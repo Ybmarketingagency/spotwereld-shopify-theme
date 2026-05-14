@@ -1,0 +1,146 @@
+{
+  "sections": {
+    "spotwereld_collection_header": {
+      "type": "custom-liquid",
+      "settings": {
+        "custom_liquid": "{%- assign hi = '' -%}{%- assign hs = '' -%}{%- case collection.handle -%}{%- when 'inbouwspots' -%}{%- assign hi = 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1400&q=80' -%}{%- assign hs = 'Strak en modern ingebouwd in uw plafond' -%}{%- when 'opbouwspots' -%}{%- assign hi = 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=1400&q=80' -%}{%- assign hs = 'Veelzijdig en eenvoudig te monteren' -%}{%- when 'hanglampen' -%}{%- assign hi = 'https://images.unsplash.com/photo-1513506003901-1e6a35421bff?auto=format&fit=crop&w=1400&q=80' -%}{%- assign hs = 'Sfeervolle verlichting voor elk interieur' -%}{%- when 'trapverlichting' -%}{%- assign hi = 'https://images.unsplash.com/photo-1459767129954-1b1c1f9b9ace?auto=format&fit=crop&w=1400&q=80' -%}{%- assign hs = 'Veilig en sfeervol uw trap verlichten' -%}{%- when 'wandlampen' -%}{%- assign hi = 'https://images.unsplash.com/photo-1550581190-9c1c48d21d6c?auto=format&fit=crop&w=1400&q=80' -%}{%- assign hs = 'Accentverlichting voor de mooiste muren' -%}{%- endcase -%}{%- if collection.image -%}{%- assign hi = collection.image | image_url: width: 1400 -%}{%- endif -%}<div style=\"position:relative;height:280px;background:#061f40;overflow:hidden\">{%- if hi != '' -%}<img src=\"{{ hi }}\" alt=\"{{ collection.title }}\" style=\"position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.45\" loading=\"eager\">{%- endif -%}<div style=\"position:absolute;inset:0;background:linear-gradient(135deg,rgba(6,31,64,0.78) 0%,rgba(6,31,64,0.35) 100%)\"></div><div style=\"position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:0 1.5rem;height:100%;display:flex;flex-direction:column;justify-content:center\"><h1 style=\"color:#fff;font-weight:800;font-size:2.25rem;margin:0 0 0.5rem;text-shadow:0 2px 12px rgba(0,0,0,0.4)\">{{ collection.title }}</h1>{%- if collection.description != blank -%}<p style=\"color:#bfdbfe;margin:0;font-size:1.1rem;text-shadow:0 1px 4px rgba(0,0,0,0.3)\">{{ collection.description }}</p>{%- elsif hs != '' -%}<p style=\"color:#bfdbfe;margin:0;font-size:1.1rem;text-shadow:0 1px 4px rgba(0,0,0,0.3)\">{{ hs }}</p>{%- endif -%}</div></div>",
+        "color_scheme": "",
+        "section_width": "full-width",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "main": {
+      "type": "main-collection",
+      "blocks": {
+        "filters": {
+          "type": "filters",
+          "static": true,
+          "settings": {
+            "enable_filtering": true,
+            "filter_style": "vertical",
+            "filter_width": "centered",
+            "text_label_case": "default",
+            "show_swatch_label": true,
+            "show_filter_label": true,
+            "enable_sorting": true,
+            "enable_grid_density": true,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "padding-block-start": 16,
+            "padding-block-end": 8,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0,
+            "facets_margin_bottom": 8,
+            "facets_margin_right": 24
+          },
+          "blocks": {}
+        },
+        "product-card": {
+          "type": "_product-card",
+          "static": true,
+          "settings": {
+            "product_card_gap": 4,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "card-gallery": {
+              "type": "_product-card-gallery",
+              "settings": {
+                "image_ratio": "adapt",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "product_title": {
+              "type": "product-title",
+              "name": "Producttitel",
+              "settings": {
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "rte",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 4,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "price": {
+              "type": "price",
+              "settings": {
+                "show_sale_price_first": true,
+                "show_installments": false,
+                "show_tax_info": false,
+                "type_preset": "h6",
+                "width": "100%",
+                "alignment": "left",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "color": "var(--color-foreground)",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "card-gallery",
+            "product_title",
+            "price"
+          ]
+        }
+      },
+      "settings": {
+        "layout_type": "grid",
+        "product_card_size": "medium",
+        "mobile_product_card_size": "small",
+        "product_grid_width": "centered",
+        "full_width_on_mobile": true,
+        "columns_gap_horizontal": 16,
+        "columns_gap_vertical": 24,
+        "padding-inline-start": 0,
+        "padding-inline-end": 0,
+        "color_scheme": "scheme-1",
+        "padding-block-start": 24,
+        "padding-block-end": 32
+      }
+    }
+  },
+  "order": [
+    "spotwereld_collection_header",
+    "main"
+  ]
+}
