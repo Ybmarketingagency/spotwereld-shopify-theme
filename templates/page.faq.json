@@ -10,6 +10,16 @@
         "padding-block-end": 0
       }
     },
+    "faq_nav": {
+      "type": "custom-liquid",
+      "settings": {
+        "custom_liquid": "<style>.sw-ks-nav-wrap{background:#fff;border-bottom:1px solid #e5e7eb}.sw-ks-nav{max-width:1280px;margin:0 auto;padding:.625rem 1.5rem;display:flex;align-items:center;gap:.25rem;flex-wrap:wrap}.sw-ks-nav a{display:inline-block;padding:.4rem .875rem;border-radius:9999px;font-size:.8125rem;font-weight:600;color:#374151;text-decoration:none;transition:background .15s,color .15s}.sw-ks-nav a:hover{background:#EBF2FF;color:#083D7D}.sw-ks-nav a.sw-ks-active{background:#EBF2FF;color:#083D7D;border:1.5px solid #bfdbfe}</style><div class='sw-ks-nav-wrap'><nav class='sw-ks-nav'><a href='/pages/contact'>Contact</a><a href='/pages/over-ons'>Over ons</a><a href='/pages/veelgestelde-vragen'>Veelgestelde vragen</a><a href='/pages/verzending-retouren'>Verzending &amp; Retouren</a><a href='/pages/garantie'>Garantie</a><a href='/pages/algemene-voorwaarden'>Algemene voorwaarden</a><a href='/pages/privacyverklaring'>Privacyverklaring</a></nav></div><script>document.querySelectorAll('.sw-ks-nav a').forEach(function(a){if(a.pathname===window.location.pathname){a.classList.add('sw-ks-active');}});</script>",
+        "color_scheme": "",
+        "section_width": "full-width",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
     "faq_body": {
       "type": "custom-liquid",
       "settings": {
@@ -23,6 +33,7 @@
   },
   "order": [
     "faq_hero",
+    "faq_nav",
     "faq_body"
   ]
 }
