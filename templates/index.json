@@ -13,171 +13,21 @@
     "spotwereld_usp": {
       "type": "custom-liquid",
       "settings": {
-        "custom_liquid": "<style>.sw-usp{display:grid;grid-template-columns:repeat(2,1fr)}@media(min-width:768px){.sw-usp{grid-template-columns:repeat(4,1fr)}}</style><div style=\"background:#f3f4f6;border-bottom:1px solid #e5e7eb\"><div style=\"max-width:1280px;margin:0 auto;padding:0 1rem\"><div class=\"sw-usp\"><div style=\"display:flex;align-items:center;gap:0.75rem;padding:1.25rem 1rem;border-right:1px solid #e5e7eb\"><div style=\"width:2.5rem;height:2.5rem;border-radius:9999px;background:#EBF2FF;display:flex;align-items:center;justify-content:center;flex-shrink:0\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#083D7D\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"1\" y=\"3\" width=\"15\" height=\"13\"/><polygon points=\"16 8 20 8 23 11 23 16 16 16 16 8\"/><circle cx=\"5.5\" cy=\"18.5\" r=\"2.5\"/><circle cx=\"18.5\" cy=\"18.5\" r=\"2.5\"/></svg></div><div><p style=\"font-weight:600;color:#111827;font-size:0.875rem;margin:0\">Gratis Verzending</p><p style=\"color:#6b7280;font-size:0.75rem;margin:0\">Bij bestellingen boven €50</p></div></div><div style=\"display:flex;align-items:center;gap:0.75rem;padding:1.25rem 1rem;border-right:1px solid #e5e7eb\"><div style=\"width:2.5rem;height:2.5rem;border-radius:9999px;background:#EBF2FF;display:flex;align-items:center;justify-content:center;flex-shrink:0\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#083D7D\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polygon points=\"13 2 3 14 12 14 11 22 21 10 12 10 13 2\"/></svg></div><div><p style=\"font-weight:600;color:#111827;font-size:0.875rem;margin:0\">Snelle Levering</p><p style=\"color:#6b7280;font-size:0.75rem;margin:0\">Voor 22:00 besteld, morgen in huis</p></div></div><div style=\"display:flex;align-items:center;gap:0.75rem;padding:1.25rem 1rem;border-right:1px solid #e5e7eb\"><div style=\"width:2.5rem;height:2.5rem;border-radius:9999px;background:#EBF2FF;display:flex;align-items:center;justify-content:center;flex-shrink:0\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#083D7D\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z\"/></svg></div><div><p style=\"font-weight:600;color:#111827;font-size:0.875rem;margin:0\">2 Jaar Garantie</p><p style=\"color:#6b7280;font-size:0.75rem;margin:0\">Kwaliteit gegarandeerd</p></div></div><div style=\"display:flex;align-items:center;gap:0.75rem;padding:1.25rem 1rem\"><div style=\"width:2.5rem;height:2.5rem;border-radius:9999px;background:#EBF2FF;display:flex;align-items:center;justify-content:center;flex-shrink:0\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#083D7D\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"1 4 1 10 7 10\"/><path d=\"M3.51 15a9 9 0 1 0 .49-4.47\"/></svg></div><div><p style=\"font-weight:600;color:#111827;font-size:0.875rem;margin:0\">30 Dagen Retour</p><p style=\"color:#6b7280;font-size:0.75rem;margin:0\">Niet goed, geld terug</p></div></div></div></div></div>",
+        "custom_liquid": "<style>.sw-usp{display:grid;grid-template-columns:repeat(2,1fr)}@media(min-width:768px){.sw-usp{grid-template-columns:repeat(4,1fr)}}</style><div style=\"background:#f3f4f6;border-bottom:1px solid #e5e7eb\"><div style=\"max-width:1280px;margin:0 auto;padding:0 1rem\"><div class=\"sw-usp\"><div style=\"display:flex;align-items:center;gap:0.75rem;padding:1.25rem 1rem;border-right:1px solid #e5e7eb\"><div style=\"width:2.5rem;height:2.5rem;border-radius:9999px;background:#EBF2FF;display:flex;align-items:center;justify-content:center;flex-shrink:0\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#083D7D\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"1\" y=\"3\" width=\"15\" height=\"13\"/><polygon points=\"16 8 20 8 23 11 23 16 16 16 16 8\"/><circle cx=\"5.5\" cy=\"18.5\" r=\"2.5\"/><circle cx=\"18.5\" cy=\"18.5\" r=\"2.5\"/></svg></div><div><p style=\"font-weight:600;color:#111827;font-size:0.875rem;margin:0\">Gratis Verzending</p><p style=\"color:#6b7280;font-size:0.75rem;margin:0\">Bij bestellingen boven &euro;50</p></div></div><div style=\"display:flex;align-items:center;gap:0.75rem;padding:1.25rem 1rem;border-right:1px solid #e5e7eb\"><div style=\"width:2.5rem;height:2.5rem;border-radius:9999px;background:#EBF2FF;display:flex;align-items:center;justify-content:center;flex-shrink:0\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#083D7D\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polygon points=\"13 2 3 14 12 14 11 22 21 10 12 10 13 2\"/></svg></div><div><p style=\"font-weight:600;color:#111827;font-size:0.875rem;margin:0\">Snelle Levering</p><p style=\"color:#6b7280;font-size:0.75rem;margin:0\">Voor 22:00 besteld, morgen in huis</p></div></div><div style=\"display:flex;align-items:center;gap:0.75rem;padding:1.25rem 1rem;border-right:1px solid #e5e7eb\"><div style=\"width:2.5rem;height:2.5rem;border-radius:9999px;background:#EBF2FF;display:flex;align-items:center;justify-content:center;flex-shrink:0\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#083D7D\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z\"/></svg></div><div><p style=\"font-weight:600;color:#111827;font-size:0.875rem;margin:0\">2 Jaar Garantie</p><p style=\"color:#6b7280;font-size:0.75rem;margin:0\">Kwaliteit gegarandeerd</p></div></div><div style=\"display:flex;align-items:center;gap:0.75rem;padding:1.25rem 1rem\"><div style=\"width:2.5rem;height:2.5rem;border-radius:9999px;background:#EBF2FF;display:flex;align-items:center;justify-content:center;flex-shrink:0\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#083D7D\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"1 4 1 10 7 10\"/><path d=\"M3.51 15a9 9 0 1 0 .49-4.47\"/></svg></div><div><p style=\"font-weight:600;color:#111827;font-size:0.875rem;margin:0\">30 Dagen Retour</p><p style=\"color:#6b7280;font-size:0.75rem;margin:0\">Niet goed, geld terug</p></div></div></div></div></div>",
         "color_scheme": "",
         "section_width": "full-width",
         "padding-block-start": 0,
         "padding-block-end": 0
       }
     },
-    "spotwereld_products_header": {
+    "spotwereld_populaire_producten": {
       "type": "custom-liquid",
       "settings": {
-        "custom_liquid": "<div style=\"max-width:1280px;margin:0 auto;padding:2.5rem 1rem 0\"><div style=\"display:flex;align-items:center;gap:1rem;width:100%\"><div><span style=\"font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,#083D7D,#0F6FE3);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text\">Populaire Producten</span><p style=\"color:#6b7280;font-size:0.875rem;margin:0.25rem 0 0\">Onze best verkochte LED spots en lampen</p></div><div style=\"flex:1;height:1px;background:linear-gradient(to right,#0F6FE3,transparent)\"></div></div></div>",
-        "color_scheme": "scheme-1",
+        "custom_liquid": "<style>.sw-pp-outer{position:relative}.sw-pp-wrap{overflow:hidden}.sw-pp-track{display:flex;transition:transform .4s ease}.sw-pp-card{flex-shrink:0;padding:0 .5rem;box-sizing:border-box;text-decoration:none;color:inherit;display:block}.sw-pp-img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:.75rem;display:block;background:#f3f4f6}.sw-pp-name{font-weight:600;color:#111827;font-size:.9375rem;margin:.625rem 0 .25rem;line-height:1.3}.sw-pp-price{color:#083D7D;font-weight:700;font-size:1rem;margin:0}.sw-pp-btn{position:absolute;top:calc(50% - 2rem);transform:translateY(-50%);width:2.75rem;height:2.75rem;border-radius:50%;background:#fff;border:2px solid #e5e7eb;box-shadow:0 2px 8px rgba(0,0,0,.12);cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2;transition:all .2s;color:#111827}.sw-pp-btn:hover{background:#083D7D;border-color:#083D7D;color:#fff}#swPpPrev{left:-.75rem}#swPpNext{right:-.75rem}</style><section style=\"padding:3rem 0 3.5rem;background:#fff\"><div style=\"max-width:1280px;margin:0 auto;padding:0 2rem\"><div style=\"display:flex;align-items:center;gap:1rem;margin-bottom:1.75rem\"><div><span style=\"font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,#083D7D,#0F6FE3);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text\">Populaire Producten</span><p style=\"color:#6b7280;font-size:.875rem;margin:.25rem 0 0\">Onze best verkochte LED spots en lampen</p></div><div style=\"flex:1;height:1px;background:linear-gradient(to right,#0F6FE3,transparent)\"></div></div><div class=\"sw-pp-outer\" style=\"padding:0 1.25rem\"><button class=\"sw-pp-btn\" id=\"swPpPrev\" aria-label=\"Vorige\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"15 18 9 12 15 6\"/></svg></button><div class=\"sw-pp-wrap\" id=\"swPpWrap\"><div class=\"sw-pp-track\" id=\"swPpTrack\">{%- assign pp_col = collections['inbouwspots-2'] -%}{%- if pp_col -%}{%- for prod in pp_col.products limit:8 -%}<a href=\"{{ prod.url }}\" class=\"sw-pp-card\"><img class=\"sw-pp-img\" src=\"{{ prod.featured_image | img_url: '400x400' }}\" alt=\"{{ prod.title | escape }}\" loading=\"lazy\"><p class=\"sw-pp-name\">{{ prod.title }}</p><p class=\"sw-pp-price\">{{ prod.price_min | money }}</p></a>{%- endfor -%}{%- endif -%}</div></div><button class=\"sw-pp-btn\" id=\"swPpNext\" aria-label=\"Volgende\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"9 18 15 12 9 6\"/></svg></button></div></div></section><script>var swPpCur=0;function swPpVis(){var w=document.getElementById('swPpWrap').offsetWidth;return w<640?2:w<1024?3:4;}function swPpBuild(){var vis=swPpVis(),iw=document.getElementById('swPpWrap').offsetWidth/vis;document.querySelectorAll('.sw-pp-card').forEach(function(el){el.style.width=iw+'px';el.style.minWidth=iw+'px';});}function swPpGo(dir){var vis=swPpVis(),n=document.querySelectorAll('.sw-pp-card').length,max=Math.max(0,n-vis),iw=document.getElementById('swPpWrap').offsetWidth/vis;swPpCur=Math.min(Math.max(swPpCur+dir,0),max);document.getElementById('swPpTrack').style.transform='translateX(-'+(swPpCur*iw)+'px)';}document.getElementById('swPpPrev').addEventListener('click',function(){swPpGo(-1);});document.getElementById('swPpNext').addEventListener('click',function(){swPpGo(1);});swPpBuild();window.addEventListener('resize',function(){swPpBuild();swPpCur=0;document.getElementById('swPpTrack').style.transform='translateX(0)';});<\/script>",
+        "color_scheme": "",
         "section_width": "full-width",
         "padding-block-start": 0,
         "padding-block-end": 0
-      }
-    },
-    "product_list_main": {
-      "type": "product-list",
-      "blocks": {
-        "static-header": {
-          "type": "_product-list-content",
-          "name": "Header",
-          "static": true,
-          "settings": {
-            "content_direction": "row",
-            "vertical_on_mobile": false,
-            "horizontal_alignment": "space-between",
-            "vertical_alignment": "flex-end",
-            "align_baseline": true,
-            "horizontal_alignment_flex_direction_column": "flex-start",
-            "vertical_alignment_flex_direction_column": "center",
-            "gap": 12,
-            "width": "fill",
-            "custom_width": 100,
-            "width_mobile": "fill",
-            "custom_width_mobile": 100,
-            "height": "fit",
-            "custom_height": 100,
-            "inherit_color_scheme": true,
-            "color_scheme": "",
-            "background_media": "none",
-            "video_position": "cover",
-            "background_image_position": "cover",
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {},
-          "block_order": []
-        },
-        "static-product-card": {
-          "type": "_product-card",
-          "name": "Product card",
-          "static": true,
-          "settings": {
-            "product_card_gap": 4,
-            "inherit_color_scheme": true,
-            "color_scheme": "",
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {
-            "product_card_gallery": {
-              "type": "_product-card-gallery",
-              "name": "Product media",
-              "settings": {
-                "image_ratio": "square",
-                "border": "none",
-                "border_width": 1,
-                "border_opacity": 100,
-                "border_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "product_title": {
-              "type": "product-title",
-              "name": "Product title",
-              "settings": {
-                "width": "100%",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "rte",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "var(--color-foreground)",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 4,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "price": {
-              "type": "price",
-              "name": "Price",
-              "settings": {
-                "show_sale_price_first": true,
-                "show_installments": false,
-                "show_tax_info": false,
-                "type_preset": "h6",
-                "width": "100%",
-                "alignment": "left",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "color": "var(--color-foreground)",
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": [
-            "product_card_gallery",
-            "product_title",
-            "price"
-          ]
-        }
-      },
-      "name": "Populaire Producten",
-      "settings": {
-        "collection": "inbouwspots",
-        "layout_type": "grid",
-        "carousel_on_mobile": false,
-        "max_products": 4,
-        "columns": 4,
-        "mobile_columns": "2",
-        "mobile_card_size": "60cqw",
-        "columns_gap": 8,
-        "rows_gap": 24,
-        "icons_style": "arrow",
-        "icons_shape": "none",
-        "section_width": "page-width",
-        "horizontal_alignment": "flex-start",
-        "gap": 28,
-        "color_scheme": "scheme-1",
-        "padding-block-start": 16,
-        "padding-block-end": 48
       }
     },
     "spotwereld_led_strips": {
@@ -254,8 +104,7 @@
   "order": [
     "spotwereld_hero",
     "spotwereld_usp",
-    "spotwereld_products_header",
-    "product_list_main",
+    "spotwereld_populaire_producten",
     "spotwereld_led_strips",
     "spotwereld_banners",
     "spotwereld_category_grid",
