@@ -162,6 +162,32 @@
               },
               "blocks": {}
             },
+            "sw_color_family": {
+              "type": "text",
+              "name": "Kleurfamilie",
+              "settings": {
+                "text": "{%- assign cf = '' -%}{%- if closest.product.tags contains 'aristo' -%}{%- assign cf = 'aristo' -%}{%- endif -%}{%- if closest.product.tags contains 'miran' -%}{%- assign cf = 'miran' -%}{%- endif -%}{%- if cf != '' -%}{%- assign ck = closest.product.options_with_values[0].values[0] -%}<div style=\"margin-bottom:.25rem\"><p style=\"font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#6b7280;margin-bottom:.625rem\">Kleur: <strong style=\"color:#061f40;font-weight:700\">{{ ck }}</strong></p><div style=\"display:flex;flex-wrap:wrap;gap:.5rem\">{%- for p in collections['inbouwspots'].products -%}{%- if p.tags contains cf -%}{%- assign pk = p.options_with_values[0].values[0] -%}{%- if p.handle == closest.product.handle -%}<span style=\"display:inline-flex;align-items:center;padding:.375rem .875rem;border:2px solid #061f40;border-radius:4px;font-size:.875rem;color:#fff;background:#061f40;font-weight:600\">{{ pk }}</span>{%- else -%}<a href=\"{{ p.url }}\" style=\"display:inline-flex;align-items:center;padding:.375rem .875rem;border:1.5px solid #d1d5db;border-radius:4px;font-size:.875rem;color:#061f40;background:#fff;text-decoration:none\">{{ pk }}</a>{%- endif -%}{%- endif -%}{%- endfor -%}</div></div>{%- endif -%}",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "rte",
+                "font": "var(--font-body--family)",
+                "font_size": "0.875rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
             "variant_picker": {
               "type": "variant-picker",
               "settings": {
@@ -265,7 +291,7 @@
           "block_order": [
             "product_header",
             "divider",
-            "variant_picker",
+            "sw_color_family",
             "buy_buttons",
             "trust_bullets",
             "product_description"
