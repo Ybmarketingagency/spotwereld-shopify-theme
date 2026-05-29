@@ -283,6 +283,13 @@
       {{ content_for_additional_checkout_buttons }}
     </div>
   {% endif %}
+
+  <a href="{{ routes.cart_url }}" class="sw-cart-link" style="display:block;text-align:center;padding:.7rem;border:2px solid #061f40;border-radius:8px;font-weight:600;color:#061f40;text-decoration:none;font-size:.9rem;margin-top:.25rem;transition:background .15s,color .15s" onmouseover="this.style.background='#061f40';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#061f40'">Bekijk winkelmand →</a>
+
+  <div class="sw-trust-badges" style="display:flex;gap:1rem;padding:.75rem 0 .25rem;border-top:1px solid #f0f4f8;margin-top:.5rem;flex-wrap:wrap">
+    <div style="display:flex;align-items:center;gap:.4rem;font-size:.78rem;color:#374151"><span style="color:#16a34a;font-size:1rem">✓</span>Gratis verzending v.a. €50</div>
+    <div style="display:flex;align-items:center;gap:.4rem;font-size:.78rem;color:#374151"><span style="color:#16a34a;font-size:1rem">✓</span>30 dagen retour</div>
+  </div>
 </div>
 
 {% stylesheet %}
