@@ -18,7 +18,8 @@
     block_shopify_attributes: block.shopify_attributes,
   %}
 {% enddoc %}
-{%- if block_settings.zoom -%}
+{%- comment -%}Spotwereld: zoom permanently disabled{%- endcomment -%}
+{%- if false and block_settings.zoom -%}
   <script
     src="{{ 'zoom-dialog.js' | asset_url }}"
     type="module"
@@ -374,7 +375,7 @@
           {% endif %}
         {% endcapture %}
         {% capture class %}
-          {{ product_media_container_class }} product-media-container--{{ media.media_type }}{% if block_settings.zoom %} product-media-container--zoomable{% endif %}{% if forloop.index0 == lowest_aspect_ratio_index and block_settings.aspect_ratio == 'adapt' %} product-media-container--tallest{% endif %}
+          {{ product_media_container_class }} product-media-container--{{ media.media_type }}{% if forloop.index0 == lowest_aspect_ratio_index and block_settings.aspect_ratio == 'adapt' %} product-media-container--tallest{% endif %}
         {% endcapture %}
         {% if block_settings.aspect_ratio == 'adapt' %}
           {% capture style %}
@@ -461,7 +462,7 @@
               data-focal-point="{{ media.presentation.focal_point }}"
             {% endif %}
           >
-            {%- if block_settings.zoom and media.media_type == 'image' -%}
+            {%- if false and block_settings.zoom and media.media_type == 'image' -%}
               <button
                 type="button"
                 class="button button-unstyled product-media-container__zoom-button"
@@ -492,7 +493,7 @@
       </ul>
     {% endif %}
 
-    {%- if block_settings.zoom -%}
+    {%- if false and block_settings.zoom -%}
       <zoom-dialog
         ref="zoomDialogComponent"
         id="zoom-dialog-{{ block_id }}"

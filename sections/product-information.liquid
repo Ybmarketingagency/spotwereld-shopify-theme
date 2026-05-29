@@ -191,6 +191,38 @@
   </div>
 {%- endif -%}
 
+<!-- Spotwereld: Delivery badge + Shopify payment icons (hidden, moved by JS) -->
+<div id="sw-payment-liquid" style="display:none">
+  <div class="sw-delivery" style="display:flex;align-items:center;gap:.5rem;margin:.75rem 0 .25rem;padding:.6rem .875rem;background:#f0fdf4;border-radius:8px;border:1px solid #bbf7d0">
+    <span style="color:#16a34a;font-size:1.1rem">●</span>
+    <span style="font-size:.875rem;color:#15803d;font-weight:600">Vandaag besteld, morgen in huis</span>
+  </div>
+  <div class="sw-payment-icons" style="margin:1.25rem 0 .5rem">
+    <p style="font-size:.8rem;font-weight:700;color:#374151;margin:0 0 .5rem">Veilig shoppen met</p>
+    <div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center">
+      {%- for type in shop.enabled_payment_types -%}
+        <span style="display:inline-flex;align-items:center;padding:.25rem .4rem;border:1px solid #e5e7eb;border-radius:6px;background:#fff">
+          {{ type | payment_type_svg_tag: class: 'sw-pay-svg' }}
+        </span>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+<!-- Spotwereld: Lichtkleur selector (hidden, moved by JS) -->
+<div id="sw-lichtkleur-liquid" style="display:none">
+  <div class="sw-lichtkleur" style="margin:0 0 1rem">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem">
+      <p style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#6b7280;margin:0">Lichtkleur</p>
+    </div>
+    <select class="sw-lichtkleur-select" style="width:100%;padding:.625rem .875rem;border:1.5px solid #d1d5db;border-radius:6px;font-size:.875rem;color:#061f40;background:#fff;cursor:pointer;appearance:auto">
+      <option value="3000K">3000K (warm-wit)</option>
+      <option value="2700K">2700K (extra warm-wit)</option>
+      <option value="4000K">4000K (neutraal-wit)</option>
+    </select>
+  </div>
+</div>
+
 <script>
 (function() {
   function initSwProductPage() {
@@ -257,24 +289,21 @@
       el.style.setProperty('display','none','important');
     });
 
-    // Delivery badge after buy button area
+    // Delivery badge + payment icons (rendered from Liquid below)
     var buyBtns = form.closest('.buy-buttons, [class*="buy-button"]') || form.parentElement;
-    if (buyBtns && !document.querySelector('.sw-delivery')) {
-      buyBtns.insertAdjacentHTML('afterend',
-        '<div class="sw-delivery" style="display:flex;align-items:center;gap:.5rem;margin:.75rem 0 .25rem;padding:.6rem .875rem;background:#f0fdf4;border-radius:8px;border:1px solid #bbf7d0">' +
-        '<span style="color:#16a34a;font-size:1.1rem">●</span>' +
-        '<span style="font-size:.875rem;color:#15803d;font-weight:600">Vandaag besteld, morgen in huis</span>' +
-        '</div>' +
-        '<div class="sw-payment-icons" style="margin:1.25rem 0 .5rem">' +
-        '<p style="font-size:.8rem;font-weight:700;color:#374151;margin:0 0 .5rem">Veilig shoppen met</p>' +
-        '<div style="display:flex;gap:.5rem;flex-wrap:wrap">' +
-        '<span style="display:inline-flex;align-items:center;padding:.35rem .6rem;border:1px solid #e5e7eb;border-radius:6px;font-size:.75rem;font-weight:600;color:#061f40;background:#fff">iDEAL</span>' +
-        '<span style="display:inline-flex;align-items:center;padding:.35rem .6rem;border:1px solid #e5e7eb;border-radius:6px;font-size:.75rem;font-weight:600;color:#061f40;background:#fff">Bancontact</span>' +
-        '<span style="display:inline-flex;align-items:center;padding:.35rem .6rem;border:1px solid #e5e7eb;border-radius:6px;font-size:.75rem;font-weight:600;color:#F5A623;background:#fff">Klarna</span>' +
-        '<span style="display:inline-flex;align-items:center;padding:.35rem .6rem;border:1px solid #e5e7eb;border-radius:6px;font-size:.75rem;font-weight:600;color:#061f40;background:#fff">Visa</span>' +
-        '<span style="display:inline-flex;align-items:center;padding:.35rem .6rem;border:1px solid #e5e7eb;border-radius:6px;font-size:.75rem;font-weight:600;color:#061f40;background:#fff">Mastercard</span>' +
-        '<span style="display:inline-flex;align-items:center;padding:.35rem .6rem;border:1px solid #e5e7eb;border-radius:6px;font-size:.75rem;font-weight:600;color:#061f40;background:#fff">PayPal</span>' +
-        '</div></div>');
+    var swPayEl = document.getElementById('sw-payment-liquid');
+    if (buyBtns && swPayEl && !document.querySelector('.sw-delivery')) {
+      buyBtns.insertAdjacentHTML('afterend', swPayEl.innerHTML);
+      swPayEl.remove();
+    }
+
+    // Lichtkleur selector
+    var swLkEl = document.getElementById('sw-lichtkleur-liquid');
+    if (swLkEl && !document.querySelector('.sw-lichtkleur')) {
+      var colorPicker = document.querySelector('.sw-color-picker');
+      var target = colorPicker || form;
+      target.insertAdjacentHTML(colorPicker ? 'afterend' : 'beforebegin', swLkEl.innerHTML);
+      swLkEl.remove();
     }
   }
 
@@ -530,6 +559,15 @@
     border-color: #061f40 !important;
     color: #061f40 !important;
     background: #f0f4ff !important;
+  }
+  .sw-pay-svg {
+    height: 24px;
+    width: auto;
+  }
+  .sw-lichtkleur-select:focus {
+    border-color: #061f40;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(6,31,64,0.1);
   }
 {% endstylesheet %}
 

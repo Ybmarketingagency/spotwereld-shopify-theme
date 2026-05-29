@@ -301,7 +301,7 @@
               "type": "text",
               "name": "Productbeschrijving",
               "settings": {
-                "text": "<p><strong>Productbeschrijving</strong></p>{{ closest.product.description }}",
+                "text": "",
                 "width": "100%",
                 "max_width": "normal",
                 "alignment": "left",
@@ -316,7 +316,7 @@
                 "background": false,
                 "background_color": "#00000026",
                 "corner_radius": 0,
-                "padding-block-start": 8,
+                "padding-block-start": 0,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0
@@ -328,9 +328,7 @@
             "product_header",
             "divider",
             "buy_buttons",
-            "trust_bullets",
-            "product_description",
-            "sw_specs_table"
+            "trust_bullets"
           ]
         }
       },
@@ -342,6 +340,16 @@
         "gap": 48,
         "color_scheme": "",
         "padding-block-start": 24,
+        "padding-block-end": 0
+      }
+    },
+    "sw_description_specs": {
+      "type": "custom-liquid",
+      "settings": {
+        "custom_liquid": "<section style=\"padding:2.5rem 0 3rem;border-top:1px solid #e5e7eb\"><div style=\"max-width:1280px;margin:0 auto;padding:0 1.5rem\"><div style=\"display:grid;grid-template-columns:1fr 1fr;gap:3rem\"><!-- Beschrijving links --><div><h2 style=\"font-size:1.35rem;font-weight:800;color:#061f40;margin:0 0 1rem\">Ontdek de {{ product.title }}</h2><div style=\"color:#374151;font-size:.9375rem;line-height:1.75\">{{ product.description }}</div></div><!-- Specificaties rechts --><div><h2 style=\"font-size:1.35rem;font-weight:800;color:#061f40;margin:0 0 1rem\">Specificaties</h2><table style=\"width:100%;border-collapse:collapse;font-size:.875rem\"><tr style=\"background:#f8fafc\"><td style=\"padding:.625rem .875rem;font-weight:600;color:#374151;border-bottom:1px solid #e5e7eb;width:45%\">Fitting</td><td style=\"padding:.625rem .875rem;color:#1e293b;border-bottom:1px solid #e5e7eb\">GU10</td></tr><tr><td style=\"padding:.625rem .875rem;font-weight:600;color:#374151;border-bottom:1px solid #e5e7eb\">Dimbaar</td><td style=\"padding:.625rem .875rem;color:#1e293b;border-bottom:1px solid #e5e7eb\">Ja</td></tr><tr style=\"background:#f8fafc\"><td style=\"padding:.625rem .875rem;font-weight:600;color:#374151;border-bottom:1px solid #e5e7eb\">IP-waarde</td><td style=\"padding:.625rem .875rem;color:#1e293b;border-bottom:1px solid #e5e7eb\">IP65</td></tr><tr><td style=\"padding:.625rem .875rem;font-weight:600;color:#374151;border-bottom:1px solid #e5e7eb\">Materiaal</td><td style=\"padding:.625rem .875rem;color:#1e293b;border-bottom:1px solid #e5e7eb\">Aluminium</td></tr><tr style=\"background:#f8fafc\"><td style=\"padding:.625rem .875rem;font-weight:600;color:#374151;border-bottom:1px solid #e5e7eb\">Garantie</td><td style=\"padding:.625rem .875rem;color:#1e293b;border-bottom:1px solid #e5e7eb\">2 jaar</td></tr><tr><td style=\"padding:.625rem .875rem;font-weight:600;color:#374151;border-bottom:1px solid #e5e7eb\">Levensduur</td><td style=\"padding:.625rem .875rem;color:#1e293b;border-bottom:1px solid #e5e7eb\">25.000 uur</td></tr><tr style=\"background:#f8fafc\"><td style=\"padding:.625rem .875rem;font-weight:600;color:#374151;border-bottom:1px solid #e5e7eb\">Spanning</td><td style=\"padding:.625rem .875rem;color:#1e293b;border-bottom:1px solid #e5e7eb\">230V</td></tr><tr><td style=\"padding:.625rem .875rem;font-weight:600;color:#374151\">Lichtkleur</td><td style=\"padding:.625rem .875rem;color:#1e293b\">2700K / 3000K / 4000K (instelbaar)</td></tr></table></div></div></div></section><style>@media(max-width:749px){section .sw-desc-grid{grid-template-columns:1fr!important}}</style>",
+        "color_scheme": "",
+        "section_width": "full-width",
+        "padding-block-start": 0,
         "padding-block-end": 0
       }
     },
@@ -500,6 +508,7 @@
   "order": [
     "spotwereld_product_enhancements",
     "main",
+    "sw_description_specs",
     "product_recommendations",
     "product_reviews"
   ]
