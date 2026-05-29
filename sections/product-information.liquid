@@ -196,7 +196,8 @@
   <div class="sw-payment-icons" style="margin:1.25rem 0 .5rem">
     <p style="font-size:.8rem;font-weight:700;color:#374151;margin:0 0 .5rem">Veilig shoppen met</p>
     <div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center">
-      {%- for type in shop.enabled_payment_types -%}
+      {%- assign sw_pay_types = 'ideal,visa,mastercard,paypal,klarna,bancontact' | split: ',' -%}
+      {%- for type in sw_pay_types -%}
         <span style="display:inline-flex;align-items:center;padding:.25rem .5rem;border:1px solid #e5e7eb;border-radius:6px;background:#fff">
           {{ type | payment_type_svg_tag: class: 'sw-pay-svg' }}
         </span>
