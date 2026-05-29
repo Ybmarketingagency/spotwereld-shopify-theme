@@ -249,6 +249,20 @@
     if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initSwColorPicker); }
     else { initSwColorPicker(); }
     setTimeout(initSwColorPicker, 600);
+    // Add thumbnail strip (5x same image)
+    setTimeout(function() {
+      if (document.querySelector('.sw-thumbs')) return;
+      var img = document.querySelector('.product-media img, .product__media img, [class*="media"] img[src*="cdn.shopify"]');
+      if (!img) return;
+      var src = img.src.replace(/width=\d+/, 'width=120');
+      var strip = '<div class="sw-thumbs" style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">';
+      for (var i = 0; i < 5; i++) {
+        strip += '<img src="' + src + '" alt="" style="width:72px;height:72px;object-fit:cover;border-radius:4px;border:' + (i===0?'2px solid #061f40':'1.5px solid #e2e8f0') + ';cursor:pointer" onclick="document.querySelectorAll(\'.sw-thumbs img\').forEach(function(t){t.style.borderColor=\'#e2e8f0\';t.style.borderWidth=\'1.5px\'});this.style.borderColor=\'#061f40\';this.style.borderWidth=\'2px\'">';
+      }
+      strip += '</div>';
+      var mediaEl = document.querySelector('.product-media__wrapper, .product__media-wrapper, [class*="product-media"]');
+      if (mediaEl) mediaEl.insertAdjacentHTML('afterend', strip);
+    }, 800);
   })();
   </script>
 {%- endif -%}
@@ -436,12 +450,8 @@
       white-space: nowrap;
     }
   }
-  /* Hide Dimbaar/IP-waarde options in cart — only show Kleur */
-  .cart-items__table-row--full-width-variants,
-  .cart-item__variant-title,
-  [class*="cart"] [class*="option"]:not(:first-child),
-  [class*="cart"] [class*="variant"] dl dt ~ dt,
-  [class*="cart"] [class*="variant"] dl dd ~ dd {
+  /* Hide only extra variant labels (Dimbaar/IP-waarde) in cart, keep product row visible */
+  .cart-items__variant-option:not(:first-child) {
     display: none !important;
   }
   /* Spotwereld: gradient buy button */
