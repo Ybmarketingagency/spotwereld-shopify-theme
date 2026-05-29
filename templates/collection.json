@@ -1,15 +1,5 @@
 {
   "sections": {
-    "spotwereld_collection_header": {
-      "type": "custom-liquid",
-      "settings": {
-        "custom_liquid": "{%- assign hi = '' -%}{%- assign hs = '' -%}{%- case collection.handle -%}{%- when 'inbouwspots' -%}{%- assign hi = 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1400&q=80' -%}{%- assign hs = 'Strak en modern ingebouwd in uw plafond' -%}{%- when 'opbouwspots' -%}{%- assign hi = 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=1400&q=80' -%}{%- assign hs = 'Veelzijdig en eenvoudig te monteren' -%}{%- when 'hanglampen' -%}{%- assign hi = 'https://images.unsplash.com/photo-1513506003901-1e6a35421bff?auto=format&fit=crop&w=1400&q=80' -%}{%- assign hs = 'Sfeervolle verlichting voor elk interieur' -%}{%- when 'trapverlichting' -%}{%- assign hi = 'https://images.unsplash.com/photo-1459767129954-1b1c1f9b9ace?auto=format&fit=crop&w=1400&q=80' -%}{%- assign hs = 'Veilig en sfeervol uw trap verlichten' -%}{%- when 'wandlampen' -%}{%- assign hi = 'https://images.unsplash.com/photo-1550581190-9c1c48d21d6c?auto=format&fit=crop&w=1400&q=80' -%}{%- assign hs = 'Accentverlichting voor de mooiste muren' -%}{%- endcase -%}{%- if collection.image -%}{%- assign hi = collection.image | image_url: width: 1400 -%}{%- endif -%}<div style=\"position:relative;height:280px;background:#061f40;overflow:hidden\">{%- if hi != '' -%}<img src=\"{{ hi }}\" alt=\"{{ collection.title }}\" style=\"position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.45\" loading=\"eager\">{%- endif -%}<div style=\"position:absolute;inset:0;background:linear-gradient(135deg,rgba(6,31,64,0.78) 0%,rgba(6,31,64,0.35) 100%)\"></div><div style=\"position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:0 1.5rem;height:100%;display:flex;flex-direction:column;justify-content:center\"><h1 style=\"color:#fff;font-weight:800;font-size:2.25rem;margin:0 0 0.5rem;text-shadow:0 2px 12px rgba(0,0,0,0.4)\">{{ collection.title }}</h1>{%- if collection.description != blank -%}<p style=\"color:#bfdbfe;margin:0;font-size:1.1rem;text-shadow:0 1px 4px rgba(0,0,0,0.3)\">{{ collection.description }}</p>{%- elsif hs != '' -%}<p style=\"color:#bfdbfe;margin:0;font-size:1.1rem;text-shadow:0 1px 4px rgba(0,0,0,0.3)\">{{ hs }}</p>{%- endif -%}</div></div>",
-        "color_scheme": "",
-        "section_width": "full-width",
-        "padding-block-start": 0,
-        "padding-block-end": 0
-      }
-    },
     "spotwereld_filter_styles": {
       "type": "custom-liquid",
       "settings": {
@@ -150,7 +140,6 @@
     }
   },
   "order": [
-    "spotwereld_collection_header",
     "spotwereld_filter_styles",
     "main"
   ]
