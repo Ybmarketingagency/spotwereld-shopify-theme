@@ -76,7 +76,7 @@
     "price_filter_high": "Hoge prijs"
   },
   "actions": {
-    "add_to_cart": "Aan winkelwagen toevoegen",
+    "add_to_cart": "In winkelmandje",
     "clear_all": "Alles wissen",
     "remove": "Verwijderen",
     "view_in_your_space": "In ruimte bekijken",
@@ -324,7 +324,7 @@
   },
   "products": {
     "product": {
-      "add_to_cart": "Aan winkelwagen toevoegen",
+      "add_to_cart": "In winkelmandje",
       "adding_to_cart": "Toevoegen...",
       "added_to_cart": "Toegevoegd aan winkelwagen",
       "add_to_cart_error": "Fout bij het toevoegen aan de winkelwagen",

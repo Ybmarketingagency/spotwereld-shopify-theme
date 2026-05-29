@@ -260,9 +260,11 @@
         strip += '<img src="' + src + '" alt="" loading="lazy" style="width:76px;height:76px;flex-shrink:0;object-fit:cover;border-radius:6px;border:' + (i===0?'2px solid #061f40':'1.5px solid #e2e8f0') + ';cursor:pointer;transition:border-color .15s" onclick="document.querySelectorAll(\'.sw-thumbs img\').forEach(function(t){t.style.borderColor=\'#e2e8f0\';t.style.borderWidth=\'1.5px\'});this.style.borderColor=\'#061f40\';this.style.borderWidth=\'2px\'">';
       }
       strip += '</div>';
-      // Insert AFTER the media-gallery component (below the main image)
-      var gallery = document.querySelector('media-gallery');
-      if (gallery) gallery.insertAdjacentHTML('afterend', strip);
+      // Insert inside product-information__media div, after the gallery
+      var mediaCol = document.querySelector('.product-information__media');
+      if (mediaCol) {
+        mediaCol.insertAdjacentHTML('beforeend', strip);
+      }
     }, 800);
   })();
   </script>
