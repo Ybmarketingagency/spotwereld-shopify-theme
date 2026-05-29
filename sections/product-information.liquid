@@ -206,10 +206,44 @@
         return '<a href="' + s.dataset.url + '" style="display:inline-flex;align-items:center;padding:.375rem .875rem;border:1.5px solid #d1d5db;border-radius:4px;font-size:.875rem;color:#061f40;background:#fff;text-decoration:none">' + s.dataset.color + '</a>';
       }).join('');
       var pickerHtml = '<div class="sw-color-picker" style="margin:0 0 1.25rem"><p style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#6b7280;margin:0 0 .625rem">Kleur: <strong style="color:#061f40">' + currentColor + '</strong></p><div style="display:flex;flex-wrap:wrap;gap:.5rem">' + colorBtns + '</div></div>';
+      // Insert color picker before product form
       var form = document.querySelector('form.shopify-product-form');
       if (!form) { form = document.querySelector('button[name="add"]'); }
       if (form && !form.closest('cart-drawer-component, [id*="CartDrawer"], .cart-drawer')) {
-        form.insertAdjacentHTML('beforebegin', pickerHtml);
+        // Volume pricing
+        var price = {{ product.price | divided_by: 100.0 }};
+        var volHtml = '<div class="sw-vol" style="display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap">' +
+          '<div style="flex:1;min-width:90px;border:2px solid #061f40;border-radius:6px;padding:.5rem .625rem;background:#f8faff;cursor:default">' +
+          '<div style="font-size:.75rem;font-weight:700;color:#061f40">1-4 stuks</div>' +
+          '<div style="font-size:.9rem;font-weight:800;color:#061f40">€' + price.toFixed(2).replace('.',',') + '/stuk</div></div>' +
+          '<div style="flex:1;min-width:90px;border:1.5px solid #d1d5db;border-radius:6px;padding:.5rem .625rem;cursor:pointer" onclick="this.style.borderColor=\'#061f40\'">' +
+          '<div style="font-size:.75rem;font-weight:700;color:#16a34a">5-9 stuks</div>' +
+          '<div style="font-size:.9rem;font-weight:800;color:#1e293b">€' + (price * 0.92).toFixed(2).replace('.',',') + '/stuk</div>' +
+          '<div style="font-size:.7rem;color:#16a34a;font-weight:600">▼ 8% korting</div></div>' +
+          '<div style="flex:1;min-width:90px;border:1.5px solid #d1d5db;border-radius:6px;padding:.5rem .625rem;cursor:pointer" onclick="this.style.borderColor=\'#061f40\'">' +
+          '<div style="font-size:.75rem;font-weight:700;color:#16a34a">10+ stuks</div>' +
+          '<div style="font-size:.9rem;font-weight:800;color:#1e293b">€' + (price * 0.84).toFixed(2).replace('.',',') + '/stuk</div>' +
+          '<div style="font-size:.7rem;color:#16a34a;font-weight:600">▼ 16% korting</div></div>' +
+          '</div>';
+        form.insertAdjacentHTML('beforebegin', pickerHtml + volHtml);
+
+        // Stars + Op voorraad after price
+        var priceWrap = Array.from(document.querySelectorAll('.price__regular')).find(function(el) {
+          return !el.closest('[id*="cart"], .cart-drawer, .cart-items, .sticky-add-to-cart');
+        });
+        if (priceWrap && !document.querySelector('.sw-extras')) {
+          priceWrap.insertAdjacentHTML('afterend',
+            '<div class="sw-extras" style="display:flex;align-items:center;gap:1rem;margin:.5rem 0 .75rem;flex-wrap:wrap">' +
+            '<div style="display:flex;align-items:center;gap:.35rem">' +
+            '<span style="color:#f59e0b;font-size:1rem;letter-spacing:-.05em">★★★★★</span>' +
+            '<span style="font-size:.82rem;font-weight:700;color:#1e293b">4.9</span>' +
+            '<span style="font-size:.78rem;color:#94a3b8">(47)</span></div>' +
+            '<div style="display:flex;align-items:center;gap:.3rem">' +
+            '<span style="color:#16a34a;font-size:.9rem">●</span>' +
+            '<span style="color:#16a34a;font-size:.82rem;font-weight:600">Op voorraad</span>' +
+            '<span style="color:#94a3b8;font-size:.78rem">— direct leverbaar</span></div>' +
+            '</div>');
+        }
       }
     }
     if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initSwColorPicker); }
