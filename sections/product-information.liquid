@@ -191,6 +191,20 @@
   </div>
 {%- endif -%}
 
+<!-- Spotwereld: Payment icons from Shopify (same as footer) -->
+<div id="sw-pay-icons-source" style="display:none">
+  <div class="sw-payment-icons" style="margin:1.25rem 0 .5rem">
+    <p style="font-size:.8rem;font-weight:700;color:#374151;margin:0 0 .5rem">Veilig shoppen met</p>
+    <div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center">
+      {%- for type in shop.enabled_payment_types -%}
+        <span style="display:inline-flex;align-items:center;padding:.25rem .5rem;border:1px solid #e5e7eb;border-radius:6px;background:#fff">
+          {{ type | payment_type_svg_tag: class: 'sw-pay-svg' }}
+        </span>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
 <script>
 (function() {
   function initSwProductPage() {
@@ -230,13 +244,11 @@
       var isFirst = i === 0;
       var border = isFirst ? '2px solid #061f40' : '1.5px solid #d1d5db';
       var bg = isFirst ? 'background:#f8faff;' : '';
-      var labelColor = isFirst ? 'color:#061f40' : 'color:#16a34a';
-      var priceColor = isFirst ? 'color:#061f40' : 'color:#1e293b';
       volHtml += '<div class="sw-vol-tier" data-qty="' + tier.qty + '" data-index="' + i + '" style="flex:1;min-width:90px;border:' + border + ';border-radius:6px;padding:.5rem .625rem;cursor:pointer;' + bg + 'transition:border-color .15s,background .15s">' +
-        '<div style="font-size:.75rem;font-weight:700;' + labelColor + '">' + tier.label + '</div>' +
-        '<div style="font-size:.9rem;font-weight:800;' + priceColor + '">€' + tp.toFixed(2).replace('.',',') + '/stuk</div>';
+        '<div style="font-size:.75rem;font-weight:700;color:#061f40">' + tier.label + '</div>' +
+        '<div style="font-size:.9rem;font-weight:800;color:#061f40">€' + tp.toFixed(2).replace('.',',') + '/stuk</div>';
       if (tier.discount > 0) {
-        volHtml += '<div style="font-size:.7rem;color:#16a34a;font-weight:600">▼ ' + Math.round(tier.discount * 100) + '% korting</div>';
+        volHtml += '<div style="font-size:.7rem;color:#0F6FE3;font-weight:600">▼ ' + Math.round(tier.discount * 100) + '% korting</div>';
       }
       volHtml += '</div>';
     });
@@ -298,17 +310,13 @@
         '<div class="sw-delivery" style="display:flex;align-items:center;gap:.5rem;margin:.75rem 0 .25rem;padding:.6rem .875rem;background:#f0fdf4;border-radius:8px;border:1px solid #bbf7d0">' +
         '<span style="color:#16a34a;font-size:1.1rem">●</span>' +
         '<span style="font-size:.875rem;color:#15803d;font-weight:600">Vandaag besteld, morgen in huis</span>' +
-        '</div>' +
-        '<div class="sw-payment-icons" style="margin:1.25rem 0 .5rem">' +
-        '<p style="font-size:.8rem;font-weight:700;color:#374151;margin:0 0 .5rem">Veilig shoppen met</p>' +
-        '<div style="display:flex;gap:.5rem;flex-wrap:wrap">' +
-        '<span style="display:inline-flex;align-items:center;padding:.35rem .6rem;border:1px solid #e5e7eb;border-radius:6px;font-size:.75rem;font-weight:600;color:#061f40;background:#fff">iDEAL</span>' +
-        '<span style="display:inline-flex;align-items:center;padding:.35rem .6rem;border:1px solid #e5e7eb;border-radius:6px;font-size:.75rem;font-weight:600;color:#061f40;background:#fff">Bancontact</span>' +
-        '<span style="display:inline-flex;align-items:center;padding:.35rem .6rem;border:1px solid #e5e7eb;border-radius:6px;font-size:.75rem;font-weight:600;color:#F5A623;background:#fff">Klarna</span>' +
-        '<span style="display:inline-flex;align-items:center;padding:.35rem .6rem;border:1px solid #e5e7eb;border-radius:6px;font-size:.75rem;font-weight:600;color:#061f40;background:#fff">Visa</span>' +
-        '<span style="display:inline-flex;align-items:center;padding:.35rem .6rem;border:1px solid #e5e7eb;border-radius:6px;font-size:.75rem;font-weight:600;color:#061f40;background:#fff">Mastercard</span>' +
-        '<span style="display:inline-flex;align-items:center;padding:.35rem .6rem;border:1px solid #e5e7eb;border-radius:6px;font-size:.75rem;font-weight:600;color:#061f40;background:#fff">PayPal</span>' +
-        '</div></div>';
+        '</div>';
+
+      // Payment icons — grab from the hidden Liquid-rendered div
+      var paySource = document.getElementById('sw-pay-icons-source');
+      if (paySource) {
+        deliveryHtml += paySource.innerHTML;
+      }
 
       insertTarget.insertAdjacentHTML('afterend', deliveryHtml);
     }
@@ -321,8 +329,8 @@
           '<div class="sw-lichtkleur" style="margin:0 0 1rem">' +
           '<p style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#6b7280;margin:0 0 .5rem">Lichtkleur</p>' +
           '<select style="width:100%;padding:.625rem .875rem;border:1.5px solid #d1d5db;border-radius:6px;font-size:.875rem;color:#061f40;background:#fff;cursor:pointer;appearance:auto">' +
-          '<option value="3000K">3000K (warm-wit)</option>' +
           '<option value="2700K">2700K (extra warm-wit)</option>' +
+          '<option value="3000K">3000K (warm-wit)</option>' +
           '<option value="4000K">4000K (neutraal-wit)</option>' +
           '</select></div>');
       }
@@ -555,10 +563,15 @@
   media-gallery {
     overflow: visible !important;
   }
+  .product-information__media {
+    position: relative;
+  }
   .sw-thumbs {
     position: relative;
-    z-index: 10;
+    z-index: 100;
     background: #fff;
+    padding-top: 8px;
+    clear: both;
   }
   /* Spotwereld: gradient buy button */
   form.cart-form button[type="submit"],
