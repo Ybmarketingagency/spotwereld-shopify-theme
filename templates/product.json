@@ -271,6 +271,32 @@
               },
               "blocks": {}
             },
+            "sw_specs_table": {
+              "type": "text",
+              "name": "Specificaties",
+              "settings": {
+                "text": "<div style=\"margin-top:1.5rem\"><h3 style=\"font-size:1.1rem;font-weight:800;color:#061f40;margin:0 0 .75rem\">Specificaties</h3><table style=\"width:100%;border-collapse:collapse;font-size:.875rem\"><tr style=\"background:#f8fafc\"><td style=\"padding:.5rem .75rem;font-weight:600;color:#374151;border-bottom:1px solid #e5e7eb;width:40%\">Fitting</td><td style=\"padding:.5rem .75rem;color:#1e293b;border-bottom:1px solid #e5e7eb\">GU10</td></tr><tr><td style=\"padding:.5rem .75rem;font-weight:600;color:#374151;border-bottom:1px solid #e5e7eb\">Dimbaar</td><td style=\"padding:.5rem .75rem;color:#1e293b;border-bottom:1px solid #e5e7eb\">Ja</td></tr><tr style=\"background:#f8fafc\"><td style=\"padding:.5rem .75rem;font-weight:600;color:#374151;border-bottom:1px solid #e5e7eb\">IP-waarde</td><td style=\"padding:.5rem .75rem;color:#1e293b;border-bottom:1px solid #e5e7eb\">IP65</td></tr><tr><td style=\"padding:.5rem .75rem;font-weight:600;color:#374151;border-bottom:1px solid #e5e7eb\">Materiaal</td><td style=\"padding:.5rem .75rem;color:#1e293b;border-bottom:1px solid #e5e7eb\">Aluminium</td></tr><tr style=\"background:#f8fafc\"><td style=\"padding:.5rem .75rem;font-weight:600;color:#374151;border-bottom:1px solid #e5e7eb\">Garantie</td><td style=\"padding:.5rem .75rem;color:#1e293b;border-bottom:1px solid #e5e7eb\">2 jaar</td></tr><tr><td style=\"padding:.5rem .75rem;font-weight:600;color:#374151;border-bottom:1px solid #e5e7eb\">Levensduur</td><td style=\"padding:.5rem .75rem;color:#1e293b;border-bottom:1px solid #e5e7eb\">25.000 uur</td></tr><tr style=\"background:#f8fafc\"><td style=\"padding:.5rem .75rem;font-weight:600;color:#374151\">Spanning</td><td style=\"padding:.5rem .75rem;color:#1e293b\">230V</td></tr></table></div>",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "rte",
+                "font": "var(--font-body--family)",
+                "font_size": "0.875rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
             "product_description": {
               "type": "text",
               "name": "Productbeschrijving",
@@ -303,7 +329,8 @@
             "divider",
             "buy_buttons",
             "trust_bullets",
-            "product_description"
+            "product_description",
+            "sw_specs_table"
           ]
         }
       },

@@ -256,6 +256,26 @@
     document.querySelectorAll('.shopify-payment-button, .shopify-payment-button__button, accelerated-checkout-component').forEach(function(el) {
       el.style.setProperty('display','none','important');
     });
+
+    // Delivery badge after buy button area
+    var buyBtns = form.closest('.buy-buttons, [class*="buy-button"]') || form.parentElement;
+    if (buyBtns && !document.querySelector('.sw-delivery')) {
+      buyBtns.insertAdjacentHTML('afterend',
+        '<div class="sw-delivery" style="display:flex;align-items:center;gap:.5rem;margin:.75rem 0 .25rem;padding:.6rem .875rem;background:#f0fdf4;border-radius:8px;border:1px solid #bbf7d0">' +
+        '<span style="color:#16a34a;font-size:1.1rem">●</span>' +
+        '<span style="font-size:.875rem;color:#15803d;font-weight:600">Vandaag besteld, morgen in huis</span>' +
+        '</div>' +
+        '<div class="sw-payment-icons" style="margin:1.25rem 0 .5rem">' +
+        '<p style="font-size:.8rem;font-weight:700;color:#374151;margin:0 0 .5rem">Veilig shoppen met</p>' +
+        '<div style="display:flex;gap:.5rem;flex-wrap:wrap">' +
+        '<span style="display:inline-flex;align-items:center;padding:.35rem .6rem;border:1px solid #e5e7eb;border-radius:6px;font-size:.75rem;font-weight:600;color:#061f40;background:#fff">iDEAL</span>' +
+        '<span style="display:inline-flex;align-items:center;padding:.35rem .6rem;border:1px solid #e5e7eb;border-radius:6px;font-size:.75rem;font-weight:600;color:#061f40;background:#fff">Bancontact</span>' +
+        '<span style="display:inline-flex;align-items:center;padding:.35rem .6rem;border:1px solid #e5e7eb;border-radius:6px;font-size:.75rem;font-weight:600;color:#F5A623;background:#fff">Klarna</span>' +
+        '<span style="display:inline-flex;align-items:center;padding:.35rem .6rem;border:1px solid #e5e7eb;border-radius:6px;font-size:.75rem;font-weight:600;color:#061f40;background:#fff">Visa</span>' +
+        '<span style="display:inline-flex;align-items:center;padding:.35rem .6rem;border:1px solid #e5e7eb;border-radius:6px;font-size:.75rem;font-weight:600;color:#061f40;background:#fff">Mastercard</span>' +
+        '<span style="display:inline-flex;align-items:center;padding:.35rem .6rem;border:1px solid #e5e7eb;border-radius:6px;font-size:.75rem;font-weight:600;color:#061f40;background:#fff">PayPal</span>' +
+        '</div></div>');
+    }
   }
 
   // Thumbnail strip (universal)
