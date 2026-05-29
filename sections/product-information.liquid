@@ -191,6 +191,39 @@
   </div>
 {%- endif -%}
 
+<!-- Spotwereld: Specificaties tabel -->
+<div id="sw-specs-source" style="display:none">
+  <div class="sw-specs-table" style="margin:1.5rem 0 0">
+    <h3 style="font-size:1rem;font-weight:800;color:#061f40;margin:0 0 .75rem;padding-bottom:.5rem;border-bottom:2px solid #e8edf4">Specificaties</h3>
+    <table style="width:100%;border-collapse:collapse;font-size:.875rem">
+      <tbody>
+        {%- if product.selected_or_first_available_variant.sku != blank -%}
+        <tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.5rem .75rem .5rem 0;color:#6b7280;font-weight:500;width:45%">SKU</td><td style="padding:.5rem 0;color:#1e293b;font-weight:600">{{ product.selected_or_first_available_variant.sku }}</td></tr>
+        {%- endif -%}
+        {%- if product.vendor != blank -%}
+        <tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.5rem .75rem .5rem 0;color:#6b7280;font-weight:500">Merk</td><td style="padding:.5rem 0;color:#1e293b;font-weight:600">{{ product.vendor }}</td></tr>
+        {%- endif -%}
+        {%- for opt in product.options_with_values -%}
+          {%- assign opt_name = opt.name | downcase -%}
+          {%- unless opt_name == 'title' -%}
+          <tr style="border-bottom:1px solid #f0f3f8{% cycle '': ';background:#f8fafc' %}"><td style="padding:.5rem .75rem .5rem 0;color:#6b7280;font-weight:500">{{ opt.name }}</td><td style="padding:.5rem 0;color:#1e293b;font-weight:600">{{ product.selected_or_first_available_variant.options[forloop.index0] }}</td></tr>
+          {%- endunless -%}
+        {%- endfor -%}
+        {%- if product.metafields.custom.wattage != blank -%}
+        <tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.5rem .75rem .5rem 0;color:#6b7280;font-weight:500">Wattage</td><td style="padding:.5rem 0;color:#1e293b;font-weight:600">{{ product.metafields.custom.wattage }}</td></tr>
+        {%- endif -%}
+        {%- if product.metafields.custom.lumen != blank -%}
+        <tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.5rem .75rem .5rem 0;color:#6b7280;font-weight:500">Lichtopbrengst</td><td style="padding:.5rem 0;color:#1e293b;font-weight:600">{{ product.metafields.custom.lumen }}</td></tr>
+        {%- endif -%}
+        {%- if product.metafields.custom.garantie != blank -%}
+        <tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.5rem .75rem .5rem 0;color:#6b7280;font-weight:500">Garantie</td><td style="padding:.5rem 0;color:#1e293b;font-weight:600">{{ product.metafields.custom.garantie }}</td></tr>
+        {%- endif -%}
+        <tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.5rem .75rem .5rem 0;color:#6b7280;font-weight:500">Beschikbaarheid</td><td style="padding:.5rem 0;font-weight:600;color:{%- if product.available -%}#16a34a{%- else -%}#dc2626{%- endif -%}">{%- if product.available -%}Op voorraad{%- else -%}Uitverkocht{%- endif -%}</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
 <!-- Spotwereld: Payment icons from Shopify (same as footer) -->
 <div id="sw-pay-icons-source" style="display:none">
   <div class="sw-payment-icons" style="margin:1.25rem 0 .5rem">
@@ -338,7 +371,7 @@
     }
   }
 
-  // Thumbnail strip (universal)
+  // Thumbnail strip + Specs table (universal)
   function initSwThumbs() {
     if (document.querySelector('.sw-thumbs')) return;
     var img = document.querySelector('.product-media img, slideshow-component img, media-gallery img');
@@ -352,6 +385,11 @@
     var mediaCol = document.querySelector('.product-information__media');
     if (mediaCol) {
       mediaCol.insertAdjacentHTML('beforeend', strip);
+      // Insert specs table below thumbnails
+      var specsSource = document.getElementById('sw-specs-source');
+      if (specsSource && !document.querySelector('.sw-specs-table')) {
+        mediaCol.insertAdjacentHTML('beforeend', specsSource.innerHTML);
+      }
     }
   }
 

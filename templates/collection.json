@@ -126,10 +126,24 @@
               "blocks": {}
             }
           },
+            "quick_add_btn": {
+              "type": "buy-buttons",
+              "settings": {
+                "show_buy_it_now_button": false,
+                "show_pickup_availability": false,
+                "padding-block-start": 8,
+                "padding-block-end": 4,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            }
+          },
           "block_order": [
             "card-gallery",
             "product_title",
-            "price"
+            "price",
+            "quick_add_btn"
           ]
         }
       },
