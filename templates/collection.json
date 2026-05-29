@@ -1,5 +1,15 @@
 {
   "sections": {
+    "spotwereld_collection_header": {
+      "type": "custom-liquid",
+      "settings": {
+        "custom_liquid": "{%- assign sub = '' -%}{%- case collection.handle -%}{%- when 'inbouwspots' -%}{%- assign sub = 'Strak en modern ingebouwd in uw plafond — eenvoudig zelf te installeren.' -%}{%- when 'opbouwspots' -%}{%- assign sub = 'Veelzijdig en eenvoudig te monteren, ook op betonnen plafonds.' -%}{%- when 'hanglampen' -%}{%- assign sub = 'Sfeervolle verlichting die elke ruimte compleet maakt.' -%}{%- when 'trapverlichting' -%}{%- assign sub = 'Veilig en sfeervol uw trap verlichten met LED.' -%}{%- when 'wandlampen' -%}{%- assign sub = 'Accentverlichting voor de mooiste muren.' -%}{%- endcase -%}{%- if sub == '' and collection.description != blank -%}{%- assign sub = collection.description | strip_html | truncate: 120 -%}{%- endif -%}<div style=\"background:linear-gradient(120deg,#061f40 0%,#0a2d5e 55%,#0f3d7a 100%);padding:2.25rem 0 2rem;position:relative;overflow:hidden\"><div style=\"position:absolute;right:-80px;top:-80px;width:320px;height:320px;border-radius:50%;background:rgba(255,255,255,0.035);pointer-events:none\"></div><div style=\"position:absolute;right:60px;top:30px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,0.05);pointer-events:none\"></div><div style=\"position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:100%;height:100%;background:radial-gradient(ellipse at 70% 50%,rgba(15,111,227,0.15) 0%,transparent 60%);pointer-events:none\"></div><div style=\"max-width:1280px;margin:0 auto;padding:0 1.5rem;position:relative;z-index:1\"><nav style=\"display:flex;align-items:center;gap:.375rem;margin-bottom:.875rem;font-size:.78rem;color:rgba(255,255,255,.45)\"><a href=\"/\" style=\"color:rgba(255,255,255,.45);text-decoration:none;transition:color .15s\" onmouseover=\"this.style.color='rgba(255,255,255,.8)'\" onmouseout=\"this.style.color='rgba(255,255,255,.45)'\">Home</a><span style=\"font-size:.6rem\">&#9656;</span><span style=\"color:rgba(255,255,255,.8)\">{{ collection.title }}</span></nav><div style=\"display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem\"><div><h1 style=\"color:#fff;font-weight:900;font-size:clamp(1.75rem,4vw,2.5rem);margin:0 0 .5rem;letter-spacing:-.03em;line-height:1.1\">{{ collection.title }}</h1>{%- if sub != '' -%}<p style=\"color:rgba(255,255,255,.7);margin:0;font-size:.95rem;line-height:1.55;max-width:500px\">{{ sub }}</p>{%- endif -%}</div><div style=\"display:flex;align-items:center;gap:.625rem;background:rgba(255,255,255,.1);backdrop-filter:blur(8px);padding:.6rem 1.1rem;border-radius:999px;border:1px solid rgba(255,255,255,.12);flex-shrink:0\"><span style=\"color:#facc15;font-size:1rem\">&#9733;</span><span style=\"color:#fff;font-size:.85rem;font-weight:600\">{{ collection.products_count }} producten</span></div></div></div></div>",
+        "color_scheme": "",
+        "section_width": "full-width",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
     "spotwereld_filter_styles": {
       "type": "custom-liquid",
       "settings": {
@@ -140,6 +150,7 @@
     }
   },
   "order": [
+    "spotwereld_collection_header",
     "spotwereld_filter_styles",
     "main"
   ]
