@@ -206,8 +206,11 @@
         return '<a href="' + s.dataset.url + '" style="display:inline-flex;align-items:center;padding:.375rem .875rem;border:1.5px solid #d1d5db;border-radius:4px;font-size:.875rem;color:#061f40;background:#fff;text-decoration:none">' + s.dataset.color + '</a>';
       }).join('');
       var pickerHtml = '<div class="sw-color-picker" style="margin:0 0 1.25rem"><p style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#6b7280;margin:0 0 .625rem">Kleur: <strong style="color:#061f40">' + currentColor + '</strong></p><div style="display:flex;flex-wrap:wrap;gap:.5rem">' + colorBtns + '</div></div>';
-      var form = document.querySelector('form.cart-form, form[action*="/cart/add"]');
-      if (form) { form.insertAdjacentHTML('beforebegin', pickerHtml); }
+      var form = document.querySelector('form.shopify-product-form');
+      if (!form) { form = document.querySelector('button[name="add"]'); }
+      if (form && !form.closest('cart-drawer-component, [id*="CartDrawer"], .cart-drawer')) {
+        form.insertAdjacentHTML('beforebegin', pickerHtml);
+      }
     }
     if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initSwColorPicker); }
     else { initSwColorPicker(); }
@@ -398,6 +401,14 @@
       text-overflow: ellipsis;
       white-space: nowrap;
     }
+  }
+  /* Hide Dimbaar/IP-waarde options in cart — only show Kleur */
+  .cart-items__table-row--full-width-variants,
+  .cart-item__variant-title,
+  [class*="cart"] [class*="option"]:not(:first-child),
+  [class*="cart"] [class*="variant"] dl dt ~ dt,
+  [class*="cart"] [class*="variant"] dl dd ~ dd {
+    display: none !important;
   }
   /* Spotwereld: gradient buy button */
   form.cart-form button[type="submit"],
