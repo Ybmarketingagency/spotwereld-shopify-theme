@@ -332,6 +332,21 @@
       el.style.setProperty('display','none','important');
     });
 
+    // Specificaties tabel — inject after payment icons section
+    function injectSpecs() {
+      if (document.querySelector('.sw-specs-table')) return;
+      var specsSource = document.getElementById('sw-specs-source');
+      if (!specsSource) return;
+      // Try: inject after .sw-delivery or after form parent
+      var anchor = document.querySelector('.sw-delivery') || form.parentElement;
+      if (anchor) {
+        anchor.insertAdjacentHTML('afterend', specsSource.innerHTML);
+      }
+    }
+    setTimeout(injectSpecs, 500);
+    setTimeout(injectSpecs, 1200);
+    setTimeout(injectSpecs, 2500);
+
     // Delivery badge + payment icons + lichtkleur
     if (!document.querySelector('.sw-delivery')) {
       // Find the trust bullets or form parent to insert after
