@@ -250,6 +250,21 @@
     else { initSwColorPicker(); }
     setTimeout(initSwColorPicker, 600);
     // Add thumbnail strip (5x same image)
+    // Fix add to cart text + hide buy it now
+    setTimeout(function() {
+      var addBtn = document.querySelector('button[name="add"]');
+      if (addBtn) {
+        var txt = addBtn.textContent.trim();
+        if (txt.toLowerCase().includes('add to cart') || txt.toLowerCase().includes('toevoegen')) {
+          var span = addBtn.querySelector('.button-text, span:not(.svg-wrapper)');
+          if (span) span.textContent = 'In winkelmandje';
+          else addBtn.innerHTML = addBtn.innerHTML.replace(/Add to cart/gi, 'In winkelmandje');
+        }
+      }
+      document.querySelectorAll('.shopify-payment-button, .shopify-payment-button__button, accelerated-checkout-component').forEach(function(el) {
+        el.style.setProperty('display','none','important');
+      });
+    }, 300);
     setTimeout(function() {
       if (document.querySelector('.sw-thumbs')) return;
       var img = document.querySelector('.product-media img, slideshow-component img');
@@ -456,6 +471,22 @@
   /* Hide only extra variant labels (Dimbaar/IP-waarde) in cart, keep product row visible */
   .cart-items__variant-option:not(:first-child) {
     display: none !important;
+  }
+  /* Hide Buy it now */
+  .shopify-payment-button,
+  .shopify-payment-button__button,
+  .product-form__payment-wrapper,
+  accelerated-checkout-component {
+    display: none !important;
+  }
+  /* Thumbnails inside sticky gallery */
+  media-gallery {
+    overflow: visible !important;
+  }
+  .sw-thumbs {
+    position: relative;
+    z-index: 10;
+    background: #fff;
   }
   /* Spotwereld: gradient buy button */
   form.cart-form button[type="submit"],
