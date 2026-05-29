@@ -217,22 +217,51 @@
       }
     }
 
-    // Volume pricing (universal for ALL products)
+    // Volume pricing (clickable, updates quantity)
     var price = {{ product.price | divided_by: 100.0 }};
-    var volHtml = '<div class="sw-vol" style="display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap">' +
-      '<div style="flex:1;min-width:90px;border:2px solid #061f40;border-radius:6px;padding:.5rem .625rem;background:#f8faff;cursor:default">' +
-      '<div style="font-size:.75rem;font-weight:700;color:#061f40">1-4 stuks</div>' +
-      '<div style="font-size:.9rem;font-weight:800;color:#061f40">€' + price.toFixed(2).replace('.',',') + '/stuk</div></div>' +
-      '<div style="flex:1;min-width:90px;border:1.5px solid #d1d5db;border-radius:6px;padding:.5rem .625rem;cursor:pointer" onclick="this.style.borderColor=\'#061f40\'">' +
-      '<div style="font-size:.75rem;font-weight:700;color:#16a34a">5-9 stuks</div>' +
-      '<div style="font-size:.9rem;font-weight:800;color:#1e293b">€' + (price * 0.92).toFixed(2).replace('.',',') + '/stuk</div>' +
-      '<div style="font-size:.7rem;color:#16a34a;font-weight:600">▼ 8% korting</div></div>' +
-      '<div style="flex:1;min-width:90px;border:1.5px solid #d1d5db;border-radius:6px;padding:.5rem .625rem;cursor:pointer" onclick="this.style.borderColor=\'#061f40\'">' +
-      '<div style="font-size:.75rem;font-weight:700;color:#16a34a">10+ stuks</div>' +
-      '<div style="font-size:.9rem;font-weight:800;color:#1e293b">€' + (price * 0.84).toFixed(2).replace('.',',') + '/stuk</div>' +
-      '<div style="font-size:.7rem;color:#16a34a;font-weight:600">▼ 16% korting</div></div>' +
-      '</div>';
+    var tiers = [
+      { qty: 1, label: '1 stuk', discount: 0 },
+      { qty: 10, label: '10 stuks', discount: 0.08 },
+      { qty: 50, label: '50 stuks', discount: 0.16 }
+    ];
+    var volHtml = '<div class="sw-vol" style="display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap">';
+    tiers.forEach(function(tier, i) {
+      var tp = price * (1 - tier.discount);
+      var isFirst = i === 0;
+      var border = isFirst ? '2px solid #061f40' : '1.5px solid #d1d5db';
+      var bg = isFirst ? 'background:#f8faff;' : '';
+      var labelColor = isFirst ? 'color:#061f40' : 'color:#16a34a';
+      var priceColor = isFirst ? 'color:#061f40' : 'color:#1e293b';
+      volHtml += '<div class="sw-vol-tier" data-qty="' + tier.qty + '" data-index="' + i + '" style="flex:1;min-width:90px;border:' + border + ';border-radius:6px;padding:.5rem .625rem;cursor:pointer;' + bg + 'transition:border-color .15s,background .15s">' +
+        '<div style="font-size:.75rem;font-weight:700;' + labelColor + '">' + tier.label + '</div>' +
+        '<div style="font-size:.9rem;font-weight:800;' + priceColor + '">€' + tp.toFixed(2).replace('.',',') + '/stuk</div>';
+      if (tier.discount > 0) {
+        volHtml += '<div style="font-size:.7rem;color:#16a34a;font-weight:600">▼ ' + Math.round(tier.discount * 100) + '% korting</div>';
+      }
+      volHtml += '</div>';
+    });
+    volHtml += '</div>';
     form.insertAdjacentHTML('beforebegin', volHtml);
+
+    // Make volume tiers clickable — update quantity input
+    document.querySelectorAll('.sw-vol-tier').forEach(function(tier) {
+      tier.addEventListener('click', function() {
+        var qty = parseInt(this.dataset.qty);
+        // Update quantity input
+        var qtyInput = document.querySelector('input[name="quantity"], quantity-selector input[type="number"]');
+        if (qtyInput) {
+          qtyInput.value = qty;
+          qtyInput.dispatchEvent(new Event('change', {bubbles: true}));
+        }
+        // Visual: highlight selected tier
+        document.querySelectorAll('.sw-vol-tier').forEach(function(t) {
+          t.style.border = '1.5px solid #d1d5db';
+          t.style.background = '#fff';
+        });
+        this.style.border = '2px solid #061f40';
+        this.style.background = '#f8faff';
+      });
+    });
 
     // Stars + Op voorraad after price (universal)
     var priceWrap = Array.from(document.querySelectorAll('.price__regular')).find(function(el) {
