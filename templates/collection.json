@@ -10,6 +10,16 @@
         "padding-block-end": 0
       }
     },
+    "spotwereld_filter_styles": {
+      "type": "custom-liquid",
+      "settings": {
+        "custom_liquid": "<style>.facets-block-wrapper--vertical{border-right:2px solid #f0f4f8}.facets--vertical .facets__item{border-bottom:1px solid #edf1f7!important}.facets--vertical .facets__summary{padding-top:1rem!important;padding-bottom:.9rem!important}.facets--vertical .facets__summary .facets__label{font-size:.8rem!important;font-weight:700!important;text-transform:uppercase!important;letter-spacing:.06em!important;color:#061f40!important}.facets--vertical .checkbox__label-text{font-size:.875rem!important;color:#4b5563!important}.facets--vertical .checkbox:not(.checkbox--disabled):hover .checkbox__label-text{color:#061f40!important}.facets--vertical .checkbox__input:checked + .checkbox__label .checkbox__label-text{color:#061f40!important;font-weight:600!important}.facets--vertical .icon-checkmark{border-color:#c8d3de!important;border-radius:4px!important}.facets--vertical .checkbox__input:checked + .checkbox__label .icon-checkmark{background-color:#061f40!important;border-color:#061f40!important}.facets--vertical .checkbox:not(.checkbox--disabled):hover .icon-checkmark{border-color:#061f40!important}.facets--vertical .facets__bubble{background-color:#061f40!important;color:#fff!important}.facets--vertical .clear-filter{font-size:.75rem!important;border-radius:20px!important}.facets-block-wrapper--vertical .facets--filters-title,.facets-controls-wrapper .facets--filters-title{font-size:.8125rem!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:.07em!important;color:#061f40!important}.facets--vertical floating-panel-component.facets__inputs{padding-bottom:1rem!important}.facets--vertical .facets__inputs-list-item{margin-bottom:.15rem!important}@media screen and (max-width:749px){.facets-controls-wrapper .button-secondary:not(.clear-filter){background-color:#061f40!important;color:#fff!important;border-color:#061f40!important}}</style>",
+        "color_scheme": "",
+        "section_width": "full-width",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
     "main": {
       "type": "main-collection",
       "blocks": {
@@ -141,6 +151,7 @@
   },
   "order": [
     "spotwereld_collection_header",
+    "spotwereld_filter_styles",
     "main"
   ]
 }
