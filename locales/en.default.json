@@ -62,8 +62,8 @@
     "unit_price": "Unit price",
     "find_country": "Find country",
     "view_pricing_info": "View pricing information",
-    "price_filter_low": "Low price",
-    "price_filter_high": "High price"
+    "price_filter_low": "Laagste prijs",
+    "price_filter_high": "Hoogste prijs"
   },
   "actions": {
     // Quick add button on product cards, shortened version of add to cart
@@ -230,7 +230,7 @@
     "price_from": "Vanaf {{ price }}",
     "price_regular": "Normale prijs",
     "price_sale": "Actieprijs",
-    "price_filter_html": "The highest price is {{ price }}",
+    "price_filter_html": "De hoogste prijs is {{ price }}",
     "product_image": "Product image",
     "product_information": "Product information",
     "product_subtotal": "Product subtotal",
@@ -301,7 +301,7 @@
     "each": "{{ price }}/ea",
     "each_abbreviation": "ea",
     "price_at": "at",
-    "price_range": "Price range",
+    "price_range": "Prijsbereik",
     "your_cart_is_empty": "Je winkelwagen is leeg",
     "product_count": "Product count",
     "errors": "Errors",
@@ -323,7 +323,7 @@
   },
   "fields": {
     // Separates min and max values in price range filter
-    "separator": "to"
+    "separator": "tot"
   },
   "gift_cards": {
     "issued": {
