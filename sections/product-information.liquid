@@ -176,6 +176,46 @@
   additional_blocks: additional_blocks
 %}
 
+{%- assign sw_cf = '' -%}
+{%- if product.tags contains 'aristo' -%}{%- assign sw_cf = 'aristo' -%}{%- endif -%}
+{%- if product.tags contains 'miran' -%}{%- assign sw_cf = 'miran' -%}{%- endif -%}
+{%- if sw_cf != '' -%}
+  {%- assign sw_ck = product.options_with_values[0].values[0] -%}
+  <div id="sw-color-data" style="display:none" data-current-handle="{{ product.handle }}" data-current-color="{{ sw_ck | escape }}">
+    {%- for sw_p in collections['inbouwspots'].products -%}
+      {%- if sw_p.tags contains sw_cf -%}
+        {%- assign sw_pk = sw_p.options_with_values[0].values[0] -%}
+        <span data-handle="{{ sw_p.handle }}" data-color="{{ sw_pk | escape }}" data-url="{{ sw_p.url }}"></span>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+  <script>
+  (function() {
+    function initSwColorPicker() {
+      if (document.querySelector('.sw-color-picker')) return;
+      var d = document.getElementById('sw-color-data');
+      if (!d) return;
+      var currentHandle = d.dataset.currentHandle;
+      var currentColor = d.dataset.currentColor;
+      var items = Array.from(d.querySelectorAll('span'));
+      if (items.length === 0) return;
+      var colorBtns = items.map(function(s) {
+        if (s.dataset.handle === currentHandle) {
+          return '<span style="display:inline-flex;align-items:center;padding:.375rem .875rem;border:2px solid #061f40;border-radius:4px;font-size:.875rem;color:#fff;background:#061f40;font-weight:600">' + s.dataset.color + '</span>';
+        }
+        return '<a href="' + s.dataset.url + '" style="display:inline-flex;align-items:center;padding:.375rem .875rem;border:1.5px solid #d1d5db;border-radius:4px;font-size:.875rem;color:#061f40;background:#fff;text-decoration:none">' + s.dataset.color + '</a>';
+      }).join('');
+      var pickerHtml = '<div class="sw-color-picker" style="margin:0 0 1.25rem"><p style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#6b7280;margin:0 0 .625rem">Kleur: <strong style="color:#061f40">' + currentColor + '</strong></p><div style="display:flex;flex-wrap:wrap;gap:.5rem">' + colorBtns + '</div></div>';
+      var form = document.querySelector('form.cart-form, form[action*="/cart/add"]');
+      if (form) { form.insertAdjacentHTML('beforebegin', pickerHtml); }
+    }
+    if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initSwColorPicker); }
+    else { initSwColorPicker(); }
+    setTimeout(initSwColorPicker, 600);
+  })();
+  </script>
+{%- endif -%}
+
 {% stylesheet %}
   .sticky-add-to-cart__bar {
     position: fixed;
@@ -358,6 +398,28 @@
       text-overflow: ellipsis;
       white-space: nowrap;
     }
+  }
+  /* Spotwereld: gradient buy button */
+  form.cart-form button[type="submit"],
+  button[name="add"] {
+    background: linear-gradient(135deg, #083D7D 0%, #0F6FE3 100%) !important;
+    border: none !important;
+    border-radius: 8px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.02em !important;
+  }
+  form.cart-form button[type="submit"]:hover,
+  button[name="add"]:hover {
+    background: linear-gradient(135deg, #062d5c 0%, #0a5abf 100%) !important;
+  }
+  .shopify-payment-button__button--unbranded {
+    background: linear-gradient(135deg, #0F6FE3 0%, #083D7D 100%) !important;
+    border-radius: 8px !important;
+  }
+  .sw-color-picker a:hover {
+    border-color: #061f40 !important;
+    color: #061f40 !important;
+    background: #f0f4ff !important;
   }
 {% endstylesheet %}
 
