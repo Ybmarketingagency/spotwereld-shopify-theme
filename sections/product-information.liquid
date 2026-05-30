@@ -191,70 +191,7 @@
   </div>
 {%- endif -%}
 
-<!-- Spotwereld: Reviews carousel met pijltjes -->
-<div class="sw-reviews-section" style="max-width:1280px;margin:2.5rem auto 0;padding:0 1.5rem">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:1rem">
-    <div>
-      <h2 style="font-size:1.5rem;font-weight:900;color:#061f40;margin:0 0 .375rem;letter-spacing:-.02em">Wat klanten zeggen</h2>
-      <div style="display:flex;align-items:center;gap:.5rem">
-        <span style="color:#f59e0b;font-size:1.1rem;letter-spacing:-.05em">★★★★★</span>
-        <span style="font-weight:700;color:#061f40">4.9</span>
-        <span style="color:#94a3b8;font-size:.875rem">gebaseerd op 247 reviews</span>
-      </div>
-    </div>
-    <div style="display:flex;gap:.5rem">
-      <button class="sw-rev-prev" aria-label="Vorige" style="width:42px;height:42px;border-radius:50%;border:1.5px solid #e2e8f0;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;color:#061f40;font-size:1.1rem;font-weight:700">&#8249;</button>
-      <button class="sw-rev-next" aria-label="Volgende" style="width:42px;height:42px;border-radius:50%;border:1.5px solid #061f40;background:#061f40;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;color:#fff;font-size:1.1rem;font-weight:700">&#8250;</button>
-    </div>
-  </div>
-  <div class="sw-rev-viewport" style="overflow:hidden;position:relative">
-    <div class="sw-rev-track" style="display:flex;gap:1rem;transition:transform .4s cubic-bezier(.4,0,.2,1);scroll-behavior:smooth">
-      {%- assign reviews = 'Mark V.|Top kwaliteit spots! Eenvoudig te installeren en het licht is perfect warm.|2 weken geleden|5,Sandra J.|Werken perfect, prachtige uitstraling. Heel blij mee!|1 maand geleden|5,Peter B.|Snelle levering en goede prijs. De CCT switch is een mooie extra.|3 weken geleden|5,Linda K.|Mooi design en goed verpakt. Aanrader voor wie zoekt naar kwaliteit.|2 maanden geleden|5,Tom H.|Geweldige spots voor onze nieuwe keuken. Lichtopbrengst is top.|5 dagen geleden|5,Marieke S.|Bestelling kwam volgende dag binnen. Spots zien er strak uit.|1 week geleden|5' | split: ',' -%}
-      {%- for r in reviews -%}
-        {%- assign p = r | split: '|' -%}
-        <div class="sw-rev-card" style="flex:0 0 calc(33.333% - .667rem);min-width:280px;background:#fff;border:1px solid #e8edf4;border-radius:12px;padding:1.25rem;display:flex;flex-direction:column;gap:.75rem">
-          <div style="display:flex;align-items:center;justify-content:space-between">
-            <div style="display:flex;align-items:center;gap:.625rem">
-              <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#083D7D,#0F6FE3);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.875rem">{{ p[0] | slice: 0,1 }}</div>
-              <div>
-                <div style="font-weight:700;color:#061f40;font-size:.9rem">{{ p[0] }}</div>
-                <div style="font-size:.72rem;color:#94a3b8">{{ p[2] }}</div>
-              </div>
-            </div>
-            <div style="display:flex;align-items:center;gap:.25rem;background:#f0fdf4;padding:.2rem .5rem;border-radius:6px"><span style="color:#16a34a;font-size:.7rem">&#10003;</span><span style="font-size:.7rem;color:#15803d;font-weight:600">Geverifieerd</span></div>
-          </div>
-          <div style="color:#f59e0b;font-size:.95rem;letter-spacing:-.05em">★★★★★</div>
-          <p style="margin:0;color:#374151;font-size:.875rem;line-height:1.5">"{{ p[1] }}"</p>
-        </div>
-      {%- endfor -%}
-    </div>
-  </div>
-</div>
-<style>
-@media(max-width:900px){.sw-rev-card{flex:0 0 calc(50% - .5rem)!important}}
-@media(max-width:600px){.sw-rev-card{flex:0 0 calc(100% - 0px)!important;min-width:100%!important}}
-.sw-rev-prev:hover,.sw-rev-next:hover{transform:scale(1.05);box-shadow:0 4px 12px rgba(6,31,64,.15)}
-</style>
-<script>
-(function(){
-  function initRev(){
-    var track = document.querySelector('.sw-rev-track');
-    var viewport = document.querySelector('.sw-rev-viewport');
-    var prev = document.querySelector('.sw-rev-prev');
-    var next = document.querySelector('.sw-rev-next');
-    if(!track||!prev||!next) return;
-    var pos = 0;
-    function getStep(){ var card = track.querySelector('.sw-rev-card'); return card ? card.offsetWidth + 16 : 300; }
-    function getMax(){ return track.scrollWidth - viewport.offsetWidth; }
-    function update(){ track.style.transform = 'translateX(-'+pos+'px)'; }
-    next.addEventListener('click', function(){ pos = Math.min(pos + getStep(), getMax()); update(); });
-    prev.addEventListener('click', function(){ pos = Math.max(pos - getStep(), 0); update(); });
-  }
-  if(document.readyState!=='loading') initRev(); else document.addEventListener('DOMContentLoaded', initRev);
-})();
-</script>
-
-<!-- Spotwereld: Specificaties tabel - direct visible op alle productpaginas -->
+<!-- SW_SPECS_START -->
 <div class="sw-specs-direct" style="max-width:1280px;margin:1.5rem auto 0;padding:0 1.5rem">
   <div class="sw-specs-table" style="margin:1.5rem 0 0;background:#fff;border:1px solid #e8edf4;border-radius:12px;padding:1.5rem 1.75rem 1rem">
     <h3 style="font-size:1rem;font-weight:800;color:#061f40;margin:0 0 .75rem;padding-bottom:.5rem;border-bottom:2px solid #e8edf4">Specificaties</h3>
@@ -286,6 +223,69 @@
     </table>
   </div>
 </div>
+
+<!-- SW_REVIEWS_START -->
+<div class="sw-reviews-section" style="max-width:1280px;margin:2.5rem auto 0;padding:0 1.5rem">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:1rem">
+    <div>
+      <h2 style="font-size:1.5rem;font-weight:900;color:#061f40;margin:0 0 .375rem;letter-spacing:-.02em">Wat klanten zeggen</h2>
+      <div style="display:flex;align-items:center;gap:.5rem">
+        <span style="color:#f59e0b;font-size:1.1rem;letter-spacing:-.05em">â˜…â˜…â˜…â˜…â˜…</span>
+        <span style="font-weight:700;color:#061f40">4.9</span>
+        <span style="color:#94a3b8;font-size:.875rem">gebaseerd op 247 reviews</span>
+      </div>
+    </div>
+    <div style="display:flex;gap:.5rem">
+      <button class="sw-rev-prev" aria-label="Vorige" style="width:42px;height:42px;border-radius:50%;border:1.5px solid #e2e8f0;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;color:#061f40;font-size:1.1rem;font-weight:700">&#8249;</button>
+      <button class="sw-rev-next" aria-label="Volgende" style="width:42px;height:42px;border-radius:50%;border:1.5px solid #061f40;background:#061f40;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;color:#fff;font-size:1.1rem;font-weight:700">&#8250;</button>
+    </div>
+  </div>
+  <div class="sw-rev-viewport" style="overflow:hidden;position:relative">
+    <div class="sw-rev-track" style="display:flex;gap:1rem;transition:transform .4s cubic-bezier(.4,0,.2,1);scroll-behavior:smooth">
+      {%- assign reviews = 'Mark V.|Top kwaliteit spots! Eenvoudig te installeren en het licht is perfect warm.|2 weken geleden|5,Sandra J.|Werken perfect, prachtige uitstraling. Heel blij mee!|1 maand geleden|5,Peter B.|Snelle levering en goede prijs. De CCT switch is een mooie extra.|3 weken geleden|5,Linda K.|Mooi design en goed verpakt. Aanrader voor wie zoekt naar kwaliteit.|2 maanden geleden|5,Tom H.|Geweldige spots voor onze nieuwe keuken. Lichtopbrengst is top.|5 dagen geleden|5,Marieke S.|Bestelling kwam volgende dag binnen. Spots zien er strak uit.|1 week geleden|5' | split: ',' -%}
+      {%- for r in reviews -%}
+        {%- assign p = r | split: '|' -%}
+        <div class="sw-rev-card" style="flex:0 0 calc(33.333% - .667rem);min-width:280px;background:#fff;border:1px solid #e8edf4;border-radius:12px;padding:1.25rem;display:flex;flex-direction:column;gap:.75rem">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <div style="display:flex;align-items:center;gap:.625rem">
+              <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#083D7D,#0F6FE3);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.875rem">{{ p[0] | slice: 0,1 }}</div>
+              <div>
+                <div style="font-weight:700;color:#061f40;font-size:.9rem">{{ p[0] }}</div>
+                <div style="font-size:.72rem;color:#94a3b8">{{ p[2] }}</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:.25rem;background:#f0fdf4;padding:.2rem .5rem;border-radius:6px"><span style="color:#16a34a;font-size:.7rem">&#10003;</span><span style="font-size:.7rem;color:#15803d;font-weight:600">Geverifieerd</span></div>
+          </div>
+          <div style="color:#f59e0b;font-size:.95rem;letter-spacing:-.05em">â˜…â˜…â˜…â˜…â˜…</div>
+          <p style="margin:0;color:#374151;font-size:.875rem;line-height:1.5">"{{ p[1] }}"</p>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+<style>
+@media(max-width:900px){.sw-rev-card{flex:0 0 calc(50% - .5rem)!important}}
+@media(max-width:600px){.sw-rev-card{flex:0 0 calc(100% - 0px)!important;min-width:100%!important}}
+.sw-rev-prev:hover,.sw-rev-next:hover{transform:scale(1.05);box-shadow:0 4px 12px rgba(6,31,64,.15)}
+</style>
+<script>
+(function(){
+  function initRev(){
+    var track = document.querySelector('.sw-rev-track');
+    var viewport = document.querySelector('.sw-rev-viewport');
+    var prev = document.querySelector('.sw-rev-prev');
+    var next = document.querySelector('.sw-rev-next');
+    if(!track||!prev||!next) return;
+    var pos = 0;
+    function getStep(){ var card = track.querySelector('.sw-rev-card'); return card ? card.offsetWidth + 16 : 300; }
+    function getMax(){ return track.scrollWidth - viewport.offsetWidth; }
+    function update(){ track.style.transform = 'translateX(-'+pos+'px)'; }
+    next.addEventListener('click', function(){ pos = Math.min(pos + getStep(), getMax()); update(); });
+    prev.addEventListener('click', function(){ pos = Math.max(pos - getStep(), 0); update(); });
+  }
+  if(document.readyState!=='loading') initRev(); else document.addEventListener('DOMContentLoaded', initRev);
+})();
+</script>
 
 <!-- Spotwereld: Payment icons from Shopify (same as footer) -->
 <div id="sw-pay-icons-source" style="display:none">
@@ -343,16 +343,16 @@
       var bg = isFirst ? 'background:#f8faff;' : '';
       volHtml += '<div class="sw-vol-tier" data-qty="' + tier.qty + '" data-index="' + i + '" style="flex:1;min-width:90px;border:' + border + ';border-radius:6px;padding:.5rem .625rem;cursor:pointer;' + bg + 'transition:border-color .15s,background .15s">' +
         '<div style="font-size:.75rem;font-weight:700;color:#061f40">' + tier.label + '</div>' +
-        '<div style="font-size:.9rem;font-weight:800;color:#061f40">€' + tp.toFixed(2).replace('.',',') + '/stuk</div>';
+        '<div style="font-size:.9rem;font-weight:800;color:#061f40">â‚¬' + tp.toFixed(2).replace('.',',') + '/stuk</div>';
       if (tier.discount > 0) {
-        volHtml += '<div style="font-size:.7rem;color:#0F6FE3;font-weight:600">▼ ' + Math.round(tier.discount * 100) + '% korting</div>';
+        volHtml += '<div style="font-size:.7rem;color:#0F6FE3;font-weight:600">â–¼ ' + Math.round(tier.discount * 100) + '% korting</div>';
       }
       volHtml += '</div>';
     });
     volHtml += '</div>';
     form.insertAdjacentHTML('beforebegin', volHtml);
 
-    // Make volume tiers clickable — update quantity input
+    // Make volume tiers clickable â€” update quantity input
     document.querySelectorAll('.sw-vol-tier').forEach(function(tier) {
       tier.addEventListener('click', function() {
         var qty = parseInt(this.dataset.qty);
@@ -380,13 +380,13 @@
       priceWrap.insertAdjacentHTML('afterend',
         '<div class="sw-extras" style="display:flex;align-items:center;gap:1rem;margin:.5rem 0 .75rem;flex-wrap:wrap">' +
         '<div style="display:flex;align-items:center;gap:.35rem">' +
-        '<span style="color:#f59e0b;font-size:1rem;letter-spacing:-.05em">★★★★★</span>' +
+        '<span style="color:#f59e0b;font-size:1rem;letter-spacing:-.05em">â˜…â˜…â˜…â˜…â˜…</span>' +
         '<span style="font-size:.82rem;font-weight:700;color:#1e293b">4.9</span>' +
         '<span style="font-size:.78rem;color:#94a3b8">(47)</span></div>' +
         '<div style="display:flex;align-items:center;gap:.3rem">' +
-        '<span style="color:#16a34a;font-size:.9rem">●</span>' +
+        '<span style="color:#16a34a;font-size:.9rem">â—</span>' +
         '<span style="color:#16a34a;font-size:.82rem;font-weight:600">Op voorraad</span>' +
-        '<span style="color:#94a3b8;font-size:.78rem">— direct leverbaar</span></div>' +
+        '<span style="color:#94a3b8;font-size:.78rem">â€” direct leverbaar</span></div>' +
         '</div>');
     }
 
@@ -395,7 +395,7 @@
       el.style.setProperty('display','none','important');
     });
 
-    // Specificaties tabel — inject after payment icons section
+    // Specificaties tabel â€” inject after payment icons section
     function injectSpecs() {
       if (document.querySelector('.sw-specs-table')) return;
       var specsSource = document.getElementById('sw-specs-source');
@@ -420,11 +420,11 @@
 
       var deliveryHtml =
         '<div class="sw-delivery" style="display:flex;align-items:center;gap:.5rem;margin:.75rem 0 .25rem;padding:.6rem .875rem;background:#f0fdf4;border-radius:8px;border:1px solid #bbf7d0">' +
-        '<span style="color:#16a34a;font-size:1.1rem">●</span>' +
+        '<span style="color:#16a34a;font-size:1.1rem">â—</span>' +
         '<span style="font-size:.875rem;color:#15803d;font-weight:600">Vandaag besteld, morgen in huis</span>' +
         '</div>';
 
-      // Payment icons — grab from the hidden Liquid-rendered div
+      // Payment icons â€” grab from the hidden Liquid-rendered div
       var paySource = document.getElementById('sw-pay-icons-source');
       if (paySource) {
         deliveryHtml += paySource.innerHTML;
