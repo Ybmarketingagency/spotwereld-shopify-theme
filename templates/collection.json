@@ -10,6 +10,10 @@
         "padding-block-end": 0
       }
     },
+    "spotwereld_filter_enhancements": {
+      "type": "spotwereld-filter-enhancements",
+      "settings": {}
+    },
     "spotwereld_filter_styles": {
       "type": "custom-liquid",
       "settings": {
@@ -166,6 +170,7 @@
   "order": [
     "spotwereld_collection_header",
     "spotwereld_filter_styles",
+    "spotwereld_filter_enhancements",
     "main"
   ]
 }

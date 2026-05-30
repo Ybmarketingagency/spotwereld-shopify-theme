@@ -1,0 +1,123 @@
+<script>
+(function(){
+  function rnK(){
+    document.querySelectorAll('.facets__label,.facets__summary .facets__label').forEach(function(el){
+      var t=el.textContent.trim();
+      if(t==='Kleur'||t==='Color')el.textContent='Kleur behuizing';
+    });
+  }
+  function findFacetByName(name){
+    var details=document.querySelectorAll('details.facets__item,.facets__item details,.facets__item');
+    for(var i=0;i<details.length;i++){
+      var lbl=details[i].querySelector('.facets__label');
+      if(lbl&&lbl.textContent.trim().toLowerCase().indexOf(name.toLowerCase())>-1)return details[i];
+    }
+    return null;
+  }
+  function addNeeOption(){
+    if(document.querySelector('.sw-fake-nee'))return;
+    var dimFacet=findFacetByName('Dimbaar');
+    if(!dimFacet)return;
+    var list=dimFacet.querySelector('.facets__inputs,ul,.facets__inputs-list');
+    if(!list)return;
+    var existingItem=list.querySelector('.facets__inputs-list-item,li');
+    if(!existingItem)return;
+    var hasNee=Array.from(list.querySelectorAll('label,.checkbox__label-text')).some(function(el){return el.textContent.trim()==='Nee';});
+    if(hasNee)return;
+    var clone=existingItem.cloneNode(true);
+    clone.classList.add('sw-fake-nee');
+    var lblTxt=clone.querySelector('.checkbox__label-text,label span,label');
+    if(lblTxt)lblTxt.textContent='Nee';
+    var input=clone.querySelector('input');
+    if(input){input.disabled=true;input.checked=false;input.value='Nee';}
+    var countEl=clone.querySelector('.facets__count,.facets__item-count');
+    if(countEl)countEl.textContent='(0)';
+    clone.style.opacity='.55';
+    list.appendChild(clone);
+  }
+  function splitLichtkleur(){
+    if(document.querySelector('.sw-fake-lk-2700'))return;
+    var lkFacet=findFacetByName('Lichtkleur');
+    if(!lkFacet)return;
+    var list=lkFacet.querySelector('.facets__inputs,ul,.facets__inputs-list');
+    if(!list)return;
+    var origItem=null;
+    var origInputName='filter.p.product_option.lichtkleur';
+    var origInputValue='Instelbaar (2700K-4000K)';
+    Array.from(list.querySelectorAll('.facets__inputs-list-item,li')).forEach(function(it){
+      var t=it.textContent;
+      if(t.indexOf('Instelbaar')>-1||t.indexOf('2700K-4000K')>-1){
+        origItem=it;
+        var oi=it.querySelector('input');
+        if(oi){origInputName=oi.name||origInputName;origInputValue=oi.value||origInputValue;}
+        it.style.display='none';
+      }
+    });
+    if(!origItem)origItem=list.querySelector('.facets__inputs-list-item,li');
+    if(!origItem)return;
+    [{c:'2700',n:'2700K (Warm wit)'},{c:'3000',n:'3000K (Sfeer wit)'},{c:'4000',n:'4000K (Daglicht)'}].forEach(function(opt){
+      var clone=origItem.cloneNode(true);
+      clone.style.display='';
+      clone.classList.add('sw-fake-lk-'+opt.c);
+      var lbl=clone.querySelector('.checkbox__label-text,label span');
+      if(lbl)lbl.textContent=opt.n;
+      var input=clone.querySelector('input');
+      if(input){input.name=origInputName;input.value=origInputValue;input.checked=false;}
+      list.appendChild(clone);
+    });
+  }
+  function addVormFilter(){
+    if(document.querySelector('.sw-vorm-facet'))return;
+    var kleurFacet=findFacetByName('Kleur');
+    if(!kleurFacet)return;
+    var vormHtml='<details class="facets__item sw-vorm-facet" open><summary class="facets__summary"><span class="facets__label">Vorm</span><span class="facets__icon"></span></summary><div class="facets__panel"><ul class="facets__inputs facets__inputs-list">'+
+      [{v:'rond',n:'Rond'},{v:'vierkant',n:'Vierkant'},{v:'rechthoek',n:'Rechthoek'}].map(function(o){
+        return '<li class="facets__inputs-list-item"><label class="checkbox"><input type="checkbox" class="checkbox__input" name="filter.p.tag" value="vorm-'+o.v+'"><span class="checkbox__label"><span class="icon-checkmark"></span><span class="checkbox__label-text">'+o.n+'</span></span></label></li>';
+      }).join('')+'</ul></div></details>';
+    kleurFacet.insertAdjacentHTML('beforebegin',vormHtml);
+    var vormInputs=document.querySelectorAll('.sw-vorm-facet input');
+    var urlParams=new URLSearchParams(window.location.search);
+    var activeTags=urlParams.getAll('filter.p.tag');
+    vormInputs.forEach(function(inp){
+      if(activeTags.indexOf(inp.value)>-1)inp.checked=true;
+      inp.addEventListener('change',function(){
+        var params=new URLSearchParams(window.location.search);
+        var tags=params.getAll('filter.p.tag');
+        params.delete('filter.p.tag');
+        if(inp.checked){tags.push(inp.value);}
+        else{tags=tags.filter(function(t){return t!==inp.value;});}
+        tags.forEach(function(t){params.append('filter.p.tag',t);});
+        window.location.search=params.toString();
+      });
+    });
+  }
+  function runAll(){rnK();addNeeOption();splitLichtkleur();addVormFilter();}
+  document.addEventListener('DOMContentLoaded',runAll);
+  setTimeout(runAll,300);
+  setTimeout(runAll,900);
+  setTimeout(runAll,2000);
+  document.addEventListener('shopify:section:load',runAll);
+  var obs=new MutationObserver(function(muts){
+    var hasFacetChange=muts.some(function(m){
+      return Array.from(m.addedNodes).some(function(n){
+        return n.nodeType===1&&(n.classList&&(n.classList.contains('facets__item')||n.querySelector&&n.querySelector('.facets__item')));
+      });
+    });
+    if(hasFacetChange)runAll();else rnK();
+  });
+  document.addEventListener('DOMContentLoaded',function(){
+    var f=document.querySelector('.facets-block-wrapper--vertical,.facets__form-wrapper');
+    if(f)obs.observe(f,{childList:true,subtree:true});
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Filter Enhancements",
+  "settings": [],
+  "presets": [
+    { "name": "Filter Enhancements" }
+  ]
+}
+{% endschema %}
