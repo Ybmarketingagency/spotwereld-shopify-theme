@@ -4,9 +4,10 @@
 .sw-coll-stock::before{content:'';width:6px;height:6px;border-radius:50%;background:#16a34a}
 .sw-coll-stars{color:#f59e0b;font-size:.78rem;letter-spacing:-.05em;margin:.3rem 0 .1rem;line-height:1}
 .sw-coll-stars span{color:#94a3b8;font-size:.72rem;margin-left:.25rem;letter-spacing:0}
-.sw-coll-cart{display:flex!important;align-items:center;justify-content:center;gap:.4rem;background:linear-gradient(135deg,#083D7D,#0F6FE3)!important;color:#fff!important;border:none!important;border-radius:.5rem!important;padding:.6rem .75rem!important;font-weight:700!important;font-size:.82rem!important;cursor:pointer;width:100%;transition:all .15s;letter-spacing:.01em;margin-top:.5rem;text-decoration:none;line-height:1}
-.sw-coll-cart:hover{background:linear-gradient(135deg,#062d5c,#0a5abf)!important;transform:translateY(-1px);box-shadow:0 4px 12px rgba(8,61,125,.2)}
-.sw-coll-cart svg{flex-shrink:0}
+.sw-coll-cart,.sw-coll-bekijk{display:flex!important;align-items:center;justify-content:center;gap:.4rem;background:linear-gradient(135deg,#083D7D,#0F6FE3)!important;color:#fff!important;border:none!important;border-radius:.5rem!important;padding:.65rem .75rem!important;font-weight:700!important;font-size:.82rem!important;cursor:pointer;width:100%;transition:all .15s;letter-spacing:.01em;margin-top:.5rem;text-decoration:none!important;line-height:1;box-sizing:border-box}
+.sw-coll-cart:hover,.sw-coll-bekijk:hover{background:linear-gradient(135deg,#062d5c,#0a5abf)!important;transform:translateY(-1px);box-shadow:0 4px 12px rgba(8,61,125,.2)}
+.sw-coll-cart svg,.sw-coll-bekijk svg{flex-shrink:0;transition:transform .2s}
+.sw-coll-bekijk:hover svg{transform:translateX(3px)}
 .product-card{position:relative}
 .quick-add{display:block!important;opacity:1!important;visibility:visible!important;transform:none!important;position:static!important}
 .quick-add__button{background:linear-gradient(135deg,#083D7D,#0F6FE3)!important;color:#fff!important;border:none!important;border-radius:.5rem!important;font-weight:700!important;letter-spacing:.01em!important;padding:.65rem .75rem!important;width:100%!important;font-size:.82rem!important;display:flex!important;align-items:center;justify-content:center;gap:.4rem}
@@ -44,11 +45,18 @@
           titleEl.insertAdjacentElement('afterend', stars);
         }
       }
-      // Quick-add knop tekst veranderen + cart icoon
-      var qaBtn = card.querySelector('.quick-add__button');
-      if(qaBtn && !qaBtn.dataset.swStyled){
-        qaBtn.dataset.swStyled = '1';
-        qaBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>In Winkelwagen';
+      // Vervang Quick-add knop door "Bekijk Product" link
+      var qaContainer = card.querySelector('.quick-add');
+      var productLink = card.querySelector('.product-card__link, a[href*="/products/"]');
+      if(qaContainer && productLink && !qaContainer.dataset.swReplaced){
+        qaContainer.dataset.swReplaced = '1';
+        var prodHref = productLink.getAttribute('href');
+        var bekijkBtn = document.createElement('a');
+        bekijkBtn.href = prodHref;
+        bekijkBtn.className = 'sw-coll-bekijk';
+        bekijkBtn.innerHTML = 'Bekijk Product <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
+        qaContainer.style.display = 'none';
+        qaContainer.parentNode.insertBefore(bekijkBtn, qaContainer.nextSibling);
       }
     });
   }
