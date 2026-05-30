@@ -14,6 +14,16 @@
       "type": "spotwereld-filter-enhancements",
       "settings": {}
     },
+    "sw_card_boost_v4": {
+      "type": "custom-liquid",
+      "settings": {
+        "custom_liquid": "<style>.product-card{position:relative}.sw-cb-stock{position:absolute;top:.5rem;right:.5rem;z-index:5;font-size:.65rem;font-weight:600;color:#16a34a;background:rgba(255,255,255,.95);padding:.18rem .45rem;border-radius:4px;display:inline-flex;align-items:center;gap:.25rem}.sw-cb-stock::before{content:'';width:6px;height:6px;border-radius:50%;background:#16a34a;display:inline-block;margin-right:.25rem}.sw-cb-stars{color:#f59e0b;font-size:.78rem;letter-spacing:-.05em;margin:.3rem 0 .1rem;line-height:1}.sw-cb-stars span{color:#94a3b8;font-size:.72rem;margin-left:.25rem;letter-spacing:0}.sw-cb-bekijk{display:flex!important;align-items:center;justify-content:center;gap:.4rem;background:linear-gradient(135deg,#083D7D,#0F6FE3)!important;color:#fff!important;border:none!important;border-radius:.5rem!important;padding:.65rem .75rem!important;font-weight:700!important;font-size:.82rem!important;cursor:pointer;width:100%;transition:all .15s;letter-spacing:.01em;margin-top:.5rem;text-decoration:none!important;line-height:1;box-sizing:border-box}.sw-cb-bekijk:hover{background:linear-gradient(135deg,#062d5c,#0a5abf)!important;transform:translateY(-1px);box-shadow:0 4px 12px rgba(8,61,125,.2)}.sw-cb-bekijk svg{flex-shrink:0;transition:transform .2s}.sw-cb-bekijk:hover svg{transform:translateX(3px)}.quick-add{display:none!important}</style><script>(function(){function boost(){var cards=document.querySelectorAll('.product-card');cards.forEach(function(card){if(card.dataset.swCb)return;card.dataset.swCb='1';var mc=card.querySelector('.product-media-container, .card-gallery, .product-media');if(mc&&!card.querySelector('.sw-cb-stock')){mc.style.position='relative';var st=document.createElement('span');st.className='sw-cb-stock';st.textContent='Op voorraad';mc.appendChild(st);}var ti=card.querySelector('.product-card__title, product-title, .product-title');if(ti&&!card.querySelector('.sw-cb-stars')){var sr=document.createElement('div');sr.className='sw-cb-stars';sr.innerHTML='&#9733;&#9733;&#9733;&#9733;&#9733;<span>(4.9)</span>';ti.insertAdjacentElement('afterend',sr);}var pl=card.querySelector('.product-card__link, a[href*=\"/products/\"]');if(pl&&!card.querySelector('.sw-cb-bekijk')){var bk=document.createElement('a');bk.href=pl.getAttribute('href');bk.className='sw-cb-bekijk';bk.innerHTML='Bekijk Product <svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"5\" y1=\"12\" x2=\"19\" y2=\"12\"/><polyline points=\"12 5 19 12 12 19\"/></svg>';var ct=card.querySelector('.product-card__content')||card;ct.appendChild(bk);}});}if(document.readyState!=='loading')boost();else document.addEventListener('DOMContentLoaded',boost);setTimeout(boost,300);setTimeout(boost,800);setTimeout(boost,1500);setTimeout(boost,3000);document.addEventListener('shopify:section:load',boost);var obs=new MutationObserver(function(){boost();});setTimeout(function(){var g=document.querySelector('.product-grid,results-list');if(g)obs.observe(g,{childList:true,subtree:true});},500);})();</script>",
+        "color_scheme": "",
+        "section_width": "full-width",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
     "spotwereld_filter_styles": {
       "type": "custom-liquid",
       "settings": {
@@ -171,6 +181,7 @@
     "spotwereld_collection_header",
     "spotwereld_filter_styles",
     "spotwereld_filter_enhancements",
+    "sw_card_boost_v4",
     "main"
   ]
 }
