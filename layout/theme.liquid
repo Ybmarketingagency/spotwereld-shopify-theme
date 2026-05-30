@@ -59,6 +59,71 @@
       document.addEventListener('DOMContentLoaded',function(){var f=document.querySelector('.facets-block-wrapper--vertical,.facets__form-wrapper');if(f)obs.observe(f,{childList:true,subtree:true});});
     })();
     </script>
+    <style>
+    /* Collection page product card enhancements */
+    .product-grid .product-card,
+    product-card.product-card,
+    results-list .product-card{position:relative}
+    .product-grid .product-card .product-card__information,
+    product-card.product-card .product-card__information{padding-top:.5rem!important}
+    .sw-coll-stock{position:absolute;top:.5rem;right:.5rem;z-index:5;font-size:.65rem;font-weight:600;color:#16a34a;background:rgba(255,255,255,.95);padding:.18rem .45rem;border-radius:4px;display:inline-flex;align-items:center;gap:.25rem;backdrop-filter:blur(4px)}
+    .sw-coll-stock::before{content:'';width:6px;height:6px;border-radius:50%;background:#16a34a}
+    .sw-coll-stars{color:#f59e0b;font-size:.78rem;letter-spacing:-.05em;margin:.25rem 0;line-height:1}
+    .sw-coll-stars span{color:#94a3b8;font-size:.72rem;margin-left:.25rem;letter-spacing:0}
+    .sw-coll-cart{display:flex;align-items:center;justify-content:center;gap:.4rem;background:linear-gradient(135deg,#083D7D,#0F6FE3)!important;color:#fff!important;border:none!important;border-radius:.5rem!important;padding:.6rem .75rem!important;font-weight:700!important;font-size:.82rem!important;cursor:pointer;width:100%;transition:all .15s;letter-spacing:.01em;margin-top:.5rem;text-decoration:none;line-height:1}
+    .sw-coll-cart:hover{background:linear-gradient(135deg,#062d5c,#0a5abf)!important;transform:translateY(-1px);box-shadow:0 4px 12px rgba(8,61,125,.2)}
+    .sw-coll-cart svg{flex-shrink:0}
+    .product-grid product-form-component button[type="submit"]:not(.sw-coll-cart),
+    .product-grid form button[name="add"]:not(.sw-coll-cart){background:linear-gradient(135deg,#083D7D,#0F6FE3)!important;color:#fff!important;border:none!important;border-radius:.5rem!important;font-weight:700!important;letter-spacing:.01em!important}
+    .product-card__information .price{font-weight:800!important;color:#061f40!important;font-size:1.05rem!important}
+    </style>
+    {%- if request.page_type == 'collection' or request.page_type == 'search' -%}
+    <script>
+    (function(){
+      function enhanceCards(){
+        var cards = document.querySelectorAll('.product-card, product-card');
+        cards.forEach(function(card){
+          if(card.dataset.swEnhanced) return;
+          card.dataset.swEnhanced = '1';
+          // Op voorraad badge
+          if(!card.querySelector('.sw-coll-stock')){
+            var stock = document.createElement('span');
+            stock.className = 'sw-coll-stock';
+            stock.textContent = 'Op voorraad';
+            var imgWrap = card.querySelector('.product-card__media, .product-card-gallery, .product-card__gallery, a img')?.closest('a, .product-card__media, .product-card-gallery') || card;
+            (imgWrap.parentElement || card).style.position = 'relative';
+            imgWrap.appendChild ? imgWrap.appendChild(stock) : card.appendChild(stock);
+          }
+          // Sterren rating
+          if(!card.querySelector('.sw-coll-stars')){
+            var stars = document.createElement('div');
+            stars.className = 'sw-coll-stars';
+            stars.innerHTML = '&#9733;&#9733;&#9733;&#9733;&#9733;<span>(4.9)</span>';
+            var title = card.querySelector('.product-card__title, .product-title, [class*="title"]');
+            if(title) title.insertAdjacentElement('afterend', stars);
+          }
+          // In Winkelwagen knop - vervang de standaard button als die er is
+          var existingCart = card.querySelector('.sw-coll-cart');
+          if(!existingCart){
+            // Style existing button OR add new one
+            var existingBtn = card.querySelector('form[action*="/cart/add"] button, button[name="add"]');
+            if(existingBtn){
+              existingBtn.classList.add('sw-coll-cart');
+              existingBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>In Winkelwagen';
+            }
+          }
+        });
+      }
+      function init(){enhanceCards();}
+      if(document.readyState!=='loading')init();
+      else document.addEventListener('DOMContentLoaded',init);
+      setTimeout(enhanceCards,500);
+      setTimeout(enhanceCards,1500);
+      document.addEventListener('shopify:section:load',enhanceCards);
+      var obs=new MutationObserver(function(muts){var hasNewCards=muts.some(function(m){return Array.from(m.addedNodes).some(function(n){return n.nodeType===1&&(n.matches&&(n.matches('.product-card, product-card')||n.querySelector&&n.querySelector('.product-card, product-card')));});});if(hasNewCards)enhanceCards();});
+      document.addEventListener('DOMContentLoaded',function(){var grid=document.querySelector('.product-grid, results-list');if(grid)obs.observe(grid,{childList:true,subtree:true});});
+    })();
+    </script>
     {%- endif -%}
     {% render 'skip-to-content-link', href: '#MainContent', text: 'accessibility.skip_to_text' %}
     <div id="header-group">
