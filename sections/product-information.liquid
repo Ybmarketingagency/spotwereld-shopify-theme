@@ -352,7 +352,7 @@
     volHtml += '</div>';
     form.insertAdjacentHTML('beforebegin', volHtml);
 
-    // Make volume tiers clickable â€” update quantity input
+    // Make volume tiers clickable â&euro;” update quantity input
     document.querySelectorAll('.sw-vol-tier').forEach(function(tier) {
       tier.addEventListener('click', function() {
         var qty = parseInt(this.dataset.qty);
@@ -384,9 +384,9 @@
         '<span style="font-size:.82rem;font-weight:700;color:#1e293b">4.9</span>' +
         '<span style="font-size:.78rem;color:#94a3b8">(47)</span></div>' +
         '<div style="display:flex;align-items:center;gap:.3rem">' +
-        '<span style="color:#16a34a;font-size:.9rem">â—</span>' +
+        '<span style="color:#16a34a;font-size:.9rem">â&mdash;</span>' +
         '<span style="color:#16a34a;font-size:.82rem;font-weight:600">Op voorraad</span>' +
-        '<span style="color:#94a3b8;font-size:.78rem">â€” direct leverbaar</span></div>' +
+        '<span style="color:#94a3b8;font-size:.78rem">â&euro;” direct leverbaar</span></div>' +
         '</div>');
     }
 
@@ -395,7 +395,7 @@
       el.style.setProperty('display','none','important');
     });
 
-    // Specificaties tabel â€” inject after payment icons section
+    // Specificaties tabel â&euro;” inject after payment icons section
     function injectSpecs() {
       if (document.querySelector('.sw-specs-table')) return;
       var specsSource = document.getElementById('sw-specs-source');
@@ -420,11 +420,11 @@
 
       var deliveryHtml =
         '<div class="sw-delivery" style="display:flex;align-items:center;gap:.5rem;margin:.75rem 0 .25rem;padding:.6rem .875rem;background:#f0fdf4;border-radius:8px;border:1px solid #bbf7d0">' +
-        '<span style="color:#16a34a;font-size:1.1rem">â—</span>' +
+        '<span style="color:#16a34a;font-size:1.1rem">â&mdash;</span>' +
         '<span style="font-size:.875rem;color:#15803d;font-weight:600">Vandaag besteld, morgen in huis</span>' +
         '</div>';
 
-      // Payment icons â€” grab from the hidden Liquid-rendered div
+      // Payment icons â&euro;” grab from the hidden Liquid-rendered div
       var paySource = document.getElementById('sw-pay-icons-source');
       if (paySource) {
         deliveryHtml += paySource.innerHTML;
