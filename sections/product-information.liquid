@@ -191,6 +191,53 @@
   </div>
 {%- endif -%}
 
+<!-- SW_SPECS_START -->
+<div class="sw-specs-direct" style="max-width:1280px;margin:1.5rem auto 0;padding:0 1.5rem">
+  <div class="sw-specs-table" style="margin:1.5rem 0 0;background:#fff;border:1px solid #e8edf4;border-radius:12px;padding:1.5rem 1.75rem 1rem">
+    <h3 style="font-size:1rem;font-weight:800;color:#061f40;margin:0 0 .75rem;padding-bottom:.5rem;border-bottom:2px solid #e8edf4">Specificaties</h3>
+    {%- comment -%} Bepaal merk uit tag (Aristo/Miran) ipv vendor {%- endcomment -%}
+    {%- assign sw_merk = '' -%}
+    {%- if product.tags contains 'aristo' -%}{%- assign sw_merk = 'Aristo' -%}
+    {%- elsif product.tags contains 'miran' -%}{%- assign sw_merk = 'Miran' -%}
+    {%- else -%}
+      {%- assign sw_title_parts = product.title | split: '&mdash;' | first | split: ' ' -%}
+      {%- assign sw_merk = sw_title_parts | last | strip -%}
+      {%- if sw_merk == 'Inbouwspot' or sw_merk == 'LED' or sw_merk == '' -%}{%- assign sw_merk = product.vendor -%}{%- endif -%}
+    {%- endif -%}
+    {%- assign sw_wattage = product.metafields.custom.wattage | default: '4W of 6W (instelbaar)' -%}
+    {%- assign sw_lumen = product.metafields.custom.lumen | default: '400 lm' -%}
+    {%- assign sw_garantie = product.metafields.custom.garantie | default: '2 jaar' -%}
+    {%- assign sw_levensduur = product.metafields.custom.levensduur | default: '25.000 uur' -%}
+    {%- assign sw_materiaal = product.metafields.custom.materiaal | default: 'Aluminium' -%}
+    {%- assign sw_driver = product.metafields.custom.driver | default: 'Ja, externe driver' -%}
+    {%- assign sw_fitting = product.metafields.custom.fitting | default: 'Ge&iuml;ntegreerd' -%}
+    {%- assign sw_ip = product.metafields.custom.ip_waarde | default: 'IP65' -%}
+    <table style="width:100%;border-collapse:collapse;font-size:.875rem">
+      <tbody>
+        {%- if product.selected_or_first_available_variant.sku != blank -%}
+        <tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500;width:45%">SKU</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ product.selected_or_first_available_variant.sku }}</td></tr>
+        {%- endif -%}
+        <tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Merk</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_merk }}</td></tr>
+        <tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Verwachte levensduur</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_levensduur }}</td></tr>
+        <tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Garantie</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_garantie }}</td></tr>
+        <tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Materiaal</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_materiaal }}</td></tr>
+        <tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Wattage</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_wattage }}</td></tr>
+        <tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Lichtopbrengst</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_lumen }}</td></tr>
+        <tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Inclusief driver</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_driver }}</td></tr>
+        <tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Fitting</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_fitting }}</td></tr>
+        <tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">IP-waarde</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_ip }}</td></tr>
+        {%- for opt in product.options_with_values -%}
+          {%- assign opt_name = opt.name | downcase -%}
+          {%- unless opt_name == 'title' or opt_name == 'ip-waarde' -%}
+          <tr style="border-bottom:1px solid #f0f3f8{% cycle 'specrow': '', ';background:#f8fafc' %}"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">{%- if opt_name == 'kleur' -%}Kleur behuizing{%- else -%}{{ opt.name }}{%- endif -%}</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ product.selected_or_first_available_variant.options[forloop.index0] }}</td></tr>
+          {%- endunless -%}
+        {%- endfor -%}
+        <tr><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Beschikbaarheid</td><td style="padding:.6rem 0;font-weight:600;color:{%- if product.available -%}#16a34a{%- else -%}#dc2626{%- endif -%}">{%- if product.available -%}Op voorraad{%- else -%}Uitverkocht{%- endif -%}</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
 <!-- SW_REVIEWS_CAROUSEL_V3 -->
 <section style="padding:2.5rem 0 1rem;max-width:1280px;margin:0 auto;padding-inline:1.5rem">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem">
@@ -264,53 +311,6 @@ section:has(> div > .sw-pr-grid){display:none!important}
   },200);
 })();
 </script>
-
-<!-- SW_SPECS_START -->
-<div class="sw-specs-direct" style="max-width:1280px;margin:1.5rem auto 0;padding:0 1.5rem">
-  <div class="sw-specs-table" style="margin:1.5rem 0 0;background:#fff;border:1px solid #e8edf4;border-radius:12px;padding:1.5rem 1.75rem 1rem">
-    <h3 style="font-size:1rem;font-weight:800;color:#061f40;margin:0 0 .75rem;padding-bottom:.5rem;border-bottom:2px solid #e8edf4">Specificaties</h3>
-    {%- comment -%} Bepaal merk uit tag (Aristo/Miran) ipv vendor {%- endcomment -%}
-    {%- assign sw_merk = '' -%}
-    {%- if product.tags contains 'aristo' -%}{%- assign sw_merk = 'Aristo' -%}
-    {%- elsif product.tags contains 'miran' -%}{%- assign sw_merk = 'Miran' -%}
-    {%- else -%}
-      {%- assign sw_title_parts = product.title | split: '&mdash;' | first | split: ' ' -%}
-      {%- assign sw_merk = sw_title_parts | last | strip -%}
-      {%- if sw_merk == 'Inbouwspot' or sw_merk == 'LED' or sw_merk == '' -%}{%- assign sw_merk = product.vendor -%}{%- endif -%}
-    {%- endif -%}
-    {%- assign sw_wattage = product.metafields.custom.wattage | default: '4W of 6W (instelbaar)' -%}
-    {%- assign sw_lumen = product.metafields.custom.lumen | default: '400 lm' -%}
-    {%- assign sw_garantie = product.metafields.custom.garantie | default: '2 jaar' -%}
-    {%- assign sw_levensduur = product.metafields.custom.levensduur | default: '25.000 uur' -%}
-    {%- assign sw_materiaal = product.metafields.custom.materiaal | default: 'Aluminium' -%}
-    {%- assign sw_driver = product.metafields.custom.driver | default: 'Ja, externe driver' -%}
-    {%- assign sw_fitting = product.metafields.custom.fitting | default: 'Ge&iuml;ntegreerd' -%}
-    {%- assign sw_ip = product.metafields.custom.ip_waarde | default: 'IP65' -%}
-    <table style="width:100%;border-collapse:collapse;font-size:.875rem">
-      <tbody>
-        {%- if product.selected_or_first_available_variant.sku != blank -%}
-        <tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500;width:45%">SKU</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ product.selected_or_first_available_variant.sku }}</td></tr>
-        {%- endif -%}
-        <tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Merk</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_merk }}</td></tr>
-        <tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Verwachte levensduur</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_levensduur }}</td></tr>
-        <tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Garantie</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_garantie }}</td></tr>
-        <tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Materiaal</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_materiaal }}</td></tr>
-        <tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Wattage</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_wattage }}</td></tr>
-        <tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Lichtopbrengst</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_lumen }}</td></tr>
-        <tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Inclusief driver</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_driver }}</td></tr>
-        <tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Fitting</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_fitting }}</td></tr>
-        <tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">IP-waarde</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_ip }}</td></tr>
-        {%- for opt in product.options_with_values -%}
-          {%- assign opt_name = opt.name | downcase -%}
-          {%- unless opt_name == 'title' or opt_name == 'ip-waarde' -%}
-          <tr style="border-bottom:1px solid #f0f3f8{% cycle 'specrow': '', ';background:#f8fafc' %}"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">{%- if opt_name == 'kleur' -%}Kleur behuizing{%- else -%}{{ opt.name }}{%- endif -%}</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ product.selected_or_first_available_variant.options[forloop.index0] }}</td></tr>
-          {%- endunless -%}
-        {%- endfor -%}
-        <tr><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Beschikbaarheid</td><td style="padding:.6rem 0;font-weight:600;color:{%- if product.available -%}#16a34a{%- else -%}#dc2626{%- endif -%}">{%- if product.available -%}Op voorraad{%- else -%}Uitverkocht{%- endif -%}</td></tr>
-      </tbody>
-    </table>
-  </div>
-</div>
 
 <!-- Spotwereld: Payment icons from Shopify (same as footer) -->
 <div id="sw-pay-icons-source" style="display:none">
