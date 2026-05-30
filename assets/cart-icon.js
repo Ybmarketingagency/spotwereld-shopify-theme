@@ -1,3 +1,4 @@
+// trigger sync 639157819509999538
 import { Component } from '@theme/component';
 import { onAnimationEnd } from '@theme/utilities';
 import { ThemeEvents, CartUpdateEvent } from '@theme/events';
