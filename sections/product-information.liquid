@@ -294,16 +294,16 @@
       var bg = isFirst ? 'background:#f8faff;' : '';
       volHtml += '<div class="sw-vol-tier" data-qty="' + tier.qty + '" data-index="' + i + '" style="flex:1;min-width:90px;border:' + border + ';border-radius:6px;padding:.5rem .625rem;cursor:pointer;' + bg + 'transition:border-color .15s,background .15s">' +
         '<div style="font-size:.75rem;font-weight:700;color:#061f40">' + tier.label + '</div>' +
-        '<div style="font-size:.9rem;font-weight:800;color:#061f40">â‚¬' + tp.toFixed(2).replace('.',',') + '/stuk</div>';
+        '<div style="font-size:.9rem;font-weight:800;color:#061f40">&euro;' + tp.toFixed(2).replace('.',',') + '/stuk</div>';
       if (tier.discount > 0) {
-        volHtml += '<div style="font-size:.7rem;color:#0F6FE3;font-weight:600">â–¼ ' + Math.round(tier.discount * 100) + '% korting</div>';
+        volHtml += '<div style="font-size:.7rem;color:#0F6FE3;font-weight:600">▼ ' + Math.round(tier.discount * 100) + '% korting</div>';
       }
       volHtml += '</div>';
     });
     volHtml += '</div>';
     form.insertAdjacentHTML('beforebegin', volHtml);
 
-    // Make volume tiers clickable â&euro;” update quantity input
+    // Make volume tiers clickable &mdash; update quantity input
     document.querySelectorAll('.sw-vol-tier').forEach(function(tier) {
       tier.addEventListener('click', function() {
         var qty = parseInt(this.dataset.qty);
@@ -331,13 +331,13 @@
       priceWrap.insertAdjacentHTML('afterend',
         '<div class="sw-extras" style="display:flex;align-items:center;gap:1rem;margin:.5rem 0 .75rem;flex-wrap:wrap">' +
         '<div style="display:flex;align-items:center;gap:.35rem">' +
-        '<span style="color:#f59e0b;font-size:1rem;letter-spacing:-.05em">â˜…â˜…â˜…â˜…â˜…</span>' +
+        '<span style="color:#f59e0b;font-size:1rem;letter-spacing:-.05em">&#9733;&#9733;&#9733;&#9733;&#9733;</span>' +
         '<span style="font-size:.82rem;font-weight:700;color:#1e293b">4.9</span>' +
         '<span style="font-size:.78rem;color:#94a3b8">(47)</span></div>' +
         '<div style="display:flex;align-items:center;gap:.3rem">' +
-        '<span style="color:#16a34a;font-size:.9rem">â&mdash;</span>' +
+        '<span style="color:#16a34a;font-size:.9rem">&#9679;</span>' +
         '<span style="color:#16a34a;font-size:.82rem;font-weight:600">Op voorraad</span>' +
-        '<span style="color:#94a3b8;font-size:.78rem">â&euro;” direct leverbaar</span></div>' +
+        '<span style="color:#94a3b8;font-size:.78rem">&mdash; direct leverbaar</span></div>' +
         '</div>');
     }
 
@@ -346,7 +346,7 @@
       el.style.setProperty('display','none','important');
     });
 
-    // Specificaties tabel â&euro;” inject after payment icons section
+    // Specificaties tabel &mdash; inject after payment icons section
     function injectSpecs() {
       if (document.querySelector('.sw-specs-table')) return;
       var specsSource = document.getElementById('sw-specs-source');
@@ -371,11 +371,11 @@
 
       var deliveryHtml =
         '<div class="sw-delivery" style="display:flex;align-items:center;gap:.5rem;margin:.75rem 0 .25rem;padding:.6rem .875rem;background:#f0fdf4;border-radius:8px;border:1px solid #bbf7d0">' +
-        '<span style="color:#16a34a;font-size:1.1rem">â&mdash;</span>' +
+        '<span style="color:#16a34a;font-size:1.1rem">&#9679;</span>' +
         '<span style="font-size:.875rem;color:#15803d;font-weight:600">Vandaag besteld, morgen in huis</span>' +
         '</div>';
 
-      // Payment icons â&euro;” grab from the hidden Liquid-rendered div
+      // Payment icons &mdash; grab from the hidden Liquid-rendered div
       var paySource = document.getElementById('sw-pay-icons-source');
       if (paySource) {
         deliveryHtml += paySource.innerHTML;
