@@ -1,5 +1,56 @@
+<style>
+.sw-coll-stock{position:absolute;top:.5rem;right:.5rem;z-index:5;font-size:.65rem;font-weight:600;color:#16a34a;background:rgba(255,255,255,.95);padding:.18rem .45rem;border-radius:4px;display:inline-flex;align-items:center;gap:.25rem}
+.sw-coll-stock::before{content:'';width:6px;height:6px;border-radius:50%;background:#16a34a}
+.sw-coll-stars{color:#f59e0b;font-size:.78rem;letter-spacing:-.05em;margin:.3rem 0 .1rem;line-height:1}
+.sw-coll-stars span{color:#94a3b8;font-size:.72rem;margin-left:.25rem;letter-spacing:0}
+.sw-coll-cart{display:flex!important;align-items:center;justify-content:center;gap:.4rem;background:linear-gradient(135deg,#083D7D,#0F6FE3)!important;color:#fff!important;border:none!important;border-radius:.5rem!important;padding:.6rem .75rem!important;font-weight:700!important;font-size:.82rem!important;cursor:pointer;width:100%;transition:all .15s;letter-spacing:.01em;margin-top:.5rem;text-decoration:none;line-height:1}
+.sw-coll-cart:hover{background:linear-gradient(135deg,#062d5c,#0a5abf)!important;transform:translateY(-1px);box-shadow:0 4px 12px rgba(8,61,125,.2)}
+.sw-coll-cart svg{flex-shrink:0}
+.product-card{position:relative}
+.quick-add{display:block!important;opacity:1!important;visibility:visible!important;transform:none!important;position:static!important}
+.quick-add__button{background:linear-gradient(135deg,#083D7D,#0F6FE3)!important;color:#fff!important;border:none!important;border-radius:.5rem!important;font-weight:700!important;letter-spacing:.01em!important;padding:.65rem .75rem!important;width:100%!important;font-size:.82rem!important;display:flex!important;align-items:center;justify-content:center;gap:.4rem}
+.quick-add__button:hover{background:linear-gradient(135deg,#062d5c,#0a5abf)!important;transform:translateY(-1px);box-shadow:0 4px 12px rgba(8,61,125,.2)}
+.product-card .product-card__content,.product-card__content{padding-bottom:.5rem}
+.product-card__title,.product-grid__item .product-card__title{font-size:.875rem!important;font-weight:600!important;color:#1e293b!important}
+.product-card .price{font-weight:800!important;color:#061f40!important;font-size:1.05rem!important}
+</style>
 <script>
 (function(){
+  function enhanceColCards(){
+    var cards = document.querySelectorAll('.product-card');
+    cards.forEach(function(card){
+      if(card.dataset.swEnh) return;
+      card.dataset.swEnh = '1';
+      // Op voorraad badge
+      if(!card.querySelector('.sw-coll-stock')){
+        var mediaContainer = card.querySelector('.product-media-container, .card-gallery, .product-media');
+        if(mediaContainer){
+          mediaContainer.style.position = 'relative';
+          var stock = document.createElement('span');
+          stock.className = 'sw-coll-stock';
+          stock.textContent = 'Op voorraad';
+          mediaContainer.appendChild(stock);
+        }
+      }
+      // Sterren rating onder de titel
+      if(!card.querySelector('.sw-coll-stars')){
+        var title = card.querySelector('.product-card__title, [class*="product-card__title"], product-title, .product-title');
+        if(title){
+          var stars = document.createElement('div');
+          stars.className = 'sw-coll-stars';
+          stars.innerHTML = '&#9733;&#9733;&#9733;&#9733;&#9733;<span>(4.9)</span>';
+          var titleEl = title.tagName === 'PRODUCT-TITLE' ? title : title;
+          titleEl.insertAdjacentElement('afterend', stars);
+        }
+      }
+      // Quick-add knop tekst veranderen + cart icoon
+      var qaBtn = card.querySelector('.quick-add__button');
+      if(qaBtn && !qaBtn.dataset.swStyled){
+        qaBtn.dataset.swStyled = '1';
+        qaBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>In Winkelwagen';
+      }
+    });
+  }
   function rnK(){
     document.querySelectorAll('.facets__label,.facets__summary .facets__label').forEach(function(el){
       var t=el.textContent.trim();
@@ -91,7 +142,7 @@
       });
     });
   }
-  function runAll(){rnK();addNeeOption();splitLichtkleur();addVormFilter();}
+  function runAll(){rnK();addNeeOption();splitLichtkleur();addVormFilter();enhanceColCards();}
   document.addEventListener('DOMContentLoaded',runAll);
   setTimeout(runAll,300);
   setTimeout(runAll,900);
