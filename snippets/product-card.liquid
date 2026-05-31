@@ -107,10 +107,27 @@
     "
   >
     {{ children }}
+    {%- unless onboarding -%}
+      {%- if product.available -%}
+        <span class="sw-card-stock">Op voorraad</span>
+      {%- endif -%}
+      <div class="sw-card-stars">&#9733;&#9733;&#9733;&#9733;&#9733;<span>(4.9)</span></div>
+      <a href="{{ variant_to_link.url }}" class="sw-card-bekijk" tabindex="-1" aria-hidden="true">Bekijk Product <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>
+    {%- endunless -%}
   </div>
 </product-card>
 
 {% stylesheet %}
+  product-card.product-card{position:relative}
+  .product-card .sw-card-stock{position:absolute;top:.5rem;right:.5rem;z-index:5;font-size:.65rem;font-weight:600;color:#16a34a;background:rgba(255,255,255,.95);padding:.18rem .45rem;border-radius:4px;display:inline-flex;align-items:center;gap:.25rem}
+  .product-card .sw-card-stock::before{content:'';width:6px;height:6px;border-radius:50%;background:#16a34a;display:inline-block;margin-right:.25rem}
+  .product-card .sw-card-stars{color:#f59e0b;font-size:.78rem;letter-spacing:-.05em;margin:.25rem 0 0;line-height:1;order:99}
+  .product-card .sw-card-stars span{color:#94a3b8;font-size:.72rem;margin-left:.25rem;letter-spacing:0}
+  .product-card .sw-card-bekijk{display:flex;align-items:center;justify-content:center;gap:.4rem;background:linear-gradient(135deg,#083D7D,#0F6FE3);color:#fff !important;border:none;border-radius:.5rem;padding:.65rem .75rem;font-weight:700;font-size:.82rem;cursor:pointer;width:100%;transition:all .15s;letter-spacing:.01em;margin-top:.5rem;text-decoration:none !important;line-height:1;box-sizing:border-box;position:relative;z-index:10;order:100}
+  .product-card .sw-card-bekijk:hover{background:linear-gradient(135deg,#062d5c,#0a5abf);transform:translateY(-1px);box-shadow:0 4px 12px rgba(8,61,125,.2)}
+  .product-card .sw-card-bekijk svg{flex-shrink:0;transition:transform .2s}
+  .product-card .sw-card-bekijk:hover svg{transform:translateX(3px)}
+  .product-card .quick-add{display:none !important}
   .product-card__placeholder-image svg {
     height: 100%;
   }
