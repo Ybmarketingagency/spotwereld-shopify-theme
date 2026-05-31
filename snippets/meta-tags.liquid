@@ -107,21 +107,158 @@
   content="{{ og_description | escape }}"
 >
 
+{%- comment -%} Spotwereld SEO: betere titles met keywords per page type {%- endcomment -%}
+{%- liquid
+  assign sw_brand = 'Spotwereld'
+  assign sw_tagline = 'Premium LED Verlichting'
+  if request.page_type == 'index'
+    assign sw_title = 'LED Inbouwspots, Opbouwspots & Hanglampen | ' | append: sw_brand
+    assign sw_desc = 'Premium LED verlichting voor elk interieur. CCT switch dimbaar, IP65, 25.000 uur levensduur. Voor 22:00 besteld, morgen in huis. 4.9/5 klantbeoordeling.'
+  elsif request.page_type == 'product'
+    assign sw_title = product.title | append: ' kopen | ' | append: sw_brand
+    if product.description != blank
+      assign sw_desc = product.description | strip_html | truncate: 155
+    else
+      assign sw_desc = product.title | append: ' - Premium LED kwaliteit, snelle levering en 2 jaar garantie bij Spotwereld.'
+    endif
+  elsif request.page_type == 'collection'
+    assign sw_title = collection.title | append: ' kopen - LED ' | append: collection.title | append: ' | ' | append: sw_brand
+    if collection.description != blank
+      assign sw_desc = collection.description | strip_html | truncate: 155
+    else
+      assign sw_desc = 'Bekijk onze ' | append: collection.title | append: ' collectie. Premium LED kwaliteit met 2 jaar garantie. Voor 22:00 besteld, morgen in huis.'
+    endif
+  elsif request.page_type == 'article'
+    assign sw_title = article.title | append: ' | ' | append: sw_brand | append: ' Blog'
+    assign sw_desc = article.excerpt_or_content | strip_html | truncate: 155
+  elsif request.page_type == 'page'
+    assign sw_title = page.title | append: ' | ' | append: sw_brand
+    if page.content != blank
+      assign sw_desc = page.content | strip_html | truncate: 155
+    else
+      assign sw_desc = sw_tagline | append: ' bij ' | append: sw_brand
+    endif
+  else
+    assign sw_title = page_title | append: ' | ' | append: sw_brand
+    assign sw_desc = page_description | default: shop.description | default: sw_tagline
+  endif
+-%}
+
 <title>
-  {{ page_title }}
-  {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
-  {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
-  {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+  {{ sw_title }}
+  {%- if current_tags %} &ndash; {{ current_tags | join: ', ' }}{% endif -%}
+  {%- if current_page != 1 %} &ndash; Pagina {{ current_page }}{% endif -%}
 </title>
 
-<link
-  rel="canonical"
-  href="{{ canonical_url }}"
->
+<meta name="description" content="{{ sw_desc | strip_html | escape }}">
+
+<link rel="canonical" href="{{ canonical_url }}">
+
+{%- comment -%} Spotwereld: extra SEO meta tags {%- endcomment -%}
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<meta name="author" content="Spotwereld">
+<meta name="format-detection" content="telephone=no">
+
+{%- comment -%} Favicon - hardcoded gele lamp op blauwe achtergrond {%- endcomment -%}
+<link rel="icon" type="image/png" sizes="32x32" href="https://i.imgur.com/2ROeTRS.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://i.imgur.com/2ROeTRS.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://i.imgur.com/2ROeTRS.png">
+<link rel="shortcut icon" href="https://i.imgur.com/2ROeTRS.png">
+
+{%- comment -%} JSON-LD Organization (alle pagina's) {%- endcomment -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Spotwereld",
+  "alternateName": "Spotwereld Webshop",
+  "url": "{{ request.origin }}",
+  "logo": "https://i.imgur.com/2ROeTRS.png",
+  "description": "{{ sw_tagline }} voor elk interieur. Premium LED inbouwspots, opbouwspots, hanglampen en meer.",
+  "sameAs": [
+    "https://www.facebook.com/spotwereld",
+    "https://www.instagram.com/spotwereld"
+  ],
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "Customer Service",
+    "availableLanguage": ["Dutch", "Nederlands"]
+  }
+}
+</script>
+
+{%- comment -%} JSON-LD WebSite met SearchAction {%- endcomment -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Spotwereld",
+  "url": "{{ request.origin }}",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "{{ request.origin }}/search?q={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+
+{%- comment -%} JSON-LD BreadcrumbList op collection en product pages {%- endcomment -%}
+{%- if request.page_type == 'collection' -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ request.origin }}"},
+    {"@type": "ListItem", "position": 2, "name": "{{ collection.title | escape }}", "item": "{{ request.origin }}{{ collection.url }}"}
+  ]
+}
+</script>
+{%- endif -%}
+
+{%- if request.page_type == 'product' -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ request.origin }}"},
+    {%- if collection -%}
+    {"@type": "ListItem", "position": 2, "name": "{{ collection.title | escape }}", "item": "{{ request.origin }}{{ collection.url }}"},
+    {"@type": "ListItem", "position": 3, "name": "{{ product.title | escape }}", "item": "{{ request.origin }}{{ product.url }}"}
+    {%- else -%}
+    {"@type": "ListItem", "position": 2, "name": "{{ product.title | escape }}", "item": "{{ request.origin }}{{ product.url }}"}
+    {%- endif -%}
+  ]
+}
+</script>
+{%- endif -%}
+
+{%- comment -%} Open Graph image fallback (1200x630 minimum voor social sharing) {%- endcomment -%}
+{%- unless page_image -%}
+<meta property="og:image" content="https://i.imgur.com/2ROeTRS.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+{%- endunless -%}
+
+{%- comment -%} Override Open Graph title/description met onze SEO versie {%- endcomment -%}
+<meta property="og:title" content="{{ sw_title | escape }}" data-sw-override>
+<meta property="og:description" content="{{ sw_desc | strip_html | escape }}" data-sw-override>
+<meta name="twitter:title" content="{{ sw_title | escape }}" data-sw-override>
+<meta name="twitter:description" content="{{ sw_desc | strip_html | escape }}" data-sw-override>
+
+{%- comment -%} Preconnect voor performance {%- endcomment -%}
+<link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+<link rel="preconnect" href="https://i.imgur.com" crossorigin>
+<link rel="dns-prefetch" href="https://cdn.shopify.com">
 
 {% if page_description %}
   <meta
     name="description"
     content="{{ page_description | escape }}"
+    data-sw-fallback
   >
 {% endif %}
