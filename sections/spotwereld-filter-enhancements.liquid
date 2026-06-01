@@ -126,32 +126,57 @@
       list.appendChild(clone);
     });
   }
+  // Map: product handle pattern -> vorm
+  function getVorm(handle){
+    if(!handle)return null;
+    if(handle.indexOf('aristo')>-1||handle.indexOf('miran')>-1)return 'rond';
+    if(handle.indexOf('laom')>-1)return 'vierkant';
+    return null;
+  }
+  function applyVormFilter(){
+    var params=new URLSearchParams(window.location.search);
+    var actives=params.getAll('sw_vorm');
+    var cards=document.querySelectorAll('product-card, .product-card');
+    cards.forEach(function(c){
+      var link=c.querySelector('a[href*="/products/"]');
+      var handle=link?link.getAttribute('href').split('/products/')[1].split('?')[0].split('#')[0]:'';
+      var vorm=getVorm(handle);
+      var gridItem=c.closest('li, .grid__item, .product-grid__card-wrapper')||c;
+      if(actives.length===0||(vorm&&actives.indexOf(vorm)>-1)){
+        gridItem.style.display='';
+      } else {
+        gridItem.style.display='none';
+      }
+    });
+  }
   function addVormFilter(){
     if(document.querySelector('.sw-vorm-facet'))return;
     var kleurFacet=findFacetByName('Kleur');
     if(!kleurFacet)return;
     var vormHtml='<details class="facets__item sw-vorm-facet" open><summary class="facets__summary"><span class="facets__label">Vorm</span><span class="facets__icon"></span></summary><div class="facets__panel"><ul class="facets__inputs facets__inputs-list">'+
       [{v:'rond',n:'Rond'},{v:'vierkant',n:'Vierkant'},{v:'rechthoek',n:'Rechthoek'}].map(function(o){
-        return '<li class="facets__inputs-list-item"><label class="checkbox"><input type="checkbox" class="checkbox__input" name="filter.p.tag" value="vorm-'+o.v+'"><span class="checkbox__label"><span class="icon-checkmark"></span><span class="checkbox__label-text">'+o.n+'</span></span></label></li>';
+        return '<li class="facets__inputs-list-item"><label class="checkbox"><input type="checkbox" class="checkbox__input" name="sw_vorm" value="'+o.v+'"><span class="checkbox__label"><span class="icon-checkmark"></span><span class="checkbox__label-text">'+o.n+'</span></span></label></li>';
       }).join('')+'</ul></div></details>';
     kleurFacet.insertAdjacentHTML('beforebegin',vormHtml);
     var vormInputs=document.querySelectorAll('.sw-vorm-facet input');
     var urlParams=new URLSearchParams(window.location.search);
-    var activeTags=urlParams.getAll('filter.p.tag');
+    var activeVorms=urlParams.getAll('sw_vorm');
     vormInputs.forEach(function(inp){
-      if(activeTags.indexOf(inp.value)>-1)inp.checked=true;
+      if(activeVorms.indexOf(inp.value)>-1)inp.checked=true;
       inp.addEventListener('change',function(){
         var params=new URLSearchParams(window.location.search);
-        var tags=params.getAll('filter.p.tag');
-        params.delete('filter.p.tag');
-        if(inp.checked){tags.push(inp.value);}
-        else{tags=tags.filter(function(t){return t!==inp.value;});}
-        tags.forEach(function(t){params.append('filter.p.tag',t);});
-        window.location.search=params.toString();
+        params.delete('sw_vorm');
+        document.querySelectorAll('.sw-vorm-facet input:checked').forEach(function(i){
+          params.append('sw_vorm',i.value);
+        });
+        var newSearch=params.toString();
+        window.history.replaceState({},'','?'+newSearch);
+        applyVormFilter();
       });
     });
+    applyVormFilter();
   }
-  function runAll(){rnK();addNeeOption();splitLichtkleur();addVormFilter();enhanceColCards();}
+  function runAll(){rnK();addNeeOption();splitLichtkleur();addVormFilter();enhanceColCards();applyVormFilter();}
   document.addEventListener('DOMContentLoaded',runAll);
   setTimeout(runAll,300);
   setTimeout(runAll,900);
