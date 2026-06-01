@@ -270,6 +270,35 @@
 <meta name="twitter:title" content="{{ sw_title | escape }}" data-sw-override>
 <meta name="twitter:description" content="{{ sw_desc | strip_html | escape }}" data-sw-override>
 
+{%- comment -%} Card image override (collection/index): swap placeholder met outledtl foto's {%- endcomment -%}
+<script>
+(function(){
+  function applyCardOverrides(){
+    document.querySelectorAll('.sw-card-img-override').forEach(function(marker){
+      var card = marker.closest('product-card');
+      if (!card || card.dataset.swImgDone) return;
+      var url = marker.dataset.url;
+      if (!url) return;
+      card.querySelectorAll('img, source').forEach(function(el){
+        if (el.tagName === 'SOURCE') { el.srcset = url; return; }
+        el.removeAttribute('srcset');
+        el.removeAttribute('data-src');
+        el.src = url;
+        if (el.loading === 'lazy') el.loading = 'eager';
+      });
+      card.dataset.swImgDone = '1';
+    });
+  }
+  applyCardOverrides();
+  document.addEventListener('DOMContentLoaded', applyCardOverrides);
+  // Re-apply after lazy load / variant change / pagination
+  var mo = new MutationObserver(function(){ applyCardOverrides(); });
+  document.addEventListener('DOMContentLoaded', function(){
+    mo.observe(document.body, {childList:true, subtree:true, attributes:true, attributeFilter:['src','srcset']});
+  });
+})();
+</script>
+
 {%- comment -%} Preconnect voor performance {%- endcomment -%}
 <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
 <link rel="preconnect" href="https://i.imgur.com" crossorigin>
