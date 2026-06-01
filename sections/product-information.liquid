@@ -212,6 +212,14 @@
       assign sw_extras = 'https://www.outledtl.nl/wp-content/uploads/2025/07/led-inbouwspots-miran-slim-fit-5w-7w-cct-switch-zwart.webp|https://www.outledtl.nl/wp-content/uploads/2025/07/led-inbouwspot-miran-slim-fit-5w-7w-cct-switch-zwart.webp|https://www.outledtl.nl/wp-content/uploads/2025/07/led-inbouwspot-slim-fit-5w-7w-cct-switch-zwart.webp|https://www.outledtl.nl/wp-content/uploads/2025/07/inbouwspot-5w-7w-cct-switch-zwart.jpg'
     when 'led-inbouwspot-miran-goud'
       assign sw_extras = 'https://www.outledtl.nl/wp-content/uploads/2025/07/led-inbouwspot-miran-slim-fit-5w-7w-cct-switch-brass.webp|https://www.outledtl.nl/wp-content/uploads/2025/07/led-inbouwspot-miran-slim-fit-5w-7w-cct-switch-brass-goud.webp|https://www.outledtl.nl/wp-content/uploads/2025/07/led-inbouwspot-slim-fit-5w-7w-cct-switch-goud.webp|https://www.outledtl.nl/wp-content/uploads/2025/07/inbouwspot-miran-slim-fit-5w-7w-outledtl.nl-cct-switch-goud.jpg'
+    when 'led-inbouwspot-laom-wit'
+      assign sw_main_override = 'https://www.outledtl.nl/wp-content/uploads/2023/10/LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIMBAAR-WIT.png'
+      assign sw_extras = 'https://www.outledtl.nl/wp-content/uploads/2023/10/OUTLEDTL-LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIMBAAR-WIT.png|https://www.outledtl.nl/wp-content/uploads/2023/10/LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIMBAAR-WIT-OUTLEDTL.png|https://www.outledtl.nl/wp-content/uploads/2023/10/LED-INBOUWSPOT-LAOM-6W-DIMBAAR-WIT.png'
+    when 'led-inbouwspot-laom-mat-zwart'
+      assign sw_main_override = 'https://www.outledtl.nl/wp-content/uploads/2019/12/LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIMBAAR-ZWART.png'
+      assign sw_extras = 'https://www.outledtl.nl/wp-content/uploads/2019/12/OUTLEDTL-LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIMBAAR-ZWART.png|https://www.outledtl.nl/wp-content/uploads/2019/12/LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIMBAAR-ZWART-OUTLEDTL.NL_.png|https://www.outledtl.nl/wp-content/uploads/2019/12/LED-INBOUWSPOT-LAOM-6W-DIMBAAR-ZWART.png'
+    when 'led-inbouwspot-laom-zilver'
+      assign sw_extras = 'https://www.outledtl.nl/wp-content/uploads/2023/10/OUTLEDTL-LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIMBAAR-ZILVER.png|https://www.outledtl.nl/wp-content/uploads/2023/10/LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIMBAAR-ZILVER.png|https://www.outledtl.nl/wp-content/uploads/2023/10/LED-INBOUWSPOT-LAOM-6W-DIMBAAR-ZILVER.png'
     else
       assign sw_extras = ''
   endcase
@@ -219,7 +227,7 @@
     assign sw_extras_arr = sw_extras | split: '|'
   endif
 -%}
-<div id="sw-thumbs-source" style="display:none">
+<div id="sw-thumbs-source" style="display:none" data-main-override="{{ sw_main_override }}">
   <div class="sw-thumbs" style="display:flex;gap:8px;margin-top:10px;flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px">
     {%- comment -%} Eerst echte product media {%- endcomment -%}
     {%- if product.media.size > 0 -%}
@@ -227,7 +235,7 @@
         <img src="{{ sw_media | image_url: width: 150 }}" alt="{{ product.title | escape }}" loading="lazy"
              data-full-src="{{ sw_media | image_url: width: 1200 }}"
              style="width:76px;height:76px;flex-shrink:0;object-fit:cover;border-radius:6px;border:{% if forloop.first %}2px solid #061f40{% else %}1.5px solid #e2e8f0{% endif %};cursor:pointer;transition:all .15s;background:#fff"
-             onclick="document.querySelectorAll('.sw-thumbs img').forEach(function(t){t.style.border='1.5px solid #e2e8f0'});this.style.border='2px solid #061f40';var mainImg=document.querySelector('media-gallery img, .product-media img, slideshow-component img');if(mainImg)mainImg.src=this.dataset.fullSrc;">
+             onclick="swSwitchMain(this)">
       {%- endfor -%}
     {%- endif -%}
     {%- comment -%} Daarna extra outledtl thumbnails (lookup-based) {%- endcomment -%}
@@ -236,7 +244,7 @@
         <img src="{{ sw_url }}" alt="{{ product.title | escape }}" loading="lazy"
              data-full-src="{{ sw_url }}"
              style="width:76px;height:76px;flex-shrink:0;object-fit:cover;border-radius:6px;border:1.5px solid #e2e8f0;cursor:pointer;transition:all .15s;background:#fff"
-             onclick="document.querySelectorAll('.sw-thumbs img').forEach(function(t){t.style.border='1.5px solid #e2e8f0'});this.style.border='2px solid #061f40';var mainImg=document.querySelector('media-gallery img, .product-media img, slideshow-component img');if(mainImg)mainImg.src=this.dataset.fullSrc;">
+             onclick="swSwitchMain(this)">
       {%- endfor -%}
     {%- else -%}
       {%- comment -%} Fallback voor producten zonder lookup: clones van hoofdfoto {%- endcomment -%}
@@ -247,7 +255,7 @@
           <img src="{{ sw_main | image_url: width: 150 }}" alt="{{ product.title | escape }}" loading="lazy"
                data-full-src="{{ sw_main | image_url: width: 1200 }}"
                style="width:76px;height:76px;flex-shrink:0;object-fit:cover;border-radius:6px;border:1.5px solid #e2e8f0;cursor:pointer;transition:all .15s;background:#fff"
-               onclick="document.querySelectorAll('.sw-thumbs img').forEach(function(t){t.style.border='1.5px solid #e2e8f0'});this.style.border='2px solid #061f40';var mainImg=document.querySelector('media-gallery img, .product-media img, slideshow-component img');if(mainImg)mainImg.src=this.dataset.fullSrc;">
+               onclick="swSwitchMain(this)">
         {%- endfor -%}
       {%- endif -%}
     {%- endif -%}
@@ -535,6 +543,30 @@ section:has(> div > .sw-pr-grid){display:none!important}
     }
   }
 
+  // Robuuste main-image switcher voor Horizon media-gallery
+  window.swSwitchMain = function(thumbEl){
+    try {
+      var url = thumbEl.dataset.fullSrc;
+      if (!url) return;
+      document.querySelectorAll('.sw-thumbs img').forEach(function(t){ t.style.border='1.5px solid #e2e8f0'; });
+      thumbEl.style.border='2px solid #061f40';
+      var mediaCol = document.querySelector('.product-information__media');
+      if (!mediaCol) return;
+      // Update alle main media img/source elementen (sla onze eigen .sw-thumbs over)
+      mediaCol.querySelectorAll('img, source').forEach(function(el){
+        if (el.closest && el.closest('.sw-thumbs')) return;
+        if (el.tagName === 'SOURCE') {
+          el.srcset = url;
+        } else {
+          el.removeAttribute('srcset');
+          el.removeAttribute('data-src');
+          el.src = url;
+          if (el.loading === 'lazy') el.loading = 'eager';
+        }
+      });
+    } catch(e){ console.log('swSwitchMain err', e); }
+  };
+
   // Thumbnail strip + Specs table (universal)
   function initSwThumbs() {
     var mediaCol = document.querySelector('.product-information__media');
@@ -543,6 +575,21 @@ section:has(> div > .sw-pr-grid){display:none!important}
     if (mediaCol.querySelector('.sw-thumbs')) return;
     var source = document.getElementById('sw-thumbs-source');
     if (!source) return;
+    // Main image override (voor producten met placeholder als hoofdfoto)
+    var override = source.getAttribute('data-main-override');
+    if (override) {
+      mediaCol.querySelectorAll('img, source').forEach(function(el){
+        if (el.closest && el.closest('.sw-thumbs')) return;
+        if (el.tagName === 'SOURCE') {
+          el.srcset = override;
+        } else {
+          el.removeAttribute('srcset');
+          el.removeAttribute('data-src');
+          el.src = override;
+          if (el.loading === 'lazy') el.loading = 'eager';
+        }
+      });
+    }
     mediaCol.insertAdjacentHTML('beforeend', source.innerHTML);
     // Specs tabel onder thumbnails injecteren (alleen als nog niet in mediaCol)
     var specsSource = document.getElementById('sw-specs-source');
