@@ -296,14 +296,17 @@
       swapImgs(card, url);
       card.dataset.swImgDone = '1';
     });
-    // Generic by handle: any <a href="/products/{handle}"> krijgt swap als handle in overrides staat
-    document.querySelectorAll('a[href*="/products/"]').forEach(function(a){
+    // Generic by handle: alleen binnen STRIKT product-card componenten (homepage sw-pp-card etc),
+    // NOOIT op product detail page (anders swappen color-picker links de main media)
+    document.querySelectorAll('product-card a[href*="/products/"], .sw-pp-card[href*="/products/"], a.sw-pp-card[href*="/products/"]').forEach(function(a){
       if (a.dataset.swImgDone) return;
       var m = a.getAttribute('href').match(/\/products\/([^?#\/]+)/);
       if (!m) return;
       var url = SW_HANDLE_OVERRIDES[m[1]];
       if (!url) return;
-      var scope = a.closest('product-card, .sw-pp-card, .card, [class*="card"]') || a;
+      // Scope MOET een echte card wrapper zijn, niet zomaar [class*="card"]
+      var scope = a.closest('product-card, .sw-pp-card');
+      if (!scope) scope = a; // fallback: alleen de link zelf (geen brede swap)
       swapImgs(scope, url);
       a.dataset.swImgDone = '1';
     });
