@@ -431,9 +431,7 @@ section:has(> div > .sw-pr-grid){display:none!important}
         anchor.insertAdjacentHTML('afterend', specsSource.innerHTML);
       }
     }
-    setTimeout(injectSpecs, 500);
-    setTimeout(injectSpecs, 1200);
-    setTimeout(injectSpecs, 2500);
+    injectSpecs();
 
     // Delivery badge + payment icons + lichtkleur
     if (!document.querySelector('.sw-delivery')) {
@@ -496,16 +494,32 @@ section:has(> div > .sw-pr-grid){display:none!important}
     }
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() { initSwProductPage(); setTimeout(initSwThumbs, 400); });
-  } else {
+  function initAll(){
     initSwProductPage();
-    setTimeout(initSwThumbs, 400);
+    initSwThumbs();
+    if(document.body) document.body.classList.add('sw-product-ready');
   }
-  setTimeout(initSwProductPage, 600);
-  setTimeout(initSwThumbs, 800);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAll);
+  } else {
+    initAll();
+  }
 })();
 </script>
+<style>
+/* Voorkom FOUC: verberg variant picker + product form tot mijn JS klaar is, dan smooth fade-in */
+.product-information__details variant-picker-component,
+.product-information__details .product-form,
+.product-information__details product-form-component{opacity:0;transition:opacity .15s ease-out}
+body.sw-product-ready .product-information__details variant-picker-component,
+body.sw-product-ready .product-information__details .product-form,
+body.sw-product-ready .product-information__details product-form-component{opacity:1}
+/* Reserveer ruimte voor injected elementen (kleurpicker + volume) zodat layout niet shift */
+.product-information__details:not(.sw-product-ready) .product-form{min-height:280px}
+/* Smooth fade voor sw-injected elementen */
+.sw-color-picker,.sw-vol,.sw-extras,.sw-delivery,.sw-payment-icons,.sw-specs-table,.sw-thumbs{animation:swFadeIn .2s ease-out}
+@keyframes swFadeIn{from{opacity:0}to{opacity:1}}
+</style>
 
 {% stylesheet %}
   .sticky-add-to-cart__bar {
