@@ -273,20 +273,39 @@
 {%- comment -%} Card image override (collection/index): swap placeholder met outledtl foto's {%- endcomment -%}
 <script>
 (function(){
+  // Hardcoded overrides per handle voor cards waar geen liquid marker te plaatsen is (sw-pp-card op homepage etc)
+  var SW_HANDLE_OVERRIDES = {
+    'led-inbouwspot-laom-wit': 'https://www.outledtl.nl/wp-content/uploads/2023/10/OUTLEDTL-LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIMBAAR-WIT.png',
+    'led-inbouwspot-laom-mat-zwart': 'https://www.outledtl.nl/wp-content/uploads/2019/12/OUTLEDTL-LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIMBAAR-ZWART.png'
+  };
+  function swapImgs(scope, url){
+    scope.querySelectorAll('img, source').forEach(function(el){
+      if (el.tagName === 'SOURCE') { el.srcset = url; return; }
+      el.removeAttribute('srcset');
+      el.removeAttribute('data-src');
+      el.src = url;
+      if (el.loading === 'lazy') el.loading = 'eager';
+    });
+  }
   function applyCardOverrides(){
     document.querySelectorAll('.sw-card-img-override').forEach(function(marker){
       var card = marker.closest('product-card');
       if (!card || card.dataset.swImgDone) return;
       var url = marker.dataset.url;
       if (!url) return;
-      card.querySelectorAll('img, source').forEach(function(el){
-        if (el.tagName === 'SOURCE') { el.srcset = url; return; }
-        el.removeAttribute('srcset');
-        el.removeAttribute('data-src');
-        el.src = url;
-        if (el.loading === 'lazy') el.loading = 'eager';
-      });
+      swapImgs(card, url);
       card.dataset.swImgDone = '1';
+    });
+    // Generic by handle: any <a href="/products/{handle}"> krijgt swap als handle in overrides staat
+    document.querySelectorAll('a[href*="/products/"]').forEach(function(a){
+      if (a.dataset.swImgDone) return;
+      var m = a.getAttribute('href').match(/\/products\/([^?#\/]+)/);
+      if (!m) return;
+      var url = SW_HANDLE_OVERRIDES[m[1]];
+      if (!url) return;
+      var scope = a.closest('product-card, .sw-pp-card, .card, [class*="card"]') || a;
+      swapImgs(scope, url);
+      a.dataset.swImgDone = '1';
     });
   }
   applyCardOverrides();

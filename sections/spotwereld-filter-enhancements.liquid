@@ -15,6 +15,10 @@
 .product-card .product-card__content,.product-card__content{padding-bottom:.5rem}
 .product-card__title,.product-grid__item .product-card__title{font-size:.875rem!important;font-weight:600!important;color:#1e293b!important}
 .product-card .price{font-weight:800!important;color:#061f40!important;font-size:1.05rem!important}
+.sw-lk-active .checkbox__label,.sw-lk-active{background:rgba(15,111,227,.08)!important;border-radius:6px}
+.sw-lk-active .checkbox__label-text{color:#0F6FE3!important;font-weight:700!important}
+[class*="sw-fake-lk-"] input:checked + .checkbox__label .checkbox__label-text,[class*="sw-fake-lk-"] input:checked ~ .checkbox__label .checkbox__label-text{color:#0F6FE3!important;font-weight:700!important}
+[class*="sw-fake-lk-"] input:checked + .checkbox__label .icon-checkmark,[class*="sw-fake-lk-"] input:checked ~ .checkbox__label .icon-checkmark{background:#0F6FE3!important;border-color:#0F6FE3!important}
 </style>
 <script>
 (function(){
@@ -115,16 +119,50 @@
     });
     if(!origItem)origItem=list.querySelector('.facets__inputs-list-item,li');
     if(!origItem)return;
+    var urlSel=new URLSearchParams(window.location.search).get('sw_lk');
     [{c:'2700',n:'2700K (Warm wit)'},{c:'3000',n:'3000K (Sfeer wit)'},{c:'4000',n:'4000K (Daglicht)'}].forEach(function(opt){
       var clone=origItem.cloneNode(true);
       clone.style.display='';
       clone.classList.add('sw-fake-lk-'+opt.c);
+      clone.setAttribute('data-sw-lk',opt.c);
       var lbl=clone.querySelector('.checkbox__label-text,label span');
       if(lbl)lbl.textContent=opt.n;
       var input=clone.querySelector('input');
-      if(input){input.name=origInputName;input.value=origInputValue;input.checked=false;}
+      if(input){
+        input.name=origInputName;
+        input.value=origInputValue;
+        input.checked=(urlSel===opt.c);
+        input.setAttribute('data-sw-lk',opt.c);
+        input.addEventListener('click',function(){
+          var p=new URLSearchParams(window.location.search);
+          if(input.checked){p.set('sw_lk',opt.c);}else{p.delete('sw_lk');}
+          // Bewaar voor na de reload (Shopify zal de form submitten)
+          try{sessionStorage.setItem('sw_lk_pending',input.checked?opt.c:'');}catch(e){}
+        },true);
+      }
       list.appendChild(clone);
+      if(urlSel===opt.c){
+        clone.classList.add('sw-lk-active');
+      }
     });
+    // After Shopify reload, sync sw_lk into URL if missing
+    try{
+      var pending=sessionStorage.getItem('sw_lk_pending');
+      if(pending!==null && pending!==''){
+        var p=new URLSearchParams(window.location.search);
+        if(p.get('sw_lk')!==pending && p.get('filter.p.product_option.lichtkleur')){
+          p.set('sw_lk',pending);
+          window.history.replaceState({},'','?'+p.toString());
+          var inp=document.querySelector('.sw-fake-lk-'+pending+' input');
+          if(inp)inp.checked=true;
+          var cl=document.querySelector('.sw-fake-lk-'+pending);
+          if(cl)cl.classList.add('sw-lk-active');
+        }
+        if(!p.get('filter.p.product_option.lichtkleur')){
+          sessionStorage.removeItem('sw_lk_pending');
+        }
+      }
+    }catch(e){}
   }
   // Map: product handle pattern -> vorm
   function getVorm(handle){
