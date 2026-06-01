@@ -271,12 +271,34 @@
 <meta name="twitter:description" content="{{ sw_desc | strip_html | escape }}" data-sw-override>
 
 {%- comment -%} Card image override (collection/index): swap placeholder met outledtl foto's {%- endcomment -%}
+<style>
+/* Unify card titles: collection page (product-card) matches homepage (sw-pp-card) */
+.sw-pp-name,
+product-card .product-card__title,
+product-card .product-card__title a,
+product-card [class*="product-card__title"],
+product-card product-title,
+product-card product-title a,
+.product-card .product-card__title,
+.product-card .product-card__title a,
+.product-card product-title,
+.product-card product-title a{
+  font-weight:600 !important;
+  color:#1e293b !important;
+  font-size:.85rem !important;
+  line-height:1.35 !important;
+  font-family:inherit !important;
+  text-decoration:none !important;
+  letter-spacing:normal !important;
+}
+</style>
 <script>
 (function(){
   // Hardcoded overrides per handle voor cards waar geen liquid marker te plaatsen is (sw-pp-card op homepage etc)
   var SW_HANDLE_OVERRIDES = {
     'led-inbouwspot-laom-wit': 'https://www.outledtl.nl/wp-content/uploads/2023/10/OUTLEDTL-LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIMBAAR-WIT.png',
-    'led-inbouwspot-laom-mat-zwart': 'https://www.outledtl.nl/wp-content/uploads/2019/12/OUTLEDTL-LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIMBAAR-ZWART.png'
+    'led-inbouwspot-laom-mat-zwart': 'https://www.outledtl.nl/wp-content/uploads/2019/12/OUTLEDTL-LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIMBAAR-ZWART.png',
+    'led-inbouwspot-laom-zilver': 'https://www.outledtl.nl/wp-content/uploads/2023/10/OUTLEDTL-LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIMBAAR-ZILVER.png'
   };
   function swapImgs(scope, url){
     scope.querySelectorAll('img, source').forEach(function(el){
