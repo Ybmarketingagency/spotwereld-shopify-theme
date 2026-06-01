@@ -191,6 +191,27 @@
   </div>
 {%- endif -%}
 
+<!-- Spotwereld: Echte product media als thumbnails -->
+<div id="sw-thumbs-source" style="display:none">
+  <div class="sw-thumbs" style="display:flex;gap:8px;margin-top:10px;flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px">
+    {%- if product.media.size > 0 -%}
+      {%- for sw_media in product.media limit: 8 -%}
+        <img src="{{ sw_media | image_url: width: 150 }}" alt="{{ product.title | escape }}" loading="lazy"
+             data-full-src="{{ sw_media | image_url: width: 1200 }}"
+             style="width:76px;height:76px;flex-shrink:0;object-fit:cover;border-radius:6px;border:{% if forloop.first %}2px solid #061f40{% else %}1.5px solid #e2e8f0{% endif %};cursor:pointer;transition:all .15s;background:#fff"
+             onclick="document.querySelectorAll('.sw-thumbs img').forEach(function(t){t.style.border='1.5px solid #e2e8f0'});this.style.border='2px solid #061f40';var mainImg=document.querySelector('media-gallery img, .product-media img, slideshow-component img');if(mainImg)mainImg.src=this.dataset.fullSrc;">
+      {%- endfor -%}
+    {%- else -%}
+      {%- for sw_image in product.images limit: 8 -%}
+        <img src="{{ sw_image | image_url: width: 150 }}" alt="{{ product.title | escape }}" loading="lazy"
+             data-full-src="{{ sw_image | image_url: width: 1200 }}"
+             style="width:76px;height:76px;flex-shrink:0;object-fit:cover;border-radius:6px;border:{% if forloop.first %}2px solid #061f40{% else %}1.5px solid #e2e8f0{% endif %};cursor:pointer;transition:all .15s;background:#fff"
+             onclick="document.querySelectorAll('.sw-thumbs img').forEach(function(t){t.style.border='1.5px solid #e2e8f0'});this.style.border='2px solid #061f40';var mainImg=document.querySelector('media-gallery img, .product-media img, slideshow-component img');if(mainImg)mainImg.src=this.dataset.fullSrc;">
+      {%- endfor -%}
+    {%- endif -%}
+  </div>
+</div>
+
 <!-- SW_SPECS_START -->
 <div class="sw-specs-direct" style="max-width:1280px;margin:1.5rem auto 0;padding:0 1.5rem">
   <div class="sw-specs-table" style="margin:1.5rem 0 0;background:#fff;border:1px solid #e8edf4;border-radius:12px;padding:1.5rem 1.75rem 1rem">
@@ -475,17 +496,12 @@ section:has(> div > .sw-pr-grid){display:none!important}
   // Thumbnail strip + Specs table (universal)
   function initSwThumbs() {
     if (document.querySelector('.sw-thumbs')) return;
-    var img = document.querySelector('.product-media img, slideshow-component img, media-gallery img');
-    if (!img) return;
-    var src = img.src.replace(/width=\d+/, 'width=150');
-    var strip = '<div class="sw-thumbs" style="display:flex;gap:8px;margin-top:10px;flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px">';
-    for (var i = 0; i < 5; i++) {
-      strip += '<img src="' + src + '" alt="" loading="lazy" style="width:76px;height:76px;flex-shrink:0;object-fit:cover;border-radius:6px;border:' + (i===0?'2px solid #061f40':'1.5px solid #e2e8f0') + ';cursor:pointer;transition:border-color .15s" onclick="document.querySelectorAll(\'.sw-thumbs img\').forEach(function(t){t.style.borderColor=\'#e2e8f0\';t.style.borderWidth=\'1.5px\'});this.style.borderColor=\'#061f40\';this.style.borderWidth=\'2px\'">';
-    }
-    strip += '</div>';
+    // Gebruik echte product media (uit Liquid) ipv clones
+    var source = document.getElementById('sw-thumbs-source');
+    if (!source) return;
     var mediaCol = document.querySelector('.product-information__media');
     if (mediaCol) {
-      mediaCol.insertAdjacentHTML('beforeend', strip);
+      mediaCol.insertAdjacentHTML('beforeend', source.innerHTML);
       // Insert specs table below thumbnails
       var specsSource = document.getElementById('sw-specs-source');
       if (specsSource && !document.querySelector('.sw-specs-table')) {
