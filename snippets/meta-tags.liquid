@@ -272,17 +272,21 @@
 
 {%- comment -%} Card image override (collection/index): swap placeholder met outledtl foto's {%- endcomment -%}
 <style>
-/* Unify card titles: collection page (product-card) matches homepage (sw-pp-card) */
+/* Unify card titles: collection page (product-card H3/text-block) matches homepage (sw-pp-card .sw-pp-name) */
 .sw-pp-name,
+product-card h3,
+product-card h4,
+product-card .h4,
+product-card .h3,
+product-card [class*="product_title"],
+product-card [class*="product-card__title"],
 product-card .product-card__title,
 product-card .product-card__title a,
-product-card [class*="product-card__title"],
 product-card product-title,
 product-card product-title a,
-.product-card .product-card__title,
-.product-card .product-card__title a,
-.product-card product-title,
-.product-card product-title a{
+.product-card h3,
+.product-card h4,
+.product-card .h4{
   font-weight:600 !important;
   color:#1e293b !important;
   font-size:.85rem !important;
@@ -290,6 +294,12 @@ product-card product-title a,
   font-family:inherit !important;
   text-decoration:none !important;
   letter-spacing:normal !important;
+}
+/* Ook de inline tekst-block container die Horizon gebruikt */
+product-card [class*="product_title"] *,
+product-card .text-block[class*="product_title"]{
+  color:#1e293b !important;
+  font-weight:600 !important;
 }
 </style>
 <script>
