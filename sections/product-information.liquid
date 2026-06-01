@@ -191,12 +191,37 @@
   </div>
 {%- endif -%}
 
-<!-- Spotwereld: Thumbnails - echte product media, aangevuld met clones tot minimaal 5 -->
+<!-- Spotwereld: Thumbnails - lookup table met extra outledtl foto's per product handle -->
+{%- liquid
+  case product.handle
+    when 'led-inbouwspot-aristo-mat-wit'
+      assign sw_extras = 'https://www.outledtl.nl/wp-content/uploads/2025/11/Led-inbouwspot-aristo-outledtl.nl_.jpg|https://www.outledtl.nl/wp-content/uploads/2025/11/Led-inbouwspot-aristo.webp|https://www.outledtl.nl/wp-content/uploads/2025/11/led-inbouwspot-varda-outledtl-6w-dim-wit-cct-switch.webp|https://www.outledtl.nl/wp-content/uploads/2025/11/led-inbouwspot-varda-slim-fit-driver.webp'
+    when 'led-inbouwspot-aristo-mat-zwart'
+      assign sw_extras = 'https://www.outledtl.nl/wp-content/uploads/2025/11/led-inbouwspot-varda-dimbaar-zwart-outledtl.nl-kopie.jpg|https://www.outledtl.nl/wp-content/uploads/2025/11/outledtl-led-inbouwspot-varda-slim-fit-6w-dim-zwart.webp|https://www.outledtl.nl/wp-content/uploads/2025/11/led-inbouwspot-varda-6w-dim-zwart-cct-switch.webp|https://www.outledtl.nl/wp-content/uploads/2025/11/led-inbouwspot-varda-slim-fit-driver.webp'
+    when 'led-inbouwspot-aristo-zilver'
+      assign sw_extras = 'https://www.outledtl.nl/wp-content/uploads/2021/02/Led-inbouwspot-zilver.webp|https://www.outledtl.nl/wp-content/uploads/2021/02/led-inbouwspot-varda-slim-fit-6w-dim-zilver-cct-switch.webp|https://www.outledtl.nl/wp-content/uploads/2025/11/led-inbouwspot-varda-slim-fit-6w-dimbaar-zilver-cct-switch.webp|https://www.outledtl.nl/wp-content/uploads/2025/11/led-inbouwspot-varda-slim-driver.webp'
+    when 'led-inbouwspot-aristo-koper'
+      assign sw_extras = 'https://www.outledtl.nl/wp-content/uploads/2020/01/led-inbouwspot-varda-outledtl-5w-koper-kopie.jpg|https://www.outledtl.nl/wp-content/uploads/2020/01/led-inbouwspot-varda-slim-fit-5w-koper.webp|https://www.outledtl.nl/wp-content/uploads/2020/01/outledtl-led-inbouwspot-varda-slim-fit-5w-koper.webp|https://www.outledtl.nl/wp-content/uploads/2025/11/led-inbouwspot-6w-dim-koper-cct-switch.webp'
+    when 'led-inbouwspot-aristo-goud'
+      assign sw_extras = 'https://www.outledtl.nl/wp-content/uploads/2025/11/led-inbouwspot-varda-slim-fit-6w-dim-goud-cct-switch-outledtl.nl_.jpg|https://www.outledtl.nl/wp-content/uploads/2025/11/led-inbouwspot-slim-fit-6w-dim-goud-cct-switch.jpg|https://www.outledtl.nl/wp-content/uploads/2025/11/outledtl.nl-led-inbouwspot-varda-slim-fit-6w-dim-goud-cct-switch.jpg|https://www.outledtl.nl/wp-content/uploads/2025/11/led-inbouwspot-varda-slim-fit-goud-cct-switch.jpg'
+    when 'led-inbouwspot-aristo-satin-metallic'
+      assign sw_extras = 'https://www.outledtl.nl/wp-content/uploads/2025/11/led-inbouwspot-varda-slim-fit-6w-dim-brons-cct-switch-outledtl.jpg|https://www.outledtl.nl/wp-content/uploads/2025/11/outledtl-led-inbouwspot-varda-slim-fit-6w-dim-brons-cct-switch.jpg|https://www.outledtl.nl/wp-content/uploads/2025/11/led-inbouwspot-slim-fit-6w-dim-messing-cct-switch.jpg|https://www.outledtl.nl/wp-content/uploads/2025/11/led-inbouwspot-slim-fit-6w-messing-cct-switch.jpg'
+    when 'led-inbouwspot-miran-mat-wit'
+      assign sw_extras = 'https://www.outledtl.nl/wp-content/uploads/2025/07/led-inbouwspot-slim-fit-5w-7w-cct-switch-wit.webp|https://www.outledtl.nl/wp-content/uploads/2025/07/led-inbouwspot-miran-5w-7w-cct-switch-wit.webp|https://www.outledtl.nl/wp-content/uploads/2025/07/inbouwspot-miran-slim-fit-5w-7w-cct-switch-wit.png|https://www.outledtl.nl/wp-content/uploads/2025/07/inbouwspot-outledtl.nl-5w-7w-cct-switch-wit.jpg'
+    when 'led-inbouwspot-miran-mat-zwart'
+      assign sw_extras = 'https://www.outledtl.nl/wp-content/uploads/2025/07/led-inbouwspots-miran-slim-fit-5w-7w-cct-switch-zwart.webp|https://www.outledtl.nl/wp-content/uploads/2025/07/led-inbouwspot-miran-slim-fit-5w-7w-cct-switch-zwart.webp|https://www.outledtl.nl/wp-content/uploads/2025/07/led-inbouwspot-slim-fit-5w-7w-cct-switch-zwart.webp|https://www.outledtl.nl/wp-content/uploads/2025/07/inbouwspot-5w-7w-cct-switch-zwart.jpg'
+    when 'led-inbouwspot-miran-goud'
+      assign sw_extras = 'https://www.outledtl.nl/wp-content/uploads/2025/07/led-inbouwspot-miran-slim-fit-5w-7w-cct-switch-brass.webp|https://www.outledtl.nl/wp-content/uploads/2025/07/led-inbouwspot-miran-slim-fit-5w-7w-cct-switch-brass-goud.webp|https://www.outledtl.nl/wp-content/uploads/2025/07/led-inbouwspot-slim-fit-5w-7w-cct-switch-goud.webp|https://www.outledtl.nl/wp-content/uploads/2025/07/inbouwspot-miran-slim-fit-5w-7w-outledtl.nl-cct-switch-goud.jpg'
+    else
+      assign sw_extras = ''
+  endcase
+  if sw_extras != ''
+    assign sw_extras_arr = sw_extras | split: '|'
+  endif
+-%}
 <div id="sw-thumbs-source" style="display:none">
   <div class="sw-thumbs" style="display:flex;gap:8px;margin-top:10px;flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px">
-    {%- assign sw_media_count = product.media.size -%}
-    {%- if sw_media_count == 0 -%}{%- assign sw_media_count = product.images.size -%}{%- endif -%}
-    {%- comment -%} Echte media tonen {%- endcomment -%}
+    {%- comment -%} Eerst echte product media {%- endcomment -%}
     {%- if product.media.size > 0 -%}
       {%- for sw_media in product.media limit: 8 -%}
         <img src="{{ sw_media | image_url: width: 150 }}" alt="{{ product.title | escape }}" loading="lazy"
@@ -204,24 +229,27 @@
              style="width:76px;height:76px;flex-shrink:0;object-fit:cover;border-radius:6px;border:{% if forloop.first %}2px solid #061f40{% else %}1.5px solid #e2e8f0{% endif %};cursor:pointer;transition:all .15s;background:#fff"
              onclick="document.querySelectorAll('.sw-thumbs img').forEach(function(t){t.style.border='1.5px solid #e2e8f0'});this.style.border='2px solid #061f40';var mainImg=document.querySelector('media-gallery img, .product-media img, slideshow-component img');if(mainImg)mainImg.src=this.dataset.fullSrc;">
       {%- endfor -%}
-    {%- else -%}
-      {%- for sw_image in product.images limit: 8 -%}
-        <img src="{{ sw_image | image_url: width: 150 }}" alt="{{ product.title | escape }}" loading="lazy"
-             data-full-src="{{ sw_image | image_url: width: 1200 }}"
-             style="width:76px;height:76px;flex-shrink:0;object-fit:cover;border-radius:6px;border:{% if forloop.first %}2px solid #061f40{% else %}1.5px solid #e2e8f0{% endif %};cursor:pointer;transition:all .15s;background:#fff"
-             onclick="document.querySelectorAll('.sw-thumbs img').forEach(function(t){t.style.border='1.5px solid #e2e8f0'});this.style.border='2px solid #061f40';var mainImg=document.querySelector('media-gallery img, .product-media img, slideshow-component img');if(mainImg)mainImg.src=this.dataset.fullSrc;">
-      {%- endfor -%}
     {%- endif -%}
-    {%- comment -%} Aanvullen met clones van hoofdfoto tot er minimaal 5 thumbnails zijn {%- endcomment -%}
-    {%- assign sw_main = product.featured_image -%}
-    {%- if sw_main != blank and sw_media_count < 5 -%}
-      {%- assign sw_clones_needed = 5 | minus: sw_media_count -%}
-      {%- for i in (1..sw_clones_needed) -%}
-        <img src="{{ sw_main | image_url: width: 150 }}" alt="{{ product.title | escape }}" loading="lazy"
-             data-full-src="{{ sw_main | image_url: width: 1200 }}"
+    {%- comment -%} Daarna extra outledtl thumbnails (lookup-based) {%- endcomment -%}
+    {%- if sw_extras != '' -%}
+      {%- for sw_url in sw_extras_arr -%}
+        <img src="{{ sw_url }}" alt="{{ product.title | escape }}" loading="lazy"
+             data-full-src="{{ sw_url }}"
              style="width:76px;height:76px;flex-shrink:0;object-fit:cover;border-radius:6px;border:1.5px solid #e2e8f0;cursor:pointer;transition:all .15s;background:#fff"
              onclick="document.querySelectorAll('.sw-thumbs img').forEach(function(t){t.style.border='1.5px solid #e2e8f0'});this.style.border='2px solid #061f40';var mainImg=document.querySelector('media-gallery img, .product-media img, slideshow-component img');if(mainImg)mainImg.src=this.dataset.fullSrc;">
       {%- endfor -%}
+    {%- else -%}
+      {%- comment -%} Fallback voor producten zonder lookup: clones van hoofdfoto {%- endcomment -%}
+      {%- assign sw_main = product.featured_image -%}
+      {%- if sw_main != blank and product.media.size < 5 -%}
+        {%- assign sw_clones_needed = 5 | minus: product.media.size -%}
+        {%- for i in (1..sw_clones_needed) -%}
+          <img src="{{ sw_main | image_url: width: 150 }}" alt="{{ product.title | escape }}" loading="lazy"
+               data-full-src="{{ sw_main | image_url: width: 1200 }}"
+               style="width:76px;height:76px;flex-shrink:0;object-fit:cover;border-radius:6px;border:1.5px solid #e2e8f0;cursor:pointer;transition:all .15s;background:#fff"
+               onclick="document.querySelectorAll('.sw-thumbs img').forEach(function(t){t.style.border='1.5px solid #e2e8f0'});this.style.border='2px solid #061f40';var mainImg=document.querySelector('media-gallery img, .product-media img, slideshow-component img');if(mainImg)mainImg.src=this.dataset.fullSrc;">
+        {%- endfor -%}
+      {%- endif -%}
     {%- endif -%}
   </div>
 </div>
