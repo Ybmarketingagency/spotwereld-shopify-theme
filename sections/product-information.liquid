@@ -191,6 +191,25 @@
   </div>
 {%- endif -%}
 
+{%- comment -%} LAOM family: hardcoded omdat producten geen tag/optie hebben {%- endcomment -%}
+{%- if product.handle == 'led-inbouwspot-laom-wit' or product.handle == 'led-inbouwspot-laom-mat-zwart' or product.handle == 'led-inbouwspot-laom-zilver' -%}
+  {%- liquid
+    case product.handle
+      when 'led-inbouwspot-laom-wit'
+        assign sw_ck_laom = 'Wit'
+      when 'led-inbouwspot-laom-mat-zwart'
+        assign sw_ck_laom = 'Mat Zwart'
+      when 'led-inbouwspot-laom-zilver'
+        assign sw_ck_laom = 'Zilver'
+    endcase
+  -%}
+  <div id="sw-color-data" style="display:none" data-current-handle="{{ product.handle }}" data-current-color="{{ sw_ck_laom | escape }}">
+    <span data-handle="led-inbouwspot-laom-wit" data-color="Wit" data-url="/products/led-inbouwspot-laom-wit"></span>
+    <span data-handle="led-inbouwspot-laom-mat-zwart" data-color="Mat Zwart" data-url="/products/led-inbouwspot-laom-mat-zwart"></span>
+    <span data-handle="led-inbouwspot-laom-zilver" data-color="Zilver" data-url="/products/led-inbouwspot-laom-zilver"></span>
+  </div>
+{%- endif -%}
+
 <!-- Spotwereld: Thumbnails - lookup table met extra outledtl foto's per product handle -->
 {%- liquid
   case product.handle
@@ -571,8 +590,10 @@ section:has(> div > .sw-pr-grid){display:none!important}
   function initSwThumbs() {
     var mediaCol = document.querySelector('.product-information__media');
     if (!mediaCol) return;
-    // Skip alleen als thumbs AL in mediaCol staan (niet in hidden source)
-    if (mediaCol.querySelector('.sw-thumbs')) return;
+    // Inject thumbs INSIDE de sticky media-gallery zodat ze meebewegen, niet erover
+    var stickyTarget = mediaCol.querySelector('media-gallery') || mediaCol;
+    // Skip alleen als thumbs AL in stickyTarget staan (niet in hidden source)
+    if (stickyTarget.querySelector('.sw-thumbs')) return;
     var source = document.getElementById('sw-thumbs-source');
     if (!source) return;
     // Main image override (voor producten met placeholder als hoofdfoto)
@@ -590,7 +611,7 @@ section:has(> div > .sw-pr-grid){display:none!important}
         }
       });
     }
-    mediaCol.insertAdjacentHTML('beforeend', source.innerHTML);
+    stickyTarget.insertAdjacentHTML('beforeend', source.innerHTML);
     // Specs tabel onder thumbnails injecteren (alleen als nog niet in mediaCol)
     var specsSource = document.getElementById('sw-specs-source');
     if (specsSource && !mediaCol.querySelector('.sw-specs-table')) {
