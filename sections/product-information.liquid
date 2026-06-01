@@ -191,9 +191,12 @@
   </div>
 {%- endif -%}
 
-<!-- Spotwereld: Echte product media als thumbnails -->
+<!-- Spotwereld: Thumbnails - echte product media, aangevuld met clones tot minimaal 5 -->
 <div id="sw-thumbs-source" style="display:none">
   <div class="sw-thumbs" style="display:flex;gap:8px;margin-top:10px;flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px">
+    {%- assign sw_media_count = product.media.size -%}
+    {%- if sw_media_count == 0 -%}{%- assign sw_media_count = product.images.size -%}{%- endif -%}
+    {%- comment -%} Echte media tonen {%- endcomment -%}
     {%- if product.media.size > 0 -%}
       {%- for sw_media in product.media limit: 8 -%}
         <img src="{{ sw_media | image_url: width: 150 }}" alt="{{ product.title | escape }}" loading="lazy"
@@ -206,6 +209,17 @@
         <img src="{{ sw_image | image_url: width: 150 }}" alt="{{ product.title | escape }}" loading="lazy"
              data-full-src="{{ sw_image | image_url: width: 1200 }}"
              style="width:76px;height:76px;flex-shrink:0;object-fit:cover;border-radius:6px;border:{% if forloop.first %}2px solid #061f40{% else %}1.5px solid #e2e8f0{% endif %};cursor:pointer;transition:all .15s;background:#fff"
+             onclick="document.querySelectorAll('.sw-thumbs img').forEach(function(t){t.style.border='1.5px solid #e2e8f0'});this.style.border='2px solid #061f40';var mainImg=document.querySelector('media-gallery img, .product-media img, slideshow-component img');if(mainImg)mainImg.src=this.dataset.fullSrc;">
+      {%- endfor -%}
+    {%- endif -%}
+    {%- comment -%} Aanvullen met clones van hoofdfoto tot er minimaal 5 thumbnails zijn {%- endcomment -%}
+    {%- assign sw_main = product.featured_image -%}
+    {%- if sw_main != blank and sw_media_count < 5 -%}
+      {%- assign sw_clones_needed = 5 | minus: sw_media_count -%}
+      {%- for i in (1..sw_clones_needed) -%}
+        <img src="{{ sw_main | image_url: width: 150 }}" alt="{{ product.title | escape }}" loading="lazy"
+             data-full-src="{{ sw_main | image_url: width: 1200 }}"
+             style="width:76px;height:76px;flex-shrink:0;object-fit:cover;border-radius:6px;border:1.5px solid #e2e8f0;cursor:pointer;transition:all .15s;background:#fff"
              onclick="document.querySelectorAll('.sw-thumbs img').forEach(function(t){t.style.border='1.5px solid #e2e8f0'});this.style.border='2px solid #061f40';var mainImg=document.querySelector('media-gallery img, .product-media img, slideshow-component img');if(mainImg)mainImg.src=this.dataset.fullSrc;">
       {%- endfor -%}
     {%- endif -%}
