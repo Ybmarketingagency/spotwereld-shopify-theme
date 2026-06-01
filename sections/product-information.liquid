@@ -537,18 +537,17 @@ section:has(> div > .sw-pr-grid){display:none!important}
 
   // Thumbnail strip + Specs table (universal)
   function initSwThumbs() {
-    if (document.querySelector('.sw-thumbs')) return;
-    // Gebruik echte product media (uit Liquid) ipv clones
+    var mediaCol = document.querySelector('.product-information__media');
+    if (!mediaCol) return;
+    // Skip alleen als thumbs AL in mediaCol staan (niet in hidden source)
+    if (mediaCol.querySelector('.sw-thumbs')) return;
     var source = document.getElementById('sw-thumbs-source');
     if (!source) return;
-    var mediaCol = document.querySelector('.product-information__media');
-    if (mediaCol) {
-      mediaCol.insertAdjacentHTML('beforeend', source.innerHTML);
-      // Insert specs table below thumbnails
-      var specsSource = document.getElementById('sw-specs-source');
-      if (specsSource && !document.querySelector('.sw-specs-table')) {
-        mediaCol.insertAdjacentHTML('beforeend', specsSource.innerHTML);
-      }
+    mediaCol.insertAdjacentHTML('beforeend', source.innerHTML);
+    // Specs tabel onder thumbnails injecteren (alleen als nog niet in mediaCol)
+    var specsSource = document.getElementById('sw-specs-source');
+    if (specsSource && !mediaCol.querySelector('.sw-specs-table')) {
+      mediaCol.insertAdjacentHTML('beforeend', specsSource.innerHTML);
     }
   }
 
