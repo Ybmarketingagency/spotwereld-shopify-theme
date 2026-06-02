@@ -1147,7 +1147,7 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
 {%- comment -%} Welkom 5% korting popup — eenmalig na 30s, met email-aanmelding en kortingscode {%- endcomment -%}
 <div class="sw-popup-overlay" id="sw-popup-overlay" role="dialog" aria-modal="true" aria-labelledby="sw-popup-title">
   <div class="sw-popup">
-    <button type="button" class="sw-popup-close" aria-label="Sluiten" id="sw-popup-close">&times;</button>
+    <button type="button" class="sw-popup-close" aria-label="Sluiten" id="sw-popup-close" onclick="window.swClosePopup&amp;&amp;window.swClosePopup();return false;">&times;</button>
     <div class="sw-popup-form-wrap" id="sw-popup-form-wrap">
       <span class="sw-popup-badge">Exclusief voor jou</span>
       <div class="sw-popup-discount">5% korting</div>
@@ -1202,6 +1202,8 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
 
   function show(){ if (overlay) overlay.classList.add('sw-active'); document.body.style.overflow='hidden'; }
   function hide(){ if (overlay) overlay.classList.remove('sw-active'); document.body.style.overflow=''; }
+  // Globally exposed close — werkt vanaf inline onclick attribuut zonder lookup-issues
+  window.swClosePopup = function(){ hide(); markShown(); };
   function markShown(){ try{ localStorage.setItem(SHOWN_KEY,'1'); }catch(e){} }
   function setCode(code){ try{ localStorage.setItem(CODE_KEY, code); }catch(e){} }
   function getCode(){ try{ return localStorage.getItem(CODE_KEY); }catch(e){ return null; } }
