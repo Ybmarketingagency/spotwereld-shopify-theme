@@ -301,6 +301,13 @@ product-card .text-block[class*="product_title"]{
   color:#1e293b !important;
   font-weight:600 !important;
 }
+/* Vorm filter active chip & lichtkleur active */
+.sw-active-chip{display:inline-flex;align-items:center;gap:.4rem;background:#f1f5f9;border:1px solid #cbd5e1;border-radius:999px;padding:.35rem .75rem;font-size:.78rem;color:#1e293b;margin:.25rem .35rem .25rem 0;font-weight:500}
+.sw-active-chip button{background:none;border:0;cursor:pointer;color:#64748b;font-size:1rem;line-height:1;padding:0 0 0 .15rem;display:inline-flex;align-items:center}
+.sw-active-chip button:hover{color:#dc2626}
+.sw-lk-active,.sw-vorm-active{background:rgba(15,111,227,.08)!important;border-radius:6px}
+.sw-lk-active .checkbox__label-text,.sw-vorm-active .checkbox__label-text{color:#0F6FE3!important;font-weight:700!important}
+.sw-lk-active .icon-checkmark,.sw-vorm-active .icon-checkmark{background:#0F6FE3!important;border-color:#0F6FE3!important}
 </style>
 <script>
 (function(){
@@ -349,6 +356,194 @@ product-card .text-block[class*="product_title"]{
   var mo = new MutationObserver(function(){ applyCardOverrides(); });
   document.addEventListener('DOMContentLoaded', function(){
     mo.observe(document.body, {childList:true, subtree:true, attributes:true, attributeFilter:['src','srcset']});
+  });
+
+  // ============== TITLE SPEC REWRITER ==============
+  // Per handle, the full descriptive title
+  var SW_TITLES = {
+    'led-inbouwspot-aristo-mat-wit':        'LED Inbouwspot Aristo | Dimbaar | IP65 | 4W en 6W | CCT Switch | Zaagmaat: Ø68-75 mm | Mat Wit',
+    'led-inbouwspot-aristo-mat-zwart':      'LED Inbouwspot Aristo | Dimbaar | IP65 | 4W en 6W | CCT Switch | Zaagmaat: Ø68-75 mm | Mat Zwart',
+    'led-inbouwspot-aristo-zilver':         'LED Inbouwspot Aristo | Dimbaar | IP65 | 4W en 6W | CCT Switch | Zaagmaat: Ø68-75 mm | Zilver',
+    'led-inbouwspot-aristo-koper':          'LED Inbouwspot Aristo | Dimbaar | IP65 | 4W en 6W | CCT Switch | Zaagmaat: Ø68-75 mm | Koper',
+    'led-inbouwspot-aristo-goud':           'LED Inbouwspot Aristo | Dimbaar | IP65 | 4W en 6W | CCT Switch | Zaagmaat: Ø68-75 mm | Goud',
+    'led-inbouwspot-aristo-satin-metallic': 'LED Inbouwspot Aristo | Dimbaar | IP65 | 4W en 6W | CCT Switch | Zaagmaat: Ø68-75 mm | Satin Metallic',
+    'led-inbouwspot-miran-mat-wit':         'LED Inbouwspot Miran | Dimbaar | IP65 | 5W en 7W | CCT Switch | Zaagmaat: Ø68-75 mm | Mat Wit',
+    'led-inbouwspot-miran-mat-zwart':       'LED Inbouwspot Miran | Dimbaar | IP65 | 5W en 7W | CCT Switch | Zaagmaat: Ø68-75 mm | Mat Zwart',
+    'led-inbouwspot-miran-goud':            'LED Inbouwspot Miran | Dimbaar | IP65 | 5W en 7W | CCT Switch | Zaagmaat: Ø68-75 mm | Goud',
+    'led-inbouwspot-laom-wit':              'LED Inbouwspot Laom | Dimbaar | IP44 | 6W | Vierkant | Zaagmaat: Ø68 mm | Wit',
+    'led-inbouwspot-laom-mat-zwart':        'LED Inbouwspot Laom | Dimbaar | IP44 | 6W | Vierkant | Zaagmaat: Ø68 mm | Mat Zwart',
+    'led-inbouwspot-laom-zilver':           'LED Inbouwspot Laom | Dimbaar | IP44 | 6W | Vierkant | Zaagmaat: Ø68 mm | Zilver'
+  };
+  function rewriteTitles(){
+    // Cards (collection/home) — find any <a href="/products/HANDLE"> and rewrite text
+    document.querySelectorAll('a[href*="/products/"]').forEach(function(a){
+      if (a.dataset.swTitleDone) return;
+      var m = a.getAttribute('href').match(/\/products\/([^?#\/]+)/);
+      if (!m) return;
+      var newT = SW_TITLES[m[1]];
+      if (!newT) return;
+      // Walk nodes in the parent card to find title text
+      var card = a.closest('product-card, .sw-pp-card, .product-card');
+      if (!card) {
+        // Standalone link — if direct text content is the title, rewrite
+        if (a.children.length === 0 && a.textContent.trim().length > 0) {
+          a.textContent = newT;
+        }
+        a.dataset.swTitleDone = '1';
+        return;
+      }
+      // Find title element(s) in card
+      var titleEls = card.querySelectorAll('h1, h2, h3, h4, .sw-pp-name, .product-card__title, [class*="product_title"], product-title');
+      titleEls.forEach(function(t){
+        // Find deepest text node only
+        var cur = t.textContent.trim();
+        if (cur.length > 0 && cur.indexOf('|') === -1) {
+          // Find the actual text node and replace
+          var walk = document.createTreeWalker(t, NodeFilter.SHOW_TEXT, null);
+          var firstText = null;
+          var node;
+          while (node = walk.nextNode()) {
+            if (node.nodeValue.trim().length > 0) { firstText = node; break; }
+          }
+          if (firstText) firstText.nodeValue = newT;
+        }
+      });
+      a.dataset.swTitleDone = '1';
+    });
+    // Product page H1
+    var h1 = document.querySelector('h1');
+    if (h1 && !h1.dataset.swTitleDone) {
+      var path = location.pathname.match(/\/products\/([^?#\/]+)/);
+      if (path && SW_TITLES[path[1]]) {
+        h1.textContent = SW_TITLES[path[1]];
+        h1.dataset.swTitleDone = '1';
+      }
+    }
+  }
+  rewriteTitles();
+  document.addEventListener('DOMContentLoaded', rewriteTitles);
+  var titleObs = new MutationObserver(function(){ rewriteTitles(); });
+  document.addEventListener('DOMContentLoaded', function(){
+    titleObs.observe(document.body, {childList:true, subtree:true});
+  });
+
+  // ============== VORM FILTER HIJACK + CHIP ==============
+  function getVorm(handle){
+    if (!handle) return null;
+    if (handle.indexOf('aristo')>-1 || handle.indexOf('miran')>-1) return 'rond';
+    if (handle.indexOf('laom')>-1) return 'vierkant';
+    return null;
+  }
+  function applyVormFilter(){
+    var actives = new URLSearchParams(location.search).getAll('sw_vorm');
+    document.querySelectorAll('product-card, .product-card').forEach(function(c){
+      var link = c.querySelector('a[href*="/products/"]');
+      var handle = link ? (link.getAttribute('href').split('/products/')[1]||'').split(/[?#\/]/)[0] : '';
+      var vorm = getVorm(handle);
+      var grid = c.closest('li, .grid__item, .product-grid__card-wrapper') || c;
+      if (actives.length === 0 || (vorm && actives.indexOf(vorm) > -1)) {
+        grid.style.display = '';
+      } else {
+        grid.style.display = 'none';
+      }
+    });
+  }
+  function fixVormInputs(){
+    // Find any existing vorm facet inputs and re-wire them
+    var vormFacet = document.querySelector('.sw-vorm-facet');
+    if (!vormFacet) return;
+    var actives = new URLSearchParams(location.search).getAll('sw_vorm');
+    vormFacet.querySelectorAll('input').forEach(function(inp){
+      if (inp.dataset.swFixed) return;
+      inp.dataset.swFixed = '1';
+      // Strip the original name/value (vorm-rond) and convert to sw_vorm scheme
+      var val = inp.value.replace(/^vorm-/, '');
+      inp.setAttribute('name', 'sw_vorm');
+      inp.value = val;
+      inp.checked = actives.indexOf(val) > -1;
+      var li = inp.closest('li, .facets__inputs-list-item');
+      if (li) {
+        if (inp.checked) li.classList.add('sw-vorm-active'); else li.classList.remove('sw-vorm-active');
+      }
+      // Hijack click to prevent Shopify form submit
+      inp.addEventListener('click', function(e){
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        // toggle handled by browser default; let it tick, then read
+        setTimeout(function(){
+          var params = new URLSearchParams(location.search);
+          params.delete('sw_vorm');
+          // Also strip any leftover Shopify tag-based vorm
+          var tags = params.getAll('filter.p.tag');
+          params.delete('filter.p.tag');
+          tags.forEach(function(t){ if (t.indexOf('vorm-')!==0) params.append('filter.p.tag', t); });
+          document.querySelectorAll('.sw-vorm-facet input:checked').forEach(function(i){
+            params.append('sw_vorm', i.value);
+          });
+          var s = params.toString();
+          history.replaceState({}, '', location.pathname + (s ? '?' + s : ''));
+          // Re-apply visual state + filter
+          document.querySelectorAll('.sw-vorm-facet input').forEach(function(i){
+            var li2 = i.closest('li, .facets__inputs-list-item');
+            if (li2) { if (i.checked) li2.classList.add('sw-vorm-active'); else li2.classList.remove('sw-vorm-active'); }
+          });
+          applyVormFilter();
+          renderActiveChips();
+        }, 0);
+      }, true);
+      // Block form submit if Shopify dispatches change
+      inp.addEventListener('change', function(e){
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+      }, true);
+    });
+  }
+  function renderActiveChips(){
+    // Find Shopify's active facets container
+    var holder = document.querySelector('.facets__selected, .facets__active-list, .facets-controls-wrapper .facets__active, .facets-block-wrapper--vertical .facets__selected');
+    if (!holder) holder = document.querySelector('.facets-block-wrapper--vertical, .facets__form-wrapper');
+    if (!holder) return;
+    // Remove our old chips first
+    holder.querySelectorAll('.sw-active-chip[data-sw-chip]').forEach(function(c){ c.remove(); });
+    // sw_vorm chips
+    var vorms = new URLSearchParams(location.search).getAll('sw_vorm');
+    var labelMap = {rond:'Rond', vierkant:'Vierkant', rechthoek:'Rechthoek'};
+    vorms.forEach(function(v){
+      var chip = document.createElement('span');
+      chip.className = 'sw-active-chip';
+      chip.setAttribute('data-sw-chip', 'vorm-' + v);
+      chip.innerHTML = 'Vorm: ' + (labelMap[v]||v) + ' <button aria-label="Verwijder">✕</button>';
+      chip.querySelector('button').addEventListener('click', function(){
+        var p = new URLSearchParams(location.search);
+        var keep = p.getAll('sw_vorm').filter(function(x){ return x !== v; });
+        p.delete('sw_vorm');
+        keep.forEach(function(k){ p.append('sw_vorm', k); });
+        var s = p.toString();
+        history.replaceState({}, '', location.pathname + (s?'?'+s:''));
+        // Uncheck the input
+        var inp = document.querySelector('.sw-vorm-facet input[value="' + v + '"]');
+        if (inp) { inp.checked = false; var li = inp.closest('li'); if (li) li.classList.remove('sw-vorm-active'); }
+        applyVormFilter();
+        renderActiveChips();
+      });
+      holder.insertBefore(chip, holder.firstChild);
+    });
+  }
+  function runVormStuff(){
+    fixVormInputs();
+    applyVormFilter();
+    renderActiveChips();
+  }
+  runVormStuff();
+  document.addEventListener('DOMContentLoaded', runVormStuff);
+  setTimeout(runVormStuff, 400);
+  setTimeout(runVormStuff, 1200);
+  setTimeout(runVormStuff, 2500);
+  // Watch for facet rerenders
+  var vormObs = new MutationObserver(function(){ runVormStuff(); });
+  document.addEventListener('DOMContentLoaded', function(){
+    var f = document.querySelector('.facets-block-wrapper--vertical, .facets__form-wrapper, body');
+    if (f) vormObs.observe(f, {childList:true, subtree:true});
   });
 })();
 </script>
