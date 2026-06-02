@@ -749,16 +749,17 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
     if (!kleurFacet) return;
     var parent = kleurFacet.parentElement;
     if (!parent) return;
-    // Vind eerste facet in de lijst (bovenste)
     var firstFacet = parent.querySelector('.facets__item');
     if (!firstFacet) return;
-    var order = ['.sw-diepte-facet','.sw-zaag-facet','.sw-ip-facet','.sw-vorm-facet']; // reversed; we prependen
+    var order = ['.sw-diepte-facet','.sw-zaag-facet','.sw-ip-facet','.sw-vorm-facet']; // reversed; we insertBefore firstFacet
     order.forEach(function(sel){
       var el = parent.querySelector(sel);
       if (!el) return;
-      // Prepend zodat Vorm uiteindelijk bovenaan komt
-      if (el !== parent.firstElementChild) {
-        parent.insertBefore(el, parent.firstElementChild);
+      // Plaats voor de eerste .facets__item zodat headers/titels boven blijven
+      if (el !== firstFacet){
+        parent.insertBefore(el, firstFacet);
+        // Refresh firstFacet (we just put el before it, so el is now the first)
+        firstFacet = el;
       }
     });
   }
@@ -925,8 +926,23 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
   }
   function runAllSwFiltersGuarded(){
     withGuard(runAllSwFilters);
-    if (document.body && !document.body.classList.contains('sw-filters-ready')){
-      document.body.classList.add('sw-filters-ready');
+    // Pas markeer als 'ready' wanneer custom facets DAADWERKELIJK in correcte volgorde staan
+    // (Vorm moet de eerste .facets__item zijn in de wrapper)
+    var wrap = document.querySelector('.facets-block-wrapper--vertical, .facets__form-wrapper');
+    if (!wrap) return;
+    var firstFacet = wrap.querySelector('.facets__item');
+    var vorm = wrap.querySelector('.sw-vorm-facet');
+    var kleur = findFacet('Kleur');
+    // Alleen ready als Kleur bestaat (Shopify is klaar) EN onze Vorm er ook is EN bovenaan staat
+    if (kleur && vorm && firstFacet === vorm){
+      if (document.body && !document.body.classList.contains('sw-filters-ready')){
+        // RAF zodat layout/paint klaar is voordat we fade-in tonen
+        requestAnimationFrame(function(){
+          requestAnimationFrame(function(){
+            document.body.classList.add('sw-filters-ready');
+          });
+        });
+      }
     }
   }
   runAllSwFiltersGuarded();
