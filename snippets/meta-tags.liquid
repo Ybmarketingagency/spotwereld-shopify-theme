@@ -577,28 +577,23 @@ product-card .text-block[class*="product_title"]{
     });
   }
   function renameKleurLabels(){
-    var map = {'Mat Wit':'Wit','Mat Zwart':'Zwart'};
-    // Rename inside the Kleur facet panel
-    var kleurFacet = findFacet('Kleur');
-    if (kleurFacet){
-      kleurFacet.querySelectorAll('.checkbox__label-text, label span, .facets__label-text').forEach(function(lbl){
-        var t = (lbl.textContent||'').trim();
-        if (map[t]) lbl.textContent = map[t];
+    // Scan the entire facets wrapper (en active chips area) en vervang ALLE text nodes
+    var scopes = document.querySelectorAll('.facets-block-wrapper--vertical, .facets__form-wrapper, .facets-controls-wrapper, [class*="active-facets"], [class*="facets__selected"], facet-remove, active-facets');
+    scopes.forEach(function(scope){
+      var walker = document.createTreeWalker(scope, NodeFilter.SHOW_TEXT, null);
+      var n;
+      while (n = walker.nextNode()){
+        var v = n.nodeValue;
+        if (!v) continue;
+        if (v.indexOf('Mat Wit') > -1) n.nodeValue = v.replace(/Mat Wit/g, 'Wit');
+        else if (v.indexOf('Mat Zwart') > -1) n.nodeValue = v.replace(/Mat Zwart/g, 'Zwart');
+      }
+      // Ook input values voor eventuele type=hidden in chips niet aanpassen (zou Shopify breken)
+      // Alleen aria-label van remove-knoppen patchen
+      scope.querySelectorAll('[aria-label*="Mat Wit"], [aria-label*="Mat Zwart"]').forEach(function(el){
+        var a = el.getAttribute('aria-label');
+        if (a) el.setAttribute('aria-label', a.replace(/Mat Wit/g,'Wit').replace(/Mat Zwart/g,'Zwart'));
       });
-    }
-    // Rename Shopify's active filter chips that show "Mat Wit" / "Mat Zwart"
-    document.querySelectorAll('.facets__selected button, .facets__selected a, .facets__selected span, [class*="active-facet"], [data-active-facet]').forEach(function(el){
-      var t = (el.textContent||'');
-      if (!t) return;
-      if (t.indexOf('Mat Wit')>-1) {
-        // Replace text nodes only (preserve nested icons)
-        var w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
-        var n; while (n = w.nextNode()){ if (n.nodeValue.indexOf('Mat Wit')>-1) n.nodeValue = n.nodeValue.replace(/Mat Wit/g,'Wit'); }
-      }
-      if (t.indexOf('Mat Zwart')>-1) {
-        var w2 = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
-        var n2; while (n2 = w2.nextNode()){ if (n2.nodeValue.indexOf('Mat Zwart')>-1) n2.nodeValue = n2.nodeValue.replace(/Mat Zwart/g,'Zwart'); }
-      }
     });
   }
   function dedupeAndOrderFacets(){
@@ -794,6 +789,28 @@ product-card .text-block[class*="product_title"]{
   setTimeout(runAllSwFilters, 400);
   setTimeout(runAllSwFilters, 1200);
   setTimeout(runAllSwFilters, 2500);
+  // Dedicated aggressive rename (geen guard nodig, alleen text changes)
+  var renameTicks = 0;
+  var renameInterval = setInterval(function(){
+    renameKleurLabels();
+    if (++renameTicks > 30) clearInterval(renameInterval); // 30 * 250ms = ~7.5s
+  }, 250);
+  // Re-arm interval na elke Kleur input click (Shopify reload kan komen)
+  document.addEventListener('click', function(e){
+    var t = e.target;
+    if (!t || t.tagName !== 'INPUT') return;
+    var inLi = t.closest('li, .facets__inputs-list-item');
+    if (!inLi) return;
+    var txt = inLi.textContent || '';
+    if (txt.indexOf('Wit') > -1 || txt.indexOf('Zwart') > -1 || txt.indexOf('Goud') > -1 || txt.indexOf('Koper') > -1 || txt.indexOf('Zilver') > -1 || txt.indexOf('Metallic') > -1){
+      renameTicks = 0;
+      clearInterval(renameInterval);
+      renameInterval = setInterval(function(){
+        renameKleurLabels();
+        if (++renameTicks > 30) clearInterval(renameInterval);
+      }, 200);
+    }
+  }, true);
   // Observer with guard + debounce (target facet wrapper only, NOT body)
   var swFilterDebounce = null;
   var swFilterObs = new MutationObserver(function(){
