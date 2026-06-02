@@ -422,128 +422,299 @@ product-card .text-block[class*="product_title"]{
   }
   rewriteTitles();
   document.addEventListener('DOMContentLoaded', rewriteTitles);
-  var titleObs = new MutationObserver(function(){ rewriteTitles(); });
+  setTimeout(rewriteTitles, 500);
+  setTimeout(rewriteTitles, 1500);
+  setTimeout(rewriteTitles, 3000);
+  // Observe ONLY the product grid (not body) with debounce
+  var titleDebounce = null;
+  var titleObs = new MutationObserver(function(){
+    clearTimeout(titleDebounce);
+    titleDebounce = setTimeout(rewriteTitles, 200);
+  });
   document.addEventListener('DOMContentLoaded', function(){
-    titleObs.observe(document.body, {childList:true, subtree:true});
+    var g = document.querySelector('.product-grid, results-list, .sw-pp-wrap, main');
+    if (g) titleObs.observe(g, {childList:true, subtree:true});
   });
 
-  // ============== VORM FILTER HIJACK + CHIP ==============
-  function getVorm(handle){
-    if (!handle) return null;
-    if (handle.indexOf('aristo')>-1 || handle.indexOf('miran')>-1) return 'rond';
-    if (handle.indexOf('laom')>-1) return 'vierkant';
-    return null;
+  // ============== MULTI FILTER HIJACK + CHIPS (Vorm + IP + Zaagmaat + Lichtkleur opties) ==============
+  // Product spec lookup per handle
+  var SW_PRODUCT_SPECS = {
+    'led-inbouwspot-aristo-mat-wit':        {vorm:'rond', ip:'IP65', zaag:[68,75]},
+    'led-inbouwspot-aristo-mat-zwart':      {vorm:'rond', ip:'IP65', zaag:[68,75]},
+    'led-inbouwspot-aristo-zilver':         {vorm:'rond', ip:'IP65', zaag:[68,75]},
+    'led-inbouwspot-aristo-koper':          {vorm:'rond', ip:'IP65', zaag:[68,75]},
+    'led-inbouwspot-aristo-goud':           {vorm:'rond', ip:'IP65', zaag:[68,75]},
+    'led-inbouwspot-aristo-satin-metallic': {vorm:'rond', ip:'IP65', zaag:[68,75]},
+    'led-inbouwspot-miran-mat-wit':         {vorm:'rond', ip:'IP65', zaag:[68,75]},
+    'led-inbouwspot-miran-mat-zwart':       {vorm:'rond', ip:'IP65', zaag:[68,75]},
+    'led-inbouwspot-miran-goud':            {vorm:'rond', ip:'IP65', zaag:[68,75]},
+    'led-inbouwspot-laom-wit':              {vorm:'vierkant', ip:'IP44', zaag:[68,68]},
+    'led-inbouwspot-laom-mat-zwart':        {vorm:'vierkant', ip:'IP44', zaag:[68,68]},
+    'led-inbouwspot-laom-zilver':           {vorm:'vierkant', ip:'IP44', zaag:[68,68]}
+  };
+  function getHandle(card){
+    var link = card.querySelector('a[href*="/products/"]');
+    if (!link) return '';
+    return (link.getAttribute('href').split('/products/')[1]||'').split(/[?#\/]/)[0];
   }
-  function applyVormFilter(){
-    var actives = new URLSearchParams(location.search).getAll('sw_vorm');
+  function getSpecs(handle){ return SW_PRODUCT_SPECS[handle] || null; }
+  function zaagInRange(zaag, rangeKey){
+    if (!zaag) return false;
+    var lo=zaag[0], hi=zaag[1];
+    var ranges = {
+      'lt49': function(){return hi < 49},
+      '50-59': function(){return lo<=59 && hi>=50},
+      '60-69': function(){return lo<=69 && hi>=60},
+      '70-79': function(){return lo<=79 && hi>=70},
+      '80-99': function(){return lo<=99 && hi>=80},
+      '100-129': function(){return lo<=129 && hi>=100},
+      'gt130': function(){return lo > 130}
+    };
+    return ranges[rangeKey] ? ranges[rangeKey]() : false;
+  }
+  function applyAllFilters(){
+    var params = new URLSearchParams(location.search);
+    var vorms = params.getAll('sw_vorm');
+    var ips = params.getAll('sw_ip');
+    var zaags = params.getAll('sw_zaag');
     document.querySelectorAll('product-card, .product-card').forEach(function(c){
-      var link = c.querySelector('a[href*="/products/"]');
-      var handle = link ? (link.getAttribute('href').split('/products/')[1]||'').split(/[?#\/]/)[0] : '';
-      var vorm = getVorm(handle);
+      var h = getHandle(c);
+      var s = getSpecs(h);
       var grid = c.closest('li, .grid__item, .product-grid__card-wrapper') || c;
-      if (actives.length === 0 || (vorm && actives.indexOf(vorm) > -1)) {
-        grid.style.display = '';
-      } else {
-        grid.style.display = 'none';
-      }
+      var keep = true;
+      if (vorms.length>0) keep = keep && s && vorms.indexOf(s.vorm)>-1;
+      if (ips.length>0) keep = keep && s && ips.indexOf(s.ip)>-1;
+      if (zaags.length>0) keep = keep && s && zaags.some(function(z){return zaagInRange(s.zaag, z)});
+      grid.style.display = keep ? '' : 'none';
     });
   }
+
+  // GUARD to prevent observer infinite loop
+  var SW_FILTER_GUARD = false;
+  function withGuard(fn){
+    if (SW_FILTER_GUARD) return;
+    SW_FILTER_GUARD = true;
+    try { fn(); } finally {
+      requestAnimationFrame(function(){ requestAnimationFrame(function(){ SW_FILTER_GUARD = false; }); });
+    }
+  }
+
+  function findFacet(label){
+    var details = document.querySelectorAll('.facets__item, details.facets__item');
+    for (var i=0; i<details.length; i++){
+      var l = details[i].querySelector('.facets__label, summary');
+      if (l && l.textContent.trim().toLowerCase().indexOf(label.toLowerCase()) > -1) return details[i];
+    }
+    return null;
+  }
+
   function fixVormInputs(){
-    // Find any existing vorm facet inputs and re-wire them
     var vormFacet = document.querySelector('.sw-vorm-facet');
     if (!vormFacet) return;
     var actives = new URLSearchParams(location.search).getAll('sw_vorm');
     vormFacet.querySelectorAll('input').forEach(function(inp){
       if (inp.dataset.swFixed) return;
       inp.dataset.swFixed = '1';
-      // Strip the original name/value (vorm-rond) and convert to sw_vorm scheme
       var val = inp.value.replace(/^vorm-/, '');
-      inp.setAttribute('name', 'sw_vorm');
+      inp.setAttribute('name','sw_vorm');
       inp.value = val;
       inp.checked = actives.indexOf(val) > -1;
       var li = inp.closest('li, .facets__inputs-list-item');
-      if (li) {
-        if (inp.checked) li.classList.add('sw-vorm-active'); else li.classList.remove('sw-vorm-active');
-      }
-      // Hijack click to prevent Shopify form submit
+      if (li){ li.classList.toggle('sw-vorm-active', inp.checked); }
       inp.addEventListener('click', function(e){
-        e.stopPropagation();
-        e.stopImmediatePropagation();
-        // toggle handled by browser default; let it tick, then read
-        setTimeout(function(){
-          var params = new URLSearchParams(location.search);
-          params.delete('sw_vorm');
-          // Also strip any leftover Shopify tag-based vorm
-          var tags = params.getAll('filter.p.tag');
-          params.delete('filter.p.tag');
-          tags.forEach(function(t){ if (t.indexOf('vorm-')!==0) params.append('filter.p.tag', t); });
-          document.querySelectorAll('.sw-vorm-facet input:checked').forEach(function(i){
-            params.append('sw_vorm', i.value);
-          });
-          var s = params.toString();
-          history.replaceState({}, '', location.pathname + (s ? '?' + s : ''));
-          // Re-apply visual state + filter
-          document.querySelectorAll('.sw-vorm-facet input').forEach(function(i){
-            var li2 = i.closest('li, .facets__inputs-list-item');
-            if (li2) { if (i.checked) li2.classList.add('sw-vorm-active'); else li2.classList.remove('sw-vorm-active'); }
-          });
-          applyVormFilter();
-          renderActiveChips();
-        }, 0);
+        e.stopPropagation(); e.stopImmediatePropagation();
+        setTimeout(function(){ toggleParamFromInputs('.sw-vorm-facet', 'sw_vorm'); }, 0);
       }, true);
-      // Block form submit if Shopify dispatches change
-      inp.addEventListener('change', function(e){
-        e.stopPropagation();
-        e.stopImmediatePropagation();
-      }, true);
+      inp.addEventListener('change', function(e){ e.stopPropagation(); e.stopImmediatePropagation(); }, true);
     });
+  }
+  function addIPFilter(){
+    if (document.querySelector('.sw-ip-facet')) { syncIPInputs(); return; }
+    var anchor = document.querySelector('.sw-vorm-facet') || findFacet('Kleur');
+    if (!anchor) return;
+    var html = '<details class="facets__item sw-ip-facet" open><summary class="facets__summary"><span class="facets__label">IP-waarde</span><span class="facets__icon"></span></summary><div class="facets__panel"><ul class="facets__inputs facets__inputs-list">'+
+      [{v:'IP44',n:'IP44'},{v:'IP65',n:'IP65'},{v:'IP67',n:'IP67'}].map(function(o){
+        return '<li class="facets__inputs-list-item"><label class="checkbox"><input type="checkbox" class="checkbox__input" name="sw_ip" value="'+o.v+'"><span class="checkbox__label"><span class="icon-checkmark"></span><span class="checkbox__label-text">'+o.n+'</span></span></label></li>';
+      }).join('')+'</ul></div></details>';
+    withGuard(function(){ anchor.insertAdjacentHTML('afterend', html); });
+    syncIPInputs();
+  }
+  function syncIPInputs(){
+    var facet = document.querySelector('.sw-ip-facet'); if (!facet) return;
+    var actives = new URLSearchParams(location.search).getAll('sw_ip');
+    facet.querySelectorAll('input').forEach(function(inp){
+      inp.checked = actives.indexOf(inp.value) > -1;
+      var li = inp.closest('li'); if (li) li.classList.toggle('sw-vorm-active', inp.checked);
+      if (inp.dataset.swFixed) return;
+      inp.dataset.swFixed = '1';
+      inp.addEventListener('click', function(e){ e.stopPropagation(); e.stopImmediatePropagation(); setTimeout(function(){ toggleParamFromInputs('.sw-ip-facet', 'sw_ip'); }, 0); }, true);
+      inp.addEventListener('change', function(e){ e.stopPropagation(); e.stopImmediatePropagation(); }, true);
+    });
+  }
+  function addZaagFilter(){
+    if (document.querySelector('.sw-zaag-facet')) { syncZaagInputs(); return; }
+    var anchor = document.querySelector('.sw-ip-facet') || document.querySelector('.sw-vorm-facet') || findFacet('Kleur');
+    if (!anchor) return;
+    var opts = [
+      {v:'lt49', n:'< 49 mm'},
+      {v:'50-59', n:'50-59 mm'},
+      {v:'60-69', n:'60-69 mm'},
+      {v:'70-79', n:'70-79 mm'},
+      {v:'80-99', n:'80-99 mm'},
+      {v:'100-129', n:'100-129 mm'},
+      {v:'gt130', n:'> 130 mm'}
+    ];
+    var html = '<details class="facets__item sw-zaag-facet" open><summary class="facets__summary"><span class="facets__label">Gatmaat / Zaagmaat</span><span class="facets__icon"></span></summary><div class="facets__panel"><ul class="facets__inputs facets__inputs-list">'+
+      opts.map(function(o){
+        return '<li class="facets__inputs-list-item"><label class="checkbox"><input type="checkbox" class="checkbox__input" name="sw_zaag" value="'+o.v+'"><span class="checkbox__label"><span class="icon-checkmark"></span><span class="checkbox__label-text">'+o.n+'</span></span></label></li>';
+      }).join('')+'</ul></div></details>';
+    withGuard(function(){ anchor.insertAdjacentHTML('afterend', html); });
+    syncZaagInputs();
+  }
+  function syncZaagInputs(){
+    var facet = document.querySelector('.sw-zaag-facet'); if (!facet) return;
+    var actives = new URLSearchParams(location.search).getAll('sw_zaag');
+    facet.querySelectorAll('input').forEach(function(inp){
+      inp.checked = actives.indexOf(inp.value) > -1;
+      var li = inp.closest('li'); if (li) li.classList.toggle('sw-vorm-active', inp.checked);
+      if (inp.dataset.swFixed) return;
+      inp.dataset.swFixed = '1';
+      inp.addEventListener('click', function(e){ e.stopPropagation(); e.stopImmediatePropagation(); setTimeout(function(){ toggleParamFromInputs('.sw-zaag-facet', 'sw_zaag'); }, 0); }, true);
+      inp.addEventListener('change', function(e){ e.stopPropagation(); e.stopImmediatePropagation(); }, true);
+    });
+  }
+  function expandLichtkleur(){
+    var lkFacet = findFacet('Lichtkleur');
+    if (!lkFacet) return;
+    if (lkFacet.dataset.swLkExpanded) return;
+    var list = lkFacet.querySelector('.facets__inputs, ul, .facets__inputs-list');
+    if (!list) return;
+    var origItem = list.querySelector('.facets__inputs-list-item, li');
+    if (!origItem) return;
+    // Hide original (Instelbaar) shown items already done by old code; we add comprehensive set
+    var allOpts = [
+      {v:'2200', n:'2200K (flame-wit)'},
+      {v:'2700', n:'2700K (extra warm-wit)'},
+      {v:'2700d', n:'2700K (extra warm-wit) (dimbaar)'},
+      {v:'3000', n:'3000K (warm-wit)'},
+      {v:'4000', n:'4000K (neutraal-wit)'},
+      {v:'dim2warm', n:'Dim-to-warm'},
+      {v:'rgbww', n:'RGBWW'},
+      {v:'tri', n:'Tri-color (2700K, 3000K en 4000K)'}
+    ];
+    withGuard(function(){
+      // Remove existing fake-lk clones to rebuild cleanly
+      list.querySelectorAll('[class*="sw-fake-lk-"], [class*="sw-lk-opt-"]').forEach(function(el){ el.remove(); });
+      allOpts.forEach(function(opt){
+        var clone = origItem.cloneNode(true);
+        clone.style.display = '';
+        clone.classList.add('sw-lk-opt-'+opt.v);
+        clone.setAttribute('data-sw-lk', opt.v);
+        var lbl = clone.querySelector('.checkbox__label-text, label span');
+        if (lbl) lbl.textContent = opt.n;
+        var input = clone.querySelector('input');
+        if (input){
+          input.name = 'sw_lk';
+          input.value = opt.v;
+          input.checked = false;
+          // Find existing original input name/value for actual Shopify filtering
+          // Pass-through: clicking will filter on sw_lk URL param + match Instelbaar product option
+          input.addEventListener('click', function(e){
+            e.stopPropagation(); e.stopImmediatePropagation();
+            setTimeout(function(){ toggleParamFromInputs('[data-sw-lk]','sw_lk', list); }, 0);
+          }, true);
+          input.addEventListener('change', function(e){ e.stopPropagation(); e.stopImmediatePropagation(); }, true);
+        }
+        list.appendChild(clone);
+      });
+    });
+    lkFacet.dataset.swLkExpanded = '1';
+    syncLkInputs();
+  }
+  function syncLkInputs(){
+    var actives = new URLSearchParams(location.search).getAll('sw_lk');
+    document.querySelectorAll('[class*="sw-lk-opt-"]').forEach(function(li){
+      var inp = li.querySelector('input');
+      if (inp){ inp.checked = actives.indexOf(inp.value) > -1; li.classList.toggle('sw-lk-active', inp.checked); }
+    });
+  }
+  function toggleParamFromInputs(scopeSel, paramName, optionalScope){
+    var scope = optionalScope || document;
+    var p = new URLSearchParams(location.search);
+    p.delete(paramName);
+    (typeof scopeSel === 'string' ? scope.querySelectorAll(scopeSel + ' input:checked, ' + scopeSel + '[data-sw-lk] input:checked') : scope.querySelectorAll('input:checked')).forEach(function(i){
+      if (i.name === paramName) p.append(paramName, i.value);
+    });
+    var s = p.toString();
+    history.replaceState({}, '', location.pathname + (s ? '?' + s : ''));
+    applyAllFilters();
+    renderActiveChips();
+    // Update visual active classes
+    document.querySelectorAll('.sw-vorm-facet input, .sw-ip-facet input, .sw-zaag-facet input').forEach(function(i){
+      var li = i.closest('li'); if (li) li.classList.toggle('sw-vorm-active', i.checked);
+    });
+    syncLkInputs();
   }
   function renderActiveChips(){
-    // Find Shopify's active facets container
-    var holder = document.querySelector('.facets__selected, .facets__active-list, .facets-controls-wrapper .facets__active, .facets-block-wrapper--vertical .facets__selected');
-    if (!holder) holder = document.querySelector('.facets-block-wrapper--vertical, .facets__form-wrapper');
+    var holder = document.querySelector('.facets-block-wrapper--vertical, .facets__form-wrapper');
     if (!holder) return;
-    // Remove our old chips first
-    holder.querySelectorAll('.sw-active-chip[data-sw-chip]').forEach(function(c){ c.remove(); });
-    // sw_vorm chips
-    var vorms = new URLSearchParams(location.search).getAll('sw_vorm');
-    var labelMap = {rond:'Rond', vierkant:'Vierkant', rechthoek:'Rechthoek'};
-    vorms.forEach(function(v){
-      var chip = document.createElement('span');
-      chip.className = 'sw-active-chip';
-      chip.setAttribute('data-sw-chip', 'vorm-' + v);
-      chip.innerHTML = 'Vorm: ' + (labelMap[v]||v) + ' <button aria-label="Verwijder">✕</button>';
-      chip.querySelector('button').addEventListener('click', function(){
-        var p = new URLSearchParams(location.search);
-        var keep = p.getAll('sw_vorm').filter(function(x){ return x !== v; });
-        p.delete('sw_vorm');
-        keep.forEach(function(k){ p.append('sw_vorm', k); });
-        var s = p.toString();
-        history.replaceState({}, '', location.pathname + (s?'?'+s:''));
-        // Uncheck the input
-        var inp = document.querySelector('.sw-vorm-facet input[value="' + v + '"]');
-        if (inp) { inp.checked = false; var li = inp.closest('li'); if (li) li.classList.remove('sw-vorm-active'); }
-        applyVormFilter();
-        renderActiveChips();
+    withGuard(function(){
+      holder.querySelectorAll('.sw-active-chip[data-sw-chip]').forEach(function(c){ c.remove(); });
+      var p = new URLSearchParams(location.search);
+      var defs = [
+        {param:'sw_vorm', label:'Vorm', facetSel:'.sw-vorm-facet', map:{rond:'Rond',vierkant:'Vierkant',rechthoek:'Rechthoek'}},
+        {param:'sw_ip', label:'IP', facetSel:'.sw-ip-facet', map:{}},
+        {param:'sw_zaag', label:'Gatmaat', facetSel:'.sw-zaag-facet', map:{'lt49':'< 49 mm','50-59':'50-59 mm','60-69':'60-69 mm','70-79':'70-79 mm','80-99':'80-99 mm','100-129':'100-129 mm','gt130':'> 130 mm'}},
+        {param:'sw_lk', label:'Lichtkleur', facetSel:'[data-sw-lk]', map:{'2200':'2200K','2700':'2700K','2700d':'2700K dimbaar','3000':'3000K','4000':'4000K','dim2warm':'Dim-to-warm','rgbww':'RGBWW','tri':'Tri-color'}}
+      ];
+      defs.forEach(function(def){
+        p.getAll(def.param).forEach(function(v){
+          var chip = document.createElement('span');
+          chip.className = 'sw-active-chip';
+          chip.setAttribute('data-sw-chip', def.param+'-'+v);
+          chip.innerHTML = def.label + ': ' + (def.map[v]||v) + ' <button aria-label="Verwijder">✕</button>';
+          chip.querySelector('button').addEventListener('click', function(){
+            var p2 = new URLSearchParams(location.search);
+            var keep = p2.getAll(def.param).filter(function(x){ return x !== v; });
+            p2.delete(def.param);
+            keep.forEach(function(k){ p2.append(def.param, k); });
+            var s = p2.toString();
+            history.replaceState({}, '', location.pathname + (s?'?'+s:''));
+            var sel = def.facetSel + ' input[value="'+v+'"]';
+            var inp = document.querySelector(sel);
+            if (inp){ inp.checked = false; var li = inp.closest('li'); if (li) li.classList.remove('sw-vorm-active','sw-lk-active'); }
+            applyAllFilters();
+            renderActiveChips();
+          });
+          holder.insertBefore(chip, holder.firstChild);
+        });
       });
-      holder.insertBefore(chip, holder.firstChild);
     });
   }
-  function runVormStuff(){
+  function runAllSwFilters(){
+    if (SW_FILTER_GUARD) return;
     fixVormInputs();
-    applyVormFilter();
+    addIPFilter();
+    addZaagFilter();
+    expandLichtkleur();
+    applyAllFilters();
     renderActiveChips();
   }
-  runVormStuff();
-  document.addEventListener('DOMContentLoaded', runVormStuff);
-  setTimeout(runVormStuff, 400);
-  setTimeout(runVormStuff, 1200);
-  setTimeout(runVormStuff, 2500);
-  // Watch for facet rerenders
-  var vormObs = new MutationObserver(function(){ runVormStuff(); });
+  runAllSwFilters();
+  document.addEventListener('DOMContentLoaded', runAllSwFilters);
+  setTimeout(runAllSwFilters, 400);
+  setTimeout(runAllSwFilters, 1200);
+  setTimeout(runAllSwFilters, 2500);
+  // Observer with guard + debounce (target facet wrapper only, NOT body)
+  var swFilterDebounce = null;
+  var swFilterObs = new MutationObserver(function(){
+    if (SW_FILTER_GUARD) return;
+    clearTimeout(swFilterDebounce);
+    swFilterDebounce = setTimeout(function(){ withGuard(runAllSwFilters); }, 150);
+  });
   document.addEventListener('DOMContentLoaded', function(){
-    var f = document.querySelector('.facets-block-wrapper--vertical, .facets__form-wrapper, body');
-    if (f) vormObs.observe(f, {childList:true, subtree:true});
+    var f = document.querySelector('.facets-block-wrapper--vertical, .facets__form-wrapper');
+    if (f) swFilterObs.observe(f, {childList:true, subtree:true});
   });
 })();
 </script>
