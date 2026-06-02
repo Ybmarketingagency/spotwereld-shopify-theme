@@ -328,22 +328,25 @@ details.facets__item[open] .facets__icon:empty::after{transform:rotate(-135deg);
 .facets__item .checkbox__input:checked + .checkbox__label .icon-checkmark::after,.facets__item .checkbox__input:checked ~ .checkbox__label .icon-checkmark::after{content:'';position:absolute;left:5px;top:1px;width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
 .facets__item .swatch{display:none !important}
 /* Verberg LAOM card images en main media tot mijn JS de outledtl swap heeft gedaan (FOUC fix) */
-.sw-pp-card a[href*="laom-wit"] img,
-.sw-pp-card a[href*="laom-mat-zwart"] img,
-.sw-pp-card a[href*="laom-zilver"] img,
-product-card a[href*="laom-wit"] ~ * img,
-product-card a[href*="laom-mat-zwart"] ~ * img,
-product-card a[href*="laom-zilver"] ~ * img{opacity:0;transition:opacity .15s}
+.sw-pp-card[href*="laom-wit"] img,
+.sw-pp-card[href*="laom-mat-zwart"] img,
+.sw-pp-card[href*="laom-zilver"] img,
+product-card:has(a[href*="laom-wit"]) img,
+product-card:has(a[href*="laom-mat-zwart"]) img,
+product-card:has(a[href*="laom-zilver"]) img{opacity:0 !important;transition:opacity .15s}
 product-card[data-sw-img-done="1"] img,
 .sw-pp-card[data-sw-img-done="1"] img,
-a.sw-pp-card[data-sw-img-done="1"] img,
 [data-sw-img-done="1"] img{opacity:1 !important}
 /* Product detail page: hide main media op LAOM pagina's tot override */
-body.sw-product-laom .product-information__media img:not(.sw-thumbs img){opacity:0;transition:opacity .2s}
-body.sw-product-laom.sw-main-img-ready .product-information__media img:not(.sw-thumbs img){opacity:1 !important}
-/* Fallback: na max 1.2s altijd tonen */
-@keyframes swImgFallback{to{opacity:1}}
-.sw-pp-card img,product-card img,.product-information__media img{animation:swImgFallback 0s linear 1.2s forwards}
+body.sw-product-laom .product-information__media img:not(.sw-thumbs img),
+body.sw-product-laom .product-information__media source{opacity:0 !important;transition:opacity .2s}
+body.sw-product-laom.sw-main-img-ready .product-information__media img:not(.sw-thumbs img),
+body.sw-product-laom.sw-main-img-ready .product-information__media source{opacity:1 !important}
+/* Fallback: na max 1.5s altijd tonen */
+@keyframes swImgFallback{0%{opacity:0}100%{opacity:1}}
+.sw-pp-card[href*="laom-"] img,
+product-card:has(a[href*="laom-"]) img,
+body.sw-product-laom .product-information__media img:not(.sw-thumbs img){animation:swImgFallback .1s linear 1.5s forwards}
 /* Verberg facets sidebar tot mijn JS klaar is met layout (voorkomt flicker bij page load) */
 body:not(.sw-filters-ready) .facets-block-wrapper--vertical,body:not(.sw-filters-ready) .facets__form-wrapper{opacity:0 !important;transition:none !important}
 body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .facets__form-wrapper{opacity:1 !important;transition:opacity .15s ease}
@@ -361,18 +364,30 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
 </style>
 <script>
 (function(){
-  // Bij LAOM productpagina: markeer body voor FOUC-CSS
-  try {
-    var path = location.pathname || '';
-    if (/\/products\/led-inbouwspot-laom-(wit|mat-zwart|zilver)/.test(path)){
-      // Run zo vroeg mogelijk; body bestaat nog niet bij script-execution in <head>
-      var setLaomClass = function(){
-        if (document.body) document.body.classList.add('sw-product-laom');
-        else requestAnimationFrame(setLaomClass);
+  // Bij LAOM productpagina: markeer body voor FOUC-CSS — fires zo vroeg mogelijk + bij iedere navigation
+  function checkLaomPage(){
+    try {
+      var path = location.pathname || '';
+      var isLaom = /\/products\/led-inbouwspot-laom-(wit|mat-zwart|zilver)/.test(path);
+      var setClass = function(){
+        if (!document.body) { requestAnimationFrame(setClass); return; }
+        if (isLaom) document.body.classList.add('sw-product-laom');
+        else {
+          document.body.classList.remove('sw-product-laom');
+          document.body.classList.remove('sw-main-img-ready');
+        }
       };
-      setLaomClass();
-    }
-  } catch(e){}
+      setClass();
+    } catch(e){}
+  }
+  checkLaomPage();
+  window.addEventListener('popstate', checkLaomPage);
+  window.addEventListener('pageshow', checkLaomPage);
+  // Horizon view-transition: intercept link clicks die naar LAOM gaan om body class meteen te zetten
+  document.addEventListener('click', function(e){
+    var a = e.target && e.target.closest && e.target.closest('a[href*="/products/led-inbouwspot-laom-"]');
+    if (a && document.body) document.body.classList.add('sw-product-laom');
+  }, true);
   // Hardcoded overrides per handle voor cards waar geen liquid marker te plaatsen is (sw-pp-card op homepage etc)
   var SW_HANDLE_OVERRIDES = {
     'led-inbouwspot-laom-wit': 'https://www.outledtl.nl/wp-content/uploads/2023/10/OUTLEDTL-LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIMBAAR-WIT.png',
