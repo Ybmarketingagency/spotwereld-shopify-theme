@@ -307,7 +307,10 @@ product-card .text-block[class*="product_title"]{
 .sw-active-chip button:hover{color:#dc2626}
 .sw-lk-active,.sw-vorm-active{background:rgba(15,111,227,.08)!important;border-radius:6px}
 .sw-lk-active .checkbox__label-text,.sw-vorm-active .checkbox__label-text{color:#0F6FE3!important;font-weight:700!important}
-.sw-lk-active .icon-checkmark,.sw-vorm-active .icon-checkmark{background:#0F6FE3!important;border-color:#0F6FE3!important}
+.sw-lk-active .icon-checkmark,.sw-vorm-active .icon-checkmark{background:#0F6FE3!important;border-color:#0F6FE3!important;color:#fff!important}
+.sw-lk-active input[type="checkbox"],.sw-vorm-active input[type="checkbox"]{accent-color:#0F6FE3}
+/* Force checked appearance regardless of native render */
+.sw-lk-active .checkbox__label::before,.sw-vorm-active .checkbox__label::before{background:#0F6FE3!important;border-color:#0F6FE3!important}
 </style>
 <script>
 (function(){
@@ -439,18 +442,18 @@ product-card .text-block[class*="product_title"]{
   // ============== MULTI FILTER HIJACK + CHIPS (Vorm + IP + Zaagmaat + Lichtkleur opties) ==============
   // Product spec lookup per handle
   var SW_PRODUCT_SPECS = {
-    'led-inbouwspot-aristo-mat-wit':        {vorm:'rond', ip:'IP65', zaag:[68,75]},
-    'led-inbouwspot-aristo-mat-zwart':      {vorm:'rond', ip:'IP65', zaag:[68,75]},
-    'led-inbouwspot-aristo-zilver':         {vorm:'rond', ip:'IP65', zaag:[68,75]},
-    'led-inbouwspot-aristo-koper':          {vorm:'rond', ip:'IP65', zaag:[68,75]},
-    'led-inbouwspot-aristo-goud':           {vorm:'rond', ip:'IP65', zaag:[68,75]},
-    'led-inbouwspot-aristo-satin-metallic': {vorm:'rond', ip:'IP65', zaag:[68,75]},
-    'led-inbouwspot-miran-mat-wit':         {vorm:'rond', ip:'IP65', zaag:[68,75]},
-    'led-inbouwspot-miran-mat-zwart':       {vorm:'rond', ip:'IP65', zaag:[68,75]},
-    'led-inbouwspot-miran-goud':            {vorm:'rond', ip:'IP65', zaag:[68,75]},
-    'led-inbouwspot-laom-wit':              {vorm:'vierkant', ip:'IP44', zaag:[68,68]},
-    'led-inbouwspot-laom-mat-zwart':        {vorm:'vierkant', ip:'IP44', zaag:[68,68]},
-    'led-inbouwspot-laom-zilver':           {vorm:'vierkant', ip:'IP44', zaag:[68,68]}
+    'led-inbouwspot-aristo-mat-wit':        {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:25},
+    'led-inbouwspot-aristo-mat-zwart':      {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:25},
+    'led-inbouwspot-aristo-zilver':         {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:25},
+    'led-inbouwspot-aristo-koper':          {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:25},
+    'led-inbouwspot-aristo-goud':           {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:25},
+    'led-inbouwspot-aristo-satin-metallic': {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:25},
+    'led-inbouwspot-miran-mat-wit':         {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:23},
+    'led-inbouwspot-miran-mat-zwart':       {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:23},
+    'led-inbouwspot-miran-goud':            {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:23},
+    'led-inbouwspot-laom-wit':              {vorm:'vierkant', ip:'IP44', zaag:[68,68], diepte:28},
+    'led-inbouwspot-laom-mat-zwart':        {vorm:'vierkant', ip:'IP44', zaag:[68,68], diepte:28},
+    'led-inbouwspot-laom-zilver':           {vorm:'vierkant', ip:'IP44', zaag:[68,68], diepte:28}
   };
   function getHandle(card){
     var link = card.querySelector('a[href*="/products/"]');
@@ -477,6 +480,7 @@ product-card .text-block[class*="product_title"]{
     var vorms = params.getAll('sw_vorm');
     var ips = params.getAll('sw_ip');
     var zaags = params.getAll('sw_zaag');
+    var dieptes = params.getAll('sw_diepte');
     document.querySelectorAll('product-card, .product-card').forEach(function(c){
       var h = getHandle(c);
       var s = getSpecs(h);
@@ -485,6 +489,7 @@ product-card .text-block[class*="product_title"]{
       if (vorms.length>0) keep = keep && s && vorms.indexOf(s.vorm)>-1;
       if (ips.length>0) keep = keep && s && ips.indexOf(s.ip)>-1;
       if (zaags.length>0) keep = keep && s && zaags.some(function(z){return zaagInRange(s.zaag, z)});
+      if (dieptes.length>0) keep = keep && s && dieptes.indexOf(String(s.diepte))>-1;
       grid.style.display = keep ? '' : 'none';
     });
   }
@@ -532,12 +537,54 @@ product-card .text-block[class*="product_title"]{
     if (document.querySelector('.sw-ip-facet')) { syncIPInputs(); return; }
     var anchor = document.querySelector('.sw-vorm-facet') || findFacet('Kleur');
     if (!anchor) return;
+    var opts = [
+      {v:'IP20', n:'IP20 (Stofbestendig)'},
+      {v:'IP21', n:'IP21 (Stof- en druppelbestendig)'},
+      {v:'IP44', n:'IP44 (Spatwaterdicht)'},
+      {v:'IP54', n:'IP54 (Stof- en spatwaterdicht)'},
+      {v:'IP65', n:'IP65 (Stof- en plenswaterdicht)'},
+      {v:'IP67', n:'IP67 (Stof- en waterdicht)'}
+    ];
     var html = '<details class="facets__item sw-ip-facet" open><summary class="facets__summary"><span class="facets__label">IP-waarde</span><span class="facets__icon"></span></summary><div class="facets__panel"><ul class="facets__inputs facets__inputs-list">'+
-      [{v:'IP44',n:'IP44'},{v:'IP65',n:'IP65'},{v:'IP67',n:'IP67'}].map(function(o){
+      opts.map(function(o){
         return '<li class="facets__inputs-list-item"><label class="checkbox"><input type="checkbox" class="checkbox__input" name="sw_ip" value="'+o.v+'"><span class="checkbox__label"><span class="icon-checkmark"></span><span class="checkbox__label-text">'+o.n+'</span></span></label></li>';
       }).join('')+'</ul></div></details>';
     withGuard(function(){ anchor.insertAdjacentHTML('afterend', html); });
     syncIPInputs();
+  }
+  function addDiepteFilter(){
+    if (document.querySelector('.sw-diepte-facet')) { syncDiepteInputs(); return; }
+    var anchor = document.querySelector('.sw-zaag-facet') || document.querySelector('.sw-ip-facet') || document.querySelector('.sw-vorm-facet') || findFacet('Kleur');
+    if (!anchor) return;
+    var opts = [12,15,23,25,26,27,28,30,35,36,37,38,45,47,62,68,78,80,125,133].map(function(d){return {v:String(d), n:d+' mm'};});
+    var html = '<details class="facets__item sw-diepte-facet" open><summary class="facets__summary"><span class="facets__label">Inbouwdiepte</span><span class="facets__icon"></span></summary><div class="facets__panel"><ul class="facets__inputs facets__inputs-list">'+
+      opts.map(function(o){
+        return '<li class="facets__inputs-list-item"><label class="checkbox"><input type="checkbox" class="checkbox__input" name="sw_diepte" value="'+o.v+'"><span class="checkbox__label"><span class="icon-checkmark"></span><span class="checkbox__label-text">'+o.n+'</span></span></label></li>';
+      }).join('')+'</ul></div></details>';
+    withGuard(function(){ anchor.insertAdjacentHTML('afterend', html); });
+    syncDiepteInputs();
+  }
+  function syncDiepteInputs(){
+    var facet = document.querySelector('.sw-diepte-facet'); if (!facet) return;
+    var actives = new URLSearchParams(location.search).getAll('sw_diepte');
+    facet.querySelectorAll('input').forEach(function(inp){
+      inp.checked = actives.indexOf(inp.value) > -1;
+      var li = inp.closest('li'); if (li) li.classList.toggle('sw-vorm-active', inp.checked);
+      if (inp.dataset.swFixed) return;
+      inp.dataset.swFixed = '1';
+      inp.addEventListener('click', function(e){ e.stopPropagation(); e.stopImmediatePropagation(); setTimeout(function(){ toggleParamFromInputs('.sw-diepte-facet', 'sw_diepte'); }, 0); }, true);
+      inp.addEventListener('change', function(e){ e.stopPropagation(); e.stopImmediatePropagation(); }, true);
+    });
+  }
+  function renameKleurLabels(){
+    var kleurFacet = findFacet('Kleur');
+    if (!kleurFacet || kleurFacet.dataset.swKleurRenamed) return;
+    var map = {'Mat Wit':'Wit','Mat Zwart':'Zwart'};
+    kleurFacet.querySelectorAll('.checkbox__label-text, label span').forEach(function(lbl){
+      var t = lbl.textContent.trim();
+      if (map[t]) lbl.textContent = map[t];
+    });
+    kleurFacet.dataset.swKleurRenamed = '1';
   }
   function syncIPInputs(){
     var facet = document.querySelector('.sw-ip-facet'); if (!facet) return;
@@ -663,8 +710,9 @@ product-card .text-block[class*="product_title"]{
       var p = new URLSearchParams(location.search);
       var defs = [
         {param:'sw_vorm', label:'Vorm', facetSel:'.sw-vorm-facet', map:{rond:'Rond',vierkant:'Vierkant',rechthoek:'Rechthoek'}},
-        {param:'sw_ip', label:'IP', facetSel:'.sw-ip-facet', map:{}},
+        {param:'sw_ip', label:'IP', facetSel:'.sw-ip-facet', map:{IP20:'IP20',IP21:'IP21',IP44:'IP44',IP54:'IP54',IP65:'IP65',IP67:'IP67'}},
         {param:'sw_zaag', label:'Gatmaat', facetSel:'.sw-zaag-facet', map:{'lt49':'< 49 mm','50-59':'50-59 mm','60-69':'60-69 mm','70-79':'70-79 mm','80-99':'80-99 mm','100-129':'100-129 mm','gt130':'> 130 mm'}},
+        {param:'sw_diepte', label:'Inbouwdiepte', facetSel:'.sw-diepte-facet', map:{}},
         {param:'sw_lk', label:'Lichtkleur', facetSel:'[data-sw-lk]', map:{'2200':'2200K','2700':'2700K','2700d':'2700K dimbaar','3000':'3000K','4000':'4000K','dim2warm':'Dim-to-warm','rgbww':'RGBWW','tri':'Tri-color'}}
       ];
       defs.forEach(function(def){
@@ -672,7 +720,8 @@ product-card .text-block[class*="product_title"]{
           var chip = document.createElement('span');
           chip.className = 'sw-active-chip';
           chip.setAttribute('data-sw-chip', def.param+'-'+v);
-          chip.innerHTML = def.label + ': ' + (def.map[v]||v) + ' <button aria-label="Verwijder">✕</button>';
+          var lbl = def.map[v] || (def.param==='sw_diepte' ? (v + ' mm') : v);
+          chip.innerHTML = def.label + ': ' + lbl + ' <button aria-label="Verwijder">✕</button>';
           chip.querySelector('button').addEventListener('click', function(){
             var p2 = new URLSearchParams(location.search);
             var keep = p2.getAll(def.param).filter(function(x){ return x !== v; });
@@ -696,7 +745,9 @@ product-card .text-block[class*="product_title"]{
     fixVormInputs();
     addIPFilter();
     addZaagFilter();
+    addDiepteFilter();
     expandLichtkleur();
+    renameKleurLabels();
     applyAllFilters();
     renderActiveChips();
   }
