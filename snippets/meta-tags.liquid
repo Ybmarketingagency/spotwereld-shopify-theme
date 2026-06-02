@@ -394,18 +394,18 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
   // ============== TITLE SPEC REWRITER ==============
   // Per handle, the full descriptive title
   var SW_TITLES = {
-    'led-inbouwspot-aristo-mat-wit':        'LED Inbouwspot Aristo | Dimbaar | IP65 | 4W en 6W | CCT Switch | Zaagmaat: Ø68-75 mm | Mat Wit',
-    'led-inbouwspot-aristo-mat-zwart':      'LED Inbouwspot Aristo | Dimbaar | IP65 | 4W en 6W | CCT Switch | Zaagmaat: Ø68-75 mm | Mat Zwart',
-    'led-inbouwspot-aristo-zilver':         'LED Inbouwspot Aristo | Dimbaar | IP65 | 4W en 6W | CCT Switch | Zaagmaat: Ø68-75 mm | Zilver',
-    'led-inbouwspot-aristo-koper':          'LED Inbouwspot Aristo | Dimbaar | IP65 | 4W en 6W | CCT Switch | Zaagmaat: Ø68-75 mm | Koper',
-    'led-inbouwspot-aristo-goud':           'LED Inbouwspot Aristo | Dimbaar | IP65 | 4W en 6W | CCT Switch | Zaagmaat: Ø68-75 mm | Goud',
-    'led-inbouwspot-aristo-satin-metallic': 'LED Inbouwspot Aristo | Dimbaar | IP65 | 4W en 6W | CCT Switch | Zaagmaat: Ø68-75 mm | Satin Metallic',
-    'led-inbouwspot-miran-mat-wit':         'LED Inbouwspot Miran | Dimbaar | IP65 | 5W en 7W | CCT Switch | Zaagmaat: Ø68-75 mm | Mat Wit',
-    'led-inbouwspot-miran-mat-zwart':       'LED Inbouwspot Miran | Dimbaar | IP65 | 5W en 7W | CCT Switch | Zaagmaat: Ø68-75 mm | Mat Zwart',
-    'led-inbouwspot-miran-goud':            'LED Inbouwspot Miran | Dimbaar | IP65 | 5W en 7W | CCT Switch | Zaagmaat: Ø68-75 mm | Goud',
-    'led-inbouwspot-laom-wit':              'LED Inbouwspot Laom | Dimbaar | IP44 | 6W | Vierkant | Zaagmaat: Ø68 mm | Wit',
-    'led-inbouwspot-laom-mat-zwart':        'LED Inbouwspot Laom | Dimbaar | IP44 | 6W | Vierkant | Zaagmaat: Ø68 mm | Mat Zwart',
-    'led-inbouwspot-laom-zilver':           'LED Inbouwspot Laom | Dimbaar | IP44 | 6W | Vierkant | Zaagmaat: Ø68 mm | Zilver'
+    'led-inbouwspot-aristo-mat-wit':        'LED Inbouwspot Aristo | Dimbaar | IP65 | 4W en 6W | CCT Switch | Zaagmaat: Ø68-75 mm | Inbouwdiepte: 25/30 mm | Mat Wit',
+    'led-inbouwspot-aristo-mat-zwart':      'LED Inbouwspot Aristo | Dimbaar | IP65 | 4W en 6W | CCT Switch | Zaagmaat: Ø68-75 mm | Inbouwdiepte: 25/30 mm | Mat Zwart',
+    'led-inbouwspot-aristo-zilver':         'LED Inbouwspot Aristo | Dimbaar | IP65 | 4W en 6W | CCT Switch | Zaagmaat: Ø68-75 mm | Inbouwdiepte: 25/30 mm | Zilver',
+    'led-inbouwspot-aristo-koper':          'LED Inbouwspot Aristo | Dimbaar | IP65 | 4W en 6W | CCT Switch | Zaagmaat: Ø68-75 mm | Inbouwdiepte: 25/30 mm | Koper',
+    'led-inbouwspot-aristo-goud':           'LED Inbouwspot Aristo | Dimbaar | IP65 | 4W en 6W | CCT Switch | Zaagmaat: Ø68-75 mm | Inbouwdiepte: 25/30 mm | Goud',
+    'led-inbouwspot-aristo-satin-metallic': 'LED Inbouwspot Aristo | Dimbaar | IP65 | 4W en 6W | CCT Switch | Zaagmaat: Ø68-75 mm | Inbouwdiepte: 25/30 mm | Satin Metallic',
+    'led-inbouwspot-miran-mat-wit':         'LED Inbouwspot Miran | Dimbaar | IP65 | 5W en 7W | CCT Switch | Zaagmaat: Ø68-75 mm | Inbouwdiepte: 25 mm | Mat Wit',
+    'led-inbouwspot-miran-mat-zwart':       'LED Inbouwspot Miran | Dimbaar | IP65 | 5W en 7W | CCT Switch | Zaagmaat: Ø68-75 mm | Inbouwdiepte: 25 mm | Mat Zwart',
+    'led-inbouwspot-miran-goud':            'LED Inbouwspot Miran | Dimbaar | IP65 | 5W en 7W | CCT Switch | Zaagmaat: Ø68-75 mm | Inbouwdiepte: 25 mm | Goud',
+    'led-inbouwspot-laom-wit':              'LED Inbouwspot Laom | Dimbaar | IP44 | 6W | Vierkant | Zaagmaat: Ø75-80 mm | Inbouwdiepte: 26 mm | Wit',
+    'led-inbouwspot-laom-mat-zwart':        'LED Inbouwspot Laom | Dimbaar | IP44 | 6W | Vierkant | Zaagmaat: Ø75-80 mm | Inbouwdiepte: 26 mm | Mat Zwart',
+    'led-inbouwspot-laom-zilver':           'LED Inbouwspot Laom | Dimbaar | IP44 | 6W | Vierkant | Zaagmaat: Ø75-80 mm | Inbouwdiepte: 26 mm | Zilver'
   };
   function rewriteTitles(){
     // Cards (collection/home) — find any <a href="/products/HANDLE"> and rewrite text
@@ -475,19 +475,20 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
   // Product spec lookup per handle
   // CCT switch = supports 2700K/3000K/4000K
   var CCT_LK = ['2700','3000','4000'];
+  // diepte = array van mogelijke waarden (sommige producten ondersteunen meerdere varianten)
   var SW_PRODUCT_SPECS = {
-    'led-inbouwspot-aristo-mat-wit':        {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:25, lk:CCT_LK},
-    'led-inbouwspot-aristo-mat-zwart':      {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:25, lk:CCT_LK},
-    'led-inbouwspot-aristo-zilver':         {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:25, lk:CCT_LK},
-    'led-inbouwspot-aristo-koper':          {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:25, lk:CCT_LK},
-    'led-inbouwspot-aristo-goud':           {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:25, lk:CCT_LK},
-    'led-inbouwspot-aristo-satin-metallic': {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:25, lk:CCT_LK},
-    'led-inbouwspot-miran-mat-wit':         {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:23, lk:CCT_LK},
-    'led-inbouwspot-miran-mat-zwart':       {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:23, lk:CCT_LK},
-    'led-inbouwspot-miran-goud':            {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:23, lk:CCT_LK},
-    'led-inbouwspot-laom-wit':              {vorm:'vierkant', ip:'IP44', zaag:[68,68], diepte:28, lk:CCT_LK},
-    'led-inbouwspot-laom-mat-zwart':        {vorm:'vierkant', ip:'IP44', zaag:[68,68], diepte:28, lk:CCT_LK},
-    'led-inbouwspot-laom-zilver':           {vorm:'vierkant', ip:'IP44', zaag:[68,68], diepte:28, lk:CCT_LK}
+    'led-inbouwspot-aristo-mat-wit':        {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25,30], lk:CCT_LK},
+    'led-inbouwspot-aristo-mat-zwart':      {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25,30], lk:CCT_LK},
+    'led-inbouwspot-aristo-zilver':         {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25,30], lk:CCT_LK},
+    'led-inbouwspot-aristo-koper':          {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25,30], lk:CCT_LK},
+    'led-inbouwspot-aristo-goud':           {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25,30], lk:CCT_LK},
+    'led-inbouwspot-aristo-satin-metallic': {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25,30], lk:CCT_LK},
+    'led-inbouwspot-miran-mat-wit':         {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25], lk:CCT_LK},
+    'led-inbouwspot-miran-mat-zwart':       {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25], lk:CCT_LK},
+    'led-inbouwspot-miran-goud':            {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25], lk:CCT_LK},
+    'led-inbouwspot-laom-wit':              {vorm:'vierkant', ip:'IP44', zaag:[75,80], diepte:[26], lk:CCT_LK},
+    'led-inbouwspot-laom-mat-zwart':        {vorm:'vierkant', ip:'IP44', zaag:[75,80], diepte:[26], lk:CCT_LK},
+    'led-inbouwspot-laom-zilver':           {vorm:'vierkant', ip:'IP44', zaag:[75,80], diepte:[26], lk:CCT_LK}
   };
   function getHandle(card){
     var link = card.querySelector('a[href*="/products/"]');
@@ -524,7 +525,10 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
       if (vorms.length>0) keep = keep && s && vorms.indexOf(s.vorm)>-1;
       if (ips.length>0) keep = keep && s && ips.indexOf(s.ip)>-1;
       if (zaags.length>0) keep = keep && s && zaags.some(function(z){return zaagInRange(s.zaag, z)});
-      if (dieptes.length>0) keep = keep && s && dieptes.indexOf(String(s.diepte))>-1;
+      if (dieptes.length>0) {
+        var prodDieptes = Array.isArray(s && s.diepte) ? s.diepte : (s ? [s.diepte] : []);
+        keep = keep && prodDieptes.some(function(d){ return dieptes.indexOf(String(d)) > -1; });
+      }
       if (lks.length>0) keep = keep && s && s.lk && lks.some(function(l){return s.lk.indexOf(l)>-1});
       // Dimbaar Nee: all our products zijn dimbaar, dus Nee → altijd verbergen
       if (params.getAll('sw_dim').indexOf('nee') > -1) keep = false;
