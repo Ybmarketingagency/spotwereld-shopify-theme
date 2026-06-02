@@ -371,8 +371,10 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
 @keyframes swPopupFade{from{opacity:0}to{opacity:1}}
 .sw-popup{background:#fff;border-radius:16px;max-width:440px;width:100%;padding:2rem 1.75rem;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.25);animation:swPopupSlide .35s cubic-bezier(.16,1,.3,1);text-align:center;font-family:inherit}
 @keyframes swPopupSlide{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
-.sw-popup-close{position:absolute;top:.75rem;right:.75rem;background:none;border:0;font-size:1.5rem;cursor:pointer;color:#94a3b8;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all .15s;line-height:1}
-.sw-popup-close:hover{background:#f1f5f9;color:#061f40}
+.sw-popup-close{position:absolute;top:.5rem;right:.5rem;background:#fff;border:0;font-size:1.6rem;cursor:pointer !important;color:#475569;width:36px;height:36px;border-radius:50%;display:flex !important;align-items:center;justify-content:center;transition:all .15s;line-height:1;z-index:100;pointer-events:auto !important;padding:0;font-family:inherit;font-weight:400;user-select:none;-webkit-appearance:none;appearance:none}
+.sw-popup-close:hover{background:#f1f5f9;color:#061f40;transform:scale(1.05)}
+.sw-popup-close:focus{outline:2px solid #0F6FE3;outline-offset:2px}
+.sw-popup-close *{pointer-events:none}
 .sw-popup-badge{display:inline-block;background:linear-gradient(135deg,#FF6B35,#F7931E);color:#fff;font-weight:800;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;padding:.35rem .75rem;border-radius:999px;margin-bottom:.75rem}
 .sw-popup-discount{font-size:3.5rem;font-weight:900;color:#061f40;margin:.25rem 0;letter-spacing:-.03em;line-height:1;background:linear-gradient(135deg,#083D7D,#0F6FE3);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .sw-popup h2{font-size:1.4rem;font-weight:900;color:#061f40;margin:0 0 .5rem;letter-spacing:-.02em}
@@ -1220,9 +1222,22 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
     if (existingCode) showBar(existingCode);
   });
 
-  if (closeBtn) closeBtn.addEventListener('click', function(){ hide(); markShown(); });
+  if (closeBtn) closeBtn.addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); hide(); markShown(); });
   if (overlay) overlay.addEventListener('click', function(e){ if (e.target === overlay){ hide(); markShown(); } });
   if (shopBtn) shopBtn.addEventListener('click', function(){ hide(); });
+  // Fallback: event delegation op document — werkt ook als closeBtn lookup faalt
+  document.addEventListener('click', function(e){
+    var t = e.target;
+    if (!t || !t.closest) return;
+    var btn = t.closest('#sw-popup-close, .sw-popup-close');
+    if (btn){ e.preventDefault(); e.stopPropagation(); hide(); markShown(); }
+  }, true);
+  // ESC sluit popup
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && overlay && overlay.classList.contains('sw-active')){
+      hide(); markShown();
+    }
+  });
   if (barClose) barClose.addEventListener('click', function(){
     bar.classList.remove('sw-show');
     try { sessionStorage.setItem('sw_bar_dismissed','1'); } catch(e){}
