@@ -320,6 +320,11 @@ details.facets__item[open] .facets__icon svg{transform:rotate(180deg)}
 /* Inject chevron if not present (CSS fallback) */
 .facets__item .facets__icon:empty::after{content:'';display:inline-block;width:8px;height:8px;border-right:2px solid #061f40;border-bottom:2px solid #061f40;transform:rotate(45deg);transition:transform .2s;margin-bottom:3px}
 details.facets__item[open] .facets__icon:empty::after{transform:rotate(-135deg);margin-bottom:-3px}
+/* Force checkbox visibility (sommige facets renderen swatches die de checkbox verbergen — overrule dat) */
+.facets__item .checkbox{display:flex !important;align-items:center !important;gap:.5rem !important}
+.facets__item .checkbox__input{position:relative !important;opacity:1 !important;width:18px !important;height:18px !important;pointer-events:auto !important;clip:auto !important;margin:0 !important;flex-shrink:0 !important;appearance:auto !important;-webkit-appearance:auto !important;accent-color:#061f40}
+.facets__item .icon-checkmark{display:inline-block !important;width:18px !important;height:18px !important;border:1.5px solid #cbd5e1 !important;border-radius:4px !important;flex-shrink:0 !important;background:#fff !important}
+.facets__item .swatch{display:none !important}
 </style>
 <script>
 (function(){
@@ -608,12 +613,10 @@ details.facets__item[open] .facets__icon:empty::after{transform:rotate(-135deg);
     });
   }
   function fixDimbaarNee(){
-    // Find facet "Dimbaar"
     var dimFacet = findFacet('Dimbaar');
     if (!dimFacet) return;
     var nee = dimFacet.querySelector('.sw-fake-nee');
     if (!nee){
-      // Find li containing text "Nee"
       var lis = dimFacet.querySelectorAll('li, .facets__inputs-list-item');
       for (var i=0;i<lis.length;i++){
         var t = (lis[i].textContent||'').trim();
@@ -621,34 +624,41 @@ details.facets__item[open] .facets__icon:empty::after{transform:rotate(-135deg);
       }
     }
     if (!nee) return;
+    nee.classList.add('sw-fake-nee'); // mark for delegation lookup
     nee.style.opacity = '1';
     nee.style.pointerEvents = 'auto';
     var inp = nee.querySelector('input');
     if (!inp) return;
     inp.disabled = false;
     inp.removeAttribute('disabled');
+    inp.setAttribute('name','sw_dim');
+    inp.setAttribute('value','nee');
     var actives = new URLSearchParams(location.search).getAll('sw_dim');
     inp.checked = actives.indexOf('nee') > -1;
     nee.classList.toggle('sw-vorm-active', inp.checked);
-    if (inp.dataset.swFixed) return;
-    inp.dataset.swFixed = '1';
-    inp.setAttribute('name','sw_dim');
-    inp.setAttribute('value','nee');
-    inp.addEventListener('click', function(e){
-      e.stopPropagation(); e.stopImmediatePropagation();
-      setTimeout(function(){
-        var p = new URLSearchParams(location.search);
-        p.delete('sw_dim');
-        if (inp.checked) p.append('sw_dim','nee');
-        var s = p.toString();
-        history.replaceState({}, '', location.pathname + (s?'?'+s:''));
-        nee.classList.toggle('sw-vorm-active', inp.checked);
-        applyAllFilters();
-        renderActiveChips();
-      }, 0);
-    }, true);
-    inp.addEventListener('change', function(e){ e.stopPropagation(); e.stopImmediatePropagation(); }, true);
   }
+  // Delegated click handler voor Dimbaar Nee (werkt ook na Shopify re-render)
+  document.addEventListener('click', function(e){
+    var t = e.target;
+    if (!t) return;
+    var nee = t.closest && t.closest('.sw-fake-nee');
+    if (!nee) return;
+    var inp = nee.querySelector('input');
+    if (!inp || t !== inp) return;
+    // Voorkom Shopify form submit
+    e.stopPropagation();
+    e.stopImmediatePropagation();
+    setTimeout(function(){
+      var p = new URLSearchParams(location.search);
+      p.delete('sw_dim');
+      if (inp.checked) p.append('sw_dim','nee');
+      var s = p.toString();
+      history.replaceState({}, '', location.pathname + (s?'?'+s:''));
+      nee.classList.toggle('sw-vorm-active', inp.checked);
+      applyAllFilters();
+      renderActiveChips();
+    }, 0);
+  }, true);
   function renameKleurLabels(){
     // Scan the entire facets wrapper (en active chips area) en vervang ALLE text nodes
     var scopes = document.querySelectorAll('.facets-block-wrapper--vertical, .facets__form-wrapper, .facets-controls-wrapper, [class*="active-facets"], [class*="facets__selected"], facet-remove, active-facets');
@@ -670,22 +680,26 @@ details.facets__item[open] .facets__icon:empty::after{transform:rotate(-135deg);
     });
   }
   function dedupeAndOrderFacets(){
-    // Remove duplicate sw-vorm-facet (oude inline code voegt soms tweede toe)
-    var vorms = document.querySelectorAll('.sw-vorm-facet');
-    for (var i=1; i<vorms.length; i++){ vorms[i].remove(); }
-    // Verzeker dat onze filters NA Kleur staan, niet ervoor
+    // Dedup: behoud alleen eerste van elk
+    ['.sw-vorm-facet','.sw-ip-facet','.sw-zaag-facet','.sw-diepte-facet'].forEach(function(sel){
+      var els = document.querySelectorAll(sel);
+      for (var i=1; i<els.length; i++){ els[i].remove(); }
+    });
+    // Volgorde: Vorm → IP → Gatmaat → Inbouwdiepte, ALLES bovenaan vóór Kleur en de andere native facets
     var kleurFacet = findFacet('Kleur');
     if (!kleurFacet) return;
     var parent = kleurFacet.parentElement;
     if (!parent) return;
-    ['.sw-vorm-facet','.sw-ip-facet','.sw-zaag-facet','.sw-diepte-facet'].forEach(function(sel){
+    // Vind eerste facet in de lijst (bovenste)
+    var firstFacet = parent.querySelector('.facets__item');
+    if (!firstFacet) return;
+    var order = ['.sw-diepte-facet','.sw-zaag-facet','.sw-ip-facet','.sw-vorm-facet']; // reversed; we prependen
+    order.forEach(function(sel){
       var el = parent.querySelector(sel);
       if (!el) return;
-      // Als el VOOR kleurFacet staat in dezelfde parent, verplaats naar erna
-      var pos = kleurFacet.compareDocumentPosition(el);
-      if (pos & Node.DOCUMENT_POSITION_PRECEDING){
-        // move el right after kleurFacet
-        kleurFacet.parentNode.insertBefore(el, kleurFacet.nextSibling);
+      // Prepend zodat Vorm uiteindelijk bovenaan komt
+      if (el !== parent.firstElementChild) {
+        parent.insertBefore(el, parent.firstElementChild);
       }
     });
   }
