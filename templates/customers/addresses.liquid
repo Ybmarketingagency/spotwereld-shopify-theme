@@ -1,0 +1,139 @@
+{% layout 'theme' %}
+
+<style>
+.sw-addr-wrap{max-width:900px;margin:2rem auto;padding:0 1.25rem;font-family:inherit}
+.sw-addr-back{display:inline-flex;align-items:center;gap:.35rem;color:#0F6FE3;text-decoration:none;font-weight:600;font-size:.88rem;margin-bottom:1rem}
+.sw-addr-back:hover{text-decoration:underline}
+.sw-addr-head{background:linear-gradient(120deg,#061f40,#0a2d5e);color:#fff;border-radius:16px;padding:1.75rem 2rem;margin-bottom:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.sw-addr-head h1{font-size:1.6rem;font-weight:900;margin:0 0 .25rem;letter-spacing:-.02em}
+.sw-addr-head p{margin:0;color:rgba(255,255,255,.7);font-size:.88rem}
+.sw-btn-primary{background:#fff;color:#061f40;border:0;padding:.7rem 1.25rem;border-radius:8px;font-weight:700;font-size:.88rem;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:.4rem;transition:all .15s}
+.sw-btn-primary:hover{background:#facc15;transform:translateY(-1px)}
+.sw-addr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem}
+.sw-addr-card{background:#fff;border-radius:12px;border:1px solid #e8edf4;padding:1.25rem;position:relative}
+.sw-addr-card.default{border-color:#0F6FE3;border-width:2px}
+.sw-addr-card .badge{position:absolute;top:.65rem;right:.65rem;background:#dcfce7;color:#15803d;font-size:.65rem;font-weight:700;padding:.2rem .5rem;border-radius:4px;letter-spacing:.05em;text-transform:uppercase}
+.sw-addr-card p{margin:0 0 1rem;color:#1e293b;font-size:.9rem;line-height:1.6}
+.sw-addr-card strong{color:#061f40;display:block;margin-bottom:.25rem}
+.sw-addr-actions{display:flex;gap:.5rem;flex-wrap:wrap;padding-top:.75rem;border-top:1px solid #f0f3f8}
+.sw-btn-link{background:none;border:0;color:#0F6FE3;font-weight:600;font-size:.82rem;cursor:pointer;padding:.3rem .55rem;border-radius:6px;transition:background .15s}
+.sw-btn-link:hover{background:#f1f5f9}
+.sw-btn-link.danger{color:#dc2626}
+.sw-form-overlay{background:rgba(6,31,64,.5);position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:1.25rem;z-index:1000}
+.sw-form-overlay.show{display:flex}
+.sw-form-card{background:#fff;border-radius:16px;padding:2rem;max-width:520px;width:100%;max-height:90vh;overflow-y:auto}
+.sw-form-card h2{font-size:1.3rem;font-weight:900;color:#061f40;margin:0 0 1.25rem;letter-spacing:-.02em}
+.sw-form-field{margin-bottom:.85rem}
+.sw-form-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:.85rem}
+.sw-form-row .sw-form-field{margin-bottom:0}
+.sw-form-label{display:block;font-size:.75rem;font-weight:700;color:#475569;margin-bottom:.35rem;text-transform:uppercase;letter-spacing:.05em}
+.sw-form-input,.sw-form-select{width:100%;padding:.75rem .9rem;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.92rem;outline:none;transition:border-color .15s;box-sizing:border-box;font-family:inherit;background:#fff;color:#1e293b}
+.sw-form-input:focus,.sw-form-select:focus{border-color:#0F6FE3}
+.sw-form-check{display:flex;align-items:center;gap:.5rem;color:#475569;font-size:.88rem;margin-bottom:1rem}
+.sw-form-actions{display:flex;gap:.5rem;justify-content:flex-end;margin-top:.5rem}
+.sw-btn{background:linear-gradient(135deg,#083D7D,#0F6FE3);color:#fff;border:0;padding:.75rem 1.3rem;border-radius:8px;font-weight:700;font-size:.88rem;cursor:pointer;transition:all .15s}
+.sw-btn:hover{background:linear-gradient(135deg,#062d5c,#0a5abf)}
+.sw-btn-secondary{background:#f1f5f9;color:#475569}
+.sw-btn-secondary:hover{background:#e2e8f0}
+.sw-empty{text-align:center;padding:3rem 1rem;background:#fff;border-radius:12px;border:1px dashed #cbd5e1;color:#64748b}
+@media(max-width:480px){.sw-form-row{grid-template-columns:1fr}}
+</style>
+
+<div class="sw-addr-wrap">
+  <a href="{{ routes.account_url }}" class="sw-addr-back">&larr; Terug naar account</a>
+
+  <div class="sw-addr-head">
+    <div>
+      <h1>Mijn adressen</h1>
+      <p>Beheer je verzend- en factuuradressen.</p>
+    </div>
+    <a href="#new" class="sw-btn-primary" id="sw-new-btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Nieuw adres
+    </a>
+  </div>
+
+  {%- paginate customer.addresses by 10 -%}
+    {%- if customer.addresses.size > 0 -%}
+      <div class="sw-addr-grid">
+        {%- for address in customer.addresses -%}
+          <div class="sw-addr-card{% if address == customer.default_address %} default{% endif %}">
+            {%- if address == customer.default_address -%}<span class="badge">Standaard</span>{%- endif -%}
+            <p>
+              <strong>{{ address.first_name }} {{ address.last_name }}</strong>
+              {%- if address.company != blank %}{{ address.company }}<br>{%- endif -%}
+              {{ address.address1 }}{% if address.address2 != blank %}, {{ address.address2 }}{% endif %}<br>
+              {{ address.zip }} {{ address.city }}<br>
+              {{ address.country }}
+              {%- if address.phone != blank %}<br>{{ address.phone }}{%- endif -%}
+            </p>
+            <div class="sw-addr-actions">
+              <button type="button" class="sw-btn-link" data-edit="{{ address.id }}">Bewerken</button>
+              {%- form 'customer_address', address -%}
+                <button type="submit" class="sw-btn-link danger" onclick="return confirm('Adres verwijderen?');">Verwijderen</button>
+                <input type="hidden" name="_method" value="delete">
+              {%- endform -%}
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- else -%}
+      <div class="sw-empty">
+        <p style="margin:0 0 1rem">Je hebt nog geen adressen toegevoegd.</p>
+        <a href="#new" class="sw-btn-primary" style="background:linear-gradient(135deg,#083D7D,#0F6FE3);color:#fff">Voeg je eerste adres toe</a>
+      </div>
+    {%- endif -%}
+  {%- endpaginate -%}
+</div>
+
+{%- comment -%} New address overlay {%- endcomment -%}
+<div class="sw-form-overlay" id="sw-new-overlay">
+  <div class="sw-form-card">
+    <h2>Nieuw adres</h2>
+    {%- form 'customer_address', customer.new_address -%}
+      <div class="sw-form-row">
+        <div class="sw-form-field"><label class="sw-form-label">Voornaam</label><input type="text" name="address[first_name]" class="sw-form-input" required></div>
+        <div class="sw-form-field"><label class="sw-form-label">Achternaam</label><input type="text" name="address[last_name]" class="sw-form-input" required></div>
+      </div>
+      <div class="sw-form-field"><label class="sw-form-label">Bedrijf (optioneel)</label><input type="text" name="address[company]" class="sw-form-input"></div>
+      <div class="sw-form-field"><label class="sw-form-label">Adres</label><input type="text" name="address[address1]" class="sw-form-input" required></div>
+      <div class="sw-form-field"><label class="sw-form-label">Adres 2 (optioneel)</label><input type="text" name="address[address2]" class="sw-form-input"></div>
+      <div class="sw-form-row">
+        <div class="sw-form-field"><label class="sw-form-label">Postcode</label><input type="text" name="address[zip]" class="sw-form-input" required></div>
+        <div class="sw-form-field"><label class="sw-form-label">Stad</label><input type="text" name="address[city]" class="sw-form-input" required></div>
+      </div>
+      <div class="sw-form-row">
+        <div class="sw-form-field">
+          <label class="sw-form-label">Land</label>
+          <select name="address[country]" class="sw-form-select" data-default="Netherlands">{{ country_option_tags }}</select>
+        </div>
+        <div class="sw-form-field"><label class="sw-form-label">Telefoon</label><input type="tel" name="address[phone]" class="sw-form-input"></div>
+      </div>
+      <label class="sw-form-check"><input type="checkbox" name="address[default]" value="1"> Stel in als standaardadres</label>
+      <div class="sw-form-actions">
+        <button type="button" class="sw-btn sw-btn-secondary" id="sw-cancel-btn">Annuleren</button>
+        <button type="submit" class="sw-btn">Opslaan</button>
+      </div>
+    {%- endform -%}
+  </div>
+</div>
+
+<script>
+(function(){
+  var overlay = document.getElementById('sw-new-overlay');
+  var newBtn = document.getElementById('sw-new-btn');
+  var cancelBtn = document.getElementById('sw-cancel-btn');
+  function show(){ overlay.classList.add('show'); document.body.style.overflow='hidden'; }
+  function hide(){ overlay.classList.remove('show'); document.body.style.overflow=''; history.replaceState(null,'',location.pathname); }
+  if (newBtn) newBtn.addEventListener('click', function(e){ e.preventDefault(); show(); });
+  if (cancelBtn) cancelBtn.addEventListener('click', hide);
+  overlay.addEventListener('click', function(e){ if (e.target === overlay) hide(); });
+  if (location.hash === '#new') show();
+  // Set default country
+  var sel = overlay.querySelector('select[name="address[country]"]');
+  if (sel) {
+    var def = sel.dataset.default;
+    Array.from(sel.options).forEach(function(o){ if (o.value === def) o.selected = true; });
+  }
+})();
+</script>

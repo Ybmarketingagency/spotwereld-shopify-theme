@@ -1,0 +1,52 @@
+{% layout 'theme' %}
+
+<style>
+.sw-auth-wrap{min-height:calc(100vh - 200px);display:flex;align-items:center;justify-content:center;padding:3rem 1.25rem;background:linear-gradient(135deg,#f8fafc 0%,#eef2f9 100%)}
+.sw-auth-card{background:#fff;border-radius:16px;box-shadow:0 20px 60px rgba(6,31,64,.08);max-width:440px;width:100%;padding:2.5rem 2rem;border:1px solid rgba(226,232,240,.6)}
+.sw-auth-logo{display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:1.5rem}
+.sw-auth-logo img{width:36px;height:36px}
+.sw-auth-logo span{font-weight:900;font-size:1.4rem;color:#061f40;letter-spacing:-.02em}
+.sw-auth-logo span em{font-style:normal;color:#facc15}
+.sw-auth-title{font-size:1.6rem;font-weight:900;color:#061f40;margin:0 0 .375rem;text-align:center;letter-spacing:-.02em}
+.sw-auth-sub{color:#64748b;text-align:center;margin:0 0 1.5rem;font-size:.92rem;line-height:1.5}
+.sw-auth-field{margin-bottom:1rem}
+.sw-auth-label{display:block;font-size:.78rem;font-weight:700;color:#475569;margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.06em}
+.sw-auth-input{width:100%;padding:.85rem 1rem;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.95rem;outline:none;transition:all .15s;box-sizing:border-box;font-family:inherit;background:#fff;color:#1e293b}
+.sw-auth-input:focus{border-color:#0F6FE3;box-shadow:0 0 0 3px rgba(15,111,227,.12)}
+.sw-auth-btn{width:100%;background:linear-gradient(135deg,#083D7D,#0F6FE3);color:#fff;border:0;border-radius:8px;padding:.95rem 1rem;font-weight:700;font-size:.95rem;cursor:pointer;transition:all .15s;margin-top:.5rem}
+.sw-auth-btn:hover{background:linear-gradient(135deg,#062d5c,#0a5abf);transform:translateY(-1px)}
+.sw-auth-btn-secondary{background:transparent;color:#64748b;border:1.5px solid #e2e8f0;margin-top:.5rem}
+.sw-auth-btn-secondary:hover{background:#f1f5f9}
+.sw-auth-errors{background:#fef2f2;border:1px solid #fecaca;color:#991b1b;padding:.75rem 1rem;border-radius:8px;margin:0 0 1rem;font-size:.85rem}
+</style>
+
+<div class="sw-auth-wrap">
+  <div class="sw-auth-card">
+    <div class="sw-auth-logo">
+      <img src="https://i.imgur.com/2ROeTRS.png" alt="Spotwereld">
+      <span>Spot<em>wereld</em></span>
+    </div>
+    <h1 class="sw-auth-title">Activeer je account</h1>
+    <p class="sw-auth-sub">Welkom! Kies een wachtwoord om je account te activeren.</p>
+
+    {%- form 'activate_customer_password' -%}
+      {%- if form.errors -%}
+        <div class="sw-auth-errors">
+          <ul style="margin:0;padding-left:1.25rem">{% for field in form.errors %}<li>{{ form.errors.messages[field] }}</li>{% endfor %}</ul>
+        </div>
+      {%- endif -%}
+
+      <div class="sw-auth-field">
+        <label for="ActivatePassword" class="sw-auth-label">Wachtwoord</label>
+        <input type="password" name="customer[password]" id="ActivatePassword" class="sw-auth-input" autocomplete="new-password" required minlength="5">
+      </div>
+      <div class="sw-auth-field">
+        <label for="ActivatePasswordConfirm" class="sw-auth-label">Bevestig wachtwoord</label>
+        <input type="password" name="customer[password_confirmation]" id="ActivatePasswordConfirm" class="sw-auth-input" autocomplete="new-password" required minlength="5">
+      </div>
+
+      <button type="submit" class="sw-auth-btn">Account activeren</button>
+      <button type="submit" name="decline" class="sw-auth-btn sw-auth-btn-secondary">Uitnodiging weigeren</button>
+    {%- endform -%}
+  </div>
+</div>

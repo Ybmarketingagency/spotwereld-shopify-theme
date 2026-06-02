@@ -1,0 +1,125 @@
+{% layout 'theme' %}
+
+<style>
+.sw-auth-wrap{min-height:calc(100vh - 200px);display:flex;align-items:center;justify-content:center;padding:3rem 1.25rem;background:linear-gradient(135deg,#f8fafc 0%,#eef2f9 100%);position:relative;overflow:hidden}
+.sw-auth-wrap::before{content:'';position:absolute;top:-200px;right:-200px;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(15,111,227,0.08) 0%,transparent 70%);pointer-events:none}
+.sw-auth-wrap::after{content:'';position:absolute;bottom:-150px;left:-150px;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(8,61,125,0.06) 0%,transparent 70%);pointer-events:none}
+.sw-reg-grid{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;max-width:980px;width:100%;align-items:center;position:relative;z-index:1}
+.sw-reg-benefits{padding:1rem}
+.sw-reg-benefits h2{font-size:2rem;font-weight:900;color:#061f40;margin:0 0 1rem;letter-spacing:-.025em;line-height:1.15}
+.sw-reg-benefits h2 em{font-style:normal;background:linear-gradient(135deg,#083D7D,#0F6FE3);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.sw-reg-benefits>p{color:#475569;font-size:1rem;line-height:1.6;margin:0 0 1.75rem}
+.sw-reg-benefits ul{list-style:none;padding:0;margin:0;display:grid;gap:.85rem}
+.sw-reg-benefits li{display:flex;align-items:flex-start;gap:.75rem;color:#1e293b;font-size:.94rem;line-height:1.5}
+.sw-reg-benefits li svg{flex-shrink:0;color:#16a34a;margin-top:.15rem}
+.sw-reg-benefits li strong{color:#061f40}
+.sw-auth-card{background:#fff;border-radius:16px;box-shadow:0 20px 60px rgba(6,31,64,.08),0 4px 12px rgba(6,31,64,.04);width:100%;padding:2.5rem 2rem;border:1px solid rgba(226,232,240,.6)}
+.sw-auth-logo{display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:1.5rem}
+.sw-auth-logo img{width:36px;height:36px}
+.sw-auth-logo span{font-weight:900;font-size:1.4rem;color:#061f40;letter-spacing:-.02em}
+.sw-auth-logo span em{font-style:normal;color:#facc15}
+.sw-auth-title{font-size:1.75rem;font-weight:900;color:#061f40;margin:0 0 .375rem;text-align:center;letter-spacing:-.02em}
+.sw-auth-sub{color:#64748b;text-align:center;margin:0 0 1.5rem;font-size:.92rem;line-height:1.5}
+.sw-auth-field{margin-bottom:1rem}
+.sw-auth-field-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1rem}
+.sw-auth-field-row .sw-auth-field{margin-bottom:0}
+.sw-auth-label{display:block;font-size:.78rem;font-weight:700;color:#475569;margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.06em}
+.sw-auth-input{width:100%;padding:.85rem 1rem;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.95rem;outline:none;transition:all .15s;box-sizing:border-box;font-family:inherit;background:#fff;color:#1e293b}
+.sw-auth-input:focus{border-color:#0F6FE3;box-shadow:0 0 0 3px rgba(15,111,227,.12)}
+.sw-auth-btn{width:100%;background:linear-gradient(135deg,#083D7D,#0F6FE3);color:#fff;border:0;border-radius:8px;padding:.95rem 1rem;font-weight:700;font-size:.95rem;cursor:pointer;transition:all .15s;font-family:inherit;letter-spacing:.01em;display:inline-flex;align-items:center;justify-content:center;gap:.4rem;margin-top:.5rem}
+.sw-auth-btn:hover{background:linear-gradient(135deg,#062d5c,#0a5abf);transform:translateY(-1px);box-shadow:0 6px 16px rgba(8,61,125,.25)}
+.sw-auth-divider{display:flex;align-items:center;gap:.75rem;margin:1.5rem 0 1.25rem;color:#94a3b8;font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+.sw-auth-divider::before,.sw-auth-divider::after{content:'';flex:1;height:1px;background:#e2e8f0}
+.sw-auth-alt{text-align:center;margin:0;color:#64748b;font-size:.9rem}
+.sw-auth-alt a{color:#0F6FE3;font-weight:700;text-decoration:none}
+.sw-auth-alt a:hover{text-decoration:underline}
+.sw-auth-errors{background:#fef2f2;border:1px solid #fecaca;color:#991b1b;padding:.75rem 1rem;border-radius:8px;margin:0 0 1rem;font-size:.85rem;line-height:1.5}
+.sw-auth-errors ul{margin:0;padding-left:1.25rem}
+.sw-auth-tiny{font-size:.7rem;color:#94a3b8;text-align:center;margin:.75rem 0 0;line-height:1.5}
+@media(max-width:880px){.sw-reg-grid{grid-template-columns:1fr;max-width:480px}.sw-reg-benefits{order:2;padding:0;text-align:center}.sw-reg-benefits ul{text-align:left}.sw-reg-benefits h2{font-size:1.5rem}}
+@media(max-width:480px){.sw-auth-card{padding:1.75rem 1.25rem}.sw-auth-title{font-size:1.4rem}.sw-auth-field-row{grid-template-columns:1fr}}
+</style>
+
+<div class="sw-auth-wrap">
+  <div class="sw-reg-grid">
+    <div class="sw-reg-benefits">
+      <h2>Word lid van <em>Spotwereld</em></h2>
+      <p>Krijg toegang tot exclusieve voordelen en sneller afrekenen.</p>
+      <ul>
+        <li>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          <span><strong>5% welkomstkorting</strong> op je eerste bestelling</span>
+        </li>
+        <li>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          <span><strong>Sneller afrekenen</strong> met opgeslagen adressen</span>
+        </li>
+        <li>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          <span><strong>Bestelgeschiedenis</strong> altijd inzichtelijk</span>
+        </li>
+        <li>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          <span><strong>Exclusieve aanbiedingen</strong> en nieuwe collecties als eerste</span>
+        </li>
+        <li>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          <span><strong>Track &amp; trace</strong> van al je bestellingen</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="sw-auth-card">
+      <div class="sw-auth-logo">
+        <img src="https://i.imgur.com/2ROeTRS.png" alt="Spotwereld">
+        <span>Spot<em>wereld</em></span>
+      </div>
+      <h1 class="sw-auth-title">Account aanmaken</h1>
+      <p class="sw-auth-sub">Maak in 30 seconden je gratis account aan.</p>
+
+      {%- form 'create_customer', novalidate: 'novalidate' -%}
+        {%- if form.errors -%}
+          <div class="sw-auth-errors">
+            <strong>Er ging iets mis:</strong>
+            <ul>
+              {%- for field in form.errors -%}
+                <li>{{ form.errors.messages[field] }}</li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        {%- endif -%}
+
+        <div class="sw-auth-field-row">
+          <div class="sw-auth-field">
+            <label for="FirstName" class="sw-auth-label">Voornaam</label>
+            <input type="text" name="customer[first_name]" id="FirstName" class="sw-auth-input" autocomplete="given-name" required>
+          </div>
+          <div class="sw-auth-field">
+            <label for="LastName" class="sw-auth-label">Achternaam</label>
+            <input type="text" name="customer[last_name]" id="LastName" class="sw-auth-input" autocomplete="family-name" required>
+          </div>
+        </div>
+
+        <div class="sw-auth-field">
+          <label for="RegEmail" class="sw-auth-label">E-mail</label>
+          <input type="email" name="customer[email]" id="RegEmail" class="sw-auth-input" autocomplete="email" autocapitalize="off" autocorrect="off" required placeholder="jouw@email.nl">
+        </div>
+
+        <div class="sw-auth-field">
+          <label for="RegPassword" class="sw-auth-label">Wachtwoord (min. 5 tekens)</label>
+          <input type="password" name="customer[password]" id="RegPassword" class="sw-auth-input" autocomplete="new-password" required minlength="5" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;">
+        </div>
+
+        <button type="submit" class="sw-auth-btn">
+          Account aanmaken
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+
+        <p class="sw-auth-tiny">Door je aan te melden ga je akkoord met onze <a href="/policies/terms-of-service" style="color:#0F6FE3">algemene voorwaarden</a> &amp; <a href="/policies/privacy-policy" style="color:#0F6FE3">privacybeleid</a>.</p>
+      {%- endform -%}
+
+      <div class="sw-auth-divider">Al een account?</div>
+      <p class="sw-auth-alt"><a href="{{ routes.account_login_url }}">Inloggen &rarr;</a></p>
+    </div>
+  </div>
+</div>

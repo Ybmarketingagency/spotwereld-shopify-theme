@@ -1,0 +1,151 @@
+{% layout 'theme' %}
+
+<style>
+.sw-acc-wrap{max-width:1100px;margin:2rem auto;padding:0 1.25rem;font-family:inherit}
+.sw-acc-hero{background:linear-gradient(120deg,#061f40 0%,#0a2d5e 55%,#0f3d7a 100%);color:#fff;border-radius:16px;padding:2rem 2rem;margin-bottom:2rem;position:relative;overflow:hidden}
+.sw-acc-hero::before{content:'';position:absolute;right:-100px;top:-100px;width:300px;height:300px;border-radius:50%;background:rgba(255,255,255,.04);pointer-events:none}
+.sw-acc-hero::after{content:'';position:absolute;right:60px;top:30px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.06);pointer-events:none}
+.sw-acc-hero h1{font-size:2rem;font-weight:900;margin:0 0 .35rem;letter-spacing:-.02em;position:relative;z-index:1}
+.sw-acc-hero p{margin:0;color:rgba(255,255,255,.75);font-size:.95rem;position:relative;z-index:1}
+.sw-acc-grid{display:grid;grid-template-columns:280px 1fr;gap:2rem;align-items:start}
+.sw-acc-nav{background:#fff;border-radius:12px;border:1px solid #e8edf4;padding:1rem;position:sticky;top:1rem}
+.sw-acc-nav a{display:flex;align-items:center;gap:.65rem;padding:.7rem .85rem;border-radius:8px;color:#475569;text-decoration:none;font-size:.92rem;font-weight:500;transition:all .15s;margin-bottom:.15rem}
+.sw-acc-nav a:hover{background:#f1f5f9;color:#061f40}
+.sw-acc-nav a.active{background:linear-gradient(135deg,#083D7D,#0F6FE3);color:#fff;font-weight:600}
+.sw-acc-nav a.logout{color:#dc2626;margin-top:.75rem;border-top:1px solid #f0f3f8;padding-top:1rem}
+.sw-acc-nav a.logout:hover{background:#fef2f2}
+.sw-acc-main{display:grid;gap:1.5rem}
+.sw-acc-card{background:#fff;border-radius:12px;border:1px solid #e8edf4;padding:1.5rem}
+.sw-acc-card h2{font-size:1.15rem;font-weight:800;color:#061f40;margin:0 0 1rem;letter-spacing:-.01em;display:flex;align-items:center;gap:.5rem}
+.sw-acc-empty{text-align:center;padding:2rem 1rem;color:#94a3b8}
+.sw-acc-empty svg{margin-bottom:.75rem;color:#cbd5e1}
+.sw-acc-empty p{margin:0 0 1rem;color:#64748b}
+.sw-acc-cta{display:inline-flex;align-items:center;gap:.4rem;background:linear-gradient(135deg,#083D7D,#0F6FE3);color:#fff;text-decoration:none;padding:.65rem 1.1rem;border-radius:8px;font-weight:700;font-size:.88rem;transition:all .15s}
+.sw-acc-cta:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(8,61,125,.25)}
+.sw-acc-orders{width:100%;border-collapse:collapse}
+.sw-acc-orders th{text-align:left;padding:.65rem .75rem;font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:#94a3b8;font-weight:700;border-bottom:1px solid #e8edf4}
+.sw-acc-orders td{padding:.85rem .75rem;border-bottom:1px solid #f0f3f8;color:#1e293b;font-size:.9rem}
+.sw-acc-orders tr:last-child td{border-bottom:0}
+.sw-acc-orders a{color:#0F6FE3;font-weight:600;text-decoration:none}
+.sw-acc-orders a:hover{text-decoration:underline}
+.sw-status{display:inline-block;padding:.25rem .55rem;border-radius:6px;font-size:.72rem;font-weight:700;letter-spacing:.02em}
+.sw-status-paid{background:#dcfce7;color:#15803d}
+.sw-status-pending{background:#fef3c7;color:#92400e}
+.sw-status-refunded{background:#fee2e2;color:#991b1b}
+.sw-status-default{background:#f1f5f9;color:#475569}
+.sw-acc-row{display:flex;justify-content:space-between;align-items:center;padding:.65rem 0;border-bottom:1px solid #f0f3f8}
+.sw-acc-row:last-child{border-bottom:0}
+.sw-acc-row span:first-child{color:#64748b;font-size:.85rem}
+.sw-acc-row span:last-child{color:#1e293b;font-weight:600;font-size:.92rem}
+.sw-acc-addr{display:grid;grid-template-columns:1fr;gap:.75rem}
+.sw-acc-addr-card{background:#f8fafc;border:1px solid #e8edf4;border-radius:8px;padding:1rem}
+.sw-acc-addr-card p{margin:0;color:#1e293b;font-size:.9rem;line-height:1.5}
+.sw-acc-addr-card .default{display:inline-block;background:#dcfce7;color:#15803d;font-size:.65rem;font-weight:700;padding:.15rem .45rem;border-radius:4px;margin-bottom:.4rem;letter-spacing:.05em;text-transform:uppercase}
+@media(max-width:768px){.sw-acc-grid{grid-template-columns:1fr}.sw-acc-nav{position:static}.sw-acc-hero h1{font-size:1.5rem}}
+</style>
+
+<div class="sw-acc-wrap">
+  <div class="sw-acc-hero">
+    <h1>Hoi {{ customer.first_name | default: 'daar' }} &#128075;</h1>
+    <p>Welkom terug bij Spotwereld. Hier vind je je bestellingen, adressen en accountgegevens.</p>
+  </div>
+
+  <div class="sw-acc-grid">
+    <nav class="sw-acc-nav">
+      <a href="{{ routes.account_url }}" class="active">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Overzicht
+      </a>
+      <a href="{{ routes.account_addresses_url }}">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Adressen
+      </a>
+      <a href="/collections/all">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+        Verder winkelen
+      </a>
+      <a href="{{ routes.account_logout_url }}" class="logout">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Uitloggen
+      </a>
+    </nav>
+
+    <div class="sw-acc-main">
+      <div class="sw-acc-card">
+        <h2>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+          Bestellingen
+        </h2>
+        {%- paginate customer.orders by 10 -%}
+          {%- if customer.orders.size > 0 -%}
+            <table class="sw-acc-orders">
+              <thead>
+                <tr>
+                  <th>Bestelling</th>
+                  <th>Datum</th>
+                  <th>Betaling</th>
+                  <th>Status</th>
+                  <th>Totaal</th>
+                </tr>
+              </thead>
+              <tbody>
+                {%- for order in customer.orders -%}
+                  <tr>
+                    <td><a href="{{ order.customer_url }}">{{ order.name }}</a></td>
+                    <td>{{ order.created_at | date: '%d %b %Y' }}</td>
+                    <td>
+                      <span class="sw-status sw-status-{%- case order.financial_status -%}{%- when 'paid' -%}paid{%- when 'pending' -%}pending{%- when 'refunded' -%}refunded{%- else -%}default{%- endcase -%}">{{ order.financial_status_label }}</span>
+                    </td>
+                    <td>{{ order.fulfillment_status_label | default: 'Verwerken' }}</td>
+                    <td><strong>{{ order.total_price | money }}</strong></td>
+                  </tr>
+                {%- endfor -%}
+              </tbody>
+            </table>
+          {%- else -%}
+            <div class="sw-acc-empty">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+              <p>Je hebt nog geen bestellingen.</p>
+              <a href="/collections/all" class="sw-acc-cta">Bekijk onze producten &rarr;</a>
+            </div>
+          {%- endif -%}
+        {%- endpaginate -%}
+      </div>
+
+      <div class="sw-acc-card">
+        <h2>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Accountgegevens
+        </h2>
+        <div class="sw-acc-row"><span>Naam</span><span>{{ customer.first_name }} {{ customer.last_name }}</span></div>
+        <div class="sw-acc-row"><span>E-mail</span><span>{{ customer.email }}</span></div>
+        <div class="sw-acc-row"><span>Klant sinds</span><span>{{ customer.created_at | date: '%d %B %Y' }}</span></div>
+        <div class="sw-acc-row"><span>Aantal bestellingen</span><span>{{ customer.orders_count }}</span></div>
+        <div class="sw-acc-row"><span>Totaal besteed</span><span>{{ customer.total_spent | money }}</span></div>
+      </div>
+
+      {%- if customer.default_address -%}
+        <div class="sw-acc-card">
+          <h2>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Standaardadres
+          </h2>
+          <div class="sw-acc-addr">
+            <div class="sw-acc-addr-card">
+              <span class="default">Standaard</span>
+              <p>
+                <strong>{{ customer.default_address.first_name }} {{ customer.default_address.last_name }}</strong><br>
+                {%- if customer.default_address.company != blank %}{{ customer.default_address.company }}<br>{%- endif -%}
+                {{ customer.default_address.address1 }}{% if customer.default_address.address2 != blank %}, {{ customer.default_address.address2 }}{% endif %}<br>
+                {{ customer.default_address.zip }} {{ customer.default_address.city }}<br>
+                {{ customer.default_address.country }}
+                {%- if customer.default_address.phone != blank %}<br>{{ customer.default_address.phone }}{%- endif -%}
+              </p>
+            </div>
+          </div>
+          <p style="margin-top:1rem;text-align:right"><a href="{{ routes.account_addresses_url }}" style="color:#0F6FE3;font-weight:600;text-decoration:none;font-size:.88rem">Beheer adressen &rarr;</a></p>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
