@@ -311,6 +311,11 @@ product-card .text-block[class*="product_title"]{
 .sw-lk-active input[type="checkbox"],.sw-vorm-active input[type="checkbox"]{accent-color:#0F6FE3}
 /* Force checked appearance regardless of native render */
 .sw-lk-active .checkbox__label::before,.sw-vorm-active .checkbox__label::before{background:#0F6FE3!important;border-color:#0F6FE3!important}
+/* Custom facet chevron */
+.sw-vorm-facet .facets__summary,.sw-ip-facet .facets__summary,.sw-zaag-facet .facets__summary,.sw-diepte-facet .facets__summary{display:flex;justify-content:space-between;align-items:center;cursor:pointer;list-style:none}
+.sw-vorm-facet .facets__summary::-webkit-details-marker,.sw-ip-facet .facets__summary::-webkit-details-marker,.sw-zaag-facet .facets__summary::-webkit-details-marker,.sw-diepte-facet .facets__summary::-webkit-details-marker{display:none}
+.sw-vorm-facet .facets__icon svg,.sw-ip-facet .facets__icon svg,.sw-zaag-facet .facets__icon svg,.sw-diepte-facet .facets__icon svg{transition:transform .2s;color:#061f40}
+.sw-vorm-facet[open] .facets__icon svg,.sw-ip-facet[open] .facets__icon svg,.sw-zaag-facet[open] .facets__icon svg,.sw-diepte-facet[open] .facets__icon svg{transform:rotate(180deg)}
 </style>
 <script>
 (function(){
@@ -381,6 +386,8 @@ product-card .text-block[class*="product_title"]{
     // Cards (collection/home) — find any <a href="/products/HANDLE"> and rewrite text
     document.querySelectorAll('a[href*="/products/"]').forEach(function(a){
       if (a.dataset.swTitleDone) return;
+      // SKIP color picker en lichtkleur selector op productpagina (daar moeten korte kleurnamen blijven)
+      if (a.closest('.sw-color-picker, .sw-lichtkleur, .sw-pr2-card, .product-recommendations')) { a.dataset.swTitleDone='1'; return; }
       var m = a.getAttribute('href').match(/\/products\/([^?#\/]+)/);
       if (!m) return;
       var newT = SW_TITLES[m[1]];
@@ -441,19 +448,21 @@ product-card .text-block[class*="product_title"]{
 
   // ============== MULTI FILTER HIJACK + CHIPS (Vorm + IP + Zaagmaat + Lichtkleur opties) ==============
   // Product spec lookup per handle
+  // CCT switch = supports 2700K/3000K/4000K
+  var CCT_LK = ['2700','3000','4000'];
   var SW_PRODUCT_SPECS = {
-    'led-inbouwspot-aristo-mat-wit':        {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:25},
-    'led-inbouwspot-aristo-mat-zwart':      {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:25},
-    'led-inbouwspot-aristo-zilver':         {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:25},
-    'led-inbouwspot-aristo-koper':          {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:25},
-    'led-inbouwspot-aristo-goud':           {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:25},
-    'led-inbouwspot-aristo-satin-metallic': {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:25},
-    'led-inbouwspot-miran-mat-wit':         {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:23},
-    'led-inbouwspot-miran-mat-zwart':       {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:23},
-    'led-inbouwspot-miran-goud':            {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:23},
-    'led-inbouwspot-laom-wit':              {vorm:'vierkant', ip:'IP44', zaag:[68,68], diepte:28},
-    'led-inbouwspot-laom-mat-zwart':        {vorm:'vierkant', ip:'IP44', zaag:[68,68], diepte:28},
-    'led-inbouwspot-laom-zilver':           {vorm:'vierkant', ip:'IP44', zaag:[68,68], diepte:28}
+    'led-inbouwspot-aristo-mat-wit':        {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:25, lk:CCT_LK},
+    'led-inbouwspot-aristo-mat-zwart':      {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:25, lk:CCT_LK},
+    'led-inbouwspot-aristo-zilver':         {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:25, lk:CCT_LK},
+    'led-inbouwspot-aristo-koper':          {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:25, lk:CCT_LK},
+    'led-inbouwspot-aristo-goud':           {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:25, lk:CCT_LK},
+    'led-inbouwspot-aristo-satin-metallic': {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:25, lk:CCT_LK},
+    'led-inbouwspot-miran-mat-wit':         {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:23, lk:CCT_LK},
+    'led-inbouwspot-miran-mat-zwart':       {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:23, lk:CCT_LK},
+    'led-inbouwspot-miran-goud':            {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:23, lk:CCT_LK},
+    'led-inbouwspot-laom-wit':              {vorm:'vierkant', ip:'IP44', zaag:[68,68], diepte:28, lk:CCT_LK},
+    'led-inbouwspot-laom-mat-zwart':        {vorm:'vierkant', ip:'IP44', zaag:[68,68], diepte:28, lk:CCT_LK},
+    'led-inbouwspot-laom-zilver':           {vorm:'vierkant', ip:'IP44', zaag:[68,68], diepte:28, lk:CCT_LK}
   };
   function getHandle(card){
     var link = card.querySelector('a[href*="/products/"]');
@@ -481,6 +490,7 @@ product-card .text-block[class*="product_title"]{
     var ips = params.getAll('sw_ip');
     var zaags = params.getAll('sw_zaag');
     var dieptes = params.getAll('sw_diepte');
+    var lks = params.getAll('sw_lk');
     document.querySelectorAll('product-card, .product-card').forEach(function(c){
       var h = getHandle(c);
       var s = getSpecs(h);
@@ -490,6 +500,7 @@ product-card .text-block[class*="product_title"]{
       if (ips.length>0) keep = keep && s && ips.indexOf(s.ip)>-1;
       if (zaags.length>0) keep = keep && s && zaags.some(function(z){return zaagInRange(s.zaag, z)});
       if (dieptes.length>0) keep = keep && s && dieptes.indexOf(String(s.diepte))>-1;
+      if (lks.length>0) keep = keep && s && s.lk && lks.some(function(l){return s.lk.indexOf(l)>-1});
       grid.style.display = keep ? '' : 'none';
     });
   }
@@ -545,7 +556,7 @@ product-card .text-block[class*="product_title"]{
       {v:'IP65', n:'IP65 (Stof- en plenswaterdicht)'},
       {v:'IP67', n:'IP67 (Stof- en waterdicht)'}
     ];
-    var html = '<details class="facets__item sw-ip-facet" open><summary class="facets__summary"><span class="facets__label">IP-waarde</span><span class="facets__icon"></span></summary><div class="facets__panel"><ul class="facets__inputs facets__inputs-list">'+
+    var html = '<details class="facets__item sw-ip-facet" open><summary class="facets__summary"><span class="facets__label">IP-waarde</span><span class="facets__icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span></summary><div class="facets__panel"><ul class="facets__inputs facets__inputs-list">'+
       opts.map(function(o){
         return '<li class="facets__inputs-list-item"><label class="checkbox"><input type="checkbox" class="checkbox__input" name="sw_ip" value="'+o.v+'"><span class="checkbox__label"><span class="icon-checkmark"></span><span class="checkbox__label-text">'+o.n+'</span></span></label></li>';
       }).join('')+'</ul></div></details>';
@@ -557,11 +568,25 @@ product-card .text-block[class*="product_title"]{
     var anchor = document.querySelector('.sw-zaag-facet') || document.querySelector('.sw-ip-facet') || document.querySelector('.sw-vorm-facet') || findFacet('Kleur');
     if (!anchor) return;
     var opts = [12,15,23,25,26,27,28,30,35,36,37,38,45,47,62,68,78,80,125,133].map(function(d){return {v:String(d), n:d+' mm'};});
-    var html = '<details class="facets__item sw-diepte-facet" open><summary class="facets__summary"><span class="facets__label">Inbouwdiepte</span><span class="facets__icon"></span></summary><div class="facets__panel"><ul class="facets__inputs facets__inputs-list">'+
-      opts.map(function(o){
-        return '<li class="facets__inputs-list-item"><label class="checkbox"><input type="checkbox" class="checkbox__input" name="sw_diepte" value="'+o.v+'"><span class="checkbox__label"><span class="icon-checkmark"></span><span class="checkbox__label-text">'+o.n+'</span></span></label></li>';
-      }).join('')+'</ul></div></details>';
+    var SHOW = 5;
+    var itemsHtml = opts.map(function(o,i){
+      var hidden = i >= SHOW ? ' style="display:none" data-sw-hidden="1"' : '';
+      return '<li class="facets__inputs-list-item"'+hidden+'><label class="checkbox"><input type="checkbox" class="checkbox__input" name="sw_diepte" value="'+o.v+'"><span class="checkbox__label"><span class="icon-checkmark"></span><span class="checkbox__label-text">'+o.n+'</span></span></label></li>';
+    }).join('');
+    var html = '<details class="facets__item sw-diepte-facet" open><summary class="facets__summary"><span class="facets__label">Inbouwdiepte</span><span class="facets__icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span></summary><div class="facets__panel"><ul class="facets__inputs facets__inputs-list">'+
+      itemsHtml +
+      '</ul><button type="button" class="sw-show-more-diepte" style="background:none;border:0;color:#061f40;font-weight:600;font-size:.78rem;text-decoration:underline;cursor:pointer;padding:.5rem 0 0;text-align:left">Toon alle opties</button></div></details>';
     anchor.insertAdjacentHTML('afterend', html);
+    var btn = document.querySelector('.sw-show-more-diepte');
+    if (btn){
+      btn.addEventListener('click', function(){
+        var hidden = document.querySelectorAll('.sw-diepte-facet [data-sw-hidden]');
+        var expanded = btn.dataset.swExpanded === '1';
+        hidden.forEach(function(li){ li.style.display = expanded ? 'none' : ''; });
+        btn.textContent = expanded ? 'Toon alle opties' : 'Toon minder opties';
+        btn.dataset.swExpanded = expanded ? '0' : '1';
+      });
+    }
     syncDiepteInputs();
   }
   function syncDiepteInputs(){
@@ -641,7 +666,7 @@ product-card .text-block[class*="product_title"]{
       {v:'100-129', n:'100-129 mm'},
       {v:'gt130', n:'> 130 mm'}
     ];
-    var html = '<details class="facets__item sw-zaag-facet" open><summary class="facets__summary"><span class="facets__label">Gatmaat / Zaagmaat</span><span class="facets__icon"></span></summary><div class="facets__panel"><ul class="facets__inputs facets__inputs-list">'+
+    var html = '<details class="facets__item sw-zaag-facet" open><summary class="facets__summary"><span class="facets__label">Gatmaat / Zaagmaat</span><span class="facets__icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span></summary><div class="facets__panel"><ul class="facets__inputs facets__inputs-list">'+
       opts.map(function(o){
         return '<li class="facets__inputs-list-item"><label class="checkbox"><input type="checkbox" class="checkbox__input" name="sw_zaag" value="'+o.v+'"><span class="checkbox__label"><span class="icon-checkmark"></span><span class="checkbox__label-text">'+o.n+'</span></span></label></li>';
       }).join('')+'</ul></div></details>';
