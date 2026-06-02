@@ -327,6 +327,10 @@ details.facets__item[open] .facets__icon:empty::after{transform:rotate(-135deg);
 .facets__item .checkbox__input:checked + .checkbox__label .icon-checkmark,.facets__item .checkbox__input:checked ~ .checkbox__label .icon-checkmark{background:#061f40 !important;border-color:#061f40 !important}
 .facets__item .checkbox__input:checked + .checkbox__label .icon-checkmark::after,.facets__item .checkbox__input:checked ~ .checkbox__label .icon-checkmark::after{content:'';position:absolute;left:5px;top:1px;width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
 .facets__item .swatch{display:none !important}
+/* Dimbaar facet — override pill/button styling, force standard checkbox layout */
+.facets__item button,.facets__item .button,.facets__item [class*="filter-pill"]{all:unset !important}
+.facets__item .facets__inputs-list-item,.facets__item li{background:transparent !important;border:0 !important;padding:.2rem 0 !important;list-style:none !important;display:block !important}
+.facets__item .checkbox__label{display:flex !important;align-items:center !important;gap:.5rem !important;background:transparent !important;color:#1e293b !important;font-weight:500 !important;padding:0 !important;border:0 !important;border-radius:0 !important;cursor:pointer}
 </style>
 <script>
 (function(){
@@ -626,15 +630,22 @@ details.facets__item[open] .facets__icon:empty::after{transform:rotate(-135deg);
       }
     }
     if (!nee) return;
-    nee.classList.add('sw-fake-nee'); // mark for delegation lookup
+    nee.classList.add('sw-fake-nee');
     nee.style.opacity = '1';
     nee.style.pointerEvents = 'auto';
     var inp = nee.querySelector('input');
     if (!inp) return;
+    // Geef Nee unieke id + zorg dat label NIET naar Ja wijst (gekloond met dezelfde for=)
+    var uniqueId = 'sw-dim-nee-input';
+    inp.id = uniqueId;
     inp.disabled = false;
     inp.removeAttribute('disabled');
     inp.setAttribute('name','sw_dim');
     inp.setAttribute('value','nee');
+    // Fix alle labels in deze li om naar onze input te wijzen
+    nee.querySelectorAll('label').forEach(function(lbl){
+      if (lbl.hasAttribute('for')) lbl.setAttribute('for', uniqueId);
+    });
     var actives = new URLSearchParams(location.search).getAll('sw_dim');
     inp.checked = actives.indexOf('nee') > -1;
     nee.classList.toggle('sw-vorm-active', inp.checked);
