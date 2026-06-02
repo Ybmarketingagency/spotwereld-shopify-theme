@@ -320,10 +320,12 @@ details.facets__item[open] .facets__icon svg{transform:rotate(180deg)}
 /* Inject chevron if not present (CSS fallback) */
 .facets__item .facets__icon:empty::after{content:'';display:inline-block;width:8px;height:8px;border-right:2px solid #061f40;border-bottom:2px solid #061f40;transform:rotate(45deg);transition:transform .2s;margin-bottom:3px}
 details.facets__item[open] .facets__icon:empty::after{transform:rotate(-135deg);margin-bottom:-3px}
-/* Force checkbox visibility (sommige facets renderen swatches die de checkbox verbergen — overrule dat) */
-.facets__item .checkbox{display:flex !important;align-items:center !important;gap:.5rem !important}
-.facets__item .checkbox__input{position:relative !important;opacity:1 !important;width:18px !important;height:18px !important;pointer-events:auto !important;clip:auto !important;margin:0 !important;flex-shrink:0 !important;appearance:auto !important;-webkit-appearance:auto !important;accent-color:#061f40}
-.facets__item .icon-checkmark{display:inline-block !important;width:18px !important;height:18px !important;border:1.5px solid #cbd5e1 !important;border-radius:4px !important;flex-shrink:0 !important;background:#fff !important}
+/* Force checkbox visibility — gebruik ALLEEN icon-checkmark (custom), verberg de native input visueel */
+.facets__item .checkbox{display:flex !important;align-items:center !important;gap:.5rem !important;position:relative}
+.facets__item .checkbox__input{position:absolute !important;opacity:0 !important;width:18px !important;height:18px !important;margin:0 !important;left:0 !important;top:50% !important;transform:translateY(-50%) !important;cursor:pointer !important;z-index:1}
+.facets__item .icon-checkmark{display:inline-block !important;width:18px !important;height:18px !important;border:1.5px solid #cbd5e1 !important;border-radius:4px !important;flex-shrink:0 !important;background:#fff !important;position:relative}
+.facets__item .checkbox__input:checked + .checkbox__label .icon-checkmark,.facets__item .checkbox__input:checked ~ .checkbox__label .icon-checkmark{background:#061f40 !important;border-color:#061f40 !important}
+.facets__item .checkbox__input:checked + .checkbox__label .icon-checkmark::after,.facets__item .checkbox__input:checked ~ .checkbox__label .icon-checkmark::after{content:'';position:absolute;left:5px;top:1px;width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
 .facets__item .swatch{display:none !important}
 </style>
 <script>
@@ -637,28 +639,68 @@ details.facets__item[open] .facets__icon:empty::after{transform:rotate(-135deg);
     inp.checked = actives.indexOf('nee') > -1;
     nee.classList.toggle('sw-vorm-active', inp.checked);
   }
-  // Delegated click handler voor Dimbaar Nee (werkt ook na Shopify re-render)
+  // Delegated handlers voor Dimbaar Nee — block BOTH click+change in capture (Shopify luistert op change voor form submit)
+  ['click','change','input'].forEach(function(evtName){
+    document.addEventListener(evtName, function(e){
+      var t = e.target;
+      if (!t) return;
+      var nee = t.closest && t.closest('.sw-fake-nee');
+      if (!nee) return;
+      var inp = nee.querySelector('input');
+      if (!inp || t !== inp) return;
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+      if (evtName === 'click'){
+        setTimeout(function(){
+          var p = new URLSearchParams(location.search);
+          p.delete('sw_dim');
+          if (inp.checked) p.append('sw_dim','nee');
+          var s = p.toString();
+          history.replaceState({}, '', location.pathname + (s?'?'+s:''));
+          nee.classList.toggle('sw-vorm-active', inp.checked);
+          applyAllFilters();
+          renderActiveChips();
+        }, 0);
+      }
+    }, true);
+  });
+
+  // ============== SCROLL PRESERVE bij Shopify form submit (Kleur, Lichtkleur native etc) ==============
+  // Save scroll voor Shopify's facet form submit; restore na page load
+  document.addEventListener('submit', function(e){
+    var form = e.target;
+    if (form && (form.id||'').indexOf('facets') > -1 || (form.className||'').indexOf('facets') > -1){
+      try { sessionStorage.setItem('sw_scroll', String(window.scrollY)); } catch(err){}
+    }
+  }, true);
+  // Bij click op native facet checkbox, save scroll vóór Shopify auto-submit
   document.addEventListener('click', function(e){
     var t = e.target;
-    if (!t) return;
-    var nee = t.closest && t.closest('.sw-fake-nee');
-    if (!nee) return;
-    var inp = nee.querySelector('input');
-    if (!inp || t !== inp) return;
-    // Voorkom Shopify form submit
-    e.stopPropagation();
-    e.stopImmediatePropagation();
-    setTimeout(function(){
-      var p = new URLSearchParams(location.search);
-      p.delete('sw_dim');
-      if (inp.checked) p.append('sw_dim','nee');
-      var s = p.toString();
-      history.replaceState({}, '', location.pathname + (s?'?'+s:''));
-      nee.classList.toggle('sw-vorm-active', inp.checked);
-      applyAllFilters();
-      renderActiveChips();
-    }, 0);
+    if (!t || t.tagName !== 'INPUT') return;
+    var name = t.getAttribute('name')||'';
+    if (name.indexOf('filter.') === 0){
+      try { sessionStorage.setItem('sw_scroll', String(window.scrollY)); } catch(err){}
+    }
   }, true);
+  // Bij page load, herstel scroll
+  try {
+    var savedScroll = sessionStorage.getItem('sw_scroll');
+    if (savedScroll !== null){
+      sessionStorage.removeItem('sw_scroll');
+      var target = parseInt(savedScroll, 10);
+      if (!isNaN(target)){
+        // Disable browser auto-scroll restoration
+        if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+        // Try multiple times tot DOM klaar is
+        var tries = 0;
+        var restoreFn = function(){
+          window.scrollTo(0, target);
+          if (++tries < 10) setTimeout(restoreFn, 100);
+        };
+        restoreFn();
+      }
+    }
+  } catch(err){}
   function renameKleurLabels(){
     // Scan the entire facets wrapper (en active chips area) en vervang ALLE text nodes
     var scopes = document.querySelectorAll('.facets-block-wrapper--vertical, .facets__form-wrapper, .facets-controls-wrapper, [class*="active-facets"], [class*="facets__selected"], facet-remove, active-facets');
