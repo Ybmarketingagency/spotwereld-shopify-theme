@@ -335,7 +335,9 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
 .facets-block-wrapper--vertical,.facets__form-wrapper{animation:swFiltersFallback 0s linear 1.2s forwards}
 /* Dimbaar facet — override pill/button styling, force standard checkbox layout */
 .facets__item button,.facets__item .button,.facets__item [class*="filter-pill"]{all:unset !important}
-.facets__item .facets__inputs-list-item,.facets__item li{background:transparent !important;border:0 !important;padding:.2rem 0 !important;list-style:none !important;display:block !important}
+.facets__item .facets__inputs-list-item,.facets__item li{background:transparent !important;border:0 !important;padding:.2rem 0 !important;list-style:none !important}
+.facets__item .facets__inputs-list-item:not([style*="display:none"]):not([data-sw-hidden]),.facets__item li:not([style*="display:none"]):not([data-sw-hidden]){display:block}
+.facets__item [data-sw-hidden]{display:none !important}
 .facets__item .checkbox__label{display:flex !important;align-items:center !important;gap:.5rem !important;background:transparent !important;color:#1e293b !important;font-weight:500 !important;padding:0 !important;border:0 !important;border-radius:0 !important;cursor:pointer}
 </style>
 <script>
@@ -603,9 +605,16 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
     var btn = document.querySelector('.sw-show-more-diepte');
     if (btn){
       btn.addEventListener('click', function(){
-        var hidden = document.querySelectorAll('.sw-diepte-facet [data-sw-hidden]');
+        var facet = document.querySelector('.sw-diepte-facet');
         var expanded = btn.dataset.swExpanded === '1';
-        hidden.forEach(function(li){ li.style.display = expanded ? 'none' : ''; });
+        if (expanded){
+          // Inklappen: items 5+ krijgen weer data-sw-hidden
+          var lis = facet.querySelectorAll('.facets__inputs-list-item');
+          for (var i=5; i<lis.length; i++){ lis[i].setAttribute('data-sw-hidden','1'); lis[i].style.display='none'; }
+        } else {
+          // Uitklappen: verwijder data-sw-hidden van ALLE items
+          facet.querySelectorAll('[data-sw-hidden]').forEach(function(li){ li.removeAttribute('data-sw-hidden'); li.style.display=''; });
+        }
         btn.textContent = expanded ? 'Toon alle opties' : 'Toon minder opties';
         btn.dataset.swExpanded = expanded ? '0' : '1';
       });
@@ -739,26 +748,32 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
     });
   }
   function dedupeAndOrderFacets(){
-    // Dedup: behoud alleen eerste van elk
+    // Dedup custom facets
     ['.sw-vorm-facet','.sw-ip-facet','.sw-zaag-facet','.sw-diepte-facet'].forEach(function(sel){
       var els = document.querySelectorAll(sel);
       for (var i=1; i<els.length; i++){ els[i].remove(); }
     });
-    // Volgorde: Vorm → IP → Gatmaat → Inbouwdiepte, ALLES bovenaan vóór Kleur en de andere native facets
     var kleurFacet = findFacet('Kleur');
-    if (!kleurFacet) return;
-    var parent = kleurFacet.parentElement;
+    var lkFacet = findFacet('Lichtkleur');
+    var parent = (kleurFacet || lkFacet) && (kleurFacet || lkFacet).parentElement;
     if (!parent) return;
     var firstFacet = parent.querySelector('.facets__item');
     if (!firstFacet) return;
-    var order = ['.sw-diepte-facet','.sw-zaag-facet','.sw-ip-facet','.sw-vorm-facet']; // reversed; we insertBefore firstFacet
-    order.forEach(function(sel){
-      var el = parent.querySelector(sel);
+    // Gewenste volgorde: Vorm, Kleur, Lichtkleur, IP, Gatmaat, Inbouwdiepte, [rest...]
+    // We zetten ze in reverse + insertBefore firstFacet zodat ze opstapelen in correcte volgorde
+    var order = [
+      function(){return parent.querySelector('.sw-diepte-facet');},
+      function(){return parent.querySelector('.sw-zaag-facet');},
+      function(){return parent.querySelector('.sw-ip-facet');},
+      function(){return lkFacet;},
+      function(){return kleurFacet;},
+      function(){return parent.querySelector('.sw-vorm-facet');}
+    ];
+    order.forEach(function(getter){
+      var el = getter();
       if (!el) return;
-      // Plaats voor de eerste .facets__item zodat headers/titels boven blijven
       if (el !== firstFacet){
         parent.insertBefore(el, firstFacet);
-        // Refresh firstFacet (we just put el before it, so el is now the first)
         firstFacet = el;
       }
     });
@@ -837,9 +852,17 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
       if (lbl) lbl.textContent = opt.n;
       var input = clone.querySelector('input');
       if (input){
+        var uid = 'sw-lk-input-' + opt.v;
+        input.id = uid;
         input.name = 'sw_lk';
         input.value = opt.v;
         input.checked = false;
+        input.disabled = false;
+        input.removeAttribute('disabled');
+        // Fix labels in deze clone om naar de juiste input te wijzen
+        clone.querySelectorAll('label').forEach(function(l){
+          if (l.hasAttribute('for')) l.setAttribute('for', uid);
+        });
         input.addEventListener('click', function(e){
           e.stopPropagation(); e.stopImmediatePropagation();
           setTimeout(function(){ toggleParamFromInputs('[data-sw-lk]','sw_lk', list); }, 0);
