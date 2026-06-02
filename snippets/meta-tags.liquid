@@ -549,7 +549,7 @@ product-card .text-block[class*="product_title"]{
       opts.map(function(o){
         return '<li class="facets__inputs-list-item"><label class="checkbox"><input type="checkbox" class="checkbox__input" name="sw_ip" value="'+o.v+'"><span class="checkbox__label"><span class="icon-checkmark"></span><span class="checkbox__label-text">'+o.n+'</span></span></label></li>';
       }).join('')+'</ul></div></details>';
-    withGuard(function(){ anchor.insertAdjacentHTML('afterend', html); });
+    anchor.insertAdjacentHTML('afterend', html);
     syncIPInputs();
   }
   function addDiepteFilter(){
@@ -561,7 +561,7 @@ product-card .text-block[class*="product_title"]{
       opts.map(function(o){
         return '<li class="facets__inputs-list-item"><label class="checkbox"><input type="checkbox" class="checkbox__input" name="sw_diepte" value="'+o.v+'"><span class="checkbox__label"><span class="icon-checkmark"></span><span class="checkbox__label-text">'+o.n+'</span></span></label></li>';
       }).join('')+'</ul></div></details>';
-    withGuard(function(){ anchor.insertAdjacentHTML('afterend', html); });
+    anchor.insertAdjacentHTML('afterend', html);
     syncDiepteInputs();
   }
   function syncDiepteInputs(){
@@ -645,7 +645,7 @@ product-card .text-block[class*="product_title"]{
       opts.map(function(o){
         return '<li class="facets__inputs-list-item"><label class="checkbox"><input type="checkbox" class="checkbox__input" name="sw_zaag" value="'+o.v+'"><span class="checkbox__label"><span class="icon-checkmark"></span><span class="checkbox__label-text">'+o.n+'</span></span></label></li>';
       }).join('')+'</ul></div></details>';
-    withGuard(function(){ anchor.insertAdjacentHTML('afterend', html); });
+    anchor.insertAdjacentHTML('afterend', html);
     syncZaagInputs();
   }
   function syncZaagInputs(){
@@ -679,31 +679,27 @@ product-card .text-block[class*="product_title"]{
       {v:'rgbww', n:'RGBWW'},
       {v:'tri', n:'Tri-color (2700K, 3000K en 4000K)'}
     ];
-    withGuard(function(){
-      // Remove existing fake-lk clones to rebuild cleanly
-      list.querySelectorAll('[class*="sw-fake-lk-"], [class*="sw-lk-opt-"]').forEach(function(el){ el.remove(); });
-      allOpts.forEach(function(opt){
-        var clone = origItem.cloneNode(true);
-        clone.style.display = '';
-        clone.classList.add('sw-lk-opt-'+opt.v);
-        clone.setAttribute('data-sw-lk', opt.v);
-        var lbl = clone.querySelector('.checkbox__label-text, label span');
-        if (lbl) lbl.textContent = opt.n;
-        var input = clone.querySelector('input');
-        if (input){
-          input.name = 'sw_lk';
-          input.value = opt.v;
-          input.checked = false;
-          // Find existing original input name/value for actual Shopify filtering
-          // Pass-through: clicking will filter on sw_lk URL param + match Instelbaar product option
-          input.addEventListener('click', function(e){
-            e.stopPropagation(); e.stopImmediatePropagation();
-            setTimeout(function(){ toggleParamFromInputs('[data-sw-lk]','sw_lk', list); }, 0);
-          }, true);
-          input.addEventListener('change', function(e){ e.stopPropagation(); e.stopImmediatePropagation(); }, true);
-        }
-        list.appendChild(clone);
-      });
+    // Remove existing fake-lk clones to rebuild cleanly
+    list.querySelectorAll('[class*="sw-fake-lk-"], [class*="sw-lk-opt-"]').forEach(function(el){ el.remove(); });
+    allOpts.forEach(function(opt){
+      var clone = origItem.cloneNode(true);
+      clone.style.display = '';
+      clone.classList.add('sw-lk-opt-'+opt.v);
+      clone.setAttribute('data-sw-lk', opt.v);
+      var lbl = clone.querySelector('.checkbox__label-text, label span');
+      if (lbl) lbl.textContent = opt.n;
+      var input = clone.querySelector('input');
+      if (input){
+        input.name = 'sw_lk';
+        input.value = opt.v;
+        input.checked = false;
+        input.addEventListener('click', function(e){
+          e.stopPropagation(); e.stopImmediatePropagation();
+          setTimeout(function(){ toggleParamFromInputs('[data-sw-lk]','sw_lk', list); }, 0);
+        }, true);
+        input.addEventListener('change', function(e){ e.stopPropagation(); e.stopImmediatePropagation(); }, true);
+      }
+      list.appendChild(clone);
     });
     lkFacet.dataset.swLkExpanded = '1';
     syncLkInputs();
@@ -735,10 +731,9 @@ product-card .text-block[class*="product_title"]{
   function renderActiveChips(){
     var holder = document.querySelector('.facets-block-wrapper--vertical, .facets__form-wrapper');
     if (!holder) return;
-    withGuard(function(){
-      holder.querySelectorAll('.sw-active-chip[data-sw-chip]').forEach(function(c){ c.remove(); });
-      var p = new URLSearchParams(location.search);
-      var defs = [
+    holder.querySelectorAll('.sw-active-chip[data-sw-chip]').forEach(function(c){ c.remove(); });
+    var p = new URLSearchParams(location.search);
+    var defs = [
         {param:'sw_vorm', label:'Vorm', facetSel:'.sw-vorm-facet', map:{rond:'Rond',vierkant:'Vierkant',rechthoek:'Rechthoek'}},
         {param:'sw_ip', label:'IP', facetSel:'.sw-ip-facet', map:{IP20:'IP20',IP21:'IP21',IP44:'IP44',IP54:'IP54',IP65:'IP65',IP67:'IP67'}},
         {param:'sw_zaag', label:'Gatmaat', facetSel:'.sw-zaag-facet', map:{'lt49':'< 49 mm','50-59':'50-59 mm','60-69':'60-69 mm','70-79':'70-79 mm','80-99':'80-99 mm','100-129':'100-129 mm','gt130':'> 130 mm'}},
@@ -768,27 +763,24 @@ product-card .text-block[class*="product_title"]{
           holder.insertBefore(chip, holder.firstChild);
         });
       });
-    });
   }
   function runAllSwFilters(){
-    if (SW_FILTER_GUARD) return;
-    withGuard(function(){
-      fixVormInputs();
-      addIPFilter();
-      addZaagFilter();
-      addDiepteFilter();
-      expandLichtkleur();
-      renameKleurLabels();
-      dedupeAndOrderFacets();
-      applyAllFilters();
-      renderActiveChips();
-    });
+    fixVormInputs();
+    addIPFilter();
+    addZaagFilter();
+    addDiepteFilter();
+    expandLichtkleur();
+    renameKleurLabels();
+    dedupeAndOrderFacets();
+    applyAllFilters();
+    renderActiveChips();
   }
-  runAllSwFilters();
-  document.addEventListener('DOMContentLoaded', runAllSwFilters);
-  setTimeout(runAllSwFilters, 400);
-  setTimeout(runAllSwFilters, 1200);
-  setTimeout(runAllSwFilters, 2500);
+  function runAllSwFiltersGuarded(){ withGuard(runAllSwFilters); }
+  runAllSwFiltersGuarded();
+  document.addEventListener('DOMContentLoaded', runAllSwFiltersGuarded);
+  setTimeout(runAllSwFiltersGuarded, 400);
+  setTimeout(runAllSwFiltersGuarded, 1200);
+  setTimeout(runAllSwFiltersGuarded, 2500);
   // Dedicated aggressive rename (geen guard nodig, alleen text changes)
   var renameTicks = 0;
   var renameInterval = setInterval(function(){
@@ -816,7 +808,7 @@ product-card .text-block[class*="product_title"]{
   var swFilterObs = new MutationObserver(function(){
     if (SW_FILTER_GUARD) return;
     clearTimeout(swFilterDebounce);
-    swFilterDebounce = setTimeout(function(){ withGuard(runAllSwFilters); }, 150);
+    swFilterDebounce = setTimeout(runAllSwFiltersGuarded, 150);
   });
   document.addEventListener('DOMContentLoaded', function(){
     var f = document.querySelector('.facets-block-wrapper--vertical, .facets__form-wrapper');
