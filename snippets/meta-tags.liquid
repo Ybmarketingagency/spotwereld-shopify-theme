@@ -447,9 +447,9 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
     'led-inbouwspot-miran-mat-wit':         'LED Inbouwspot Miran | Dimbaar | IP65 | 5W en 7W | CCT Switch | Zaagmaat: Ø68-75 mm | Inbouwdiepte: 25 mm | Mat Wit',
     'led-inbouwspot-miran-mat-zwart':       'LED Inbouwspot Miran | Dimbaar | IP65 | 5W en 7W | CCT Switch | Zaagmaat: Ø68-75 mm | Inbouwdiepte: 25 mm | Mat Zwart',
     'led-inbouwspot-miran-goud':            'LED Inbouwspot Miran | Dimbaar | IP65 | 5W en 7W | CCT Switch | Zaagmaat: Ø68-75 mm | Inbouwdiepte: 25 mm | Goud',
-    'led-inbouwspot-laom-wit':              'LED Inbouwspot Laom | Dimbaar | IP44 | 6W | Vierkant | Zaagmaat: Ø75-80 mm | Inbouwdiepte: 26 mm | Wit',
-    'led-inbouwspot-laom-mat-zwart':        'LED Inbouwspot Laom | Dimbaar | IP44 | 6W | Vierkant | Zaagmaat: Ø75-80 mm | Inbouwdiepte: 26 mm | Mat Zwart',
-    'led-inbouwspot-laom-zilver':           'LED Inbouwspot Laom | Dimbaar | IP44 | 6W | Vierkant | Zaagmaat: Ø75-80 mm | Inbouwdiepte: 26 mm | Zilver'
+    'led-inbouwspot-laom-wit':              'LED Inbouwspot Laom | Dimbaar | IP44 | 6W | 2700K Extra warm-wit | Vierkant | Zaagmaat: Ø75-80 mm | Inbouwdiepte: 26 mm | Wit',
+    'led-inbouwspot-laom-mat-zwart':        'LED Inbouwspot Laom | Dimbaar | IP44 | 6W | 2700K Extra warm-wit | Vierkant | Zaagmaat: Ø75-80 mm | Inbouwdiepte: 26 mm | Mat Zwart',
+    'led-inbouwspot-laom-zilver':           'LED Inbouwspot Laom | Dimbaar | IP44 | 6W | 2700K Extra warm-wit | Vierkant | Zaagmaat: Ø75-80 mm | Inbouwdiepte: 26 mm | Zilver'
   };
   function rewriteTitles(){
     // Cards (collection/home) — find any <a href="/products/HANDLE"> and rewrite text
@@ -517,9 +517,10 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
 
   // ============== MULTI FILTER HIJACK + CHIPS (Vorm + IP + Zaagmaat + Lichtkleur opties) ==============
   // Product spec lookup per handle
-  // CCT switch = supports 2700K/3000K/4000K én is technisch een "Tri-color" (2700/3000/4000K)
+  // CCT switch = 2700K + 3000K + 4000K + tri-color
   var CCT_LK = ['2700','3000','4000','tri'];
-  // diepte = array van mogelijke waarden (sommige producten ondersteunen meerdere varianten)
+  // LAOM heeft GEEN CCT switch, alleen 2700K (extra warm-wit)
+  var LAOM_LK = ['2700'];
   var SW_PRODUCT_SPECS = {
     'led-inbouwspot-aristo-mat-wit':        {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25,30], lk:CCT_LK},
     'led-inbouwspot-aristo-mat-zwart':      {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25,30], lk:CCT_LK},
@@ -530,9 +531,9 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
     'led-inbouwspot-miran-mat-wit':         {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25], lk:CCT_LK},
     'led-inbouwspot-miran-mat-zwart':       {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25], lk:CCT_LK},
     'led-inbouwspot-miran-goud':            {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25], lk:CCT_LK},
-    'led-inbouwspot-laom-wit':              {vorm:'vierkant', ip:'IP44', zaag:[75,80], diepte:[26], lk:CCT_LK},
-    'led-inbouwspot-laom-mat-zwart':        {vorm:'vierkant', ip:'IP44', zaag:[75,80], diepte:[26], lk:CCT_LK},
-    'led-inbouwspot-laom-zilver':           {vorm:'vierkant', ip:'IP44', zaag:[75,80], diepte:[26], lk:CCT_LK}
+    'led-inbouwspot-laom-wit':              {vorm:'vierkant', ip:'IP44', zaag:[75,80], diepte:[26], lk:LAOM_LK},
+    'led-inbouwspot-laom-mat-zwart':        {vorm:'vierkant', ip:'IP44', zaag:[75,80], diepte:[26], lk:LAOM_LK},
+    'led-inbouwspot-laom-zilver':           {vorm:'vierkant', ip:'IP44', zaag:[75,80], diepte:[26], lk:LAOM_LK}
   };
   function getHandle(card){
     var link = card.querySelector('a[href*="/products/"]');
@@ -875,10 +876,12 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
   function expandLichtkleur(){
     var lkFacet = findFacet('Lichtkleur');
     if (!lkFacet) return;
-    if (lkFacet.dataset.swLkExpanded) return;
     var list = lkFacet.querySelector('.facets__inputs, ul, .facets__inputs-list');
     if (!list) return;
-    var origItem = list.querySelector('.facets__inputs-list-item, li');
+    // ALTIJD oude sw-fake-lk-* clones uit collection.json verwijderen (die hebben niet onze handlers)
+    list.querySelectorAll('[class*="sw-fake-lk-"]').forEach(function(el){ el.remove(); });
+    if (lkFacet.dataset.swLkExpanded) { syncLkInputs(); return; }
+    var origItem = list.querySelector('.facets__inputs-list-item:not([class*="sw-lk-opt-"]), li:not([class*="sw-lk-opt-"])');
     if (!origItem) return;
     // Hide original (Instelbaar) shown items already done by old code; we add comprehensive set
     var allOpts = [
