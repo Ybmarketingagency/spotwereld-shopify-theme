@@ -311,11 +311,15 @@ product-card .text-block[class*="product_title"]{
 .sw-lk-active input[type="checkbox"],.sw-vorm-active input[type="checkbox"]{accent-color:#0F6FE3}
 /* Force checked appearance regardless of native render */
 .sw-lk-active .checkbox__label::before,.sw-vorm-active .checkbox__label::before{background:#0F6FE3!important;border-color:#0F6FE3!important}
-/* Custom facet chevron */
-.sw-vorm-facet .facets__summary,.sw-ip-facet .facets__summary,.sw-zaag-facet .facets__summary,.sw-diepte-facet .facets__summary{display:flex;justify-content:space-between;align-items:center;cursor:pointer;list-style:none}
-.sw-vorm-facet .facets__summary::-webkit-details-marker,.sw-ip-facet .facets__summary::-webkit-details-marker,.sw-zaag-facet .facets__summary::-webkit-details-marker,.sw-diepte-facet .facets__summary::-webkit-details-marker{display:none}
-.sw-vorm-facet .facets__icon svg,.sw-ip-facet .facets__icon svg,.sw-zaag-facet .facets__icon svg,.sw-diepte-facet .facets__icon svg{transition:transform .2s;color:#061f40}
-.sw-vorm-facet[open] .facets__icon svg,.sw-ip-facet[open] .facets__icon svg,.sw-zaag-facet[open] .facets__icon svg,.sw-diepte-facet[open] .facets__icon svg{transform:rotate(180deg)}
+/* Custom + Shopify native facet chevron */
+.facets__item .facets__summary,details.facets__item summary{display:flex !important;justify-content:space-between;align-items:center;cursor:pointer;list-style:none}
+.facets__item .facets__summary::-webkit-details-marker,details.facets__item summary::-webkit-details-marker{display:none}
+.facets__item .facets__icon,details.facets__item summary .facets__icon{display:inline-flex;align-items:center}
+.facets__item .facets__icon svg,details.facets__item summary .facets__icon svg{transition:transform .2s;color:#061f40;width:14px;height:14px}
+details.facets__item[open] .facets__icon svg{transform:rotate(180deg)}
+/* Inject chevron if not present (CSS fallback) */
+.facets__item .facets__icon:empty::after{content:'';display:inline-block;width:8px;height:8px;border-right:2px solid #061f40;border-bottom:2px solid #061f40;transform:rotate(45deg);transition:transform .2s;margin-bottom:3px}
+details.facets__item[open] .facets__icon:empty::after{transform:rotate(-135deg);margin-bottom:-3px}
 </style>
 <script>
 (function(){
@@ -501,6 +505,8 @@ product-card .text-block[class*="product_title"]{
       if (zaags.length>0) keep = keep && s && zaags.some(function(z){return zaagInRange(s.zaag, z)});
       if (dieptes.length>0) keep = keep && s && dieptes.indexOf(String(s.diepte))>-1;
       if (lks.length>0) keep = keep && s && s.lk && lks.some(function(l){return s.lk.indexOf(l)>-1});
+      // Dimbaar Nee: all our products zijn dimbaar, dus Nee → altijd verbergen
+      if (params.getAll('sw_dim').indexOf('nee') > -1) keep = false;
       grid.style.display = keep ? '' : 'none';
     });
   }
@@ -600,6 +606,48 @@ product-card .text-block[class*="product_title"]{
       inp.addEventListener('click', function(e){ e.stopPropagation(); e.stopImmediatePropagation(); setTimeout(function(){ toggleParamFromInputs('.sw-diepte-facet', 'sw_diepte'); }, 0); }, true);
       inp.addEventListener('change', function(e){ e.stopPropagation(); e.stopImmediatePropagation(); }, true);
     });
+  }
+  function fixDimbaarNee(){
+    // Find facet "Dimbaar"
+    var dimFacet = findFacet('Dimbaar');
+    if (!dimFacet) return;
+    var nee = dimFacet.querySelector('.sw-fake-nee');
+    if (!nee){
+      // Find li containing text "Nee"
+      var lis = dimFacet.querySelectorAll('li, .facets__inputs-list-item');
+      for (var i=0;i<lis.length;i++){
+        var t = (lis[i].textContent||'').trim();
+        if (t === 'Nee' || t.indexOf('Nee') === 0) { nee = lis[i]; break; }
+      }
+    }
+    if (!nee) return;
+    nee.style.opacity = '1';
+    nee.style.pointerEvents = 'auto';
+    var inp = nee.querySelector('input');
+    if (!inp) return;
+    inp.disabled = false;
+    inp.removeAttribute('disabled');
+    var actives = new URLSearchParams(location.search).getAll('sw_dim');
+    inp.checked = actives.indexOf('nee') > -1;
+    nee.classList.toggle('sw-vorm-active', inp.checked);
+    if (inp.dataset.swFixed) return;
+    inp.dataset.swFixed = '1';
+    inp.setAttribute('name','sw_dim');
+    inp.setAttribute('value','nee');
+    inp.addEventListener('click', function(e){
+      e.stopPropagation(); e.stopImmediatePropagation();
+      setTimeout(function(){
+        var p = new URLSearchParams(location.search);
+        p.delete('sw_dim');
+        if (inp.checked) p.append('sw_dim','nee');
+        var s = p.toString();
+        history.replaceState({}, '', location.pathname + (s?'?'+s:''));
+        nee.classList.toggle('sw-vorm-active', inp.checked);
+        applyAllFilters();
+        renderActiveChips();
+      }, 0);
+    }, true);
+    inp.addEventListener('change', function(e){ e.stopPropagation(); e.stopImmediatePropagation(); }, true);
   }
   function renameKleurLabels(){
     // Scan the entire facets wrapper (en active chips area) en vervang ALLE text nodes
@@ -763,7 +811,8 @@ product-card .text-block[class*="product_title"]{
         {param:'sw_ip', label:'IP', facetSel:'.sw-ip-facet', map:{IP20:'IP20',IP21:'IP21',IP44:'IP44',IP54:'IP54',IP65:'IP65',IP67:'IP67'}},
         {param:'sw_zaag', label:'Gatmaat', facetSel:'.sw-zaag-facet', map:{'lt49':'< 49 mm','50-59':'50-59 mm','60-69':'60-69 mm','70-79':'70-79 mm','80-99':'80-99 mm','100-129':'100-129 mm','gt130':'> 130 mm'}},
         {param:'sw_diepte', label:'Inbouwdiepte', facetSel:'.sw-diepte-facet', map:{}},
-        {param:'sw_lk', label:'Lichtkleur', facetSel:'[data-sw-lk]', map:{'2200':'2200K','2700':'2700K','2700d':'2700K dimbaar','3000':'3000K','4000':'4000K','dim2warm':'Dim-to-warm','rgbww':'RGBWW','tri':'Tri-color'}}
+        {param:'sw_lk', label:'Lichtkleur', facetSel:'[data-sw-lk]', map:{'2200':'2200K','2700':'2700K','2700d':'2700K dimbaar','3000':'3000K','4000':'4000K','dim2warm':'Dim-to-warm','rgbww':'RGBWW','tri':'Tri-color'}},
+        {param:'sw_dim', label:'Dimbaar', facetSel:'.sw-fake-nee', map:{nee:'Nee'}}
       ];
       defs.forEach(function(def){
         p.getAll(def.param).forEach(function(v){
@@ -795,6 +844,7 @@ product-card .text-block[class*="product_title"]{
     addZaagFilter();
     addDiepteFilter();
     expandLichtkleur();
+    fixDimbaarNee();
     renameKleurLabels();
     dedupeAndOrderFacets();
     applyAllFilters();
