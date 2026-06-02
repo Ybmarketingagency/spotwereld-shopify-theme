@@ -334,7 +334,9 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
 @keyframes swFiltersFallback{to{opacity:1}}
 .facets-block-wrapper--vertical,.facets__form-wrapper{animation:swFiltersFallback 0s linear 1.2s forwards}
 /* Dimbaar facet — override pill/button styling, force standard checkbox layout */
-.facets__item button,.facets__item .button,.facets__item [class*="filter-pill"]{all:unset !important}
+.facets__item button:not(.sw-show-more-diepte),.facets__item .button:not(.sw-show-more-diepte),.facets__item [class*="filter-pill"]{all:unset !important}
+.sw-show-more-diepte{cursor:pointer !important;color:#061f40 !important;text-decoration:underline !important;font-weight:600 !important;font-size:.78rem !important;background:none !important;border:0 !important;padding:.5rem 0 0 !important}
+.sw-show-more-diepte:hover{color:#0F6FE3 !important}
 .facets__item .facets__inputs-list-item,.facets__item li{background:transparent !important;border:0 !important;padding:.2rem 0 !important;list-style:none !important}
 .facets__item .facets__inputs-list-item:not([style*="display:none"]):not([data-sw-hidden]),.facets__item li:not([style*="display:none"]):not([data-sw-hidden]){display:block}
 .facets__item [data-sw-hidden]{display:none !important}
@@ -973,13 +975,28 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
   setTimeout(runAllSwFiltersGuarded, 400);
   setTimeout(runAllSwFiltersGuarded, 1200);
   setTimeout(runAllSwFiltersGuarded, 2500);
-  // Dedicated aggressive rename (geen guard nodig, alleen text changes)
+  // Initial rename ticks
+  renameKleurLabels();
   var renameTicks = 0;
   var renameInterval = setInterval(function(){
     renameKleurLabels();
-    if (++renameTicks > 30) clearInterval(renameInterval); // 30 * 250ms = ~7.5s
+    if (++renameTicks > 30) clearInterval(renameInterval);
   }, 250);
-  // Re-arm interval na elke Kleur input click (Shopify reload kan komen)
+  // Dedicated CharacterData observer: catch text changes in facets the moment ze gebeuren
+  var renameObsRunning = false;
+  var renameTextObs = new MutationObserver(function(){
+    if (renameObsRunning) return;
+    renameObsRunning = true;
+    renameKleurLabels();
+    // 2 rAFs zodat onze eigen text changes niet opnieuw triggeren
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){ renameObsRunning = false; }); });
+  });
+  document.addEventListener('DOMContentLoaded', function(){
+    document.querySelectorAll('.facets-block-wrapper--vertical, .facets__form-wrapper, active-facets, [class*="active-facets"]').forEach(function(scope){
+      renameTextObs.observe(scope, {childList:true, subtree:true, characterData:true});
+    });
+  });
+  // Re-arm rAF rename voor 600ms na elke Kleur klik (vangt Shopify re-render)
   document.addEventListener('click', function(e){
     var t = e.target;
     if (!t || t.tagName !== 'INPUT') return;
@@ -987,12 +1004,13 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
     if (!inLi) return;
     var txt = inLi.textContent || '';
     if (txt.indexOf('Wit') > -1 || txt.indexOf('Zwart') > -1 || txt.indexOf('Goud') > -1 || txt.indexOf('Koper') > -1 || txt.indexOf('Zilver') > -1 || txt.indexOf('Metallic') > -1){
-      renameTicks = 0;
-      clearInterval(renameInterval);
-      renameInterval = setInterval(function(){
+      // Tight rAF loop voor 600ms — vervangt Mat Wit/Zwart de moment het verschijnt
+      var start = performance.now();
+      function tick(){
         renameKleurLabels();
-        if (++renameTicks > 30) clearInterval(renameInterval);
-      }, 200);
+        if (performance.now() - start < 600) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
     }
   }, true);
   // Observer with guard + debounce (target facet wrapper only, NOT body)
