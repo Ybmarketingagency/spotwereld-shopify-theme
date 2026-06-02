@@ -619,7 +619,7 @@ section:has(> div > .sw-pr-grid){display:none!important}
       });
     }
     // FOUC fix: laat CSS pas main image tonen na override
-    if (document.body) document.body.classList.add('sw-main-img-ready');
+    document.documentElement.classList.add('sw-main-img-ready-html');
     stickyTarget.insertAdjacentHTML('beforeend', source.innerHTML);
     // Specs tabel onder thumbnails injecteren (alleen als nog niet in mediaCol)
     var specsSource = document.getElementById('sw-specs-source');

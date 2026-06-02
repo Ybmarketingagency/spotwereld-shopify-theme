@@ -327,26 +327,23 @@ details.facets__item[open] .facets__icon:empty::after{transform:rotate(-135deg);
 .facets__item .checkbox__input:checked + .checkbox__label .icon-checkmark,.facets__item .checkbox__input:checked ~ .checkbox__label .icon-checkmark{background:#061f40 !important;border-color:#061f40 !important}
 .facets__item .checkbox__input:checked + .checkbox__label .icon-checkmark::after,.facets__item .checkbox__input:checked ~ .checkbox__label .icon-checkmark::after{content:'';position:absolute;left:5px;top:1px;width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
 .facets__item .swatch{display:none !important}
-/* Verberg LAOM card images en main media tot mijn JS de outledtl swap heeft gedaan (FOUC fix) */
-.sw-pp-card[href*="laom-wit"] img,
-.sw-pp-card[href*="laom-mat-zwart"] img,
-.sw-pp-card[href*="laom-zilver"] img,
-product-card:has(a[href*="laom-wit"]) img,
-product-card:has(a[href*="laom-mat-zwart"]) img,
-product-card:has(a[href*="laom-zilver"]) img{opacity:0 !important;transition:opacity .15s}
-product-card[data-sw-img-done="1"] img,
-.sw-pp-card[data-sw-img-done="1"] img,
-[data-sw-img-done="1"] img{opacity:1 !important}
-/* Product detail page: hide main media op LAOM pagina's tot override */
-body.sw-product-laom .product-information__media img:not(.sw-thumbs img),
-body.sw-product-laom .product-information__media source{opacity:0 !important;transition:opacity .2s}
-body.sw-product-laom.sw-main-img-ready .product-information__media img:not(.sw-thumbs img),
-body.sw-product-laom.sw-main-img-ready .product-information__media source{opacity:1 !important}
-/* Fallback: na max 1.5s altijd tonen */
+/* Verberg LAOM card images tot JS de outledtl swap heeft gedaan (FOUC fix) — gebruik data-sw-img-done als show signaal */
+.sw-pp-card[href*="laom-wit"]:not([data-sw-img-done]) img,
+.sw-pp-card[href*="laom-mat-zwart"]:not([data-sw-img-done]) img,
+.sw-pp-card[href*="laom-zilver"]:not([data-sw-img-done]) img,
+product-card:has(a[href*="laom-wit"]):not([data-sw-img-done]) img,
+product-card:has(a[href*="laom-mat-zwart"]):not([data-sw-img-done]) img,
+product-card:has(a[href*="laom-zilver"]):not([data-sw-img-done]) img{opacity:0;transition:opacity .15s}
+/* Product detail page: hide main media op LAOM pagina's tot override — gebruik HTML class (vroeger beschikbaar dan body) */
+html.sw-product-laom-html .product-information__media img:not(.sw-thumbs img),
+html.sw-product-laom-html .product-information__media source{opacity:0;transition:opacity .2s}
+html.sw-product-laom-html.sw-main-img-ready-html .product-information__media img:not(.sw-thumbs img),
+html.sw-product-laom-html.sw-main-img-ready-html .product-information__media source{opacity:1}
+/* Fallback: na max 1.5s altijd tonen (vangt mislukte JS) */
 @keyframes swImgFallback{0%{opacity:0}100%{opacity:1}}
-.sw-pp-card[href*="laom-"] img,
-product-card:has(a[href*="laom-"]) img,
-body.sw-product-laom .product-information__media img:not(.sw-thumbs img){animation:swImgFallback .1s linear 1.5s forwards}
+.sw-pp-card[href*="laom-"]:not([data-sw-img-done]) img,
+product-card:has(a[href*="laom-"]):not([data-sw-img-done]) img,
+html.sw-product-laom-html .product-information__media img:not(.sw-thumbs img){animation:swImgFallback .1s linear 1.5s forwards}
 /* Verberg facets sidebar tot mijn JS klaar is met layout (voorkomt flicker bij page load) */
 body:not(.sw-filters-ready) .facets-block-wrapper--vertical,body:not(.sw-filters-ready) .facets__form-wrapper{opacity:0 !important;transition:none !important}
 body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .facets__form-wrapper{opacity:1 !important;transition:opacity .15s ease}
@@ -364,29 +361,23 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
 </style>
 <script>
 (function(){
-  // Bij LAOM productpagina: markeer body voor FOUC-CSS — fires zo vroeg mogelijk + bij iedere navigation
+  // LAOM productpagina: zet class op <html> (bestaat al bij script-execution, vóór body)
   function checkLaomPage(){
     try {
       var path = location.pathname || '';
       var isLaom = /\/products\/led-inbouwspot-laom-(wit|mat-zwart|zilver)/.test(path);
-      var setClass = function(){
-        if (!document.body) { requestAnimationFrame(setClass); return; }
-        if (isLaom) document.body.classList.add('sw-product-laom');
-        else {
-          document.body.classList.remove('sw-product-laom');
-          document.body.classList.remove('sw-main-img-ready');
-        }
-      };
-      setClass();
+      var html = document.documentElement;
+      if (isLaom){ html.classList.add('sw-product-laom-html'); }
+      else { html.classList.remove('sw-product-laom-html'); html.classList.remove('sw-main-img-ready-html'); }
     } catch(e){}
   }
   checkLaomPage();
   window.addEventListener('popstate', checkLaomPage);
   window.addEventListener('pageshow', checkLaomPage);
-  // Horizon view-transition: intercept link clicks die naar LAOM gaan om body class meteen te zetten
+  // Horizon view-transition click: zet html class direct vóór navigation
   document.addEventListener('click', function(e){
     var a = e.target && e.target.closest && e.target.closest('a[href*="/products/led-inbouwspot-laom-"]');
-    if (a && document.body) document.body.classList.add('sw-product-laom');
+    if (a) document.documentElement.classList.add('sw-product-laom-html');
   }, true);
   // Hardcoded overrides per handle voor cards waar geen liquid marker te plaatsen is (sw-pp-card op homepage etc)
   var SW_HANDLE_OVERRIDES = {
@@ -878,11 +869,13 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
     if (!lkFacet) return;
     var list = lkFacet.querySelector('.facets__inputs, ul, .facets__inputs-list');
     if (!list) return;
-    // ALTIJD oude sw-fake-lk-* clones uit collection.json verwijderen (die hebben niet onze handlers)
+    // ALTIJD oude sw-fake-lk-* clones uit collection.json verwijderen
     list.querySelectorAll('[class*="sw-fake-lk-"]').forEach(function(el){ el.remove(); });
     if (lkFacet.dataset.swLkExpanded) { syncLkInputs(); return; }
+    // Vind origineel item (Instelbaar) als template, kloon, dan VERWIJDER het origineel
     var origItem = list.querySelector('.facets__inputs-list-item:not([class*="sw-lk-opt-"]), li:not([class*="sw-lk-opt-"])');
     if (!origItem) return;
+    var origItemRef = origItem; // bewaar referentie om later te verwijderen
     // Hide original (Instelbaar) shown items already done by old code; we add comprehensive set
     var allOpts = [
       {v:'2200', n:'2200K (flame-wit)'},
@@ -923,6 +916,13 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
         input.addEventListener('change', function(e){ e.stopPropagation(); e.stopImmediatePropagation(); }, true);
       }
       list.appendChild(clone);
+    });
+    // Verwijder originele "Instelbaar (2700K-4000K)" item — voorkomt dat Shopify die submit
+    if (origItemRef && origItemRef.parentNode) origItemRef.parentNode.removeChild(origItemRef);
+    // Verwijder ook eventuele input[name*="lichtkleur"] elders in DOM (Shopify form hidden inputs)
+    document.querySelectorAll('input[name="filter.v.option.lichtkleur"], input[name="filter.p.product_option.lichtkleur"]').forEach(function(i){
+      // Alleen verwijderen als NIET een van mijn clones
+      if (!i.closest('[class*="sw-lk-opt-"]')) i.remove();
     });
     lkFacet.dataset.swLkExpanded = '1';
     syncLkInputs();
