@@ -577,14 +577,49 @@ product-card .text-block[class*="product_title"]{
     });
   }
   function renameKleurLabels(){
-    var kleurFacet = findFacet('Kleur');
-    if (!kleurFacet || kleurFacet.dataset.swKleurRenamed) return;
     var map = {'Mat Wit':'Wit','Mat Zwart':'Zwart'};
-    kleurFacet.querySelectorAll('.checkbox__label-text, label span').forEach(function(lbl){
-      var t = lbl.textContent.trim();
-      if (map[t]) lbl.textContent = map[t];
+    // Rename inside the Kleur facet panel
+    var kleurFacet = findFacet('Kleur');
+    if (kleurFacet){
+      kleurFacet.querySelectorAll('.checkbox__label-text, label span, .facets__label-text').forEach(function(lbl){
+        var t = (lbl.textContent||'').trim();
+        if (map[t]) lbl.textContent = map[t];
+      });
+    }
+    // Rename Shopify's active filter chips that show "Mat Wit" / "Mat Zwart"
+    document.querySelectorAll('.facets__selected button, .facets__selected a, .facets__selected span, [class*="active-facet"], [data-active-facet]').forEach(function(el){
+      var t = (el.textContent||'');
+      if (!t) return;
+      if (t.indexOf('Mat Wit')>-1) {
+        // Replace text nodes only (preserve nested icons)
+        var w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
+        var n; while (n = w.nextNode()){ if (n.nodeValue.indexOf('Mat Wit')>-1) n.nodeValue = n.nodeValue.replace(/Mat Wit/g,'Wit'); }
+      }
+      if (t.indexOf('Mat Zwart')>-1) {
+        var w2 = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
+        var n2; while (n2 = w2.nextNode()){ if (n2.nodeValue.indexOf('Mat Zwart')>-1) n2.nodeValue = n2.nodeValue.replace(/Mat Zwart/g,'Zwart'); }
+      }
     });
-    kleurFacet.dataset.swKleurRenamed = '1';
+  }
+  function dedupeAndOrderFacets(){
+    // Remove duplicate sw-vorm-facet (oude inline code voegt soms tweede toe)
+    var vorms = document.querySelectorAll('.sw-vorm-facet');
+    for (var i=1; i<vorms.length; i++){ vorms[i].remove(); }
+    // Verzeker dat onze filters NA Kleur staan, niet ervoor
+    var kleurFacet = findFacet('Kleur');
+    if (!kleurFacet) return;
+    var parent = kleurFacet.parentElement;
+    if (!parent) return;
+    ['.sw-vorm-facet','.sw-ip-facet','.sw-zaag-facet','.sw-diepte-facet'].forEach(function(sel){
+      var el = parent.querySelector(sel);
+      if (!el) return;
+      // Als el VOOR kleurFacet staat in dezelfde parent, verplaats naar erna
+      var pos = kleurFacet.compareDocumentPosition(el);
+      if (pos & Node.DOCUMENT_POSITION_PRECEDING){
+        // move el right after kleurFacet
+        kleurFacet.parentNode.insertBefore(el, kleurFacet.nextSibling);
+      }
+    });
   }
   function syncIPInputs(){
     var facet = document.querySelector('.sw-ip-facet'); if (!facet) return;
@@ -742,14 +777,17 @@ product-card .text-block[class*="product_title"]{
   }
   function runAllSwFilters(){
     if (SW_FILTER_GUARD) return;
-    fixVormInputs();
-    addIPFilter();
-    addZaagFilter();
-    addDiepteFilter();
-    expandLichtkleur();
-    renameKleurLabels();
-    applyAllFilters();
-    renderActiveChips();
+    withGuard(function(){
+      fixVormInputs();
+      addIPFilter();
+      addZaagFilter();
+      addDiepteFilter();
+      expandLichtkleur();
+      renameKleurLabels();
+      dedupeAndOrderFacets();
+      applyAllFilters();
+      renderActiveChips();
+    });
   }
   runAllSwFilters();
   document.addEventListener('DOMContentLoaded', runAllSwFilters);
