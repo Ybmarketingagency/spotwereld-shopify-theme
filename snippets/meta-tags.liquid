@@ -327,6 +327,13 @@ details.facets__item[open] .facets__icon:empty::after{transform:rotate(-135deg);
 .facets__item .checkbox__input:checked + .checkbox__label .icon-checkmark,.facets__item .checkbox__input:checked ~ .checkbox__label .icon-checkmark{background:#061f40 !important;border-color:#061f40 !important}
 .facets__item .checkbox__input:checked + .checkbox__label .icon-checkmark::after,.facets__item .checkbox__input:checked ~ .checkbox__label .icon-checkmark::after{content:'';position:absolute;left:5px;top:1px;width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
 .facets__item .swatch{display:none !important}
+/* Productpagina H1 title flicker fix bij kleur-switch */
+html.sw-product-page:not(.sw-title-ready) .product-information__details h1,
+html.sw-product-page:not(.sw-title-ready) h1.product__title{opacity:0;transition:opacity .15s}
+html.sw-product-page.sw-title-ready .product-information__details h1,
+html.sw-product-page.sw-title-ready h1.product__title{opacity:1}
+@keyframes swTitleFallback{to{opacity:1}}
+html.sw-product-page .product-information__details h1,html.sw-product-page h1.product__title{animation:swTitleFallback 0s linear 1.2s forwards}
 /* Verberg LAOM card images tot JS de outledtl swap heeft gedaan (FOUC fix) — gebruik data-sw-img-done als show signaal */
 .sw-pp-card[href*="laom-wit"]:not([data-sw-img-done]) img,
 .sw-pp-card[href*="laom-mat-zwart"]:not([data-sw-img-done]) img,
@@ -361,23 +368,38 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
 </style>
 <script>
 (function(){
-  // LAOM productpagina: zet class op <html> (bestaat al bij script-execution, vóór body)
-  function checkLaomPage(){
+  // Markeer productpagina + LAOM op <html>
+  function checkProductPage(){
     try {
       var path = location.pathname || '';
+      var isProduct = path.indexOf('/products/') > -1;
       var isLaom = /\/products\/led-inbouwspot-laom-(wit|mat-zwart|zilver)/.test(path);
       var html = document.documentElement;
-      if (isLaom){ html.classList.add('sw-product-laom-html'); }
+      // Reset ready flags bij navigation
+      html.classList.remove('sw-title-ready');
+      if (!isProduct){
+        html.classList.remove('sw-product-page');
+        html.classList.remove('sw-product-laom-html');
+        html.classList.remove('sw-main-img-ready-html');
+      }
+      if (isProduct) html.classList.add('sw-product-page');
+      if (isLaom) html.classList.add('sw-product-laom-html');
       else { html.classList.remove('sw-product-laom-html'); html.classList.remove('sw-main-img-ready-html'); }
     } catch(e){}
   }
-  checkLaomPage();
-  window.addEventListener('popstate', checkLaomPage);
-  window.addEventListener('pageshow', checkLaomPage);
-  // Horizon view-transition click: zet html class direct vóór navigation
+  checkProductPage();
+  window.addEventListener('popstate', checkProductPage);
+  window.addEventListener('pageshow', checkProductPage);
+  // Click op product link / color picker: zet flags direct (vóór navigation)
   document.addEventListener('click', function(e){
-    var a = e.target && e.target.closest && e.target.closest('a[href*="/products/led-inbouwspot-laom-"]');
-    if (a) document.documentElement.classList.add('sw-product-laom-html');
+    var a = e.target && e.target.closest && e.target.closest('a[href*="/products/"]');
+    if (!a) return;
+    document.documentElement.classList.add('sw-product-page');
+    document.documentElement.classList.remove('sw-title-ready');
+    if (a.getAttribute('href').indexOf('led-inbouwspot-laom-') > -1){
+      document.documentElement.classList.add('sw-product-laom-html');
+      document.documentElement.classList.remove('sw-main-img-ready-html');
+    }
   }, true);
   // Hardcoded overrides per handle voor cards waar geen liquid marker te plaatsen is (sw-pp-card op homepage etc)
   var SW_HANDLE_OVERRIDES = {
@@ -482,12 +504,21 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
     });
     // Product page H1
     var h1 = document.querySelector('h1');
-    if (h1 && !h1.dataset.swTitleDone) {
+    if (h1) {
       var path = location.pathname.match(/\/products\/([^?#\/]+)/);
       if (path && SW_TITLES[path[1]]) {
-        h1.textContent = SW_TITLES[path[1]];
+        if (h1.textContent !== SW_TITLES[path[1]]) {
+          h1.textContent = SW_TITLES[path[1]];
+        }
         h1.dataset.swTitleDone = '1';
+        document.documentElement.classList.add('sw-title-ready');
+      } else if (path) {
+        // Product zonder spec mapping: gewoon de bestaande titel laten staan
+        document.documentElement.classList.add('sw-title-ready');
       }
+    } else if (location.pathname.indexOf('/products/') === -1) {
+      // Niet op productpagina — title-ready niet nodig
+      document.documentElement.classList.add('sw-title-ready');
     }
   }
   rewriteTitles();
