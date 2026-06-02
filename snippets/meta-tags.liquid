@@ -327,6 +327,12 @@ details.facets__item[open] .facets__icon:empty::after{transform:rotate(-135deg);
 .facets__item .checkbox__input:checked + .checkbox__label .icon-checkmark,.facets__item .checkbox__input:checked ~ .checkbox__label .icon-checkmark{background:#061f40 !important;border-color:#061f40 !important}
 .facets__item .checkbox__input:checked + .checkbox__label .icon-checkmark::after,.facets__item .checkbox__input:checked ~ .checkbox__label .icon-checkmark::after{content:'';position:absolute;left:5px;top:1px;width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
 .facets__item .swatch{display:none !important}
+/* Verberg facets sidebar tot mijn JS klaar is met layout (voorkomt flicker bij page load) */
+body:not(.sw-filters-ready) .facets-block-wrapper--vertical,body:not(.sw-filters-ready) .facets__form-wrapper{opacity:0 !important;transition:none !important}
+body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .facets__form-wrapper{opacity:1 !important;transition:opacity .15s ease}
+/* Fallback: na max 1.2s altijd tonen */
+@keyframes swFiltersFallback{to{opacity:1}}
+.facets-block-wrapper--vertical,.facets__form-wrapper{animation:swFiltersFallback 0s linear 1.2s forwards}
 /* Dimbaar facet — override pill/button styling, force standard checkbox layout */
 .facets__item button,.facets__item .button,.facets__item [class*="filter-pill"]{all:unset !important}
 .facets__item .facets__inputs-list-item,.facets__item li{background:transparent !important;border:0 !important;padding:.2rem 0 !important;list-style:none !important;display:block !important}
@@ -917,7 +923,12 @@ details.facets__item[open] .facets__icon:empty::after{transform:rotate(-135deg);
     applyAllFilters();
     renderActiveChips();
   }
-  function runAllSwFiltersGuarded(){ withGuard(runAllSwFilters); }
+  function runAllSwFiltersGuarded(){
+    withGuard(runAllSwFilters);
+    if (document.body && !document.body.classList.contains('sw-filters-ready')){
+      document.body.classList.add('sw-filters-ready');
+    }
+  }
   runAllSwFiltersGuarded();
   document.addEventListener('DOMContentLoaded', runAllSwFiltersGuarded);
   setTimeout(runAllSwFiltersGuarded, 400);
