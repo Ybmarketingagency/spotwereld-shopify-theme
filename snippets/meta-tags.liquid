@@ -619,21 +619,22 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
   // Product spec lookup per handle
   // CCT switch = 2700K + 3000K + 4000K + tri-color
   var CCT_LK = ['2700','3000','4000','tri'];
-  // LAOM heeft GEEN CCT switch, alleen 2700K (extra warm-wit)
   var LAOM_LK = ['2700'];
+  // diepte = array van mogelijke waarden; wattage = array (CCT spots zijn vaak 2 wattages)
+  // buitenmaat = outer diameter/zijde in mm (Aristo 85, Miran 86, LAOM 95 vierkant)
   var SW_PRODUCT_SPECS = {
-    'led-inbouwspot-aristo-mat-wit':        {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25,30], lk:CCT_LK},
-    'led-inbouwspot-aristo-mat-zwart':      {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25,30], lk:CCT_LK},
-    'led-inbouwspot-aristo-zilver':         {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25,30], lk:CCT_LK},
-    'led-inbouwspot-aristo-koper':          {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25,30], lk:CCT_LK},
-    'led-inbouwspot-aristo-goud':           {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25,30], lk:CCT_LK},
-    'led-inbouwspot-aristo-satin-metallic': {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25,30], lk:CCT_LK},
-    'led-inbouwspot-miran-mat-wit':         {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25], lk:CCT_LK},
-    'led-inbouwspot-miran-mat-zwart':       {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25], lk:CCT_LK},
-    'led-inbouwspot-miran-goud':            {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25], lk:CCT_LK},
-    'led-inbouwspot-laom-wit':              {vorm:'vierkant', ip:'IP44', zaag:[75,80], diepte:[26], lk:LAOM_LK},
-    'led-inbouwspot-laom-mat-zwart':        {vorm:'vierkant', ip:'IP44', zaag:[75,80], diepte:[26], lk:LAOM_LK},
-    'led-inbouwspot-laom-zilver':           {vorm:'vierkant', ip:'IP44', zaag:[75,80], diepte:[26], lk:LAOM_LK}
+    'led-inbouwspot-aristo-mat-wit':        {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25,30], lk:CCT_LK, watt:[4,6], buiten:85, kantel:'ja'},
+    'led-inbouwspot-aristo-mat-zwart':      {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25,30], lk:CCT_LK, watt:[4,6], buiten:85, kantel:'ja'},
+    'led-inbouwspot-aristo-zilver':         {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25,30], lk:CCT_LK, watt:[4,6], buiten:85, kantel:'ja'},
+    'led-inbouwspot-aristo-koper':          {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25,30], lk:CCT_LK, watt:[4,6], buiten:85, kantel:'ja'},
+    'led-inbouwspot-aristo-goud':           {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25,30], lk:CCT_LK, watt:[4,6], buiten:85, kantel:'ja'},
+    'led-inbouwspot-aristo-satin-metallic': {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25,30], lk:CCT_LK, watt:[4,6], buiten:85, kantel:'ja'},
+    'led-inbouwspot-miran-mat-wit':         {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25], lk:CCT_LK, watt:[5,7], buiten:86, kantel:'ja'},
+    'led-inbouwspot-miran-mat-zwart':       {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25], lk:CCT_LK, watt:[5,7], buiten:86, kantel:'ja'},
+    'led-inbouwspot-miran-goud':            {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25], lk:CCT_LK, watt:[5,7], buiten:86, kantel:'ja'},
+    'led-inbouwspot-laom-wit':              {vorm:'vierkant', ip:'IP44', zaag:[75,80], diepte:[26], lk:LAOM_LK, watt:[6], buiten:95, kantel:'ja'},
+    'led-inbouwspot-laom-mat-zwart':        {vorm:'vierkant', ip:'IP44', zaag:[75,80], diepte:[26], lk:LAOM_LK, watt:[6], buiten:95, kantel:'ja'},
+    'led-inbouwspot-laom-zilver':           {vorm:'vierkant', ip:'IP44', zaag:[75,80], diepte:[26], lk:LAOM_LK, watt:[6], buiten:95, kantel:'ja'}
   };
   function getHandle(card){
     var link = card.querySelector('a[href*="/products/"]');
@@ -677,6 +678,18 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
       if (lks.length>0) keep = keep && s && s.lk && lks.some(function(l){return s.lk.indexOf(l)>-1});
       // Dimbaar Nee: all our products zijn dimbaar, dus Nee → altijd verbergen
       if (params.getAll('sw_dim').indexOf('nee') > -1) keep = false;
+      // Wattage (sw_watt) — product watts is array
+      var watts = params.getAll('sw_watt');
+      if (watts.length>0) {
+        var prodWatts = Array.isArray(s && s.watt) ? s.watt : (s ? [s.watt] : []);
+        keep = keep && prodWatts.some(function(w){ return watts.indexOf(String(w)) > -1; });
+      }
+      // Buitenmaat (sw_buiten) — single value per product
+      var buitens = params.getAll('sw_buiten');
+      if (buitens.length>0) keep = keep && s && buitens.indexOf(String(s.buiten)) > -1;
+      // Kantelbaar (sw_kantel) — 'ja' / 'nee'
+      var kantels = params.getAll('sw_kantel');
+      if (kantels.length>0) keep = keep && s && kantels.indexOf(s.kantel) > -1;
       grid.style.display = keep ? '' : 'none';
     });
   }
@@ -781,6 +794,112 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
       if (inp.dataset.swFixed) return;
       inp.dataset.swFixed = '1';
       inp.addEventListener('click', function(e){ e.stopPropagation(); e.stopImmediatePropagation(); setTimeout(function(){ toggleParamFromInputs('.sw-diepte-facet', 'sw_diepte'); }, 0); }, true);
+      inp.addEventListener('change', function(e){ e.stopPropagation(); e.stopImmediatePropagation(); }, true);
+    });
+  }
+  function addWattFilter(){
+    if (document.querySelector('.sw-watt-facet')) { syncWattInputs(); return; }
+    var anchor = document.querySelector('.sw-diepte-facet') || document.querySelector('.sw-zaag-facet') || document.querySelector('.sw-ip-facet') || document.querySelector('.sw-vorm-facet') || findFacet('Kleur');
+    if (!anchor) return;
+    var opts = [3,4,5,6,7,8,9,10,12,15,18,20,24,30].map(function(w){return {v:String(w), n:w+' W'};});
+    var html = '<details class="facets__item sw-watt-facet" open><summary class="facets__summary"><span class="facets__label">Wattage</span><span class="facets__icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span></summary><div class="facets__panel"><ul class="facets__inputs facets__inputs-list">'+
+      opts.map(function(o,i){
+        var hidden = i >= 6 ? ' style="display:none" data-sw-hidden="1"' : '';
+        return '<li class="facets__inputs-list-item"'+hidden+'><label class="checkbox"><input type="checkbox" class="checkbox__input" name="sw_watt" value="'+o.v+'"><span class="checkbox__label"><span class="icon-checkmark"></span><span class="checkbox__label-text">'+o.n+'</span></span></label></li>';
+      }).join('')+
+      '</ul><button type="button" class="sw-show-more-watt sw-show-more-diepte" style="background:none;border:0;color:#061f40;font-weight:600;font-size:.78rem;text-decoration:underline;cursor:pointer;padding:.5rem 0 0;text-align:left">Toon alle opties</button></div></details>';
+    anchor.insertAdjacentHTML('afterend', html);
+    var btn = document.querySelector('.sw-show-more-watt');
+    if (btn){
+      btn.addEventListener('click', function(){
+        var facet = document.querySelector('.sw-watt-facet');
+        var expanded = btn.dataset.swExpanded === '1';
+        if (expanded){
+          var lis = facet.querySelectorAll('.facets__inputs-list-item');
+          for (var i=6; i<lis.length; i++){ lis[i].setAttribute('data-sw-hidden','1'); lis[i].style.display='none'; }
+        } else {
+          facet.querySelectorAll('[data-sw-hidden]').forEach(function(li){ li.removeAttribute('data-sw-hidden'); li.style.display=''; });
+        }
+        btn.textContent = expanded ? 'Toon alle opties' : 'Toon minder opties';
+        btn.dataset.swExpanded = expanded ? '0' : '1';
+      });
+    }
+    syncWattInputs();
+  }
+  function syncWattInputs(){
+    var facet = document.querySelector('.sw-watt-facet'); if (!facet) return;
+    var actives = new URLSearchParams(location.search).getAll('sw_watt');
+    facet.querySelectorAll('input').forEach(function(inp){
+      inp.checked = actives.indexOf(inp.value) > -1;
+      var li = inp.closest('li'); if (li) li.classList.toggle('sw-vorm-active', inp.checked);
+      if (inp.dataset.swFixed) return;
+      inp.dataset.swFixed = '1';
+      inp.addEventListener('click', function(e){ e.stopPropagation(); e.stopImmediatePropagation(); setTimeout(function(){ toggleParamFromInputs('.sw-watt-facet', 'sw_watt'); }, 0); }, true);
+      inp.addEventListener('change', function(e){ e.stopPropagation(); e.stopImmediatePropagation(); }, true);
+    });
+  }
+  function addBuitenFilter(){
+    if (document.querySelector('.sw-buiten-facet')) { syncBuitenInputs(); return; }
+    var anchor = document.querySelector('.sw-watt-facet') || document.querySelector('.sw-diepte-facet') || findFacet('Kleur');
+    if (!anchor) return;
+    var opts = [80,85,86,90,95,100,110,120,150].map(function(b){return {v:String(b), n:b+' mm'};});
+    var html = '<details class="facets__item sw-buiten-facet" open><summary class="facets__summary"><span class="facets__label">Buitenmaat</span><span class="facets__icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span></summary><div class="facets__panel"><ul class="facets__inputs facets__inputs-list">'+
+      opts.map(function(o,i){
+        var hidden = i >= 5 ? ' style="display:none" data-sw-hidden="1"' : '';
+        return '<li class="facets__inputs-list-item"'+hidden+'><label class="checkbox"><input type="checkbox" class="checkbox__input" name="sw_buiten" value="'+o.v+'"><span class="checkbox__label"><span class="icon-checkmark"></span><span class="checkbox__label-text">'+o.n+'</span></span></label></li>';
+      }).join('')+
+      '</ul><button type="button" class="sw-show-more-buiten sw-show-more-diepte" style="background:none;border:0;color:#061f40;font-weight:600;font-size:.78rem;text-decoration:underline;cursor:pointer;padding:.5rem 0 0;text-align:left">Toon alle opties</button></div></details>';
+    anchor.insertAdjacentHTML('afterend', html);
+    var btn = document.querySelector('.sw-show-more-buiten');
+    if (btn){
+      btn.addEventListener('click', function(){
+        var facet = document.querySelector('.sw-buiten-facet');
+        var expanded = btn.dataset.swExpanded === '1';
+        if (expanded){
+          var lis = facet.querySelectorAll('.facets__inputs-list-item');
+          for (var i=5; i<lis.length; i++){ lis[i].setAttribute('data-sw-hidden','1'); lis[i].style.display='none'; }
+        } else {
+          facet.querySelectorAll('[data-sw-hidden]').forEach(function(li){ li.removeAttribute('data-sw-hidden'); li.style.display=''; });
+        }
+        btn.textContent = expanded ? 'Toon alle opties' : 'Toon minder opties';
+        btn.dataset.swExpanded = expanded ? '0' : '1';
+      });
+    }
+    syncBuitenInputs();
+  }
+  function syncBuitenInputs(){
+    var facet = document.querySelector('.sw-buiten-facet'); if (!facet) return;
+    var actives = new URLSearchParams(location.search).getAll('sw_buiten');
+    facet.querySelectorAll('input').forEach(function(inp){
+      inp.checked = actives.indexOf(inp.value) > -1;
+      var li = inp.closest('li'); if (li) li.classList.toggle('sw-vorm-active', inp.checked);
+      if (inp.dataset.swFixed) return;
+      inp.dataset.swFixed = '1';
+      inp.addEventListener('click', function(e){ e.stopPropagation(); e.stopImmediatePropagation(); setTimeout(function(){ toggleParamFromInputs('.sw-buiten-facet', 'sw_buiten'); }, 0); }, true);
+      inp.addEventListener('change', function(e){ e.stopPropagation(); e.stopImmediatePropagation(); }, true);
+    });
+  }
+  function addKantelFilter(){
+    if (document.querySelector('.sw-kantel-facet')) { syncKantelInputs(); return; }
+    var anchor = document.querySelector('.sw-buiten-facet') || document.querySelector('.sw-watt-facet') || findFacet('Kleur');
+    if (!anchor) return;
+    var opts = [{v:'ja',n:'Ja'},{v:'nee',n:'Nee'}];
+    var html = '<details class="facets__item sw-kantel-facet" open><summary class="facets__summary"><span class="facets__label">Kantelbaar</span><span class="facets__icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span></summary><div class="facets__panel"><ul class="facets__inputs facets__inputs-list">'+
+      opts.map(function(o){
+        return '<li class="facets__inputs-list-item"><label class="checkbox"><input type="checkbox" class="checkbox__input" name="sw_kantel" value="'+o.v+'"><span class="checkbox__label"><span class="icon-checkmark"></span><span class="checkbox__label-text">'+o.n+'</span></span></label></li>';
+      }).join('')+'</ul></div></details>';
+    anchor.insertAdjacentHTML('afterend', html);
+    syncKantelInputs();
+  }
+  function syncKantelInputs(){
+    var facet = document.querySelector('.sw-kantel-facet'); if (!facet) return;
+    var actives = new URLSearchParams(location.search).getAll('sw_kantel');
+    facet.querySelectorAll('input').forEach(function(inp){
+      inp.checked = actives.indexOf(inp.value) > -1;
+      var li = inp.closest('li'); if (li) li.classList.toggle('sw-vorm-active', inp.checked);
+      if (inp.dataset.swFixed) return;
+      inp.dataset.swFixed = '1';
+      inp.addEventListener('click', function(e){ e.stopPropagation(); e.stopImmediatePropagation(); setTimeout(function(){ toggleParamFromInputs('.sw-kantel-facet', 'sw_kantel'); }, 0); }, true);
       inp.addEventListener('change', function(e){ e.stopPropagation(); e.stopImmediatePropagation(); }, true);
     });
   }
@@ -900,7 +1019,7 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
   }
   function dedupeAndOrderFacets(){
     // Dedup custom facets
-    ['.sw-vorm-facet','.sw-ip-facet','.sw-zaag-facet','.sw-diepte-facet'].forEach(function(sel){
+    ['.sw-vorm-facet','.sw-ip-facet','.sw-zaag-facet','.sw-diepte-facet','.sw-watt-facet','.sw-buiten-facet','.sw-kantel-facet'].forEach(function(sel){
       var els = document.querySelectorAll(sel);
       for (var i=1; i<els.length; i++){ els[i].remove(); }
     });
@@ -910,9 +1029,12 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
     if (!parent) return;
     var firstFacet = parent.querySelector('.facets__item');
     if (!firstFacet) return;
-    // Gewenste volgorde: Vorm, Kleur, Lichtkleur, IP, Gatmaat, Inbouwdiepte, [rest...]
+    // Gewenste volgorde: Vorm, Kleur, Lichtkleur, IP, Zaagmaat, Inbouwdiepte, Wattage, Buitenmaat, Kantelbaar, [rest...]
     // We zetten ze in reverse + insertBefore firstFacet zodat ze opstapelen in correcte volgorde
     var order = [
+      function(){return parent.querySelector('.sw-kantel-facet');},
+      function(){return parent.querySelector('.sw-buiten-facet');},
+      function(){return parent.querySelector('.sw-watt-facet');},
       function(){return parent.querySelector('.sw-diepte-facet');},
       function(){return parent.querySelector('.sw-zaag-facet');},
       function(){return parent.querySelector('.sw-ip-facet');},
@@ -954,7 +1076,7 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
       {v:'100-129', n:'100-129 mm'},
       {v:'gt130', n:'> 130 mm'}
     ];
-    var html = '<details class="facets__item sw-zaag-facet" open><summary class="facets__summary"><span class="facets__label">Gatmaat / Zaagmaat</span><span class="facets__icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span></summary><div class="facets__panel"><ul class="facets__inputs facets__inputs-list">'+
+    var html = '<details class="facets__item sw-zaag-facet" open><summary class="facets__summary"><span class="facets__label">Zaagmaat</span><span class="facets__icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span></summary><div class="facets__panel"><ul class="facets__inputs facets__inputs-list">'+
       opts.map(function(o){
         return '<li class="facets__inputs-list-item"><label class="checkbox"><input type="checkbox" class="checkbox__input" name="sw_zaag" value="'+o.v+'"><span class="checkbox__label"><span class="icon-checkmark"></span><span class="checkbox__label-text">'+o.n+'</span></span></label></li>';
       }).join('')+'</ul></div></details>';
@@ -1068,8 +1190,11 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
     var defs = [
         {param:'sw_vorm', label:'Vorm', facetSel:'.sw-vorm-facet', map:{rond:'Rond',vierkant:'Vierkant',rechthoek:'Rechthoek'}},
         {param:'sw_ip', label:'IP', facetSel:'.sw-ip-facet', map:{IP20:'IP20',IP21:'IP21',IP44:'IP44',IP54:'IP54',IP65:'IP65',IP67:'IP67'}},
-        {param:'sw_zaag', label:'Gatmaat', facetSel:'.sw-zaag-facet', map:{'lt49':'< 49 mm','50-59':'50-59 mm','60-69':'60-69 mm','70-79':'70-79 mm','80-99':'80-99 mm','100-129':'100-129 mm','gt130':'> 130 mm'}},
+        {param:'sw_zaag', label:'Zaagmaat', facetSel:'.sw-zaag-facet', map:{'lt49':'< 49 mm','50-59':'50-59 mm','60-69':'60-69 mm','70-79':'70-79 mm','80-99':'80-99 mm','100-129':'100-129 mm','gt130':'> 130 mm'}},
         {param:'sw_diepte', label:'Inbouwdiepte', facetSel:'.sw-diepte-facet', map:{}},
+        {param:'sw_watt', label:'Wattage', facetSel:'.sw-watt-facet', map:{}},
+        {param:'sw_buiten', label:'Buitenmaat', facetSel:'.sw-buiten-facet', map:{}},
+        {param:'sw_kantel', label:'Kantelbaar', facetSel:'.sw-kantel-facet', map:{ja:'Ja',nee:'Nee'}},
         {param:'sw_lk', label:'Lichtkleur', facetSel:'[data-sw-lk]', map:{'2200':'2200K','2700':'2700K','2700d':'2700K dimbaar','3000':'3000K','4000':'4000K','dim2warm':'Dim-to-warm','rgbww':'RGBWW','tri':'Tri-color'}},
         {param:'sw_dim', label:'Dimbaar', facetSel:'.sw-fake-nee', map:{nee:'Nee'}}
       ];
@@ -1078,7 +1203,7 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
           var chip = document.createElement('span');
           chip.className = 'sw-active-chip';
           chip.setAttribute('data-sw-chip', def.param+'-'+v);
-          var lbl = def.map[v] || (def.param==='sw_diepte' ? (v + ' mm') : v);
+          var lbl = def.map[v] || (def.param==='sw_diepte' || def.param==='sw_buiten' ? (v + ' mm') : (def.param==='sw_watt' ? (v + ' W') : v));
           chip.innerHTML = def.label + ': ' + lbl + ' <button aria-label="Verwijder">✕</button>';
           chip.querySelector('button').addEventListener('click', function(){
             var p2 = new URLSearchParams(location.search);
@@ -1102,6 +1227,9 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
     addIPFilter();
     addZaagFilter();
     addDiepteFilter();
+    addWattFilter();
+    addBuitenFilter();
+    addKantelFilter();
     expandLichtkleur();
     fixDimbaarNee();
     renameKleurLabels();
