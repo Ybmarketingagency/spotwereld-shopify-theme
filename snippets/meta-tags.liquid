@@ -449,6 +449,11 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
       el.removeAttribute('data-src');
       el.src = url;
       if (el.loading === 'lazy') el.loading = 'eager';
+      // High prio voor LAOM card images zodat browser ze sneller fetched
+      try { el.fetchPriority = 'high'; } catch(e){}
+      el.setAttribute('fetchpriority','high');
+      // decoding async voorkomt main-thread block
+      el.decoding = 'async';
     });
   }
   function applyCardOverrides(){
@@ -1292,7 +1297,16 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
 {%- comment -%} Preconnect voor performance {%- endcomment -%}
 <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
 <link rel="preconnect" href="https://i.imgur.com" crossorigin>
+<link rel="preconnect" href="https://www.outledtl.nl" crossorigin>
 <link rel="dns-prefetch" href="https://cdn.shopify.com">
+<link rel="dns-prefetch" href="https://www.outledtl.nl">
+
+{%- comment -%} Preload LAOM card images (outledtl.nl is trager dan Shopify CDN) {%- endcomment -%}
+{%- if request.page_type == 'index' or request.page_type == 'collection' or template contains 'collection' -%}
+  <link rel="preload" as="image" href="https://www.outledtl.nl/wp-content/uploads/2023/10/OUTLEDTL-LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIMBAAR-WIT.png" fetchpriority="high">
+  <link rel="preload" as="image" href="https://www.outledtl.nl/wp-content/uploads/2019/12/OUTLEDTL-LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIMBAAR-ZWART.png" fetchpriority="high">
+  <link rel="preload" as="image" href="https://www.outledtl.nl/wp-content/uploads/2023/10/OUTLEDTL-LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIMBAAR-ZILVER.png" fetchpriority="high">
+{%- endif -%}
 
 {% if page_description %}
   <meta
