@@ -403,6 +403,44 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
 </style>
 <script>
 (function(){
+  // ============== INTERCEPT CHECKOUT BUTTON → /pages/gegevens ==============
+  // Alle "Door naar kassa" / "Checkout" knoppen omleiden naar onze custom step
+  function isCheckoutTrigger(el){
+    if (!el || !el.tagName) return false;
+    var name = (el.getAttribute('name')||'').toLowerCase();
+    var href = (el.getAttribute('href')||'').toLowerCase();
+    var txt = (el.textContent||'').toLowerCase();
+    if (name === 'checkout' || name === 'add') return name === 'checkout';
+    if (href === '/checkout' || href.indexOf('/checkout?') === 0) return true;
+    if (el.matches && el.matches('[href$="/checkout"], button[name="checkout"], button[type="submit"][form*="cart"]')) return true;
+    if (txt && (txt.indexOf('door naar kassa') > -1 || txt.indexOf('checkout') > -1 || txt.indexOf('afrekenen') > -1)){
+      // Alleen knoppen/links binnen cart context (vermijd false positives)
+      if (el.closest('form[action*="/cart"], #cart, cart-drawer, [is*="cart"], .cart, [class*="cart"]')) return true;
+    }
+    return false;
+  }
+  document.addEventListener('click', function(e){
+    if (location.pathname === '/pages/gegevens') return; // niet redirecten als al op gegevens
+    var t = e.target;
+    if (!t || !t.closest) return;
+    var trigger = t.closest('button[name="checkout"], a[href="/checkout"], a[href^="/checkout?"]');
+    if (!trigger){
+      // Check submit buttons in cart forms
+      var btn = t.closest('button[type="submit"], input[type="submit"]');
+      if (btn && btn.closest('form[action*="/cart"]')){
+        var formName = btn.getAttribute('name') || '';
+        if (formName === 'checkout' || /afrekenen|kassa|checkout/i.test(btn.textContent||'')){
+          trigger = btn;
+        }
+      }
+    }
+    if (!trigger) return;
+    e.preventDefault();
+    e.stopPropagation();
+    e.stopImmediatePropagation();
+    window.location.href = '/pages/gegevens';
+  }, true);
+
   // Markeer productpagina + LAOM op <html>
   function checkProductPage(){
     try {

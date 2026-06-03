@@ -1,0 +1,458 @@
+{%- comment -%}
+  Spotwereld custom checkout — stap 2 "Bestellen"
+  Gebruikers vullen hier hun gegevens in.
+  Op submit → Storefront API cartCreate → redirect naar Shopify checkoutUrl met alle data prefilled.
+{%- endcomment -%}
+
+<style>
+.swg-wrap{max-width:1280px;margin:0 auto;padding:1rem 1.25rem 3rem;font-family:inherit;color:#1e293b}
+.swg-progress{display:flex;align-items:center;justify-content:center;padding:1.5rem 0 2rem;gap:.5rem;flex-wrap:wrap}
+.swg-step{display:flex;align-items:center;gap:.5rem;color:#94a3b8;font-weight:600;font-size:.92rem}
+.swg-step.done{color:#061f40}
+.swg-step.active{color:#0F6FE3}
+.swg-step .dot{width:18px;height:18px;border-radius:50%;background:#e2e8f0;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:.7rem;font-weight:700}
+.swg-step.done .dot{background:#0F6FE3}
+.swg-step.active .dot{background:#0F6FE3;box-shadow:0 0 0 4px rgba(15,111,227,.18);position:relative}
+.swg-step.active .dot::after{content:'';position:absolute;width:8px;height:8px;background:#fff;border-radius:50%}
+.swg-bar{flex:0 0 60px;height:2px;background:#e2e8f0;margin:0 .25rem;border-radius:1px}
+.swg-bar.done{background:#0F6FE3}
+.swg-grid{display:grid;grid-template-columns:1fr 380px;gap:2rem;align-items:start}
+.swg-main{background:#fff;border-radius:14px;border:1px solid #e8edf4;padding:2rem}
+.swg-side{position:sticky;top:1rem;display:grid;gap:1rem}
+.swg-card{background:#fff;border-radius:14px;border:1px solid #e8edf4;padding:1.25rem}
+.swg-card h3{font-size:.95rem;font-weight:800;color:#061f40;margin:0 0 .85rem;letter-spacing:-.01em}
+.swg-account-row{display:flex;justify-content:space-between;align-items:center;padding:1.1rem 1.25rem;background:#fff;border:1px solid #e8edf4;border-radius:14px;margin-bottom:1.5rem}
+.swg-account-row strong{color:#061f40;font-weight:700;font-size:1rem}
+.swg-btn-outline{background:#fff;color:#0F6FE3;border:1.5px solid #0F6FE3;padding:.55rem 1rem;border-radius:8px;font-weight:700;font-size:.85rem;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:.4rem;transition:all .15s}
+.swg-btn-outline:hover{background:#0F6FE3;color:#fff}
+.swg-section-title{font-size:1.2rem;font-weight:900;color:#061f40;margin:0 0 1rem;letter-spacing:-.015em}
+.swg-field{margin-bottom:.85rem;position:relative}
+.swg-field-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:.85rem}
+.swg-field-row .swg-field{margin-bottom:0}
+.swg-input,.swg-select{width:100%;padding:.95rem 1rem;border:1.5px solid #cbd5e1;border-radius:8px;font-size:.95rem;outline:none;transition:all .15s;box-sizing:border-box;font-family:inherit;background:#fff;color:#1e293b}
+.swg-input::placeholder{color:#94a3b8}
+.swg-input:focus,.swg-select:focus{border-color:#0F6FE3;box-shadow:0 0 0 3px rgba(15,111,227,.12)}
+.swg-input.error{border-color:#dc2626}
+.swg-floating{position:relative}
+.swg-floating .swg-input{padding-top:1.1rem;padding-bottom:.55rem}
+.swg-floating label{position:absolute;left:1rem;top:.95rem;color:#94a3b8;font-size:.95rem;pointer-events:none;transition:all .15s;background:transparent;padding:0 .25rem}
+.swg-floating .swg-input:focus+label,.swg-floating .swg-input:not(:placeholder-shown)+label{top:.25rem;font-size:.7rem;color:#0F6FE3;font-weight:600}
+.swg-type-toggle{display:flex;gap:.5rem;margin-bottom:1rem}
+.swg-type-btn{flex:0 0 auto;padding:.6rem 1.5rem;border-radius:999px;border:1.5px solid #cbd5e1;background:#fff;color:#475569;font-weight:600;cursor:pointer;font-size:.9rem;transition:all .15s;font-family:inherit}
+.swg-type-btn.active{background:#061f40;color:#fff;border-color:#061f40}
+.swg-aanhef{margin-bottom:.85rem}
+.swg-label{display:block;font-size:.8rem;font-weight:700;color:#475569;margin-bottom:.4rem}
+.swg-check{display:flex;align-items:flex-start;gap:.6rem;color:#475569;font-size:.88rem;line-height:1.5;margin-bottom:.65rem;cursor:pointer}
+.swg-check input{width:18px;height:18px;margin-top:.15rem;flex-shrink:0;accent-color:#061f40}
+.swg-error-list{background:#fef2f2;border:1px solid #fecaca;color:#991b1b;padding:.75rem 1rem;border-radius:8px;margin:0 0 1rem;font-size:.85rem}
+.swg-error-list ul{margin:.25rem 0 0;padding-left:1.25rem}
+.swg-submit{width:100%;background:linear-gradient(135deg,#083D7D,#0F6FE3);color:#fff;border:0;border-radius:10px;padding:1.05rem 1rem;font-weight:800;font-size:1rem;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;justify-content:center;gap:.5rem;letter-spacing:.01em;margin-top:1rem;font-family:inherit}
+.swg-submit:hover{background:linear-gradient(135deg,#062d5c,#0a5abf);transform:translateY(-1px);box-shadow:0 10px 24px rgba(8,61,125,.25)}
+.swg-submit:disabled{opacity:.6;cursor:wait;transform:none}
+.swg-sum-row{display:flex;justify-content:space-between;padding:.45rem 0;color:#475569;font-size:.9rem}
+.swg-sum-row.total{padding-top:.85rem;margin-top:.5rem;border-top:1px solid #e8edf4;font-size:1.05rem;font-weight:800;color:#061f40}
+.swg-sum-row.total small{font-size:.65rem;color:#94a3b8;font-weight:600;display:block;margin-top:.15rem;text-transform:uppercase;letter-spacing:.05em}
+.swg-cart-item{display:flex;gap:.85rem;padding:.65rem 0;border-bottom:1px solid #f0f3f8;align-items:flex-start}
+.swg-cart-item:last-child{border-bottom:0}
+.swg-cart-item .img{position:relative;width:60px;height:60px;background:#f8fafc;border-radius:6px;overflow:hidden;flex-shrink:0;border:1px solid #e8edf4}
+.swg-cart-item .img img{width:100%;height:100%;object-fit:cover}
+.swg-cart-item .qty{position:absolute;top:-6px;right:-6px;background:#061f40;color:#fff;font-size:.7rem;font-weight:700;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.swg-cart-item .info{flex:1;min-width:0}
+.swg-cart-item .title{color:#061f40;font-weight:600;font-size:.85rem;line-height:1.3;margin-bottom:.2rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.swg-cart-item .meta{color:#94a3b8;font-size:.72rem}
+.swg-cart-item .price{font-weight:700;color:#061f40;font-size:.85rem;text-align:right;white-space:nowrap;margin-left:.5rem}
+.swg-edit-cart{display:block;text-align:center;color:#0F6FE3;font-weight:600;font-size:.82rem;text-decoration:underline;margin-top:.85rem}
+.swg-trust{display:flex;flex-direction:column;gap:.55rem;color:#475569;font-size:.85rem}
+.swg-trust div{display:flex;align-items:center;gap:.55rem}
+.swg-trust svg{flex-shrink:0;color:#16a34a}
+.swg-pay-icons{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.65rem}
+.swg-pay-icons img{height:28px;width:auto;border-radius:4px}
+.swg-empty{text-align:center;padding:3rem 1.25rem}
+.swg-empty h2{color:#061f40;font-size:1.4rem;margin:0 0 .5rem}
+.swg-empty p{color:#64748b;margin:0 0 1.5rem}
+.swg-empty a{display:inline-block;background:linear-gradient(135deg,#083D7D,#0F6FE3);color:#fff;text-decoration:none;padding:.85rem 1.5rem;border-radius:8px;font-weight:700}
+@media(max-width:880px){.swg-grid{grid-template-columns:1fr}.swg-side{position:static;order:-1}.swg-main{padding:1.25rem}.swg-progress{padding:1rem 0 1.5rem}.swg-step span:not(.dot){display:none}}
+@media(max-width:480px){.swg-field-row{grid-template-columns:1fr}}
+</style>
+
+<div class="swg-wrap">
+  {%- if cart.item_count == 0 -%}
+    <div class="swg-empty">
+      <h2>Je winkelmand is leeg</h2>
+      <p>Bekijk onze inbouwspots, opbouwspots en hanglampen.</p>
+      <a href="/collections/all">Verder winkelen &rarr;</a>
+    </div>
+  {%- else -%}
+
+  <div class="swg-progress" aria-label="Checkout voortgang">
+    <div class="swg-step done"><span class="dot">&#10003;</span><span>Winkelmand</span></div>
+    <div class="swg-bar done"></div>
+    <div class="swg-step active"><span class="dot"></span><span>Bestellen</span></div>
+    <div class="swg-bar"></div>
+    <div class="swg-step"><span class="dot">3</span><span>Bezorging</span></div>
+    <div class="swg-bar"></div>
+    <div class="swg-step"><span class="dot">4</span><span>Betalen</span></div>
+  </div>
+
+  <div class="swg-grid">
+    <div class="swg-main">
+      <div class="swg-account-row">
+        <strong>Heb je al een account?</strong>
+        <a href="/account/login?return_url=/pages/gegevens" class="swg-btn-outline">
+          Inloggen
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </a>
+      </div>
+
+      <div class="swg-errors" id="swg-errors" style="display:none"></div>
+
+      <form id="swg-form" novalidate>
+        <h2 class="swg-section-title">Gegevens</h2>
+
+        <div class="swg-field swg-floating">
+          <input type="email" id="swg-email" class="swg-input" required autocomplete="email" placeholder=" ">
+          <label for="swg-email">E-mailadres *</label>
+        </div>
+
+        <div class="swg-label">Laat ons weten wie je bent *</div>
+        <div class="swg-type-toggle" role="radiogroup">
+          <button type="button" class="swg-type-btn active" data-type="particulier" role="radio" aria-checked="true">Particulier</button>
+          <button type="button" class="swg-type-btn" data-type="bedrijf" role="radio" aria-checked="false">Bedrijf</button>
+        </div>
+        <input type="hidden" id="swg-type" value="particulier">
+
+        <div class="swg-field" id="swg-bedrijf-veld" style="display:none">
+          <div class="swg-floating">
+            <input type="text" id="swg-company" class="swg-input" autocomplete="organization" placeholder=" ">
+            <label for="swg-company">Bedrijfsnaam</label>
+          </div>
+        </div>
+
+        <div class="swg-aanhef">
+          <label class="swg-label" for="swg-aanhef">Aanhef</label>
+          <select id="swg-aanhef" class="swg-select">
+            <option value="Dhr.">Dhr.</option>
+            <option value="Mevr.">Mevr.</option>
+            <option value="">Anders / liever niet zeggen</option>
+          </select>
+        </div>
+
+        <div class="swg-field-row">
+          <div class="swg-floating">
+            <input type="text" id="swg-firstname" class="swg-input" required autocomplete="given-name" placeholder=" ">
+            <label for="swg-firstname">Naam *</label>
+          </div>
+          <div class="swg-floating">
+            <input type="text" id="swg-lastname" class="swg-input" required autocomplete="family-name" placeholder=" ">
+            <label for="swg-lastname">Achternaam *</label>
+          </div>
+        </div>
+
+        <div class="swg-field swg-floating">
+          <input type="tel" id="swg-phone" class="swg-input" autocomplete="tel" placeholder=" ">
+          <label for="swg-phone">Telefoonnummer</label>
+        </div>
+
+        <label class="swg-check">
+          <input type="checkbox" id="swg-newsletter">
+          <span>Schrijf mij in voor de nieuwsbrief (optioneel)</span>
+        </label>
+        <label class="swg-check" style="margin-bottom:1.5rem">
+          <input type="checkbox" id="swg-create-account">
+          <span>Maak een klantaccount aan</span>
+        </label>
+
+        <h2 class="swg-section-title" style="margin-top:1.5rem">Je adres</h2>
+
+        <div class="swg-field swg-floating">
+          <input type="text" id="swg-address1" class="swg-input" required autocomplete="address-line1" placeholder=" ">
+          <label for="swg-address1">Straat + huisnummer *</label>
+        </div>
+
+        <div class="swg-field swg-floating">
+          <input type="text" id="swg-address2" class="swg-input" autocomplete="address-line2" placeholder=" ">
+          <label for="swg-address2">Toevoeging (optioneel)</label>
+        </div>
+
+        <div class="swg-field-row">
+          <div class="swg-floating">
+            <input type="text" id="swg-zip" class="swg-input" required autocomplete="postal-code" placeholder=" ">
+            <label for="swg-zip">Postcode *</label>
+          </div>
+          <div class="swg-floating">
+            <input type="text" id="swg-city" class="swg-input" required autocomplete="address-level2" placeholder=" ">
+            <label for="swg-city">Stad *</label>
+          </div>
+        </div>
+
+        <div class="swg-field">
+          <label class="swg-label" for="swg-country">Land *</label>
+          <select id="swg-country" class="swg-select" required>
+            <option value="NL" selected>Nederland</option>
+            <option value="BE">België</option>
+            <option value="DE">Duitsland</option>
+            <option value="FR">Frankrijk</option>
+            <option value="LU">Luxemburg</option>
+          </select>
+        </div>
+
+        <button type="submit" class="swg-submit" id="swg-submit">
+          Door naar bezorging
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </form>
+    </div>
+
+    <aside class="swg-side">
+      <div class="swg-card">
+        <h3>Je besteloverzicht</h3>
+        <div class="swg-sum-row"><span>Totaal van alle producten</span><span>{{ cart.items_subtotal_price | money }}</span></div>
+        {%- if cart.cart_level_discount_applications.size > 0 -%}
+          {%- for d in cart.cart_level_discount_applications -%}
+            <div class="swg-sum-row" style="color:#16a34a"><span>{{ d.title }}</span><span>&minus;{{ d.total_allocated_amount | money }}</span></div>
+          {%- endfor -%}
+        {%- endif -%}
+        <div class="swg-sum-row"><span>Bezorging</span><span style="color:#94a3b8">Berekend bij volgende stap</span></div>
+        <div class="swg-sum-row total"><span>Totaalprijs (incl. BTW)<small>Excl. verzending</small></span><span>{{ cart.total_price | money }}</span></div>
+      </div>
+
+      <div class="swg-card">
+        <h3>Je winkelmand ({{ cart.item_count }})</h3>
+        {%- for item in cart.items -%}
+          <div class="swg-cart-item">
+            <div class="img">
+              {%- if item.image -%}<img src="{{ item.image | image_url: width: 120 }}" alt="{{ item.title | escape }}">{%- endif -%}
+              <span class="qty">{{ item.quantity }}&times;</span>
+            </div>
+            <div class="info">
+              <div class="title">{{ item.product.title }}</div>
+              {%- if item.variant.title and item.variant.title != 'Default Title' -%}
+                <div class="meta">{{ item.variant.title }}</div>
+              {%- endif -%}
+            </div>
+            <div class="price">{{ item.final_line_price | money }}</div>
+          </div>
+        {%- endfor -%}
+        <a href="/cart" class="swg-edit-cart">Wijzig winkelmand &rarr;</a>
+      </div>
+
+      <div class="swg-card">
+        <h3>Veilig shoppen met</h3>
+        <div class="swg-pay-icons">
+          <img src="https://cdn.shopify.com/shopifycloud/checkout-web/assets/c1.en/assets/ideal.CFA3qcEx.svg" alt="iDEAL" onerror="this.style.display='none'">
+          <img src="https://cdn.shopify.com/shopifycloud/checkout-web/assets/c1.en/assets/visa.sxIq5Dot.svg" alt="Visa" onerror="this.style.display='none'">
+          <img src="https://cdn.shopify.com/shopifycloud/checkout-web/assets/c1.en/assets/mastercard.1c4_lyMp.svg" alt="Mastercard" onerror="this.style.display='none'">
+          <img src="https://cdn.shopify.com/shopifycloud/checkout-web/assets/c1.en/assets/paypal.Cm__Erfu.svg" alt="PayPal" onerror="this.style.display='none'">
+          <img src="https://cdn.shopify.com/shopifycloud/checkout-web/assets/c1.en/assets/klarna.D8b7TZxh.svg" alt="Klarna" onerror="this.style.display='none'">
+          <img src="https://cdn.shopify.com/shopifycloud/checkout-web/assets/c1.en/assets/apple_pay.7tcXHF7H.svg" alt="Apple Pay" onerror="this.style.display='none'">
+        </div>
+        <div class="swg-trust" style="margin-top:1rem">
+          <div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> 4.9/5 klantbeoordeling</div>
+          <div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Voor 22:00 besteld, morgen in huis</div>
+          <div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> 2 jaar garantie</div>
+          <div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Veilige en versleutelde betaling</div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  {%- endif -%}
+</div>
+
+<script>
+(function(){
+  var SHOP_DOMAIN = 'spotwereld-3.myshopify.com';
+  var STOREFRONT_TOKEN = 'REPLACE_ME_WITH_STOREFRONT_API_TOKEN';
+  var API_VERSION = '2024-10';
+
+  // Type toggle
+  var typeBtns = document.querySelectorAll('.swg-type-btn');
+  var typeHidden = document.getElementById('swg-type');
+  var bedrijfVeld = document.getElementById('swg-bedrijf-veld');
+  typeBtns.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      typeBtns.forEach(function(b){ b.classList.remove('active'); b.setAttribute('aria-checked','false'); });
+      btn.classList.add('active');
+      btn.setAttribute('aria-checked','true');
+      typeHidden.value = btn.dataset.type;
+      bedrijfVeld.style.display = btn.dataset.type === 'bedrijf' ? '' : 'none';
+    });
+  });
+
+  // Fetch huidige cart en bouw lineItems voor Storefront API
+  function getCartLines(){
+    return fetch('/cart.js', { credentials:'same-origin' })
+      .then(function(r){ return r.json(); })
+      .then(function(cart){
+        return cart.items.map(function(item){
+          // variant gid voor Storefront API
+          return {
+            merchandiseId: 'gid://shopify/ProductVariant/' + item.variant_id,
+            quantity: item.quantity
+          };
+        });
+      });
+  }
+
+  function showErrors(messages){
+    var el = document.getElementById('swg-errors');
+    if (!el) return;
+    if (!messages || messages.length === 0){ el.style.display='none'; el.innerHTML=''; return; }
+    el.className = 'swg-error-list';
+    el.style.display = 'block';
+    el.innerHTML = '<strong>Controleer je gegevens:</strong><ul>' + messages.map(function(m){ return '<li>'+m+'</li>'; }).join('') + '</ul>';
+    el.scrollIntoView({ behavior:'smooth', block:'center' });
+  }
+
+  function val(id){ var el=document.getElementById(id); return el ? (el.value||'').trim() : ''; }
+
+  document.getElementById('swg-form').addEventListener('submit', function(e){
+    e.preventDefault();
+    showErrors([]);
+
+    var data = {
+      email: val('swg-email'),
+      type: val('swg-type'),
+      company: val('swg-company'),
+      aanhef: val('swg-aanhef'),
+      firstName: val('swg-firstname'),
+      lastName: val('swg-lastname'),
+      phone: val('swg-phone'),
+      address1: val('swg-address1'),
+      address2: val('swg-address2'),
+      zip: val('swg-zip'),
+      city: val('swg-city'),
+      country: val('swg-country'),
+      newsletter: document.getElementById('swg-newsletter').checked,
+      createAccount: document.getElementById('swg-create-account').checked
+    };
+
+    // Validatie
+    var errors = [];
+    if (!data.email || data.email.indexOf('@') < 1) errors.push('Vul een geldig e-mailadres in.');
+    if (!data.firstName) errors.push('Voornaam is verplicht.');
+    if (!data.lastName) errors.push('Achternaam is verplicht.');
+    if (!data.address1) errors.push('Straat + huisnummer is verplicht.');
+    if (!data.zip) errors.push('Postcode is verplicht.');
+    if (!data.city) errors.push('Stad is verplicht.');
+    if (data.type === 'bedrijf' && !data.company) errors.push('Bedrijfsnaam is verplicht.');
+    if (errors.length) { showErrors(errors); return; }
+
+    var btn = document.getElementById('swg-submit');
+    btn.disabled = true;
+    var origText = btn.innerHTML;
+    btn.innerHTML = 'Bezig...';
+
+    getCartLines().then(function(lines){
+      if (!lines.length){ throw new Error('Winkelmand is leeg.'); }
+
+      var deliveryAddress = {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        address1: data.address1,
+        address2: data.address2 || null,
+        zip: data.zip,
+        city: data.city,
+        country: data.country,
+        phone: data.phone || null,
+        company: data.type === 'bedrijf' ? (data.company || null) : null
+      };
+
+      var attributes = [
+        { key: '_klant_type', value: data.type },
+        { key: '_aanhef', value: data.aanhef || '' }
+      ];
+      if (data.newsletter) attributes.push({ key: '_newsletter', value: 'true' });
+      if (data.createAccount) attributes.push({ key: '_create_account', value: 'true' });
+
+      var query = '\
+        mutation cartCreate($input: CartInput!) {\
+          cartCreate(input: $input) {\
+            cart { id checkoutUrl }\
+            userErrors { field message }\
+          }\
+        }';
+
+      var input = {
+        lines: lines,
+        buyerIdentity: {
+          email: data.email,
+          phone: data.phone || null,
+          countryCode: data.country,
+          deliveryAddressPreferences: [{ deliveryAddress: deliveryAddress }]
+        },
+        attributes: attributes
+      };
+
+      return fetch('https://' + SHOP_DOMAIN + '/api/' + API_VERSION + '/graphql.json', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Shopify-Storefront-Access-Token': STOREFRONT_TOKEN,
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({ query: query, variables: { input: input } })
+      });
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(res){
+      if (res.errors && res.errors.length){
+        throw new Error(res.errors[0].message || 'Onbekende fout');
+      }
+      var userErrors = res.data && res.data.cartCreate && res.data.cartCreate.userErrors;
+      if (userErrors && userErrors.length){
+        throw new Error(userErrors.map(function(e){ return e.message; }).join(', '));
+      }
+      var checkoutUrl = res.data && res.data.cartCreate && res.data.cartCreate.cart && res.data.cartCreate.cart.checkoutUrl;
+      if (!checkoutUrl) throw new Error('Geen checkout URL ontvangen.');
+
+      // Bewaar gegevens locally voor evt. terugkeer
+      try {
+        sessionStorage.setItem('sw_checkout_data', JSON.stringify({
+          email: data.email, firstName: data.firstName, lastName: data.lastName,
+          address1: data.address1, zip: data.zip, city: data.city
+        }));
+      } catch(e){}
+
+      // Newsletter opt-in los (parallel)
+      if (data.newsletter){
+        try {
+          var nf = new FormData();
+          nf.append('form_type', 'customer');
+          nf.append('utf8', '✓');
+          nf.append('contact[email]', data.email);
+          nf.append('contact[tags]', 'newsletter,checkout');
+          nf.append('contact[accepts_marketing]', 'true');
+          fetch('/contact', { method:'POST', body: nf, credentials:'same-origin' });
+        } catch(e){}
+      }
+
+      window.location.href = checkoutUrl;
+    })
+    .catch(function(err){
+      console.error('Checkout error:', err);
+      showErrors(['Er ging iets mis bij het aanmaken van je bestelling: ' + (err.message || err) + '. Probeer het opnieuw of klik op "Wijzig winkelmand".']);
+      btn.disabled = false;
+      btn.innerHTML = origText;
+    });
+  });
+
+  // Restore data als gebruiker terugkomt
+  try {
+    var saved = JSON.parse(sessionStorage.getItem('sw_checkout_data') || '{}');
+    if (saved.email && document.getElementById('swg-email')) document.getElementById('swg-email').value = saved.email;
+    if (saved.firstName && document.getElementById('swg-firstname')) document.getElementById('swg-firstname').value = saved.firstName;
+    if (saved.lastName && document.getElementById('swg-lastname')) document.getElementById('swg-lastname').value = saved.lastName;
+    if (saved.address1 && document.getElementById('swg-address1')) document.getElementById('swg-address1').value = saved.address1;
+    if (saved.zip && document.getElementById('swg-zip')) document.getElementById('swg-zip').value = saved.zip;
+    if (saved.city && document.getElementById('swg-city')) document.getElementById('swg-city').value = saved.city;
+  } catch(e){}
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Spotwereld Gegevens",
+  "settings": []
+}
+{% endschema %}
