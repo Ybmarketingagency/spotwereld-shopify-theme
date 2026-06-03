@@ -1,0 +1,62 @@
+{% layout 'theme' %}
+
+<style>
+.sw-vg{max-width:1100px;margin:0 auto;padding:2.5rem 1.5rem 4rem;font-family:inherit;color:#1e293b}
+.sw-vg-crumb{font-size:.82rem;color:#64748b;margin:0 0 1rem}
+.sw-vg-crumb a{color:#0F6FE3;text-decoration:none}
+.sw-vg-hero{text-align:center;margin:0 0 2.5rem}
+.sw-vg-hero h1{font-size:2.4rem;font-weight:900;color:#061f40;margin:0 0 .65rem;letter-spacing:-.03em;line-height:1.1}
+.sw-vg-hero p{color:#475569;font-size:1.05rem;line-height:1.6;max-width:640px;margin:0 auto}
+.sw-vg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem}
+.sw-vg-card{background:#061f40;border-radius:14px;overflow:hidden;text-decoration:none;color:inherit;display:flex;flex-direction:column;transition:all .25s;box-shadow:0 8px 24px rgba(6,31,64,.08)}
+.sw-vg-card:hover{transform:translateY(-4px);box-shadow:0 16px 36px rgba(6,31,64,.18)}
+.sw-vg-img{height:200px;background-size:cover;background-position:center}
+.sw-vg-body{padding:1.4rem;color:#fff;flex:1;display:flex;flex-direction:column}
+.sw-vg-tag{display:inline-block;background:rgba(255,255,255,.15);font-size:.65rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:.25rem .55rem;border-radius:4px;margin-bottom:.65rem;color:#bfdbfe;width:fit-content}
+.sw-vg-card h3{font-size:1.15rem;font-weight:800;margin:0 0 .5rem;line-height:1.25}
+.sw-vg-card p{color:#bfdbfe;font-size:.88rem;line-height:1.5;margin:0 0 1rem;flex:1}
+.sw-vg-arrow{color:#bfdbfe;font-weight:700;font-size:.88rem;display:inline-flex;align-items:center;gap:.4rem}
+.sw-vg-card:hover .sw-vg-arrow{color:#fff}
+@media(max-width:600px){.sw-vg-hero h1{font-size:1.7rem}}
+</style>
+
+<div class="sw-vg">
+  <div class="sw-vg-crumb"><a href="/">Home</a> &rsaquo; Verlichtingsgids</div>
+
+  <div class="sw-vg-hero">
+    <h1>Verlichtingsgids</h1>
+    <p>Praktische gidsen en uitleg om zelf aan de slag te gaan met LED-verlichting. Van installatie tot dimmers, energiebesparing en lichtkleur.</p>
+  </div>
+
+  <div class="sw-vg-grid">
+    <a href="/pages/inbouwspots-plaatsen" class="sw-vg-card">
+      <div class="sw-vg-img" style="background-image:url('https://images.pexels.com/photos/5824517/pexels-photo-5824517.jpeg?auto=compress&cs=tinysrgb&w=800')"></div>
+      <div class="sw-vg-body">
+        <span class="sw-vg-tag">Installatie &middot; 10 min</span>
+        <h3>Inbouwspots plaatsen &mdash; stappenplan voor een strak resultaat</h3>
+        <p>Gat zagen, draadjes aansluiten en spot vastklikken. In één middag professioneel gemonteerd.</p>
+        <span class="sw-vg-arrow">Lees gids &rarr;</span>
+      </div>
+    </a>
+
+    <a href="/pages/led-dimmer-kiezen" class="sw-vg-card">
+      <div class="sw-vg-img" style="background-image:url('https://images.pexels.com/photos/3964736/pexels-photo-3964736.jpeg?auto=compress&cs=tinysrgb&w=800')"></div>
+      <div class="sw-vg-body">
+        <span class="sw-vg-tag">Tips &middot; 5 min</span>
+        <h3>De juiste LED-dimmer kiezen (en aansluiten)</h3>
+        <p>Niet elke dimmer werkt met LED. Fase-aansnijding vs afsnijding uitgelegd, plus aansluiten in 4 stappen.</p>
+        <span class="sw-vg-arrow">Lees gids &rarr;</span>
+      </div>
+    </a>
+
+    <a href="/pages/tl-naar-led" class="sw-vg-card">
+      <div class="sw-vg-img" style="background-image:url('https://images.pexels.com/photos/4792487/pexels-photo-4792487.jpeg?auto=compress&cs=tinysrgb&w=800')"></div>
+      <div class="sw-vg-body">
+        <span class="sw-vg-tag">Besparen &middot; 4 min</span>
+        <h3>Bespaar tot 60% door je TL te vervangen door LED-TL</h3>
+        <p>Waarom LED-TL voordeliger is en hoe je de wissel in 5 minuten doet, zonder elektricien.</p>
+        <span class="sw-vg-arrow">Lees gids &rarr;</span>
+      </div>
+    </a>
+  </div>
+</div>

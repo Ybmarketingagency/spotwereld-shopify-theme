@@ -1,0 +1,135 @@
+{% layout 'theme' %}
+
+<style>
+.sw-guide{max-width:780px;margin:0 auto;padding:2.5rem 1.5rem 4rem;font-family:inherit;color:#1e293b;line-height:1.65}
+.sw-guide-crumb{display:flex;align-items:center;gap:.4rem;font-size:.82rem;color:#64748b;margin:0 0 1rem}
+.sw-guide-crumb a{color:#0F6FE3;text-decoration:none}
+.sw-guide-crumb a:hover{text-decoration:underline}
+.sw-guide-hero{background:linear-gradient(135deg,#061f40,#0a2d5e);color:#fff;border-radius:16px;padding:2.5rem 2rem;margin:0 0 2rem;position:relative;overflow:hidden}
+.sw-guide-hero::before{content:'';position:absolute;right:-100px;top:-100px;width:280px;height:280px;border-radius:50%;background:rgba(255,255,255,.05);pointer-events:none}
+.sw-guide-hero .tag{display:inline-block;background:rgba(255,255,255,.15);color:#fff;font-size:.7rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:.3rem .65rem;border-radius:4px;margin-bottom:.85rem}
+.sw-guide-hero h1{font-size:2.1rem;font-weight:900;letter-spacing:-.025em;margin:0 0 .5rem;line-height:1.15;position:relative}
+.sw-guide-hero p{color:rgba(255,255,255,.85);font-size:1.05rem;margin:0;max-width:580px;position:relative}
+.sw-guide-meta{display:flex;gap:1.25rem;font-size:.8rem;color:rgba(255,255,255,.7);margin-top:1rem;flex-wrap:wrap;position:relative}
+.sw-guide-meta span{display:inline-flex;align-items:center;gap:.35rem}
+.sw-guide h2{font-size:1.45rem;font-weight:900;color:#061f40;margin:2rem 0 .85rem;letter-spacing:-.02em;line-height:1.25}
+.sw-guide h3{font-size:1.1rem;font-weight:800;color:#061f40;margin:1.5rem 0 .6rem;letter-spacing:-.01em}
+.sw-guide p{margin:0 0 1rem;color:#334155}
+.sw-guide ul,.sw-guide ol{margin:0 0 1.25rem;padding-left:1.4rem;color:#334155}
+.sw-guide li{margin-bottom:.45rem}
+.sw-guide strong{color:#061f40}
+.sw-guide .callout{background:#eff6ff;border-left:4px solid #0F6FE3;padding:1rem 1.25rem;border-radius:0 8px 8px 0;margin:1.5rem 0;color:#1e293b;font-size:.94rem}
+.sw-guide .callout strong{color:#0F6FE3}
+.sw-guide .warn{background:#fef3c7;border-left:4px solid #f59e0b;padding:1rem 1.25rem;border-radius:0 8px 8px 0;margin:1.5rem 0;color:#78350f;font-size:.94rem}
+.sw-savings{background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;border-radius:12px;padding:1.5rem;margin:1.5rem 0;text-align:center}
+.sw-savings .big{font-size:2.5rem;font-weight:900;letter-spacing:-.03em;line-height:1;margin:.25rem 0}
+.sw-savings .label{font-size:.78rem;text-transform:uppercase;letter-spacing:.1em;opacity:.9}
+.sw-savings p{color:rgba(255,255,255,.85);margin:.5rem 0 0;font-size:.88rem}
+.sw-guide .step{display:grid;grid-template-columns:48px 1fr;gap:1rem;align-items:flex-start;margin:1.25rem 0;padding:1.1rem 1.25rem;background:#f8fafc;border:1px solid #e8edf4;border-radius:10px}
+.sw-guide .step-num{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#083D7D,#0F6FE3);color:#fff;font-weight:900;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sw-guide .step h3{margin:0 0 .25rem}
+.sw-guide .step p{margin:0 0 .35rem;font-size:.95rem}
+.sw-guide-cta-block{background:linear-gradient(135deg,#083D7D,#0F6FE3);color:#fff;border-radius:14px;padding:2rem 1.75rem;text-align:center;margin:2.5rem 0 1rem}
+.sw-guide-cta-block h2{color:#fff;margin:0 0 .5rem;font-size:1.5rem}
+.sw-guide-cta-block p{color:rgba(255,255,255,.85);margin:0 0 1.25rem}
+.sw-guide-cta-btn{display:inline-flex;align-items:center;gap:.5rem;background:#fff;color:#061f40;text-decoration:none;padding:.85rem 1.5rem;border-radius:8px;font-weight:800;font-size:.95rem;transition:all .15s}
+.sw-guide-cta-btn:hover{background:#facc15;transform:translateY(-1px)}
+.sw-guide-back{display:inline-flex;align-items:center;gap:.4rem;color:#0F6FE3;font-weight:600;text-decoration:none;margin-top:2rem;font-size:.92rem}
+.sw-guide-back:hover{text-decoration:underline}
+</style>
+
+<div class="sw-guide">
+  <div class="sw-guide-crumb">
+    <a href="/">Home</a> <span>&rsaquo;</span> <a href="/pages/verlichtingsgids">Verlichtingsgids</a> <span>&rsaquo;</span> <span>TL naar LED</span>
+  </div>
+
+  <div class="sw-guide-hero">
+    <span class="tag">Besparen</span>
+    <h1>Bespaar tot 60% door je TL te vervangen door LED-TL</h1>
+    <p>Oude TL-buizen verbruiken veel meer stroom dan je denkt en gaan ook nog eens korter mee. Een LED-TL bespaart fors op je energierekening &mdash; en de wissel zelf duurt nog geen 5 minuten.</p>
+    <div class="sw-guide-meta">
+      <span>&#128338; 4 min lezen</span>
+      <span>&#128176; Geld besparen</span>
+      <span>&#127939; Snel klusje</span>
+    </div>
+  </div>
+
+  <h2>Waarom overstappen op LED-TL?</h2>
+  <p>Een traditionele TL-buis van 36W brandt gemiddeld 12 uur per dag in een werkplaats of garage. Per jaar kost dat al snel <strong>&euro;43</strong> aan stroom (bij &euro;0,27/kWh). Een vergelijkbare LED-TL van 18W kost in dezelfde tijd <strong>&euro;21</strong>. Per buis bespaar je dus &euro;22 per jaar &mdash; en bij meerdere armaturen tikt dat hard aan.</p>
+
+  <div class="sw-savings">
+    <div class="label">Gemiddelde besparing per buis per jaar</div>
+    <div class="big">&euro; 22,&minus;</div>
+    <p>Plus minder vervangingsbeurten: LED-TL gaat 50.000 uur mee, traditionele TL maar 8.000 uur.</p>
+  </div>
+
+  <h2>Wat is het verschil?</h2>
+  <ul>
+    <li><strong>Energieverbruik:</strong> LED-TL gebruikt 50&ndash;60% minder Watt voor dezelfde lichtopbrengst</li>
+    <li><strong>Levensduur:</strong> 50.000 uur vs 8.000 uur voor traditionele TL</li>
+    <li><strong>Opstart:</strong> direct vol licht, geen knipperend &ldquo;opwarmen&rdquo;</li>
+    <li><strong>Geluid:</strong> geen brommend voorschakelapparaat meer</li>
+    <li><strong>Geen kwik:</strong> LED-TL bevat geen schadelijke stoffen</li>
+  </ul>
+
+  <h2>Heb ik een nieuwe armatuur nodig?</h2>
+  <p>In de meeste gevallen <strong>niet</strong>. Je bestaande TL-armatuur kun je hergebruiken &mdash; mits je de starter en eventueel het voorschakelapparaat aanpast. Er zijn drie soorten LED-TL buizen:</p>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div>
+      <h3>Plug &amp; Play (KVG bypass)</h3>
+      <p>Werkt direct in armaturen met een conventioneel voorschakelapparaat. Je hoeft alleen de starter te vervangen door een LED-starter (vaak meegeleverd).</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div>
+      <h3>Direct op netspanning (HF bypass)</h3>
+      <p>Voor armaturen met elektronisch voorschakelapparaat. Je moet het VSA bypassen &mdash; dan brandt de buis direct op 230V. Iets meer werk maar wel het zuinigst.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div>
+      <h3>Universele LED-TL</h3>
+      <p>Werkt op beide systemen. Iets duurder maar je hoeft niets te weten over je bestaande armatuur. Ideaal voor doe-het-zelvers.</p>
+    </div>
+  </div>
+
+  <h2>De wissel in 5 minuten</h2>
+  <div class="warn">
+    <strong>Voordat je begint:</strong> schakel de stroom uit op de groep. Test met je spanningszoeker. Vervang nooit een TL terwijl er stroom op staat.
+  </div>
+
+  <ol>
+    <li><strong>Draai de oude TL-buis</strong> 90 graden en trek hem voorzichtig uit het armatuur.</li>
+    <li><strong>Verwijder de starter</strong> (rond schakelaartje, meestal aan zijkant van armatuur). Draai 90 graden en trek hem eruit.</li>
+    <li><strong>Plaats de LED-starter</strong> (meegeleverd bij Plug &amp; Play LED-TL) in dezelfde houder.</li>
+    <li><strong>Plaats de LED-TL buis</strong> in het armatuur, draai vast.</li>
+    <li><strong>Stroom weer aan</strong> en testen. Brandt direct op vol licht &mdash; geen geknipper meer.</li>
+  </ol>
+
+  <div class="callout">
+    <strong>Tip:</strong> wil je de werkplaats of garage volledig vernieuwen? Combineer LED-TL met een paar krachtige LED-inbouwspots boven de werkbank voor extra accentverlichting waar je het nodig hebt.
+  </div>
+
+  <h2>Welke maat heb ik nodig?</h2>
+  <p>LED-TL buizen komen in dezelfde maten als gewone TL:</p>
+  <ul>
+    <li><strong>T8 60 cm</strong> &mdash; 9W LED vervangt 18W TL</li>
+    <li><strong>T8 120 cm</strong> &mdash; 18W LED vervangt 36W TL (meest voorkomend)</li>
+    <li><strong>T8 150 cm</strong> &mdash; 24W LED vervangt 58W TL</li>
+  </ul>
+  <p>Meet je oude buis na voordat je bestelt. Pas op: T5-buizen (dunner, 16mm) zijn een ander formaat dan T8 (26mm).</p>
+
+  <div class="sw-guide-cta-block">
+    <h2>Modern LED-licht in je hele huis</h2>
+    <p>Begin met inbouwspots voor de woonkamer en badkamer. CCT-switch zodat je zelf de lichtkleur kiest.</p>
+    <a href="/collections/inbouwspots" class="sw-guide-cta-btn">Bekijk inbouwspots &rarr;</a>
+  </div>
+
+  <a href="/" class="sw-guide-back">&larr; Terug naar de homepage</a>
+</div>

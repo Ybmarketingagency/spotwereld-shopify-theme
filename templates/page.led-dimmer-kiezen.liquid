@@ -1,0 +1,120 @@
+{% layout 'theme' %}
+
+<style>
+.sw-guide{max-width:780px;margin:0 auto;padding:2.5rem 1.5rem 4rem;font-family:inherit;color:#1e293b;line-height:1.65}
+.sw-guide-crumb{display:flex;align-items:center;gap:.4rem;font-size:.82rem;color:#64748b;margin:0 0 1rem}
+.sw-guide-crumb a{color:#0F6FE3;text-decoration:none}
+.sw-guide-crumb a:hover{text-decoration:underline}
+.sw-guide-hero{background:linear-gradient(135deg,#061f40,#0a2d5e);color:#fff;border-radius:16px;padding:2.5rem 2rem;margin:0 0 2rem;position:relative;overflow:hidden}
+.sw-guide-hero::before{content:'';position:absolute;right:-100px;top:-100px;width:280px;height:280px;border-radius:50%;background:rgba(255,255,255,.05);pointer-events:none}
+.sw-guide-hero .tag{display:inline-block;background:rgba(255,255,255,.15);color:#fff;font-size:.7rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:.3rem .65rem;border-radius:4px;margin-bottom:.85rem}
+.sw-guide-hero h1{font-size:2.1rem;font-weight:900;letter-spacing:-.025em;margin:0 0 .5rem;line-height:1.15;position:relative}
+.sw-guide-hero p{color:rgba(255,255,255,.85);font-size:1.05rem;margin:0;max-width:580px;position:relative}
+.sw-guide-meta{display:flex;gap:1.25rem;font-size:.8rem;color:rgba(255,255,255,.7);margin-top:1rem;flex-wrap:wrap;position:relative}
+.sw-guide-meta span{display:inline-flex;align-items:center;gap:.35rem}
+.sw-guide h2{font-size:1.45rem;font-weight:900;color:#061f40;margin:2rem 0 .85rem;letter-spacing:-.02em;line-height:1.25}
+.sw-guide h3{font-size:1.1rem;font-weight:800;color:#061f40;margin:1.5rem 0 .6rem;letter-spacing:-.01em}
+.sw-guide p{margin:0 0 1rem;color:#334155}
+.sw-guide ul,.sw-guide ol{margin:0 0 1.25rem;padding-left:1.4rem;color:#334155}
+.sw-guide li{margin-bottom:.45rem}
+.sw-guide strong{color:#061f40}
+.sw-guide .callout{background:#eff6ff;border-left:4px solid #0F6FE3;padding:1rem 1.25rem;border-radius:0 8px 8px 0;margin:1.5rem 0;color:#1e293b;font-size:.94rem}
+.sw-guide .callout strong{color:#0F6FE3}
+.sw-guide .warn{background:#fef3c7;border-left:4px solid #f59e0b;padding:1rem 1.25rem;border-radius:0 8px 8px 0;margin:1.5rem 0;color:#78350f;font-size:.94rem}
+.sw-guide-compare{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0}
+.sw-guide-compare .c{background:#f8fafc;border:1px solid #e8edf4;border-radius:10px;padding:1.25rem}
+.sw-guide-compare h3{margin:0 0 .65rem;font-size:1rem;color:#061f40}
+.sw-guide-compare ul{margin:0;padding-left:1.1rem;font-size:.88rem}
+.sw-guide-cta-block{background:linear-gradient(135deg,#083D7D,#0F6FE3);color:#fff;border-radius:14px;padding:2rem 1.75rem;text-align:center;margin:2.5rem 0 1rem}
+.sw-guide-cta-block h2{color:#fff;margin:0 0 .5rem;font-size:1.5rem}
+.sw-guide-cta-block p{color:rgba(255,255,255,.85);margin:0 0 1.25rem}
+.sw-guide-cta-btn{display:inline-flex;align-items:center;gap:.5rem;background:#fff;color:#061f40;text-decoration:none;padding:.85rem 1.5rem;border-radius:8px;font-weight:800;font-size:.95rem;transition:all .15s}
+.sw-guide-cta-btn:hover{background:#facc15;transform:translateY(-1px)}
+.sw-guide-back{display:inline-flex;align-items:center;gap:.4rem;color:#0F6FE3;font-weight:600;text-decoration:none;margin-top:2rem;font-size:.92rem}
+.sw-guide-back:hover{text-decoration:underline}
+@media(max-width:600px){.sw-guide-compare{grid-template-columns:1fr}}
+</style>
+
+<div class="sw-guide">
+  <div class="sw-guide-crumb">
+    <a href="/">Home</a> <span>&rsaquo;</span> <a href="/pages/verlichtingsgids">Verlichtingsgids</a> <span>&rsaquo;</span> <span>LED-dimmer kiezen</span>
+  </div>
+
+  <div class="sw-guide-hero">
+    <span class="tag">Tips</span>
+    <h1>De juiste LED-dimmer kiezen (en aansluiten)</h1>
+    <p>Een gewone gloeilampdimmer werkt niet met LED. Sterker nog: hij kan je spots stuk maken. We helpen je kiezen tussen fase-aansnijding en fase-afsnijding, en hoe je geflikker voorkomt.</p>
+    <div class="sw-guide-meta">
+      <span>&#128338; 5 min lezen</span>
+      <span>&#128161; Niveau: beginner</span>
+    </div>
+  </div>
+
+  <h2>Waarom een speciale LED-dimmer?</h2>
+  <p>Een ouderwetse dimmer was gebouwd voor gloeilampen die makkelijk 40 tot 60 Watt trokken. Een LED-spot van 6W ziet zo'n dimmer nauwelijks &mdash; het resultaat: geflikker, gebrom, of een spot die helemaal niet meer aanslaat. Een <strong>LED-geschikte dimmer</strong> levert minder vermogen (vanaf 0,3W) en gebruikt een andere schakeltechniek.</p>
+
+  <h2>Fase-aansnijding vs fase-afsnijding</h2>
+  <p>Bij LED-dimmers heb je twee technieken. De keuze ligt aan jouw spots:</p>
+
+  <div class="sw-guide-compare">
+    <div class="c">
+      <h3>Fase-aansnijding (L)</h3>
+      <ul>
+        <li>Geschikt voor LED's met conventionele driver</li>
+        <li>Voor zwaardere belastingen (5W+)</li>
+        <li>Niet aan te raden voor moderne low-watt LED</li>
+      </ul>
+    </div>
+    <div class="c">
+      <h3>Fase-afsnijding (C)</h3>
+      <ul>
+        <li><strong>Voor onze LED-inbouwspots</strong></li>
+        <li>Werkt vanaf 0,3W</li>
+        <li>Stille werking, geen brom</li>
+        <li>Vloeiend dimmen van 0&ndash;100%</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>Voor Spotwereld spots:</strong> kies altijd een <strong>fase-afsnijdingsdimmer</strong> (vaak gemarkeerd met &ldquo;C&rdquo; of &ldquo;trailing edge&rdquo;). Onze Aristo en Miran dimmen daarmee vloeiend van 1% tot 100%.
+  </div>
+
+  <h2>Hoeveel spots op &eacute;&eacute;n dimmer?</h2>
+  <p>Een dimmer heeft een minimum- en maximum-belasting. Veel populaire LED-dimmers werken van <strong>0,3W tot 200W</strong>. Reken even uit:</p>
+  <ul>
+    <li>10 Aristo's van 6W = 60W &rarr; ruim binnen de marge</li>
+    <li>20 Aristo's van 6W = 120W &rarr; nog steeds prima</li>
+    <li>40 spots? Splits dan over twee dimmers of kies een dimmer met hogere capaciteit</li>
+  </ul>
+
+  <h2>Aansluiten in 4 stappen</h2>
+  <ol>
+    <li><strong>Schakel de groep uit</strong> in de meterkast. Controleer met je spanningszoeker.</li>
+    <li><strong>Verwijder de oude schakelaar.</strong> Onthoud welke draad waar zat (foto maken helpt).</li>
+    <li><strong>Sluit de dimmer aan:</strong> meestal komt de fase (bruin) op de L-aansluiting en de geschakelde draad op de andere kant. Volg de meegeleverde handleiding van de dimmer.</li>
+    <li><strong>Monteer de dimmer</strong> in de inbouwdoos, plaats het bedieningsknopje en de afdekplaat. Stroom weer aan en testen.</li>
+  </ol>
+
+  <div class="warn">
+    <strong>Geflikker na installatie?</strong> Check of je dimmer fase-afsnijding heeft (niet aansnijding). Werkt nog steeds niet vloeiend? Mogelijk is het minimum-vermogen van de dimmer te hoog voor het aantal spots dat je dimt.
+  </div>
+
+  <h2>Veelgestelde vragen</h2>
+  <h3>Werkt elke LED-dimmer met elke LED-spot?</h3>
+  <p>Nee. Sommige goedkope LED's zijn niet dimbaar en moeten 100% aan of uit zijn. Alle inbouwspots van Spotwereld zijn dimbaar &mdash; mits je een fase-afsnijdingsdimmer gebruikt.</p>
+
+  <h3>Kan ik dimmen via een app?</h3>
+  <p>Voor onze CCT-switch spots moet je nog steeds een fysieke dimmer aan de muur hebben. Smart-dimmers (Loxone, Niko Home Control, Shelly Dimmer 2) werken ook prima &mdash; mits fase-afsnijding.</p>
+
+  <h3>Wat als ik geen dimmer wil?</h3>
+  <p>Geen probleem. Onze spots werken zonder dimmer perfect op 100% lichtopbrengst. Wel kun je de lichtkleur instellen via de CCT-switch op de driver (2700K / 3000K / 4000K).</p>
+
+  <div class="sw-guide-cta-block">
+    <h2>Spots kiezen voor dimbare verlichting?</h2>
+    <p>Alle Spotwereld LED-inbouwspots zijn dimbaar met een fase-afsnijdingsdimmer. Vrij te kiezen kleur behuizing.</p>
+    <a href="/collections/inbouwspots" class="sw-guide-cta-btn">Bekijk inbouwspots &rarr;</a>
+  </div>
+
+  <a href="/" class="sw-guide-back">&larr; Terug naar de homepage</a>
+</div>

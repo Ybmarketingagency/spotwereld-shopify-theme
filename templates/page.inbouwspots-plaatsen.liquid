@@ -1,0 +1,135 @@
+{% layout 'theme' %}
+
+<style>
+.sw-guide{max-width:780px;margin:0 auto;padding:2.5rem 1.5rem 4rem;font-family:inherit;color:#1e293b;line-height:1.65}
+.sw-guide-crumb{display:flex;align-items:center;gap:.4rem;font-size:.82rem;color:#64748b;margin:0 0 1rem}
+.sw-guide-crumb a{color:#0F6FE3;text-decoration:none}
+.sw-guide-crumb a:hover{text-decoration:underline}
+.sw-guide-hero{background:linear-gradient(135deg,#061f40,#0a2d5e);color:#fff;border-radius:16px;padding:2.5rem 2rem;margin:0 0 2rem;position:relative;overflow:hidden}
+.sw-guide-hero::before{content:'';position:absolute;right:-100px;top:-100px;width:280px;height:280px;border-radius:50%;background:rgba(255,255,255,.05);pointer-events:none}
+.sw-guide-hero .tag{display:inline-block;background:rgba(255,255,255,.15);color:#fff;font-size:.7rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:.3rem .65rem;border-radius:4px;margin-bottom:.85rem}
+.sw-guide-hero h1{font-size:2.1rem;font-weight:900;letter-spacing:-.025em;margin:0 0 .5rem;line-height:1.15;position:relative}
+.sw-guide-hero p{color:rgba(255,255,255,.85);font-size:1.05rem;margin:0;max-width:580px;position:relative}
+.sw-guide-meta{display:flex;gap:1.25rem;font-size:.8rem;color:rgba(255,255,255,.7);margin-top:1rem;flex-wrap:wrap;position:relative}
+.sw-guide-meta span{display:inline-flex;align-items:center;gap:.35rem}
+.sw-guide h2{font-size:1.45rem;font-weight:900;color:#061f40;margin:2rem 0 .85rem;letter-spacing:-.02em;line-height:1.25}
+.sw-guide h3{font-size:1.1rem;font-weight:800;color:#061f40;margin:1.5rem 0 .6rem;letter-spacing:-.01em}
+.sw-guide p{margin:0 0 1rem;color:#334155}
+.sw-guide ul,.sw-guide ol{margin:0 0 1.25rem;padding-left:1.4rem;color:#334155}
+.sw-guide li{margin-bottom:.45rem}
+.sw-guide strong{color:#061f40}
+.sw-guide .callout{background:#eff6ff;border-left:4px solid #0F6FE3;padding:1rem 1.25rem;border-radius:0 8px 8px 0;margin:1.5rem 0;color:#1e293b;font-size:.94rem}
+.sw-guide .callout strong{color:#0F6FE3}
+.sw-guide .warn{background:#fef3c7;border-left:4px solid #f59e0b;padding:1rem 1.25rem;border-radius:0 8px 8px 0;margin:1.5rem 0;color:#78350f;font-size:.94rem}
+.sw-guide .step{display:grid;grid-template-columns:48px 1fr;gap:1rem;align-items:flex-start;margin:1.25rem 0;padding:1.1rem 1.25rem;background:#f8fafc;border:1px solid #e8edf4;border-radius:10px}
+.sw-guide .step-num{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#083D7D,#0F6FE3);color:#fff;font-weight:900;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sw-guide .step h3{margin:0 0 .25rem}
+.sw-guide .step p{margin:0 0 .35rem;font-size:.95rem}
+.sw-guide-cta-block{background:linear-gradient(135deg,#083D7D,#0F6FE3);color:#fff;border-radius:14px;padding:2rem 1.75rem;text-align:center;margin:2.5rem 0 1rem}
+.sw-guide-cta-block h2{color:#fff;margin:0 0 .5rem;font-size:1.5rem}
+.sw-guide-cta-block p{color:rgba(255,255,255,.85);margin:0 0 1.25rem}
+.sw-guide-cta-btn{display:inline-flex;align-items:center;gap:.5rem;background:#fff;color:#061f40;text-decoration:none;padding:.85rem 1.5rem;border-radius:8px;font-weight:800;font-size:.95rem;transition:all .15s}
+.sw-guide-cta-btn:hover{background:#facc15;transform:translateY(-1px)}
+.sw-guide-back{display:inline-flex;align-items:center;gap:.4rem;color:#0F6FE3;font-weight:600;text-decoration:none;margin-top:2rem;font-size:.92rem}
+.sw-guide-back:hover{text-decoration:underline}
+</style>
+
+<div class="sw-guide">
+  <div class="sw-guide-crumb">
+    <a href="/">Home</a> <span>&rsaquo;</span> <a href="/pages/verlichtingsgids">Verlichtingsgids</a> <span>&rsaquo;</span> <span>Inbouwspots plaatsen</span>
+  </div>
+
+  <div class="sw-guide-hero">
+    <span class="tag">Installatie</span>
+    <h1>Inbouwspots plaatsen — stappenplan voor een strak resultaat</h1>
+    <p>Een gat zagen, de bedrading aansluiten en de spot vastklikken. In deze gids leggen we de hele installatie uit, zodat je inbouwspots in &eacute;&eacute;n middag professioneel monteert.</p>
+    <div class="sw-guide-meta">
+      <span>&#128338; 10 min lezen</span>
+      <span>&#128295; Doe-het-zelf</span>
+      <span>&#9989; Geschikt voor beginners</span>
+    </div>
+  </div>
+
+  <h2>Voor je begint: dit heb je nodig</h2>
+  <ul>
+    <li><strong>Gatenzaag</strong> &mdash; let op de zaagmaat van je spot (de Aristo en Miran van Spotwereld zijn &Oslash; 68&ndash;75 mm, de Laom is &Oslash; 75&ndash;80 mm)</li>
+    <li><strong>Boormachine</strong> met variabele snelheid</li>
+    <li><strong>Spanningszoeker</strong> om te controleren of er stroom op de draden staat</li>
+    <li><strong>Lasdoppen of kroonsteen</strong> om de draadjes te verbinden</li>
+    <li><strong>Stofzuiger</strong> &mdash; bij een gipsplafond komt veel stof vrij</li>
+    <li>De LED-inbouwspot zelf, inclusief driver</li>
+  </ul>
+
+  <div class="warn">
+    <strong>Veiligheid eerst:</strong> schakel altijd de groep uit in de meterkast voordat je aan een lichtpunt werkt. Test met je spanningszoeker dat er ge&eacute;n spanning meer op staat.
+  </div>
+
+  <h2>In 6 stappen klaar</h2>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div>
+      <h3>Markeer de positie</h3>
+      <p>Bepaal waar je spots wilt. Houd minimaal 20 cm afstand van de muur en 60&ndash;80 cm onderlinge afstand voor gelijkmatig licht. Teken de cirkels af met een potlood &mdash; controleer dat er geen balk of leiding zit waar je gaat zagen.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div>
+      <h3>Zaag de gaten</h3>
+      <p>Klik de juiste gatenzaag op je boormachine. Boor langzaam op laag toerental &mdash; te snel scheurt het gips. Stofzuig direct het stof op zodat je zicht houdt.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div>
+      <h3>Trek de bedrading door</h3>
+      <p>Trek voorzichtig de aanwezige lichtdraad door het gat. Heb je geen lichtpunt op die plek? Dan moet je eerst kabel trekken vanaf het dichtstbijzijnde lichtpunt. Vraag bij twijfel een elektricien.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">4</div>
+    <div>
+      <h3>Sluit de driver aan</h3>
+      <p>Verbind de blauwe en bruine draad uit het plafond met de blauwe en bruine draad van de driver via een lasdop. Klik daarna de connector van de spot in de driver. Geen schroefjes nodig &mdash; pluggable systeem.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">5</div>
+    <div>
+      <h3>Druk de spot vast</h3>
+      <p>Knijp de veerklemmen aan beide kanten van de spot in en duw de spot in het gat. Laat de klemmen los &mdash; de spot zit nu vast. Druk hem helemaal aan tot de rand het plafond raakt.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">6</div>
+    <div>
+      <h3>Stroom aan en testen</h3>
+      <p>Schakel de groep weer in en test je spot. Gebruik onze Aristo of Miran met CCT-switch om de lichtkleur naar 2700K, 3000K of 4000K te zetten &mdash; dat doe je v&oacute;&oacute;r de installatie via een schuif op de driver.</p>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>Tip:</strong> wil je dimbaar? Kies dan een fase-afsnijdingsdimmer voor onze LED-spots. Lees onze gids <a href="/pages/led-dimmer-kiezen" style="color:#0F6FE3;font-weight:700">De juiste LED-dimmer kiezen</a>.
+  </div>
+
+  <h2>Veelgemaakte fouten</h2>
+  <ul>
+    <li><strong>Te dicht bij elkaar plaatsen</strong> &mdash; geeft hotspots en oncomfortabel licht. Houd minimaal 60 cm aan.</li>
+    <li><strong>Verkeerde zaagmaat</strong> &mdash; te groot? Spot valt erdoorheen. Te klein? Past niet. Controleer altijd de specificaties.</li>
+    <li><strong>Driver in een afgesloten ruimte</strong> &mdash; geeft oververhitting. Zorg dat de driver bovenop het plafond ligt waar lucht omheen kan.</li>
+  </ul>
+
+  <div class="sw-guide-cta-block">
+    <h2>Klaar om te beginnen?</h2>
+    <p>Onze LED-inbouwspots zijn er in 6 kleuren met CCT-switch en IP65. Voor 22:00 besteld = morgen in huis.</p>
+    <a href="/collections/inbouwspots" class="sw-guide-cta-btn">Bekijk inbouwspots &rarr;</a>
+  </div>
+
+  <a href="/" class="sw-guide-back">&larr; Terug naar de homepage</a>
+</div>
