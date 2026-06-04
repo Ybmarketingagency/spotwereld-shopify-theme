@@ -1270,6 +1270,19 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
     renameKleurLabels();
     if (++renameTicks > 30) clearInterval(renameInterval);
   }, 250);
+  // Kill oude sw-fake-lk-* clones (van collection.json's splitLichtkleur die setTimeouts blijft herhalen)
+  function killOldLkClones(){
+    document.querySelectorAll('[class*="sw-fake-lk-"]').forEach(function(el){ el.remove(); });
+  }
+  killOldLkClones();
+  setInterval(killOldLkClones, 200); // elke 200ms blijven killen
+  document.addEventListener('DOMContentLoaded', function(){
+    var lkObserver = new MutationObserver(killOldLkClones);
+    var lk = findFacet('Lichtkleur');
+    if (lk) lkObserver.observe(lk, {childList:true, subtree:true});
+    else lkObserver.observe(document.body, {childList:true, subtree:true});
+  });
+
   // Dedicated CharacterData observer: catch text changes in facets the moment ze gebeuren
   var renameObsRunning = false;
   var renameTextObs = new MutationObserver(function(){
@@ -1315,148 +1328,178 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
 })();
 </script>
 
-{%- comment -%} Welkom 5% korting popup — eenmalig na 30s, met email-aanmelding en kortingscode {%- endcomment -%}
-<div class="sw-popup-overlay" id="sw-popup-overlay" role="dialog" aria-modal="true" aria-labelledby="sw-popup-title">
-  <div class="sw-popup">
-    <button type="button" class="sw-popup-close" aria-label="Sluiten" id="sw-popup-close" style="position:absolute;top:6px;right:6px;width:48px;height:48px;background:#fff;border:0;border-radius:8px;cursor:pointer;font-size:26px;line-height:1;z-index:999999;pointer-events:auto;color:#475569;font-family:Arial,sans-serif;font-weight:300;display:flex;align-items:center;justify-content:center;padding:0" onclick="var o=document.getElementById('sw-popup-overlay');if(o){o.style.display='none';o.classList.remove('sw-active');}document.body.style.overflow='';try{localStorage.setItem('sw_popup_shown_v1','1');}catch(e){}return false;">×</button>
-    <div class="sw-popup-form-wrap" id="sw-popup-form-wrap">
-      <span class="sw-popup-badge">Exclusief voor jou</span>
-      <div class="sw-popup-discount">5% korting</div>
-      <h2 id="sw-popup-title">Op je eerste bestelling</h2>
-      <p>Meld je aan voor onze nieuwsbrief en ontvang direct 5% korting op je volgende LED-spot bestelling.</p>
-      <form class="sw-popup-form" id="sw-popup-form" action="/contact#sw-newsletter" method="post" novalidate>
-        <input type="hidden" name="form_type" value="customer">
-        <input type="hidden" name="utf8" value="&#10003;">
-        <input type="hidden" name="contact[tags]" value="newsletter,welkom-5">
-        <input type="hidden" name="contact[accepts_marketing]" value="true">
-        <input type="email" name="contact[email]" id="sw-popup-email" class="sw-popup-input" placeholder="jouw@email.nl" required autocomplete="email">
-        <button type="submit" class="sw-popup-btn" id="sw-popup-submit">Stuur mij de kortingscode</button>
-        <p class="sw-popup-tiny">Geen spam, alleen tips &amp; aanbiedingen. Afmelden kan altijd.</p>
-      </form>
-    </div>
-    <div class="sw-popup-success" id="sw-popup-success">
-      <span class="sw-popup-badge">Gelukt!</span>
-      <h2>Hier is je code</h2>
-      <p>Gebruik deze code bij de checkout. Een kopie staat ook in je inbox.</p>
-      <div class="sw-popup-code">
-        <span id="sw-popup-code-text">WELKOM5</span>
-        <button type="button" class="sw-popup-copy" id="sw-popup-copy">Kopieer</button>
-      </div>
-      <button type="button" class="sw-popup-btn" id="sw-popup-shop-btn">Verder winkelen</button>
-    </div>
-  </div>
-</div>
-<div class="sw-discount-bar" id="sw-discount-bar">
-  <span>&#127873; Je 5% korting:</span>
-  <code id="sw-bar-code">WELKOM5</code>
-  <span>(automatisch toegepast bij checkout)</span>
-  <button class="close" type="button" id="sw-bar-close" aria-label="Sluiten">&times;</button>
-</div>
+{%- comment -%} Welkom 5% korting popup v2 — gebouwd via JS appendChild in body voor maximale clickbaarheid {%- endcomment -%}
 <script>
+/* ===== WELKOM POPUP v2 — vanaf scratch ===== */
 (function(){
   var DISCOUNT_CODE = 'WELKOM5';
-  var POPUP_DELAY = 30000; // 30 seconden
-  var SHOWN_KEY = 'sw_popup_shown_v1';
-  var CODE_KEY  = 'sw_discount_code_v1';
+  var POPUP_DELAY = 30000;
+  var SHOWN_KEY = 'sw_popup_shown_v2';
+  var CODE_KEY  = 'sw_discount_code_v2';
 
-  var overlay = document.getElementById('sw-popup-overlay');
-  var closeBtn = document.getElementById('sw-popup-close');
-  var form = document.getElementById('sw-popup-form');
-  var formWrap = document.getElementById('sw-popup-form-wrap');
-  var successPane = document.getElementById('sw-popup-success');
-  var copyBtn = document.getElementById('sw-popup-copy');
-  var shopBtn = document.getElementById('sw-popup-shop-btn');
-  var submitBtn = document.getElementById('sw-popup-submit');
-  var bar = document.getElementById('sw-discount-bar');
-  var barCode = document.getElementById('sw-bar-code');
-  var barClose = document.getElementById('sw-bar-close');
-
-  function show(){ if (overlay) overlay.classList.add('sw-active'); document.body.style.overflow='hidden'; }
-  function hide(){ if (overlay) overlay.classList.remove('sw-active'); document.body.style.overflow=''; }
-  // Globally exposed close — werkt vanaf inline onclick attribuut zonder lookup-issues
-  window.swClosePopup = function(){ hide(); markShown(); };
-  function markShown(){ try{ localStorage.setItem(SHOWN_KEY,'1'); }catch(e){} }
-  function setCode(code){ try{ localStorage.setItem(CODE_KEY, code); }catch(e){} }
-  function getCode(){ try{ return localStorage.getItem(CODE_KEY); }catch(e){ return null; } }
   function hasShown(){ try{ return localStorage.getItem(SHOWN_KEY) === '1'; }catch(e){ return false; } }
+  function markShown(){ try{ localStorage.setItem(SHOWN_KEY,'1'); }catch(e){} }
+  function setCode(c){ try{ localStorage.setItem(CODE_KEY, c); }catch(e){} }
+  function getCode(){ try{ return localStorage.getItem(CODE_KEY); }catch(e){ return null; } }
 
-  function showBar(code){
-    if (!bar) return;
-    if (barCode) barCode.textContent = code;
-    bar.classList.add('sw-show');
-    try {
-      if (sessionStorage.getItem('sw_bar_dismissed') === '1') bar.classList.remove('sw-show');
-    } catch(e){}
-  }
+  function buildPopup(){
+    if (document.getElementById('swp2-overlay')) return;
+    var wrap = document.createElement('div');
+    wrap.id = 'swp2-overlay';
+    wrap.setAttribute('role','dialog');
+    wrap.setAttribute('aria-modal','true');
+    wrap.style.cssText = 'position:fixed;inset:0;background:rgba(6,31,64,.55);z-index:2147483646;display:none;align-items:center;justify-content:center;padding:1rem;font-family:inherit;animation:swp2Fade .25s ease';
 
-  // Toon bar als gebruiker eerder code heeft gekregen
-  document.addEventListener('DOMContentLoaded', function(){
-    var existingCode = getCode();
-    if (existingCode) showBar(existingCode);
-  });
+    var card = document.createElement('div');
+    card.id = 'swp2-card';
+    card.style.cssText = 'background:#fff;border-radius:16px;max-width:440px;width:100%;padding:2.5rem 1.75rem 2rem;box-shadow:0 20px 60px rgba(0,0,0,.25);text-align:center;position:relative;animation:swp2Slide .35s cubic-bezier(.16,1,.3,1)';
 
-  if (closeBtn) closeBtn.addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); hide(); markShown(); });
-  if (overlay) overlay.addEventListener('click', function(e){ if (e.target === overlay){ hide(); markShown(); } });
-  if (shopBtn) shopBtn.addEventListener('click', function(){ hide(); });
-  // Fallback: event delegation op document — werkt ook als closeBtn lookup faalt
-  document.addEventListener('click', function(e){
-    var t = e.target;
-    if (!t || !t.closest) return;
-    var btn = t.closest('#sw-popup-close, .sw-popup-close');
-    if (btn){ e.preventDefault(); e.stopPropagation(); hide(); markShown(); }
-  }, true);
-  // ESC sluit popup
-  document.addEventListener('keydown', function(e){
-    if (e.key === 'Escape' && overlay && overlay.classList.contains('sw-active')){
-      hide(); markShown();
+    // CLOSE BUTTON — eigen wrapper element BUITEN het card, top-right van overlay
+    var closeWrap = document.createElement('div');
+    closeWrap.id = 'swp2-close';
+    closeWrap.setAttribute('role','button');
+    closeWrap.setAttribute('aria-label','Sluiten');
+    closeWrap.setAttribute('tabindex','0');
+    closeWrap.style.cssText = 'position:absolute;top:-14px;right:-14px;width:44px;height:44px;background:#fff;border:2px solid #061f40;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:24px;color:#061f40;font-family:Arial,sans-serif;font-weight:400;line-height:1;user-select:none;box-shadow:0 4px 12px rgba(0,0,0,.15);z-index:1';
+    closeWrap.innerHTML = '<span style="pointer-events:none;display:block;margin-top:-2px">&times;</span>';
+
+    var content = document.createElement('div');
+    content.innerHTML = '<span style="display:inline-block;background:linear-gradient(135deg,#FF6B35,#F7931E);color:#fff;font-weight:800;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;padding:.35rem .75rem;border-radius:999px;margin-bottom:.75rem">Exclusief voor jou</span>'+
+      '<div style="font-size:3.5rem;font-weight:900;margin:.25rem 0;letter-spacing:-.03em;line-height:1;background:linear-gradient(135deg,#083D7D,#0F6FE3);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">5% korting</div>'+
+      '<h2 style="font-size:1.4rem;font-weight:900;color:#061f40;margin:0 0 .5rem;letter-spacing:-.02em">Op je eerste bestelling</h2>'+
+      '<p style="color:#475569;font-size:.92rem;line-height:1.5;margin:0 0 1.25rem">Meld je aan voor onze nieuwsbrief en ontvang direct 5% korting op je volgende LED-spot bestelling.</p>'+
+      '<form id="swp2-form" style="display:flex;flex-direction:column;gap:.6rem">'+
+        '<input type="email" id="swp2-email" required placeholder="jouw@email.nl" autocomplete="email" style="width:100%;padding:.85rem 1rem;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.95rem;outline:none;box-sizing:border-box;font-family:inherit">'+
+        '<button type="submit" id="swp2-submit" style="background:linear-gradient(135deg,#083D7D,#0F6FE3);color:#fff;border:0;border-radius:8px;padding:.95rem 1rem;font-weight:700;font-size:.95rem;cursor:pointer;font-family:inherit">Stuur mij de kortingscode</button>'+
+        '<p style="font-size:.7rem;color:#94a3b8;margin:.5rem 0 0">Geen spam, alleen tips &amp; aanbiedingen. Afmelden kan altijd.</p>'+
+      '</form>'+
+      '<div id="swp2-success" style="display:none">'+
+        '<span style="display:inline-block;background:#16a34a;color:#fff;font-weight:800;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;padding:.35rem .75rem;border-radius:999px;margin-bottom:.75rem">Gelukt!</span>'+
+        '<h2 style="font-size:1.4rem;font-weight:900;color:#061f40;margin:.5rem 0">Hier is je code</h2>'+
+        '<p style="color:#475569;font-size:.92rem;line-height:1.5;margin:0 0 1rem">Gebruik deze code bij de checkout. Een kopie staat ook in je inbox.</p>'+
+        '<div style="display:inline-flex;align-items:center;gap:.6rem;background:#f1f5f9;border:2px dashed #0F6FE3;border-radius:10px;padding:.85rem 1.1rem;margin:.5rem 0 1rem;font-family:Courier New,monospace;font-size:1.4rem;font-weight:900;color:#061f40;letter-spacing:.1em"><span id="swp2-code-txt">WELKOM5</span><button type="button" id="swp2-copy" style="background:#061f40;color:#fff;border:0;padding:.4rem .75rem;border-radius:6px;font-size:.75rem;font-weight:600;cursor:pointer;letter-spacing:.05em;font-family:inherit">Kopieer</button></div>'+
+        '<button type="button" id="swp2-done" style="background:linear-gradient(135deg,#083D7D,#0F6FE3);color:#fff;border:0;border-radius:8px;padding:.85rem 1rem;font-weight:700;font-size:.95rem;cursor:pointer;width:100%;font-family:inherit">Verder winkelen</button>'+
+      '</div>';
+
+    card.appendChild(closeWrap);
+    card.appendChild(content);
+    wrap.appendChild(card);
+
+    // Keyframes
+    if (!document.getElementById('swp2-style')){
+      var st = document.createElement('style');
+      st.id = 'swp2-style';
+      st.textContent = '@keyframes swp2Fade{from{opacity:0}to{opacity:1}}@keyframes swp2Slide{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}#swp2-close:hover{background:#061f40;color:#fff;transform:scale(1.08)}#swp2-email:focus{border-color:#0F6FE3;box-shadow:0 0 0 3px rgba(15,111,227,.15)}';
+      document.head.appendChild(st);
     }
-  });
-  if (barClose) barClose.addEventListener('click', function(){
-    bar.classList.remove('sw-show');
-    try { sessionStorage.setItem('sw_bar_dismissed','1'); } catch(e){}
-  });
+    document.body.appendChild(wrap);
 
-  if (copyBtn) copyBtn.addEventListener('click', function(){
-    var code = document.getElementById('sw-popup-code-text').textContent.trim();
-    try {
-      navigator.clipboard.writeText(code).then(function(){
-        copyBtn.textContent = 'Gekopieerd!';
-        copyBtn.classList.add('sw-copied');
-        setTimeout(function(){ copyBtn.textContent = 'Kopieer'; copyBtn.classList.remove('sw-copied'); }, 2000);
-      });
-    } catch(e){}
-  });
+    // ===== CLOSE — meerdere bindings =====
+    function close(){
+      wrap.style.display = 'none';
+      document.body.style.overflow = '';
+      markShown();
+    }
+    window.swClosePopupV2 = close;
 
-  if (form) form.addEventListener('submit', function(e){
-    e.preventDefault();
-    var email = (document.getElementById('sw-popup-email').value||'').trim();
-    if (!email || email.indexOf('@') < 1) return;
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Bezig...';
-    // Verzend naar Shopify customer/newsletter endpoint (zelfde als de footer newsletter form)
-    var fd = new FormData(form);
-    fetch('/contact', { method:'POST', body: fd, credentials:'same-origin' })
-      .then(function(){ /* Shopify reageert met redirect / 200 */ })
-      .catch(function(){ /* network err - we tonen toch code zodat gebruiker er geen last van heeft */ })
-      .finally(function(){
-        setCode(DISCOUNT_CODE);
-        markShown();
-        formWrap.classList.add('sw-hide');
-        successPane.classList.add('sw-show');
-        document.getElementById('sw-popup-code-text').textContent = DISCOUNT_CODE;
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Stuur mij de kortingscode';
-        // Bar tonen na het sluiten van success
-        setTimeout(function(){ showBar(DISCOUNT_CODE); }, 100);
-      });
-  });
+    closeWrap.onclick = close;
+    closeWrap.onmousedown = function(e){ e.preventDefault(); close(); };
+    closeWrap.onpointerdown = function(e){ e.preventDefault(); close(); };
+    closeWrap.addEventListener('click', close);
+    closeWrap.addEventListener('touchend', function(e){ e.preventDefault(); close(); });
+    closeWrap.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); close(); } });
 
-  // 30 sec na eerste page load — niet op elke navigatie, alleen 1x ooit
-  if (!hasShown()){
-    setTimeout(function(){
-      if (!hasShown()){ show(); }
-    }, POPUP_DELAY);
+    // Klik op overlay buiten card sluit ook
+    wrap.addEventListener('click', function(e){ if (e.target === wrap) close(); });
+
+    // ESC
+    document.addEventListener('keydown', function(e){
+      if (e.key === 'Escape' && wrap.style.display === 'flex') close();
+    });
+
+    // Form submit
+    var form = card.querySelector('#swp2-form');
+    var successDiv = card.querySelector('#swp2-success');
+    var submitBtn = card.querySelector('#swp2-submit');
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var emailEl = card.querySelector('#swp2-email');
+      var email = (emailEl.value||'').trim();
+      if (!email || email.indexOf('@') < 1) return;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Bezig...';
+      var fd = new FormData();
+      fd.append('form_type','customer');
+      fd.append('utf8','✓');
+      fd.append('contact[tags]','newsletter,welkom-5');
+      fd.append('contact[accepts_marketing]','true');
+      fd.append('contact[email]', email);
+      fetch('/contact', { method:'POST', body: fd, credentials:'same-origin' })
+        .catch(function(){})
+        .finally(function(){
+          setCode(DISCOUNT_CODE);
+          markShown();
+          form.style.display = 'none';
+          card.querySelector('p[style*="margin:0 0 1.25rem"]').style.display = 'none';
+          successDiv.style.display = 'block';
+        });
+    });
+
+    // Copy
+    card.querySelector('#swp2-copy').addEventListener('click', function(){
+      var btn = this;
+      var code = card.querySelector('#swp2-code-txt').textContent.trim();
+      try {
+        navigator.clipboard.writeText(code).then(function(){
+          btn.textContent = 'Gekopieerd!';
+          btn.style.background = '#16a34a';
+          setTimeout(function(){ btn.textContent = 'Kopieer'; btn.style.background = '#061f40'; }, 2000);
+        });
+      } catch(e){}
+    });
+
+    // Verder winkelen
+    card.querySelector('#swp2-done').addEventListener('click', close);
+
+    return wrap;
   }
+
+  function show(){
+    var w = buildPopup();
+    w.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+
+  // Persistent korting-bar
+  function buildBar(code){
+    if (document.getElementById('swp2-bar')) return;
+    if (!code) return;
+    try { if (sessionStorage.getItem('swp2_bar_dismissed') === '1') return; } catch(e){}
+    var bar = document.createElement('div');
+    bar.id = 'swp2-bar';
+    bar.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:linear-gradient(90deg,#083D7D,#0F6FE3);color:#fff;padding:.65rem 1rem;text-align:center;font-size:.85rem;font-weight:600;z-index:2147483645;display:flex;align-items:center;justify-content:center;gap:.75rem;flex-wrap:wrap;font-family:inherit';
+    bar.innerHTML = '<span>&#127873; Je 5% korting:</span> <code style="background:rgba(255,255,255,.18);padding:.2rem .55rem;border-radius:4px;font-family:Courier New,monospace;letter-spacing:.1em;font-weight:700">'+code+'</code> <span>(automatisch toegepast bij checkout)</span>';
+    var closeBar = document.createElement('button');
+    closeBar.type = 'button';
+    closeBar.setAttribute('aria-label','Sluiten');
+    closeBar.style.cssText = 'background:none;border:0;color:#fff;cursor:pointer;font-size:1.2rem;opacity:.8;padding:0 .35rem;font-family:inherit';
+    closeBar.innerHTML = '&times;';
+    closeBar.onclick = function(){ bar.remove(); try{sessionStorage.setItem('swp2_bar_dismissed','1');}catch(e){} };
+    bar.appendChild(closeBar);
+    document.body.appendChild(bar);
+  }
+
+  function init(){
+    // Bar tonen als er al een code bekend is
+    var code = getCode();
+    if (code) buildBar(code);
+    // Popup tonen 30s na load (1x ooit)
+    if (!hasShown()){
+      setTimeout(function(){ if (!hasShown()) show(); }, POPUP_DELAY);
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
 })();
 </script>
 
