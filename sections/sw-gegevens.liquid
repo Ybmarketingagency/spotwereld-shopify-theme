@@ -342,6 +342,8 @@
         if (!lines.length) throw new Error('Winkelmand is leeg.');
 
         // 2. Build Storefront API cartCreate input met buyerIdentity (volledige pre-fill)
+        // MailingAddressInput gebruikt 'country' (full name), NIET 'countryCode'
+        var countryNames = { NL:'Netherlands', BE:'Belgium', DE:'Germany', FR:'France', LU:'Luxembourg' };
         var deliveryAddress = {
           firstName: data.firstName,
           lastName: data.lastName,
@@ -349,7 +351,7 @@
           address2: data.address2 || null,
           zip: data.zip,
           city: data.city,
-          countryCode: data.country,
+          country: countryNames[data.country] || 'Netherlands',
           phone: data.phone || null,
           company: (data.type === 'bedrijf' && data.company) ? data.company : null
         };
