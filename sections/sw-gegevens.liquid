@@ -261,9 +261,10 @@
 
 <script>
 (function(){
-  // FALLBACK MODE: zonder Storefront API token — gebruikt /cart/update.js voor note_attributes
-  // + /checkout?checkout[email]=... URL prefill voor email
-  // Alle klantdata wordt OP DE ORDER opgeslagen in Shopify Admin als "Aanvullende details"
+  // STOREFRONT API MODE — pre-fills Shopify checkout fully, no double data entry
+  var SHOP_DOMAIN = 'spotwereld-3.myshopify.com';
+  var STOREFRONT_TOKEN = '52a93466d311fb11db9c71ceed5ace29';
+  var API_VERSION = '2024-10';
 
   // Type toggle
   var typeBtns = document.querySelectorAll('.swg-type-btn');
@@ -328,72 +329,97 @@
     var origText = btn.innerHTML;
     btn.innerHTML = 'Bezig...';
 
-    // Bouw note_attributes object: deze gegevens verschijnen op de ORDER in Shopify Admin
-    var noteAttrs = {
-      'Klant type': data.type === 'bedrijf' ? 'Bedrijf' : 'Particulier',
-      'Aanhef': data.aanhef || '',
-      'Voornaam': data.firstName,
-      'Achternaam': data.lastName,
-      'E-mail': data.email,
-      'Telefoon': data.phone || '',
-      'Adres': data.address1 + (data.address2 ? ' ' + data.address2 : ''),
-      'Postcode': data.zip,
-      'Stad': data.city,
-      'Land': data.country,
-      'Bedrijfsnaam': data.type === 'bedrijf' ? data.company : '',
-      'Nieuwsbrief inschrijving': data.newsletter ? 'Ja' : 'Nee',
-      'Account aanmaken gewenst': data.createAccount ? 'Ja' : 'Nee'
-    };
-
     // Sla op in localStorage voor terugkeer naar de bestelpagina
-    try {
-      localStorage.setItem('sw_checkout_data', JSON.stringify(data));
-    } catch(e){}
+    try { localStorage.setItem('sw_checkout_data', JSON.stringify(data)); } catch(e){}
 
-    // Update cart met note_attributes via Shopify cart API
-    fetch('/cart/update.js', {
-      method: 'POST',
-      credentials: 'same-origin',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({ attributes: noteAttrs })
-    })
-    .then(function(r){ return r.json(); })
-    .then(function(){
-      // Newsletter opt-in los
-      if (data.newsletter){
-        try {
-          var nf = new FormData();
-          nf.append('form_type', 'customer');
-          nf.append('utf8', '✓');
-          nf.append('contact[email]', data.email);
-          nf.append('contact[tags]', 'newsletter,checkout');
-          nf.append('contact[accepts_marketing]', 'true');
-          fetch('/contact', { method:'POST', body: nf, credentials:'same-origin' });
-        } catch(e){}
-      }
+    // 1. Get cart lines (variant IDs + quantities)
+    fetch('/cart.js', { credentials:'same-origin' })
+      .then(function(r){ return r.json(); })
+      .then(function(cart){
+        var lines = cart.items.map(function(it){
+          return { merchandiseId: 'gid://shopify/ProductVariant/' + it.variant_id, quantity: it.quantity };
+        });
+        if (!lines.length) throw new Error('Winkelmand is leeg.');
 
-      // Build checkout URL met prefill params
-      var params = new URLSearchParams();
-      params.set('checkout[email]', data.email);
-      params.set('checkout[shipping_address][first_name]', data.firstName);
-      params.set('checkout[shipping_address][last_name]', data.lastName);
-      params.set('checkout[shipping_address][address1]', data.address1);
-      if (data.address2) params.set('checkout[shipping_address][address2]', data.address2);
-      params.set('checkout[shipping_address][zip]', data.zip);
-      params.set('checkout[shipping_address][city]', data.city);
-      params.set('checkout[shipping_address][country]', data.country === 'NL' ? 'Netherlands' : (data.country === 'BE' ? 'Belgium' : (data.country === 'DE' ? 'Germany' : 'Netherlands')));
-      if (data.phone) params.set('checkout[shipping_address][phone]', data.phone);
-      if (data.type === 'bedrijf' && data.company) params.set('checkout[shipping_address][company]', data.company);
+        // 2. Build Storefront API cartCreate input met buyerIdentity (volledige pre-fill)
+        var deliveryAddress = {
+          firstName: data.firstName,
+          lastName: data.lastName,
+          address1: data.address1,
+          address2: data.address2 || null,
+          zip: data.zip,
+          city: data.city,
+          countryCode: data.country,
+          phone: data.phone || null,
+          company: (data.type === 'bedrijf' && data.company) ? data.company : null
+        };
+        var attributes = [
+          { key: 'Klant type', value: data.type === 'bedrijf' ? 'Bedrijf' : 'Particulier' },
+          { key: 'Aanhef', value: data.aanhef || '' }
+        ];
+        if (data.type === 'bedrijf' && data.company) attributes.push({key:'Bedrijfsnaam',value:data.company});
+        if (data.newsletter) attributes.push({key:'Nieuwsbrief',value:'Ja'});
+        if (data.createAccount) attributes.push({key:'Account aanmaken gewenst',value:'Ja'});
 
-      window.location.href = '/checkout?' + params.toString();
-    })
-    .catch(function(err){
-      console.error('Cart update error:', err);
-      // Bij fout: ga toch naar checkout met email als prefill
-      var u = '/checkout';
-      try { u += '?' + new URLSearchParams({ 'checkout[email]': data.email }).toString(); } catch(e){}
-      window.location.href = u;
-    });
+        var query = 'mutation cartCreate($input: CartInput!) {' +
+          '  cartCreate(input: $input) {' +
+          '    cart { id checkoutUrl }' +
+          '    userErrors { field message }' +
+          '  }' +
+          '}';
+
+        var input = {
+          lines: lines,
+          buyerIdentity: {
+            email: data.email,
+            phone: data.phone || null,
+            countryCode: data.country,
+            deliveryAddressPreferences: [{ deliveryAddress: deliveryAddress }]
+          },
+          attributes: attributes
+        };
+
+        // 3. Call Storefront API
+        return fetch('https://' + SHOP_DOMAIN + '/api/' + API_VERSION + '/graphql.json', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Shopify-Storefront-Access-Token': STOREFRONT_TOKEN,
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({ query: query, variables: { input: input } })
+        });
+      })
+      .then(function(r){ return r.json(); })
+      .then(function(res){
+        if (res.errors && res.errors.length) throw new Error(res.errors[0].message);
+        var ue = res.data && res.data.cartCreate && res.data.cartCreate.userErrors;
+        if (ue && ue.length) throw new Error(ue.map(function(e){return e.message;}).join(', '));
+        var checkoutUrl = res.data && res.data.cartCreate && res.data.cartCreate.cart && res.data.cartCreate.cart.checkoutUrl;
+        if (!checkoutUrl) throw new Error('Geen checkout URL ontvangen.');
+
+        // Newsletter opt-in parallel
+        if (data.newsletter){
+          try {
+            var nf = new FormData();
+            nf.append('form_type','customer');
+            nf.append('utf8','✓');
+            nf.append('contact[email]', data.email);
+            nf.append('contact[tags]', 'newsletter,checkout');
+            nf.append('contact[accepts_marketing]','true');
+            fetch('/contact', { method:'POST', body: nf, credentials:'same-origin' });
+          } catch(e){}
+        }
+
+        // 4. Redirect naar pre-filled Shopify checkout
+        window.location.href = checkoutUrl;
+      })
+      .catch(function(err){
+        console.error('Checkout error:', err);
+        showErrors(['Er ging iets mis: ' + (err.message || err) + '. Probeer opnieuw of <a href="/cart" style="color:#0F6FE3">terug naar winkelmand</a>.']);
+        btn.disabled = false;
+        btn.innerHTML = origText;
+      });
   });
 
   // Restore data als gebruiker terugkomt
