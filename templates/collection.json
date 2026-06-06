@@ -11,8 +11,14 @@
       }
     },
     "spotwereld_filter_enhancements": {
-      "type": "spotwereld-filter-enhancements",
-      "settings": {}
+      "type": "custom-liquid",
+      "settings": {
+        "custom_liquid": "<div id='sw-filter-test' style='display:none'>filter-test-ok</div>",
+        "color_scheme": "",
+        "section_width": "full-width",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
     },
     "sw_card_boost_v4": {
       "type": "custom-liquid",
