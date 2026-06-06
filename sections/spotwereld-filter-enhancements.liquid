@@ -215,26 +215,30 @@
     applyVormFilter();
   }
   var _runTimer=null;
-  function runAll(){rnK();addNeeOption();splitLichtkleur();addVormFilter();enhanceColCards();applyVormFilter();}
+  var _obsActive=false;
+  function runAll(){
+    // Tijdelijk observer pauzeren zodat onze eigen DOM-wijzigingen geen loop veroorzaken
+    if(_obsActive){obs.disconnect();_obsActive=false;}
+    rnK();addNeeOption();splitLichtkleur();addVormFilter();enhanceColCards();applyVormFilter();
+    // Observer opnieuw aansluiten
+    var f=document.querySelector('.facets-block-wrapper--vertical,.facets__form-wrapper');
+    if(f){obs.observe(f,{childList:true,subtree:true});_obsActive=true;}
+  }
   function runAllDebounced(){
     if(_runTimer)clearTimeout(_runTimer);
-    _runTimer=setTimeout(runAll,120);
+    _runTimer=setTimeout(runAll,200);
   }
-  document.addEventListener('DOMContentLoaded',runAll);
-  setTimeout(runAll,600);
-  document.addEventListener('shopify:section:load',runAll);
   var obs=new MutationObserver(function(muts){
     var hasFacetChange=muts.some(function(m){
       return Array.from(m.addedNodes).some(function(n){
         return n.nodeType===1&&(n.classList&&(n.classList.contains('facets__item')||n.querySelector&&n.querySelector('.facets__item')));
       });
     });
-    if(hasFacetChange)runAllDebounced();else rnK();
+    if(hasFacetChange)runAllDebounced();
   });
-  document.addEventListener('DOMContentLoaded',function(){
-    var f=document.querySelector('.facets-block-wrapper--vertical,.facets__form-wrapper');
-    if(f)obs.observe(f,{childList:true,subtree:true});
-  });
+  document.addEventListener('DOMContentLoaded',runAll);
+  setTimeout(runAll,800);
+  document.addEventListener('shopify:section:load',runAll);
 })();
 </script>
 

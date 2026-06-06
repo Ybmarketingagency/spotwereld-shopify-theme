@@ -163,14 +163,16 @@
         "padding-inline-end": 0,
         "color_scheme": "scheme-1",
         "padding-block-start": 24,
-        "padding-block-end": 32
+        "padding-block-end": 32,
+        "enable_infinite_scroll": false,
+        "products_per_page": 24
       }
     }
   },
   "order": [
     "spotwereld_collection_header",
     "spotwereld_filter_styles",
-    "spotwereld_filter_enhancements",
+    "spotwereld_filter_enhancements",
     "main"
   ]
 }
