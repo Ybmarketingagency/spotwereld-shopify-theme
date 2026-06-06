@@ -14,6 +14,16 @@
       "type": "spotwereld-filter-enhancements",
       "settings": {}
     },
+    "sw_card_boost_v4": {
+      "type": "custom-liquid",
+      "settings": {
+        "custom_liquid": "",
+        "color_scheme": "",
+        "section_width": "full-width",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
     "spotwereld_filter_styles": {
       "type": "custom-liquid",
       "settings": {
@@ -173,6 +183,7 @@
     "spotwereld_collection_header",
     "spotwereld_filter_styles",
     "spotwereld_filter_enhancements",
+    "sw_card_boost_v4",
     "main"
   ]
 }
