@@ -289,6 +289,28 @@
 </div>
 
 <!-- SW_SPECS_START -->
+<script>
+(function(){
+  function hideBodySpecs() {
+    document.querySelectorAll('rte-formatter h3, .rte h3, .text-block h3').forEach(function(h3) {
+      if (h3.textContent.trim() === 'Specificaties') {
+        h3.style.display = 'none';
+        var next = h3.nextElementSibling;
+        while (next && next.tagName !== 'H3' && next.tagName !== 'H2') {
+          next.style.display = 'none';
+          next = next.nextElementSibling;
+        }
+      }
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', hideBodySpecs);
+  } else {
+    hideBodySpecs();
+  }
+  setTimeout(hideBodySpecs, 500);
+})();
+</script>
 <div class="sw-specs-direct" style="max-width:1280px;margin:1.5rem auto 0;padding:0 1.5rem">
   <div class="sw-specs-table" style="margin:1.5rem 0 0;background:#fff;border:1px solid #e8edf4;border-radius:12px;padding:1.5rem 1.75rem 1rem">
     <h3 style="font-size:1rem;font-weight:800;color:#061f40;margin:0 0 .75rem;padding-bottom:.5rem;border-bottom:2px solid #e8edf4">Specificaties</h3>
