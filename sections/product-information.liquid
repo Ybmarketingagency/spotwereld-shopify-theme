@@ -176,18 +176,50 @@
   additional_blocks: additional_blocks
 %}
 
-{%- assign sw_cf = '' -%}
-{%- if product.tags contains 'aristo' -%}{%- assign sw_cf = 'aristo' -%}{%- endif -%}
-{%- if product.tags contains 'miran' -%}{%- assign sw_cf = 'miran' -%}{%- endif -%}
-{%- if sw_cf != '' -%}
-  {%- assign sw_ck = product.options_with_values[0].values[0] -%}
-  <div id="sw-color-data" style="display:none" data-current-handle="{{ product.handle }}" data-current-color="{{ sw_ck | escape }}">
-    {%- for sw_p in collections['inbouwspots'].products -%}
-      {%- if sw_p.tags contains sw_cf -%}
-        {%- assign sw_pk = sw_p.options_with_values[0].values[0] -%}
-        <span data-handle="{{ sw_p.handle }}" data-color="{{ sw_pk | escape }}" data-url="{{ sw_p.url }}"></span>
-      {%- endif -%}
-    {%- endfor -%}
+{%- comment -%} ARISTO family: hardcoded (was tag-based, nu handle-based voor betrouwbaarheid) {%- endcomment -%}
+{%- if product.handle contains 'aristo' -%}
+  {%- liquid
+    case product.handle
+      when 'led-inbouwspot-aristo-goud'
+        assign sw_ck_aristo = 'Goud'
+      when 'led-inbouwspot-aristo-koper'
+        assign sw_ck_aristo = 'Koper'
+      when 'led-inbouwspot-aristo-mat-zwart'
+        assign sw_ck_aristo = 'Mat Zwart'
+      when 'led-inbouwspot-aristo-zilver'
+        assign sw_ck_aristo = 'Zilver'
+      when 'led-inbouwspot-aristo-satin-metallic'
+        assign sw_ck_aristo = 'Satin Metallic'
+      else
+        assign sw_ck_aristo = 'Mat Wit'
+    endcase
+  -%}
+  <div id="sw-color-data" style="display:none" data-current-handle="{{ product.handle }}" data-current-color="{{ sw_ck_aristo | escape }}">
+    <span data-handle="led-inbouwspot-aristo-mat-wit" data-color="Mat Wit" data-url="/products/led-inbouwspot-aristo-mat-wit"></span>
+    <span data-handle="led-inbouwspot-aristo-mat-zwart" data-color="Mat Zwart" data-url="/products/led-inbouwspot-aristo-mat-zwart"></span>
+    <span data-handle="led-inbouwspot-aristo-zilver" data-color="Zilver" data-url="/products/led-inbouwspot-aristo-zilver"></span>
+    <span data-handle="led-inbouwspot-aristo-koper" data-color="Koper" data-url="/products/led-inbouwspot-aristo-koper"></span>
+    <span data-handle="led-inbouwspot-aristo-goud" data-color="Goud" data-url="/products/led-inbouwspot-aristo-goud"></span>
+    <span data-handle="led-inbouwspot-aristo-satin-metallic" data-color="Satin Metallic" data-url="/products/led-inbouwspot-aristo-satin-metallic"></span>
+  </div>
+{%- endif -%}
+
+{%- comment -%} MIRAN family: hardcoded (was tag-based, nu handle-based voor betrouwbaarheid) {%- endcomment -%}
+{%- if product.handle contains 'miran' -%}
+  {%- liquid
+    case product.handle
+      when 'led-inbouwspot-miran-goud'
+        assign sw_ck_miran = 'Goud'
+      when 'led-inbouwspot-miran-mat-zwart'
+        assign sw_ck_miran = 'Mat Zwart'
+      else
+        assign sw_ck_miran = 'Mat Wit'
+    endcase
+  -%}
+  <div id="sw-color-data" style="display:none" data-current-handle="{{ product.handle }}" data-current-color="{{ sw_ck_miran | escape }}">
+    <span data-handle="led-inbouwspot-miran-mat-wit" data-color="Mat Wit" data-url="/products/led-inbouwspot-miran-mat-wit"></span>
+    <span data-handle="led-inbouwspot-miran-mat-zwart" data-color="Mat Zwart" data-url="/products/led-inbouwspot-miran-mat-zwart"></span>
+    <span data-handle="led-inbouwspot-miran-goud" data-color="Goud" data-url="/products/led-inbouwspot-miran-goud"></span>
   </div>
 {%- endif -%}
 
