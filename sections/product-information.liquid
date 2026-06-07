@@ -235,6 +235,79 @@
   </div>
 {%- endif -%}
 
+{%- comment -%} AURORA family {%- endcomment -%}
+{%- if product.handle contains 'aurora' -%}
+  {%- liquid
+    case product.handle
+      when 'led-inbouwspot-aurora-rvs'
+        assign sw_ck_aurora = 'RVS'
+      when 'led-inbouwspot-aurora-wit'
+        assign sw_ck_aurora = 'Mat Wit'
+      else
+        assign sw_ck_aurora = 'Mat Zwart'
+    endcase
+  -%}
+  <div id="sw-color-data" style="display:none" data-current-handle="{{ product.handle }}" data-current-color="{{ sw_ck_aurora | escape }}">
+    <span data-handle="led-inbouwspot-aurora-rvs" data-color="RVS" data-url="/products/led-inbouwspot-aurora-rvs"></span>
+    <span data-handle="led-inbouwspot-aurora-wit" data-color="Mat Wit" data-url="/products/led-inbouwspot-aurora-wit"></span>
+    <span data-handle="led-inbouwspot-aurora-zwart" data-color="Mat Zwart" data-url="/products/led-inbouwspot-aurora-zwart"></span>
+  </div>
+{%- endif -%}
+
+{%- comment -%} BALDR family {%- endcomment -%}
+{%- if product.handle contains 'baldr' -%}
+  {%- liquid
+    case product.handle
+      when 'led-inbouwspot-baldr-aluminium'
+        assign sw_ck_baldr = 'Aluminium'
+      when 'led-inbouwspot-baldr-wit'
+        assign sw_ck_baldr = 'Mat Wit'
+      else
+        assign sw_ck_baldr = 'Mat Zwart'
+    endcase
+  -%}
+  <div id="sw-color-data" style="display:none" data-current-handle="{{ product.handle }}" data-current-color="{{ sw_ck_baldr | escape }}">
+    <span data-handle="led-inbouwspot-baldr-aluminium" data-color="Aluminium" data-url="/products/led-inbouwspot-baldr-aluminium"></span>
+    <span data-handle="led-inbouwspot-baldr-wit" data-color="Mat Wit" data-url="/products/led-inbouwspot-baldr-wit"></span>
+    <span data-handle="led-inbouwspot-baldr-zwart" data-color="Mat Zwart" data-url="/products/led-inbouwspot-baldr-zwart"></span>
+  </div>
+{%- endif -%}
+
+{%- comment -%} CERES VIERKANT family {%- endcomment -%}
+{%- if product.handle contains 'ceres' -%}
+  {%- liquid
+    case product.handle
+      when 'led-inbouwspot-ceres-vierkant-aluminium'
+        assign sw_ck_ceres = 'Aluminium'
+      when 'led-inbouwspot-ceres-vierkant-wit'
+        assign sw_ck_ceres = 'Mat Wit'
+      else
+        assign sw_ck_ceres = 'Mat Zwart'
+    endcase
+  -%}
+  <div id="sw-color-data" style="display:none" data-current-handle="{{ product.handle }}" data-current-color="{{ sw_ck_ceres | escape }}">
+    <span data-handle="led-inbouwspot-ceres-vierkant-aluminium" data-color="Aluminium" data-url="/products/led-inbouwspot-ceres-vierkant-aluminium"></span>
+    <span data-handle="led-inbouwspot-ceres-vierkant-wit" data-color="Mat Wit" data-url="/products/led-inbouwspot-ceres-vierkant-wit"></span>
+    <span data-handle="led-inbouwspot-ceres-vierkant-zwart" data-color="Mat Zwart" data-url="/products/led-inbouwspot-ceres-vierkant-zwart"></span>
+  </div>
+{%- endif -%}
+
+{%- comment -%} HESSLE family {%- endcomment -%}
+{%- if product.handle contains 'hessle' -%}
+  {%- liquid
+    case product.handle
+      when 'led-inbouwspot-hessle-wit'
+        assign sw_ck_hessle = 'Mat Wit'
+      else
+        assign sw_ck_hessle = 'Mat Zwart'
+    endcase
+  -%}
+  <div id="sw-color-data" style="display:none" data-current-handle="{{ product.handle }}" data-current-color="{{ sw_ck_hessle | escape }}">
+    <span data-handle="led-inbouwspot-hessle-wit" data-color="Mat Wit" data-url="/products/led-inbouwspot-hessle-wit"></span>
+    <span data-handle="led-inbouwspot-hessle-zwart" data-color="Mat Zwart" data-url="/products/led-inbouwspot-hessle-zwart"></span>
+  </div>
+{%- endif -%}
+
 <!-- Spotwereld: Thumbnails - lookup table met extra outledtl foto's per product handle -->
 {%- liquid
   case product.handle
