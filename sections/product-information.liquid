@@ -553,20 +553,6 @@ section:has(> div > .sw-pr-grid){display:none!important}
       insertTarget.insertAdjacentHTML('afterend', deliveryHtml);
     }
 
-    // Lichtkleur selector before volume pricing
-    if (!document.querySelector('.sw-lichtkleur')) {
-      var volEl = document.querySelector('.sw-vol');
-      if (volEl) {
-        volEl.insertAdjacentHTML('beforebegin',
-          '<div class="sw-lichtkleur" style="margin:0 0 1rem">' +
-          '<p style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#6b7280;margin:0 0 .5rem">Lichtkleur</p>' +
-          '<select style="width:100%;padding:.625rem .875rem;border:1.5px solid #d1d5db;border-radius:6px;font-size:.875rem;color:#061f40;background:#fff;cursor:pointer;appearance:auto">' +
-          '<option value="2700K">2700K (extra warm-wit)</option>' +
-          '<option value="3000K">3000K (warm-wit)</option>' +
-          '<option value="4000K">4000K (neutraal-wit)</option>' +
-          '</select></div>');
-      }
-    }
   }
 
   // Robuuste main-image switcher voor Horizon media-gallery
@@ -888,11 +874,6 @@ body.sw-product-ready .product-information__details product-form-component{opaci
   .sw-pay-svg {
     height: 24px;
     width: auto;
-  }
-  .sw-lichtkleur-select:focus {
-    border-color: #061f40;
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(6,31,64,0.1);
   }
 {% endstylesheet %}
 
