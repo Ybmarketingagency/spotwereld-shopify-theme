@@ -161,6 +161,10 @@
           ]
         }
       },
+      "block_order": [
+        "filters",
+        "product-card"
+      ],
       "settings": {
         "layout_type": "grid",
         "product_card_size": "medium",
