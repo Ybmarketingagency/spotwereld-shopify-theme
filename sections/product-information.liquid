@@ -673,6 +673,8 @@ body.sw-product-ready .product-information__details product-form-component{opaci
 /* Smooth fade voor sw-injected elementen */
 .sw-color-picker,.sw-vol,.sw-extras,.sw-delivery,.sw-payment-icons,.sw-specs-table,.sw-thumbs{animation:swFadeIn .2s ease-out}
 @keyframes swFadeIn{from{opacity:0}to{opacity:1}}
+/* Fix: toon Lichtkleur picker voor 2-temp producten — Horizon zet fieldset op display:none tijdens init */
+variant-picker fieldset.variant-option{display:grid !important}
 </style>
 
 {% stylesheet %}
