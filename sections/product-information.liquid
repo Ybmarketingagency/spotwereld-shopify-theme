@@ -210,6 +210,31 @@
   </div>
 {%- endif -%}
 
+{%- comment -%} HUGO family: hardcoded kleurpicker {%- endcomment -%}
+{%- if product.handle contains 'hugo' -%}
+  {%- liquid
+    case product.handle
+      when 'led-inbouwspot-hugo-goud'
+        assign sw_ck_hugo = 'Goud'
+      when 'led-inbouwspot-hugo-koper'
+        assign sw_ck_hugo = 'Koper'
+      when 'led-inbouwspot-hugo-wit'
+        assign sw_ck_hugo = 'Mat Wit'
+      when 'led-inbouwspot-hugo-zilver'
+        assign sw_ck_hugo = 'Zilver'
+      else
+        assign sw_ck_hugo = 'Mat Zwart'
+    endcase
+  -%}
+  <div id="sw-color-data" style="display:none" data-current-handle="{{ product.handle }}" data-current-color="{{ sw_ck_hugo | escape }}">
+    <span data-handle="led-inbouwspot-hugo-wit" data-color="Mat Wit" data-url="/products/led-inbouwspot-hugo-wit"></span>
+    <span data-handle="led-inbouwspot-hugo-zwart" data-color="Mat Zwart" data-url="/products/led-inbouwspot-hugo-zwart"></span>
+    <span data-handle="led-inbouwspot-hugo-zilver" data-color="Zilver" data-url="/products/led-inbouwspot-hugo-zilver"></span>
+    <span data-handle="led-inbouwspot-hugo-koper" data-color="Koper" data-url="/products/led-inbouwspot-hugo-koper"></span>
+    <span data-handle="led-inbouwspot-hugo-goud" data-color="Goud" data-url="/products/led-inbouwspot-hugo-goud"></span>
+  </div>
+{%- endif -%}
+
 <!-- Spotwereld: Thumbnails - lookup table met extra outledtl foto's per product handle -->
 {%- liquid
   case product.handle
@@ -462,13 +487,49 @@ section:has(> div > .sw-pr-grid){display:none!important}
       var items = Array.from(d.querySelectorAll('span'));
       if (items.length > 0) {
         var colorBtns = items.map(function(s) {
-          if (s.dataset.handle === currentHandle) {
-            return '<span style="display:inline-flex;align-items:center;padding:.375rem .875rem;border:2px solid #061f40;border-radius:4px;font-size:.875rem;color:#fff;background:#061f40;font-weight:600">' + s.dataset.color + '</span>';
-          }
-          return '<a href="' + s.dataset.url + '" style="display:inline-flex;align-items:center;padding:.375rem .875rem;border:1.5px solid #d1d5db;border-radius:4px;font-size:.875rem;color:#061f40;background:#fff;text-decoration:none">' + s.dataset.color + '</a>';
+          var isAct = s.dataset.handle === currentHandle;
+          return '<button type="button" class="sw-cp-btn" data-handle="' + s.dataset.handle + '" data-url="' + s.dataset.url + '" data-color="' + s.dataset.color + '" style="display:inline-flex;align-items:center;padding:.375rem .875rem;border:' + (isAct ? '2px solid #061f40' : '1.5px solid #d1d5db') + ';border-radius:4px;font-size:.875rem;color:' + (isAct ? '#fff' : '#061f40') + ';background:' + (isAct ? '#061f40' : '#fff') + ';cursor:pointer;font-family:inherit;font-weight:' + (isAct ? '600' : '400') + '">' + s.dataset.color + '</button>';
         }).join('');
-        var pickerHtml = '<div class="sw-color-picker" style="margin:0 0 1.25rem"><p style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#6b7280;margin:0 0 .625rem">Kleur: <strong style="color:#061f40">' + currentColor + '</strong></p><div style="display:flex;flex-wrap:wrap;gap:.5rem">' + colorBtns + '</div></div>';
+        var pickerHtml = '<div class="sw-color-picker" style="margin:0 0 1.25rem"><p style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#6b7280;margin:0 0 .625rem">Kleur: <strong class="sw-cp-lbl" style="color:#061f40">' + currentColor + '</strong></p><div style="display:flex;flex-wrap:wrap;gap:.5rem">' + colorBtns + '</div></div>';
         form.insertAdjacentHTML('beforebegin', pickerHtml);
+
+        // AJAX kleur wissel: alleen gallery swappen, geen pagina reload, geen scroll
+        document.querySelectorAll('.sw-cp-btn').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            var handle = this.dataset.handle;
+            var url = this.dataset.url;
+            var color = this.dataset.color;
+            if (handle === currentHandle) return;
+            // Fade gallery als loading indicator
+            var curGal = document.querySelector('media-gallery');
+            if (curGal) { curGal.style.opacity = '0.45'; curGal.style.pointerEvents = 'none'; }
+            fetch(url)
+              .then(function(r) { return r.text(); })
+              .then(function(html) {
+                var doc = new DOMParser().parseFromString(html, 'text/html');
+                var newGal = doc.querySelector('media-gallery');
+                var oldGal = document.querySelector('media-gallery');
+                if (newGal && oldGal) {
+                  // Vervang alleen de gallery — pagina blijft op zelfde positie
+                  oldGal.outerHTML = newGal.outerHTML;
+                }
+                // URL updaten zonder reload
+                history.pushState({}, '', url);
+                currentHandle = handle;
+                // Picker UI bijwerken
+                document.querySelectorAll('.sw-cp-btn').forEach(function(b) {
+                  var act = b.dataset.handle === handle;
+                  b.style.background = act ? '#061f40' : '#fff';
+                  b.style.color = act ? '#fff' : '#061f40';
+                  b.style.border = act ? '2px solid #061f40' : '1.5px solid #d1d5db';
+                  b.style.fontWeight = act ? '600' : '400';
+                });
+                var lbl = document.querySelector('.sw-cp-lbl');
+                if (lbl) lbl.textContent = color;
+              })
+              .catch(function() { window.location.href = url; });
+          });
+        });
       }
     }
 
