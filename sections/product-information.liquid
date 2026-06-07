@@ -628,7 +628,19 @@ section:has(> div > .sw-pr-grid){display:none!important}
     }
     // FOUC fix: laat CSS pas main image tonen na override
     document.documentElement.classList.add('sw-main-img-ready-html');
-    stickyTarget.insertAdjacentHTML('beforeend', source.innerHTML);
+    // Dedupliceer thumbnails op URL voor injectie
+    var tempDiv = document.createElement('div');
+    tempDiv.innerHTML = source.innerHTML;
+    var seenUrls = {};
+    tempDiv.querySelectorAll('img').forEach(function(img) {
+      var url = (img.getAttribute('data-full-src') || img.src || '').split('?')[0].split('_')[0];
+      if (seenUrls[url]) {
+        img.remove();
+      } else {
+        seenUrls[url] = true;
+      }
+    });
+    stickyTarget.insertAdjacentHTML('beforeend', tempDiv.innerHTML);
     // Specs tabel onder thumbnails injecteren (alleen als nog niet in mediaCol)
     var specsSource = document.getElementById('sw-specs-source');
     if (specsSource && !mediaCol.querySelector('.sw-specs-table')) {
