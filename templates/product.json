@@ -442,9 +442,19 @@
         "padding-block-start": 0,
         "padding-block-end": 0
       }
+    },
+    "sw_lichtkleur_fix": {
+      "type": "custom-liquid",
+      "settings": {
+        "custom_liquid": "<script>function swHideLK(){document.querySelectorAll(\"fieldset.variant-option,div.variant-option,.product-form__input\").forEach(function(el){var l=el.querySelector(\"legend\")||el.querySelector(\"label\");if(l&&l.textContent.trim().toLowerCase().indexOf(\"lichtkleur\")>-1){el.style.display=\"none\";}});} document.addEventListener(\"DOMContentLoaded\",swHideLK);setTimeout(swHideLK,500);setTimeout(swHideLK,1200);</script>",
+        "section_width": "full-width",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
     }
   },
   "order": [
+    "sw_lichtkleur_fix",
     "main",
     "product_recommendations",
     "product_reviews"
