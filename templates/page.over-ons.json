@@ -4,9 +4,18 @@
       "type": "sw-over-ons-hero",
       "settings": {}
     },
-    "over_nav": {
+    "over_body": {
       "type": "sw-over-ons-body",
       "settings": {}
+    },
+    "over_nav": {
+      "type": "custom-liquid",
+      "settings": {
+        "custom_liquid": "",
+        "section_width": "full-width",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
     },
     "over_stats": {
       "type": "custom-liquid",
@@ -47,6 +56,6 @@
   },
   "order": [
     "over_hero",
-    "over_nav"
+    "over_body"
   ]
 }
