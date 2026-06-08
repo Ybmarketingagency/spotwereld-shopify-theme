@@ -99,6 +99,22 @@
     clone.style.opacity='.55';
     list.appendChild(clone);
   }
+  function fixLichtkleur(){
+    var lkFacet=findFacetByName('Lichtkleur');
+    if(!lkFacet)return;
+    var list=lkFacet.querySelector('.facets__inputs,ul,.facets__inputs-list');
+    if(!list)return;
+    var seen4000=false;
+    Array.from(list.querySelectorAll('.facets__inputs-list-item,li')).forEach(function(it){
+      var t=it.textContent.trim().toLowerCase().replace(/\s+/g,' ');
+      // verberg dimbaar 2700k variant
+      if(t.indexOf('2700k')>-1&&t.indexOf('dimbaar')>-1){it.style.display='none';return;}
+      // dedupliceer 4000k neutraal-wit: eerste zichtbaar laten, tweede verbergen
+      if(t.indexOf('4000k')>-1&&t.indexOf('neutraal')>-1){
+        if(seen4000){it.style.display='none';}else{seen4000=true;}
+      }
+    });
+  }
   // Map: product handle pattern -> vorm
   function getVorm(handle){
     if(!handle)return null;
@@ -150,7 +166,7 @@
     applyVormFilter();
   }
   var _runTimer=null;
-  function runAll(){rnK();addNeeOption();addVormFilter();enhanceColCards();applyVormFilter();}
+  function runAll(){rnK();addNeeOption();fixLichtkleur();addVormFilter();enhanceColCards();applyVormFilter();}
   function runAllDebounced(){
     if(_runTimer)clearTimeout(_runTimer);
     _runTimer=setTimeout(runAll,120);
