@@ -4,13 +4,49 @@
       "type": "sw-over-ons-hero",
       "settings": {}
     },
-    "over_body": {
+    "over_nav": {
       "type": "sw-over-ons-body",
       "settings": {}
+    },
+    "over_stats": {
+      "type": "custom-liquid",
+      "settings": {
+        "custom_liquid": "",
+        "section_width": "full-width",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "over_story": {
+      "type": "custom-liquid",
+      "settings": {
+        "custom_liquid": "",
+        "section_width": "full-width",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "over_values": {
+      "type": "custom-liquid",
+      "settings": {
+        "custom_liquid": "",
+        "section_width": "full-width",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "over_cta": {
+      "type": "custom-liquid",
+      "settings": {
+        "custom_liquid": "",
+        "section_width": "full-width",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
     }
   },
   "order": [
     "over_hero",
-    "over_body"
+    "over_nav"
   ]
 }
