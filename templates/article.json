@@ -1,13 +1,9 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */{
+{
   "sections": {
+    "article_header": {
+      "type": "sw-article-header",
+      "settings": {}
+    },
     "section": {
       "type": "main-blog-post",
       "blocks": {
@@ -16,7 +12,7 @@
           "name": "Title",
           "static": true,
           "settings": {
-            "text": "<h1>{{ article.title }}</h1>",
+            "text": "",
             "width": "100%",
             "max_width": "normal",
             "alignment": "center",
@@ -43,12 +39,12 @@
           "name": "Details",
           "static": true,
           "settings": {
-            "show_date": true,
+            "show_date": false,
             "show_author": false,
             "type_preset": "",
             "alignment": "center",
             "show_alignment": true,
-            "padding-block-start": 24,
+            "padding-block-start": 0,
             "padding-block-end": 0
           },
           "blocks": {}
@@ -92,6 +88,7 @@
     }
   },
   "order": [
+    "article_header",
     "section"
   ]
 }
