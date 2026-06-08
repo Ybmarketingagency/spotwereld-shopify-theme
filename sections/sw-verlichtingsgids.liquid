@@ -1,0 +1,56 @@
+<style>
+.sw-vg-wrap{max-width:1280px;margin:0 auto;padding:3rem 1.5rem 5rem;display:grid;grid-template-columns:1fr;gap:2.5rem}
+@media(min-width:768px){.sw-vg-wrap{grid-template-columns:220px 1fr}}
+.sw-vg-sidebar{align-self:start;position:sticky;top:7rem}
+.sw-vg-sidebar-head{font-size:.75rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.1em;margin:0 0 .75rem;padding:0 .75rem}
+.sw-vg-sidebar nav{display:flex;flex-direction:column;gap:.125rem}
+.sw-vg-sidebar a{display:block;padding:.5rem .75rem;border-radius:.5rem;color:#374151;font-size:.9375rem;text-decoration:none;font-weight:500;transition:background .15s,color .15s;line-height:1.4}
+.sw-vg-sidebar a:hover{background:#EBF2FF;color:#0F6FE3}
+.sw-vg-sidebar a.sw-active{background:#EBF2FF;color:#083D7D;font-weight:700;border-left:3px solid #0F6FE3;padding-left:calc(.75rem - 3px)}
+.sw-vg-sidebar .sw-vg-divider{height:1px;background:#f0f0f0;margin:.5rem .75rem}
+.sw-vg-sidebar .sw-vg-cat{font-size:.6875rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.08em;padding:.375rem .75rem 0;margin-top:.25rem}
+
+/* Content area */
+.sw-vg-content{min-width:0}
+.sw-vg-content .page-width{max-width:100%!important;padding:0!important}
+</style>
+
+<div style="background:#f9fafb">
+  <div class="sw-vg-wrap">
+
+    <aside class="sw-vg-sidebar">
+      <p class="sw-vg-sidebar-head">Verlichtingsgids</p>
+      <nav>
+        <span class="sw-vg-cat">Installatie</span>
+        <a href="/pages/inbouwspots-plaatsen">Inbouwspots plaatsen</a>
+        <a href="/pages/tl-naar-led">TL naar LED vervangen</a>
+        <div class="sw-vg-divider"></div>
+        <span class="sw-vg-cat">Keuze &amp; advies</span>
+        <a href="/pages/led-dimmer-kiezen">De juiste LED-dimmer kiezen</a>
+        <div class="sw-vg-divider"></div>
+        <a href="/collections/all" style="margin-top:.25rem;color:#0F6FE3;font-weight:600">
+          <svg style="display:inline;vertical-align:-2px;margin-right:.25rem" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          Bekijk alle producten
+        </a>
+      </nav>
+    </aside>
+
+    <div class="sw-vg-content">
+      {{ page.content }}
+    </div>
+
+  </div>
+</div>
+
+<script>
+document.querySelectorAll('.sw-vg-sidebar a').forEach(function(a){
+  if(a.pathname===window.location.pathname){a.classList.add('sw-active');}
+});
+</script>
+
+{% schema %}
+{
+  "name": "Verlichtingsgids",
+  "settings": []
+}
+{% endschema %}
