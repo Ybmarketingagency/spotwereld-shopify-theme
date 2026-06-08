@@ -180,7 +180,7 @@
         return n.nodeType===1&&(n.classList&&(n.classList.contains('facets__item')||n.querySelector&&n.querySelector('.facets__item')));
       });
     });
-    if(hasFacetChange)runAllDebounced();else rnK();
+    if(hasFacetChange)runAllDebounced();else{rnK();fixLichtkleur();}
   });
   document.addEventListener('DOMContentLoaded',function(){
     var f=document.querySelector('.facets-block-wrapper--vertical,.facets__form-wrapper');
