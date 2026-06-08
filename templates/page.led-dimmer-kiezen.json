@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "vg_body": {
+      "type": "sw-verlichtingsgids",
+      "settings": {}
+    }
+  },
+  "order": [
+    "vg_body"
+  ]
+}
