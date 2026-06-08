@@ -38,7 +38,7 @@
     {% # theme-check-enable RemoteAsset %}
   </head>
 
-  <body class="page-width-{{ settings.page_width }} card-hover-effect-{{ settings.card_hover_effect }}">
+  <body class="page-width-{{ settings.page_width }} card-hover-effect-{{ settings.card_hover_effect }}">
     {% render 'skip-to-content-link', href: '#MainContent', text: 'accessibility.skip_to_text' %}
     <div id="header-group">
       {% sections 'header-group' %}
@@ -112,6 +112,28 @@
       })();
     </script>
 
+    {% assign sw_vg = false %}
+    {% if template == 'page.inbouwspots-plaatsen' or template == 'page.led-dimmer-kiezen' or template == 'page.tl-naar-led' %}
+      {% assign sw_vg = true %}
+    {% endif %}
+
+    {% if sw_vg %}
+    <style>
+    .sw-vg-outer{background:#f9fafb;min-height:60vh}
+    .sw-vg-wrap{max-width:1280px;margin:0 auto;padding:3rem 1.5rem 5rem;display:grid;grid-template-columns:1fr;gap:2.5rem}
+    @media(min-width:768px){.sw-vg-wrap{grid-template-columns:220px 1fr}}
+    .sw-vg-sidebar{align-self:start;position:sticky;top:7rem}
+    .sw-vg-sidebar-head{font-size:.75rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.1em;margin:0 0 .75rem;padding:0 .75rem}
+    .sw-vg-nav{display:flex;flex-direction:column;gap:.125rem}
+    .sw-vg-nav a{display:block;padding:.5rem .75rem;border-radius:.5rem;color:#374151;font-size:.9375rem;text-decoration:none;font-weight:500;transition:background .15s,color .15s;line-height:1.4}
+    .sw-vg-nav a:hover{background:#EBF2FF;color:#0F6FE3}
+    .sw-vg-nav a.sw-active{background:#EBF2FF;color:#083D7D;font-weight:700;border-left:3px solid #0F6FE3;padding-left:calc(.75rem - 3px)}
+    .sw-vg-nav-cat{font-size:.6875rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.08em;padding:.375rem .75rem 0;margin-top:.375rem;display:block}
+    .sw-vg-nav-divider{height:1px;background:#f0f0f0;margin:.5rem .75rem}
+    .sw-vg-content{min-width:0}
+    </style>
+    {% endif %}
+
     <main
       id="MainContent"
       class="content-for-layout"
@@ -120,7 +142,38 @@
       data-product-transition="{{ settings.transition_to_main_product }}"
       data-template="{{ template }}"
     >
-      {{ content_for_layout }}
+      {% if sw_vg %}
+        <div class="sw-vg-outer">
+          <div class="sw-vg-wrap">
+            <aside class="sw-vg-sidebar">
+              <p class="sw-vg-sidebar-head">Verlichtingsgids</p>
+              <nav class="sw-vg-nav">
+                <span class="sw-vg-nav-cat">Installatie</span>
+                <a href="/pages/inbouwspots-plaatsen">Inbouwspots plaatsen</a>
+                <a href="/pages/tl-naar-led">TL naar LED vervangen</a>
+                <div class="sw-vg-nav-divider"></div>
+                <span class="sw-vg-nav-cat">Keuze &amp; advies</span>
+                <a href="/pages/led-dimmer-kiezen">De juiste LED-dimmer kiezen</a>
+                <div class="sw-vg-nav-divider"></div>
+                <a href="/collections/all" style="margin-top:.25rem;color:#0F6FE3;font-weight:600;display:flex;align-items:center;gap:.3rem;padding:.5rem .75rem;font-size:.9375rem;text-decoration:none">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                  Bekijk alle producten
+                </a>
+              </nav>
+            </aside>
+            <div class="sw-vg-content">
+              {{ content_for_layout }}
+            </div>
+          </div>
+        </div>
+        <script>
+        document.querySelectorAll('.sw-vg-nav a').forEach(function(a){
+          if(a.pathname===window.location.pathname){a.classList.add('sw-active');}
+        });
+        </script>
+      {% else %}
+        {{ content_for_layout }}
+      {% endif %}
     </main>
 
     <footer>
