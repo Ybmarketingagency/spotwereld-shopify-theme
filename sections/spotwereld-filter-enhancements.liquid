@@ -1,5 +1,9 @@
-<!-- v3 cache bust -->
+<!-- v4 cache bust -->
 <style>
+/* Verberg dimbaar 2700K variant uit lichtkleur filter */
+li.facets__inputs-list-item:has(input[data-label="2700K (extra warm-wit) (dimbaar)"]) { display: none !important; }
+/* Verberg tweede (duplicate) 4000K neutraal-wit */
+li.facets__inputs-list-item:has(input[data-label="4000K (neutraal-wit)"]) ~ li.facets__inputs-list-item:has(input[data-label="4000K (neutraal-wit)"]) { display: none !important; }
 .sw-coll-stock{position:absolute;top:.5rem;right:.5rem;z-index:5;font-size:.65rem;font-weight:600;color:#16a34a;background:rgba(255,255,255,.95);padding:.18rem .45rem;border-radius:4px;display:inline-flex;align-items:center;gap:.25rem}
 .sw-coll-stock::before{content:'';width:6px;height:6px;border-radius:50%;background:#16a34a}
 .sw-coll-stars{color:#f59e0b;font-size:.78rem;letter-spacing:-.05em;margin:.3rem 0 .1rem;line-height:1}
