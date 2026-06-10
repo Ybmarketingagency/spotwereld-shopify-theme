@@ -429,7 +429,9 @@
 
         // 2. Build Storefront API cartCreate — adres meegestuurd zodat checkout pre-filled is
         var attributes = [
-          { key: 'Klant type', value: data.type === 'bedrijf' ? 'Bedrijf' : 'Particulier' }
+          { key: 'Klant type', value: data.type === 'bedrijf' ? 'Bedrijf' : 'Particulier' },
+          { key: 'Voornaam', value: data.firstName },
+          { key: 'Achternaam', value: data.lastName }
         ];
         if (data.type === 'bedrijf' && data.company) attributes.push({key:'Bedrijfsnaam',value:data.company});
 
@@ -450,7 +452,6 @@
               deliveryAddress: {
                 firstName: data.firstName,
                 lastName: data.lastName,
-                company: (data.type === 'bedrijf' && data.company) ? data.company : null,
                 address1: data.address1,
                 city: data.city,
                 zip: data.zip,
