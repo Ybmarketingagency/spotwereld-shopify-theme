@@ -73,6 +73,11 @@
 .swg-empty a{display:inline-block;background:linear-gradient(135deg,#083D7D,#0F6FE3);color:#fff;text-decoration:none;padding:.85rem 1.5rem;border-radius:8px;font-weight:700}
 @media(max-width:880px){.swg-grid{grid-template-columns:1fr}.swg-side{position:static;order:-1}.swg-main{padding:1.25rem}.swg-progress{padding:1rem 0 1.5rem}.swg-step span:not(.dot){display:none}}
 @media(max-width:480px){.swg-field-row{grid-template-columns:1fr}}
+#swg-address-suggestions li{padding:.7rem 1rem;cursor:pointer;font-size:.88rem;color:#1e293b;border-bottom:1px solid #f0f3f8;line-height:1.3}
+#swg-address-suggestions li:last-child{border-bottom:0}
+#swg-address-suggestions li:hover,#swg-address-suggestions li.swg-ac-active{background:#EBF2FF;color:#083D7D}
+#swg-address-suggestions li strong{font-weight:700}
+#swg-address-suggestions li span{color:#64748b;font-size:.8rem}
 </style>
 
 <div class="swg-wrap">
@@ -140,9 +145,12 @@
         </div>
 
         <div class="swg-field-row">
-          <div class="swg-floating" style="grid-column:1 / -1">
-            <input type="text" id="swg-address1" class="swg-input" required autocomplete="address-line1" placeholder=" ">
-            <label for="swg-address1">Straat en huisnummer *</label>
+          <div style="grid-column:1 / -1;position:relative;" id="swg-address-wrap">
+            <div class="swg-floating">
+              <input type="text" id="swg-address1" class="swg-input" required autocomplete="off" placeholder=" ">
+              <label for="swg-address1">Straat en huisnummer *</label>
+            </div>
+            <ul id="swg-address-suggestions" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1.5px solid #0F6FE3;border-top:0;border-radius:0 0 8px 8px;list-style:none;margin:0;padding:0;z-index:9999;box-shadow:0 8px 24px rgba(6,31,64,.1);max-height:220px;overflow-y:auto;"></ul>
           </div>
         </div>
 
@@ -258,6 +266,103 @@
       bedrijfVeld.style.display = btn.dataset.type === 'bedrijf' ? '' : 'none';
     });
   });
+
+  // ── Adres autocomplete via PDOK (gratis NL overheids-API) ─────────────────
+  (function(){
+    var inp  = document.getElementById('swg-address1');
+    var list = document.getElementById('swg-address-suggestions');
+    var zipEl = document.getElementById('swg-zip');
+    var cityEl = document.getElementById('swg-city');
+    if (!inp || !list) return;
+
+    var timer, activeIdx = -1, results = [];
+
+    function show(items){
+      results = items;
+      activeIdx = -1;
+      list.innerHTML = '';
+      if (!items.length){ list.style.display='none'; return; }
+      items.forEach(function(item, i){
+        var li = document.createElement('li');
+        var parts = item.weergavenaam.split(',');
+        li.innerHTML = '<strong>' + escHtml(parts[0]) + '</strong>' +
+          (parts[1] ? '<br><span>' + escHtml(parts.slice(1).join(',').trim()) + '</span>' : '');
+        li.addEventListener('mousedown', function(e){
+          e.preventDefault();
+          pick(i);
+        });
+        list.appendChild(li);
+      });
+      list.style.display = 'block';
+    }
+
+    function pick(i){
+      var item = results[i];
+      if (!item) return;
+      // Splits weergavenaam: "Soesterweg 1, 3812 AJ Amersfoort, Nederland"
+      var wn = item.weergavenaam || '';
+      var parts = wn.split(',').map(function(s){ return s.trim(); });
+      // Straat + huisnummer = eerste deel
+      inp.value = parts[0] || '';
+      // Postcode + stad = tweede deel "3812 AJ Amersfoort"
+      if (parts[1]) {
+        var m = parts[1].match(/^(\d{4}\s?[A-Z]{2})\s+(.+)$/i);
+        if (m) {
+          if (zipEl) zipEl.value = m[1].replace(/(\d{4})([A-Z]{2})/i,'$1 $2').toUpperCase();
+          if (cityEl) cityEl.value = m[2];
+        }
+      }
+      // Floating label update
+      [inp, zipEl, cityEl].forEach(function(el){
+        if (el) el.dispatchEvent(new Event('input'));
+      });
+      list.style.display = 'none';
+      results = [];
+    }
+
+    function escHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    inp.addEventListener('input', function(){
+      clearTimeout(timer);
+      var q = inp.value.trim();
+      if (q.length < 3){ list.style.display='none'; return; }
+      timer = setTimeout(function(){
+        fetch('https://api.pdok.nl/bzk/locatieserver/search/v3_1/suggest?q=' +
+          encodeURIComponent(q) + '&fq=type:adres&rows=6')
+          .then(function(r){ return r.json(); })
+          .then(function(data){
+            var docs = (data.response && data.response.docs) || [];
+            show(docs);
+          })
+          .catch(function(){ list.style.display='none'; });
+      }, 220);
+    });
+
+    // Toetsenbord navigatie
+    inp.addEventListener('keydown', function(e){
+      var items = list.querySelectorAll('li');
+      if (!items.length) return;
+      if (e.key === 'ArrowDown'){
+        e.preventDefault();
+        activeIdx = Math.min(activeIdx+1, items.length-1);
+      } else if (e.key === 'ArrowUp'){
+        e.preventDefault();
+        activeIdx = Math.max(activeIdx-1, 0);
+      } else if (e.key === 'Enter' && activeIdx >= 0){
+        e.preventDefault();
+        pick(activeIdx);
+        return;
+      } else if (e.key === 'Escape'){
+        list.style.display='none'; return;
+      }
+      items.forEach(function(li,i){ li.classList.toggle('swg-ac-active', i===activeIdx); });
+    });
+
+    // Sluit bij klik buiten
+    document.addEventListener('click', function(e){
+      if (!inp.contains(e.target) && !list.contains(e.target)) list.style.display='none';
+    });
+  })();
 
   // Postcode auto-format: 1234 AB
   var zipEl = document.getElementById('swg-zip');
