@@ -312,14 +312,16 @@
           if (cityEl) cityEl.value = m[2];
         }
       }
-      // Floating label update
-      [inp, zipEl, cityEl].forEach(function(el){
-        if (el) el.dispatchEvent(new Event('input'));
-      });
+      // Vlag zetten VOOR dispatchEvent zodat de input-listener niet opnieuw de API aanroept
+      justPicked = true;
+      clearTimeout(timer);
       list.style.display = 'none';
       results = [];
-      justPicked = true;
-      setTimeout(function(){ justPicked = false; }, 500);
+      // Floating label updaten (alleen voor zip en city, niet inp zelf)
+      [zipEl, cityEl].forEach(function(el){
+        if (el) el.dispatchEvent(new Event('input'));
+      });
+      setTimeout(function(){ justPicked = false; }, 600);
     }
 
     function escHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
