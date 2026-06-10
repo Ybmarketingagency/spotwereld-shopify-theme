@@ -117,6 +117,50 @@
       {% assign sw_vg = true %}
     {% endif %}
 
+    {%- comment -%} Tijdelijke client-side naamfix totdat CSV-import is afgerond {%- endcomment -%}
+    {% if template == 'product' %}
+    <script>
+    (function(){
+      var MAP={'Aristo':'Lesto','Hugo':'Ferro','Laom':'Quaro','Milan':'Cosmo','Miran':'Lyvo',
+               'Ceres':'Plano','Aurora':'Luma','Baldr':'Feno','Hedda':'Svena','Kari':'Tillo',
+               'Andor':'Rendo','Maredo':'Depro','Omega':'Therma','Hessle':'Privo',
+               'Rondoo':'Orvo','Chuck':'Arco','Cisco':'Viko','Dept':'Balo','Houston':'Divo'};
+      function replaceInText(str){
+        for(var k in MAP){ if(str.indexOf(k)!==-1){ str=str.split(k).join(MAP[k]); } }
+        return str;
+      }
+      function fixEl(el){
+        if(!el||!el.childNodes)return;
+        el.childNodes.forEach(function(n){
+          if(n.nodeType===3&&n.textContent.trim()){
+            var fixed=replaceInText(n.textContent);
+            if(fixed!==n.textContent)n.textContent=fixed;
+          }
+        });
+      }
+      function fixPage(){
+        // Browser tab title
+        document.title=replaceInText(document.title);
+        // Product headings + sticky title
+        document.querySelectorAll('h1,h2,[data-testid="sticky-product-title"],[class*="product-title"],[class*="product__title"]').forEach(fixEl);
+      }
+      // Direct uitvoeren + na DOM ready
+      fixPage();
+      document.addEventListener('DOMContentLoaded',fixPage);
+      // MutationObserver: vang dynamische title-updates op (view transitions)
+      var obs=new MutationObserver(function(muts){
+        muts.forEach(function(m){
+          if(m.target.matches&&m.target.matches('h1,h2,[data-testid="sticky-product-title"]')){fixEl(m.target);}
+        });
+        document.title=replaceInText(document.title);
+      });
+      document.addEventListener('DOMContentLoaded',function(){
+        obs.observe(document.body,{subtree:true,childList:true,characterData:true});
+      });
+    })();
+    </script>
+    {% endif %}
+
     {% if sw_vg %}
     <style>
     .sw-vg-outer{background:#f3f4f6;min-height:60vh;padding-bottom:4rem}
