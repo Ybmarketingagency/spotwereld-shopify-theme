@@ -170,14 +170,6 @@
           <label for="swg-phone">Telefoonnummer</label>
         </div>
 
-        <label class="swg-check">
-          <input type="checkbox" id="swg-newsletter">
-          <span>Schrijf mij in voor de nieuwsbrief (optioneel)</span>
-        </label>
-        <label class="swg-check" style="margin-bottom:1.5rem">
-          <input type="checkbox" id="swg-create-account">
-          <span>Maak een klantaccount aan</span>
-        </label>
 
         {%- comment -%} Hidden country field — Shopify checkout vraagt adres zelf {%- endcomment -%}
         <input type="hidden" id="swg-country" value="NL">
@@ -405,8 +397,6 @@
       city: val('swg-city'),
       phone: val('swg-phone'),
       country: 'NL',
-      newsletter: document.getElementById('swg-newsletter').checked,
-      createAccount: document.getElementById('swg-create-account').checked
     };
 
     // Validatie
@@ -442,8 +432,6 @@
           { key: 'Klant type', value: data.type === 'bedrijf' ? 'Bedrijf' : 'Particulier' }
         ];
         if (data.type === 'bedrijf' && data.company) attributes.push({key:'Bedrijfsnaam',value:data.company});
-        if (data.newsletter) attributes.push({key:'Nieuwsbrief',value:'Ja'});
-        if (data.createAccount) attributes.push({key:'Account aanmaken gewenst',value:'Ja'});
 
         var query = 'mutation cartCreate($input: CartInput!) {' +
           '  cartCreate(input: $input) {' +
@@ -492,19 +480,6 @@
         if (ue && ue.length) throw new Error(ue.map(function(e){return e.message;}).join(', '));
         var checkoutUrl = res.data && res.data.cartCreate && res.data.cartCreate.cart && res.data.cartCreate.cart.checkoutUrl;
         if (!checkoutUrl) throw new Error('Geen checkout URL ontvangen.');
-
-        // Newsletter opt-in parallel
-        if (data.newsletter){
-          try {
-            var nf = new FormData();
-            nf.append('form_type','customer');
-            nf.append('utf8','✓');
-            nf.append('contact[email]', data.email);
-            nf.append('contact[tags]', 'newsletter,checkout');
-            nf.append('contact[accepts_marketing]','true');
-            fetch('/contact', { method:'POST', body: nf, credentials:'same-origin' });
-          } catch(e){}
-        }
 
         // 4. Redirect naar pre-filled Shopify checkout
         window.location.href = checkoutUrl;
