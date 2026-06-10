@@ -114,6 +114,20 @@
           <label for="swg-email">E-mailadres *</label>
         </div>
 
+        <div class="swg-label">Laat ons weten wie je bent *</div>
+        <div class="swg-type-toggle" role="radiogroup">
+          <button type="button" class="swg-type-btn active" data-type="particulier" role="radio" aria-checked="true">Particulier</button>
+          <button type="button" class="swg-type-btn" data-type="bedrijf" role="radio" aria-checked="false">Bedrijf</button>
+        </div>
+        <input type="hidden" id="swg-type" value="particulier">
+
+        <div class="swg-field" id="swg-bedrijf-veld" style="display:none">
+          <div class="swg-floating">
+            <input type="text" id="swg-company" class="swg-input" autocomplete="organization" placeholder=" ">
+            <label for="swg-company">Bedrijfsnaam</label>
+          </div>
+        </div>
+
         <div class="swg-field-row">
           <div class="swg-floating">
             <input type="text" id="swg-firstname" class="swg-input" required autocomplete="given-name" placeholder=" ">
@@ -231,6 +245,20 @@
   var STOREFRONT_TOKEN = '52a93466d311fb11db9c71ceed5ace29';
   var API_VERSION = '2024-10';
 
+  // Type toggle (Particulier / Bedrijf)
+  var typeBtns = document.querySelectorAll('.swg-type-btn');
+  var typeHidden = document.getElementById('swg-type');
+  var bedrijfVeld = document.getElementById('swg-bedrijf-veld');
+  typeBtns.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      typeBtns.forEach(function(b){ b.classList.remove('active'); b.setAttribute('aria-checked','false'); });
+      btn.classList.add('active');
+      btn.setAttribute('aria-checked','true');
+      typeHidden.value = btn.dataset.type;
+      bedrijfVeld.style.display = btn.dataset.type === 'bedrijf' ? '' : 'none';
+    });
+  });
+
   // Postcode auto-format: 1234 AB
   var zipEl = document.getElementById('swg-zip');
   if (zipEl) {
@@ -258,6 +286,8 @@
 
     var data = {
       email: val('swg-email'),
+      type: val('swg-type'),
+      company: val('swg-company'),
       firstName: val('swg-firstname'),
       lastName: val('swg-lastname'),
       address1: val('swg-address1'),
@@ -277,6 +307,7 @@
     if (!data.address1) errors.push('Straat en huisnummer zijn verplicht.');
     if (!data.zip) errors.push('Postcode is verplicht.');
     if (!data.city) errors.push('Stad is verplicht.');
+    if (data.type === 'bedrijf' && !data.company) errors.push('Bedrijfsnaam is verplicht.');
     if (errors.length) { showErrors(errors); return; }
 
     var btn = document.getElementById('swg-submit');
@@ -297,7 +328,10 @@
         if (!lines.length) throw new Error('Winkelmand is leeg.');
 
         // 2. Build Storefront API cartCreate — adres meegestuurd zodat checkout pre-filled is
-        var attributes = [];
+        var attributes = [
+          { key: 'Klant type', value: data.type === 'bedrijf' ? 'Bedrijf' : 'Particulier' }
+        ];
+        if (data.type === 'bedrijf' && data.company) attributes.push({key:'Bedrijfsnaam',value:data.company});
         if (data.newsletter) attributes.push({key:'Nieuwsbrief',value:'Ja'});
         if (data.createAccount) attributes.push({key:'Account aanmaken gewenst',value:'Ja'});
 
@@ -318,6 +352,7 @@
               deliveryAddress: {
                 firstName: data.firstName,
                 lastName: data.lastName,
+                company: (data.type === 'bedrijf' && data.company) ? data.company : null,
                 address1: data.address1,
                 city: data.city,
                 zip: data.zip,
