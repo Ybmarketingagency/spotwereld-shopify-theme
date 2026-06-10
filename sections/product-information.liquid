@@ -444,14 +444,11 @@
 <div class="sw-specs-direct" style="max-width:1280px;margin:1.5rem auto 0;padding:0 1.5rem">
   <div class="sw-specs-table" style="margin:1.5rem 0 0;background:#fff;border:1px solid #e8edf4;border-radius:12px;padding:1.5rem 1.75rem 1rem">
     <h3 style="font-size:1rem;font-weight:800;color:#061f40;margin:0 0 .75rem;padding-bottom:.5rem;border-bottom:2px solid #e8edf4">Specificaties</h3>
-    {%- comment -%} Bepaal merk uit tag (Aristo/Miran) ipv vendor {%- endcomment -%}
-    {%- assign sw_merk = '' -%}
-    {%- if product.tags contains 'aristo' -%}{%- assign sw_merk = 'Aristo' -%}
-    {%- elsif product.tags contains 'miran' -%}{%- assign sw_merk = 'Miran' -%}
-    {%- else -%}
-      {%- assign sw_title_parts = product.title | split: '&mdash;' | first | split: ' ' -%}
-      {%- assign sw_merk = sw_title_parts | last | strip -%}
-      {%- if sw_merk == 'Inbouwspot' or sw_merk == 'LED' or sw_merk == '' -%}{%- assign sw_merk = product.vendor -%}{%- endif -%}
+    {%- comment -%} Merk = 3e woord van de titel: "LED Inbouwspot Lesto | ..." → "Lesto" {%- endcomment -%}
+    {%- assign sw_title_words = product.title | split: ' ' -%}
+    {%- assign sw_merk = sw_title_words[2] | remove: '|' | strip -%}
+    {%- if sw_merk == blank or sw_merk == 'Inbouwspot' or sw_merk == 'Wandlamp' or sw_merk == 'LED' -%}
+      {%- assign sw_merk = product.vendor -%}
     {%- endif -%}
     {%- assign sw_wattage = product.metafields.custom.wattage | default: '4W of 6W (instelbaar)' -%}
     {%- assign sw_lumen = product.metafields.custom.lumen | default: '400 lm' -%}
