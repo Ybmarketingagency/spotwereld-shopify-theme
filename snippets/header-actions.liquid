@@ -82,35 +82,110 @@
         assign account_actions_style = '--header-actions-font-family: ' | append: font_family_safe | append: '; --header-actions-font-weight: ' | append: font_obj.weight | append: ';'
       endif
     %}
-    <div
-      class="account-button header-actions__action{% if display_style == 'text' %} account-button--text{% endif %} color-{{ settings.popover_color_scheme }}"
-    >
-      <shopify-account
-        menu="{{ customer_account_menu }}"
-        {% if account_actions_style != blank %}
-          style="{{ account_actions_style }}"
-        {% endif %}
+
+    {% if customer %}
+      {%- comment -%} Ingelogd: shopify-account afhandelt het menu {%- endcomment -%}
+      <div
+        class="account-button header-actions__action{% if display_style == 'text' %} account-button--text{% endif %} color-{{ settings.popover_color_scheme }}"
       >
-        {% if customer %}
+        <shopify-account
+          menu="{{ customer_account_menu }}"
+          {% if account_actions_style != blank %}
+            style="{{ account_actions_style }}"
+          {% endif %}
+        >
           <div class="account-button__fallback"></div>
-        {% else %}
-          <span
-            slot="signed-out-avatar"
-            class="account-button__text header-actions__text-style {% if display_style == 'icon' %}hidden{% else %}mobile:hidden{% endif %}"
-          >
+        </shopify-account>
+      </div>
+
+    {% else %}
+      {%- comment -%} Niet ingelogd: custom Spotwereld account modal {%- endcomment -%}
+      <div class="account-button header-actions__action color-{{ settings.popover_color_scheme }}" style="position:relative;">
+
+        <button
+          id="sw-acct-btn"
+          type="button"
+          aria-label="Account"
+          aria-expanded="false"
+          aria-controls="sw-acct-panel"
+          style="background:transparent;border:0;cursor:pointer;display:flex;align-items:center;gap:.35rem;padding:.5rem;color:inherit;"
+        >
+          <span class="account-button__text header-actions__text-style {% if display_style == 'icon' %}hidden{% else %}mobile:hidden{% endif %}">
             {{ 'content.account_title' | t }}
           </span>
-
-          <span
-            slot="signed-out-avatar"
-            class="{% if display_style != 'icon' %}desktop:hidden{% endif %}"
-            aria-hidden="true"
-          >
+          <span class="{% if display_style != 'icon' %}desktop:hidden{% endif %}" aria-hidden="true">
             {{ account_icon }}
           </span>
-        {% endif %}
-      </shopify-account>
-    </div>
+        </button>
+
+        {%- comment -%} Voordelen-paneel {%- endcomment -%}
+        <div
+          id="sw-acct-panel"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Mijn Spotwereld"
+          hidden
+          style="
+            position:absolute;
+            top:calc(100% + 8px);
+            right:0;
+            width:260px;
+            background:#fff;
+            border-radius:14px;
+            box-shadow:0 12px 40px rgba(6,31,64,.14),0 2px 8px rgba(6,31,64,.06);
+            border:1px solid #e8edf5;
+            padding:0;
+            overflow:hidden;
+            z-index:9999;
+          "
+        >
+          {%- comment -%} Header balk {%- endcomment -%}
+          <div style="background:linear-gradient(135deg,#083D7D,#0F6FE3);padding:1rem 1.1rem .9rem;display:flex;justify-content:space-between;align-items:flex-start;">
+            <div>
+              <p style="margin:0 0 .15rem;font-size:.7rem;font-weight:700;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:.08em;">Jouw account</p>
+              <p style="margin:0;font-size:1rem;font-weight:900;color:#fff;line-height:1.2;">Mijn Spotwereld</p>
+            </div>
+            <button
+              id="sw-acct-close"
+              type="button"
+              aria-label="Sluiten"
+              style="background:rgba(255,255,255,.18);border:0;border-radius:50%;width:26px;height:26px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0;margin-top:2px;"
+            >
+              <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="1" y1="1" x2="13" y2="13"/><line x1="13" y1="1" x2="1" y2="13"/></svg>
+            </button>
+          </div>
+
+          {%- comment -%} Voordelen lijst {%- endcomment -%}
+          <ul style="margin:0;padding:.9rem 1.1rem .75rem;list-style:none;border-bottom:1px solid #eef1f7;">
+            {% assign sw_voordelen = "Volg de status van je bestelling,Gemakkelijk herbestellen,Eenvoudig retourneren,Exclusieve aanbiedingen & kortingen" | split: "," %}
+            {% for v in sw_voordelen %}
+              <li style="display:flex;align-items:flex-start;gap:.55rem;margin-bottom:{% if forloop.last %}0{% else %}.55rem{% endif %};font-size:.84rem;color:#1e3a5f;line-height:1.35;">
+                <svg style="flex-shrink:0;margin-top:1px;" width="15" height="15" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10" fill="#0F6FE3"/><polyline points="5,10 8.5,13.5 15,7" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                {{ v }}
+              </li>
+            {% endfor %}
+          </ul>
+
+          {%- comment -%} Actie-knoppen {%- endcomment -%}
+          <div style="padding:.9rem 1.1rem 1rem;">
+            <a
+              href="{{ routes.account_login_url }}"
+              style="display:flex;align-items:center;justify-content:center;gap:.45rem;width:100%;padding:.75rem 1rem;border:2px solid #0F6FE3;border-radius:8px;color:#0F6FE3;font-weight:700;font-size:.9rem;text-decoration:none;box-sizing:border-box;transition:background .15s,color .15s;"
+              onmouseover="this.style.background='#0F6FE3';this.style.color='#fff';"
+              onmouseout="this.style.background='transparent';this.style.color='#0F6FE3';"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              Inloggen
+            </a>
+            <p style="margin:.7rem 0 0;text-align:center;font-size:.82rem;color:#64748b;">
+              Nieuwe klant?
+              <a href="{{ routes.account_register_url }}" style="color:#0F6FE3;font-weight:700;text-decoration:none;">Begin hier</a>
+            </p>
+          </div>
+        </div>
+
+      </div>
+    {% endif %}
   {% endif %}
 
   {% if settings.cart_type == 'drawer' and template.name != 'cart' %}
@@ -266,53 +341,45 @@
 ></script>
 
 <script>
-/* Spotwereld: verberg "Sign in with shop" knop in shopify-account shadow DOM */
+/* Spotwereld: custom account-paneel open/sluiten */
 (function () {
-  var CSS_HIDE = [
-    /* knop zelf — diverse mogelijke selectors in Shopify's shadow DOM */
-    'button[class*="shop-login"]',
-    'button[class*="SignInWithShop"]',
-    'button[class*="sign-in-with-shop"]',
-    '[data-testid="sign-in-with-shop-button"]',
-    '[part="sign-in-with-shop"]',
-    'shop-login-button',
-    /* OR-scheiding direct erna */
-    '.or-separator',
-    '.separator',
-    '[class*="divider"]:first-of-type',
-    '[class*="Divider"]:first-of-type',
-  ].join(',') + '{ display:none!important }';
+  function init() {
+    var btn   = document.getElementById('sw-acct-btn');
+    var panel = document.getElementById('sw-acct-panel');
+    var close = document.getElementById('sw-acct-close');
+    if (!btn || !panel) return;
 
-  function injectStyle(el) {
-    if (!el.shadowRoot) return;
-    if (el.shadowRoot.querySelector('#sw-no-shop-btn')) return;
-    var s = document.createElement('style');
-    s.id = 'sw-no-shop-btn';
-    s.textContent = CSS_HIDE;
-    el.shadowRoot.appendChild(s);
-  }
-
-  function tryInject() {
-    var el = document.querySelector('shopify-account');
-    if (!el) return;
-    injectStyle(el);
-    /* Observeer shadow DOM-mutaties voor lazy-rendering */
-    if (el.shadowRoot) {
-      new MutationObserver(function () { injectStyle(el); })
-        .observe(el.shadowRoot, { childList: true, subtree: true });
+    function open() {
+      panel.hidden = false;
+      btn.setAttribute('aria-expanded', 'true');
+      setTimeout(function () { document.addEventListener('click', outside); }, 0);
     }
-  }
+    function shut() {
+      panel.hidden = true;
+      btn.setAttribute('aria-expanded', 'false');
+      document.removeEventListener('click', outside);
+    }
+    function outside(e) {
+      if (!panel.contains(e.target) && e.target !== btn && !btn.contains(e.target)) shut();
+    }
 
-  if (typeof customElements !== 'undefined') {
-    customElements.whenDefined('shopify-account').then(function () {
-      tryInject();
-      /* Hercheck na korte delay (sommige impls renderen na define) */
-      setTimeout(tryInject, 300);
-      setTimeout(tryInject, 1000);
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      panel.hidden ? open() : shut();
+    });
+    if (close) close.addEventListener('click', shut);
+
+    /* Sluit ook met Escape */
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !panel.hidden) shut();
     });
   }
 
-  document.addEventListener('DOMContentLoaded', tryInject);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 })();
 </script>
 
