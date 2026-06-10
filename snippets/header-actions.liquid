@@ -265,6 +265,57 @@
   fetchpriority="low"
 ></script>
 
+<script>
+/* Spotwereld: verberg "Sign in with shop" knop in shopify-account shadow DOM */
+(function () {
+  var CSS_HIDE = [
+    /* knop zelf — diverse mogelijke selectors in Shopify's shadow DOM */
+    'button[class*="shop-login"]',
+    'button[class*="SignInWithShop"]',
+    'button[class*="sign-in-with-shop"]',
+    '[data-testid="sign-in-with-shop-button"]',
+    '[part="sign-in-with-shop"]',
+    'shop-login-button',
+    /* OR-scheiding direct erna */
+    '.or-separator',
+    '.separator',
+    '[class*="divider"]:first-of-type',
+    '[class*="Divider"]:first-of-type',
+  ].join(',') + '{ display:none!important }';
+
+  function injectStyle(el) {
+    if (!el.shadowRoot) return;
+    if (el.shadowRoot.querySelector('#sw-no-shop-btn')) return;
+    var s = document.createElement('style');
+    s.id = 'sw-no-shop-btn';
+    s.textContent = CSS_HIDE;
+    el.shadowRoot.appendChild(s);
+  }
+
+  function tryInject() {
+    var el = document.querySelector('shopify-account');
+    if (!el) return;
+    injectStyle(el);
+    /* Observeer shadow DOM-mutaties voor lazy-rendering */
+    if (el.shadowRoot) {
+      new MutationObserver(function () { injectStyle(el); })
+        .observe(el.shadowRoot, { childList: true, subtree: true });
+    }
+  }
+
+  if (typeof customElements !== 'undefined') {
+    customElements.whenDefined('shopify-account').then(function () {
+      tryInject();
+      /* Hercheck na korte delay (sommige impls renderen na define) */
+      setTimeout(tryInject, 300);
+      setTimeout(tryInject, 1000);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', tryInject);
+})();
+</script>
+
 {% stylesheet %}
   .header {
     --account-offset-top: calc(
