@@ -1,4 +1,4 @@
-{% doc %}
+﻿{% doc %}
   Renders all meta tags for the page including Open Graph, Twitter Cards, and SEO tags.
 
   @param {object} [product] - The product object, available on product pages for price meta tags.
@@ -113,7 +113,7 @@
   assign sw_tagline = 'Premium LED Verlichting'
   if request.page_type == 'index'
     assign sw_title = 'LED Inbouwspots, Opbouwspots & Hanglampen | ' | append: sw_brand
-    assign sw_desc = 'Premium LED verlichting voor elk interieur. CCT switch dimbaar, IP65, 25.000 uur levensduur. Voor 22:00 besteld, morgen in huis. 4.9/5 klantbeoordeling.'
+    assign sw_desc = 'Premium LED verlichting voor elk interieur. CCT switch dimbaar, IP65, 25.000 uur levensduur. Vandaag voor 22:00 besteld, morgen verzonden. 4.9/5 klantbeoordeling.'
   elsif request.page_type == 'product'
     assign sw_title = product.title | append: ' kopen | ' | append: sw_brand
     if product.description != blank
@@ -126,7 +126,7 @@
     if collection.description != blank
       assign sw_desc = collection.description | strip_html | truncate: 155
     else
-      assign sw_desc = 'Bekijk onze ' | append: collection.title | append: ' collectie. Premium LED kwaliteit met 2 jaar garantie. Voor 22:00 besteld, morgen in huis.'
+      assign sw_desc = 'Bekijk onze ' | append: collection.title | append: ' collectie. Premium LED kwaliteit met 2 jaar garantie. Vandaag voor 22:00 besteld, morgen verzonden.'
     endif
   elsif request.page_type == 'article'
     assign sw_title = article.title | append: ' | ' | append: sw_brand | append: ' Blog'

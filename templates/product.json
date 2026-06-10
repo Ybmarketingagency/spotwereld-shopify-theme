@@ -1,4 +1,4 @@
-/*
+﻿/*
  * ------------------------------------------------------------
  * IMPORTANT: The contents of this file are auto-generated.
  *
@@ -223,7 +223,7 @@
               "type": "text",
               "name": "Vertrouwen",
               "settings": {
-                "text": "<ul><li>&#10003; Gratis verzenden vanaf &euro;50</li><li>&#10003; 30 dagen retourrecht</li><li>&#10003; 2 jaar garantie</li><li>&#10003; Werkdagen voor 23:00 besteld, morgen in huis</li></ul>",
+                "text": "<ul><li>&#10003; Gratis verzenden vanaf &euro;50</li><li>&#10003; 30 dagen retourrecht</li><li>&#10003; 2 jaar garantie</li><li>&#10003; Vandaag voor 22:00 besteld, morgen verzonden</li></ul>",
                 "width": "100%",
                 "max_width": "normal",
                 "alignment": "left",
