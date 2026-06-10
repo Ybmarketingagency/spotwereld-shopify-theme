@@ -114,37 +114,32 @@
           <label for="swg-email">E-mailadres *</label>
         </div>
 
-        <div class="swg-label">Laat ons weten wie je bent *</div>
-        <div class="swg-type-toggle" role="radiogroup">
-          <button type="button" class="swg-type-btn active" data-type="particulier" role="radio" aria-checked="true">Particulier</button>
-          <button type="button" class="swg-type-btn" data-type="bedrijf" role="radio" aria-checked="false">Bedrijf</button>
-        </div>
-        <input type="hidden" id="swg-type" value="particulier">
-
-        <div class="swg-field" id="swg-bedrijf-veld" style="display:none">
-          <div class="swg-floating">
-            <input type="text" id="swg-company" class="swg-input" autocomplete="organization" placeholder=" ">
-            <label for="swg-company">Bedrijfsnaam</label>
-          </div>
-        </div>
-
-        <div class="swg-aanhef">
-          <label class="swg-label" for="swg-aanhef">Aanhef</label>
-          <select id="swg-aanhef" class="swg-select">
-            <option value="Dhr.">Dhr.</option>
-            <option value="Mevr.">Mevr.</option>
-            <option value="">Anders / liever niet zeggen</option>
-          </select>
-        </div>
-
         <div class="swg-field-row">
           <div class="swg-floating">
             <input type="text" id="swg-firstname" class="swg-input" required autocomplete="given-name" placeholder=" ">
-            <label for="swg-firstname">Naam *</label>
+            <label for="swg-firstname">Voornaam *</label>
           </div>
           <div class="swg-floating">
             <input type="text" id="swg-lastname" class="swg-input" required autocomplete="family-name" placeholder=" ">
             <label for="swg-lastname">Achternaam *</label>
+          </div>
+        </div>
+
+        <div class="swg-field-row">
+          <div class="swg-floating" style="grid-column:1 / -1">
+            <input type="text" id="swg-address1" class="swg-input" required autocomplete="address-line1" placeholder=" ">
+            <label for="swg-address1">Straat en huisnummer *</label>
+          </div>
+        </div>
+
+        <div class="swg-field-row">
+          <div class="swg-floating">
+            <input type="text" id="swg-zip" class="swg-input" required autocomplete="postal-code" placeholder=" " maxlength="7">
+            <label for="swg-zip">Postcode *</label>
+          </div>
+          <div class="swg-floating">
+            <input type="text" id="swg-city" class="swg-input" required autocomplete="address-level2" placeholder=" ">
+            <label for="swg-city">Stad *</label>
           </div>
         </div>
 
@@ -236,19 +231,14 @@
   var STOREFRONT_TOKEN = '52a93466d311fb11db9c71ceed5ace29';
   var API_VERSION = '2024-10';
 
-  // Type toggle
-  var typeBtns = document.querySelectorAll('.swg-type-btn');
-  var typeHidden = document.getElementById('swg-type');
-  var bedrijfVeld = document.getElementById('swg-bedrijf-veld');
-  typeBtns.forEach(function(btn){
-    btn.addEventListener('click', function(){
-      typeBtns.forEach(function(b){ b.classList.remove('active'); b.setAttribute('aria-checked','false'); });
-      btn.classList.add('active');
-      btn.setAttribute('aria-checked','true');
-      typeHidden.value = btn.dataset.type;
-      bedrijfVeld.style.display = btn.dataset.type === 'bedrijf' ? '' : 'none';
+  // Postcode auto-format: 1234 AB
+  var zipEl = document.getElementById('swg-zip');
+  if (zipEl) {
+    zipEl.addEventListener('blur', function(){
+      var v = zipEl.value.replace(/\s/g,'').toUpperCase();
+      if (/^\d{4}[A-Z]{2}$/.test(v)) zipEl.value = v.slice(0,4) + ' ' + v.slice(4);
     });
-  });
+  }
 
   function showErrors(messages){
     var el = document.getElementById('swg-errors');
@@ -268,23 +258,25 @@
 
     var data = {
       email: val('swg-email'),
-      type: val('swg-type'),
-      company: val('swg-company'),
-      aanhef: val('swg-aanhef'),
       firstName: val('swg-firstname'),
       lastName: val('swg-lastname'),
+      address1: val('swg-address1'),
+      zip: val('swg-zip'),
+      city: val('swg-city'),
       phone: val('swg-phone'),
-      country: val('swg-country') || 'NL',
+      country: 'NL',
       newsletter: document.getElementById('swg-newsletter').checked,
       createAccount: document.getElementById('swg-create-account').checked
     };
 
-    // Validatie — alleen contactgegevens (adres collect Shopify in next step)
+    // Validatie
     var errors = [];
     if (!data.email || data.email.indexOf('@') < 1) errors.push('Vul een geldig e-mailadres in.');
     if (!data.firstName) errors.push('Voornaam is verplicht.');
     if (!data.lastName) errors.push('Achternaam is verplicht.');
-    if (data.type === 'bedrijf' && !data.company) errors.push('Bedrijfsnaam is verplicht.');
+    if (!data.address1) errors.push('Straat en huisnummer zijn verplicht.');
+    if (!data.zip) errors.push('Postcode is verplicht.');
+    if (!data.city) errors.push('Stad is verplicht.');
     if (errors.length) { showErrors(errors); return; }
 
     var btn = document.getElementById('swg-submit');
@@ -304,16 +296,8 @@
         });
         if (!lines.length) throw new Error('Winkelmand is leeg.');
 
-        // 2. Build Storefront API cartCreate input — alleen contactdata
-        // Adres wordt door Shopify in volgende stap gevraagd (verzending)
-        var attributes = [
-          { key: 'Klant type', value: data.type === 'bedrijf' ? 'Bedrijf' : 'Particulier' },
-          { key: 'Aanhef', value: data.aanhef || '' },
-          { key: 'Voornaam (contact)', value: data.firstName },
-          { key: 'Achternaam (contact)', value: data.lastName }
-        ];
-        if (data.phone) attributes.push({key:'Telefoon',value:data.phone});
-        if (data.type === 'bedrijf' && data.company) attributes.push({key:'Bedrijfsnaam',value:data.company});
+        // 2. Build Storefront API cartCreate — adres meegestuurd zodat checkout pre-filled is
+        var attributes = [];
         if (data.newsletter) attributes.push({key:'Nieuwsbrief',value:'Ja'});
         if (data.createAccount) attributes.push({key:'Account aanmaken gewenst',value:'Ja'});
 
@@ -329,9 +313,20 @@
           buyerIdentity: {
             email: data.email,
             phone: data.phone || null,
-            countryCode: data.country
+            countryCode: 'NL',
+            deliveryAddressPreferences: [{
+              deliveryAddress: {
+                firstName: data.firstName,
+                lastName: data.lastName,
+                address1: data.address1,
+                city: data.city,
+                zip: data.zip,
+                country: 'Netherlands',
+                phone: data.phone || null
+              }
+            }]
           },
-          attributes: attributes
+          attributes: attributes.length ? attributes : undefined
         };
 
         // 3. Call Storefront API
@@ -384,16 +379,10 @@
     setIf('swg-email', saved.email);
     setIf('swg-firstname', saved.firstName);
     setIf('swg-lastname', saved.lastName);
-    setIf('swg-phone', saved.phone);
     setIf('swg-address1', saved.address1);
-    setIf('swg-address2', saved.address2);
     setIf('swg-zip', saved.zip);
     setIf('swg-city', saved.city);
-    setIf('swg-company', saved.company);
-    if (saved.type === 'bedrijf') {
-      var btn = document.querySelector('.swg-type-btn[data-type="bedrijf"]');
-      if (btn) btn.click();
-    }
+    setIf('swg-phone', saved.phone);
   } catch(e){}
 })();
 </script>
