@@ -476,9 +476,9 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
   }, true);
   // Hardcoded overrides per handle voor cards waar geen liquid marker te plaatsen is (sw-pp-card op homepage etc)
   var SW_HANDLE_OVERRIDES = {
-    'led-inbouwspot-laom-wit': 'https://www.outledtl.nl/wp-content/uploads/2023/10/OUTLEDTL-LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIMBAAR-WIT.png',
-    'led-inbouwspot-laom-mat-zwart': 'https://www.outledtl.nl/wp-content/uploads/2019/12/OUTLEDTL-LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIMBAAR-ZWART.png',
-    'led-inbouwspot-laom-zilver': 'https://www.outledtl.nl/wp-content/uploads/2023/10/OUTLEDTL-LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIMBAAR-ZILVER.png'
+    'led-inbouwspot-laom-wit': 'https://www.outledtl.nl/wp-content/uploads/2023/10/LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIMBAAR-WIT.png',
+    'led-inbouwspot-laom-mat-zwart': 'https://www.outledtl.nl/wp-content/uploads/2019/12/LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIMBAAR-ZWART.png',
+    'led-inbouwspot-laom-zilver': 'https://www.outledtl.nl/wp-content/uploads/2023/10/LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIM-ZILVER.png'
   };
   function swapImgs(scope, url){
     scope.querySelectorAll('img, source').forEach(function(el){
@@ -1512,9 +1512,9 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
 
 {%- comment -%} Preload LAOM card images (outledtl.nl is trager dan Shopify CDN) {%- endcomment -%}
 {%- if request.page_type == 'index' or request.page_type == 'collection' or template contains 'collection' -%}
-  <link rel="preload" as="image" href="https://www.outledtl.nl/wp-content/uploads/2023/10/OUTLEDTL-LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIMBAAR-WIT.png" fetchpriority="high">
-  <link rel="preload" as="image" href="https://www.outledtl.nl/wp-content/uploads/2019/12/OUTLEDTL-LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIMBAAR-ZWART.png" fetchpriority="high">
-  <link rel="preload" as="image" href="https://www.outledtl.nl/wp-content/uploads/2023/10/OUTLEDTL-LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIMBAAR-ZILVER.png" fetchpriority="high">
+  <link rel="preload" as="image" href="https://www.outledtl.nl/wp-content/uploads/2023/10/LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIMBAAR-WIT.png" fetchpriority="high">
+  <link rel="preload" as="image" href="https://www.outledtl.nl/wp-content/uploads/2019/12/LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIMBAAR-ZWART.png" fetchpriority="high">
+  <link rel="preload" as="image" href="https://www.outledtl.nl/wp-content/uploads/2023/10/LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIM-ZILVER.png" fetchpriority="high">
 {%- endif -%}
 
 {% if page_description %}
