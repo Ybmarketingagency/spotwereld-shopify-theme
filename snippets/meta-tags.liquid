@@ -1115,8 +1115,10 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
       }
       list.appendChild(clone);
     });
-    // Verwijder originele "Instelbaar (2700K-4000K)" item — voorkomt dat Shopify die submit
-    if (origItemRef && origItemRef.parentNode) origItemRef.parentNode.removeChild(origItemRef);
+    // Verwijder ALLE originele Shopify-items (4000K, Instelbaar, GU10, etc.) — alleen onze eigen lijst blijft
+    list.querySelectorAll('.facets__inputs-list-item, li').forEach(function(el){
+      if (!/sw-lk-opt-/.test(el.className)) el.remove();
+    });
     // Verwijder ook eventuele input[name*="lichtkleur"] elders in DOM (Shopify form hidden inputs)
     document.querySelectorAll('input[name="filter.v.option.lichtkleur"], input[name="filter.p.product_option.lichtkleur"]').forEach(function(i){
       // Alleen verwijderen als NIET een van mijn clones
