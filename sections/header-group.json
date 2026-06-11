@@ -1,4 +1,13 @@
-﻿{
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
   "type": "header",
   "name": "Header",
   "sections": {
@@ -31,9 +40,7 @@
           "settings": {
             "hide_logo_on_home_page": false,
             "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
+            "padding-block-end": 0
           },
           "blocks": {}
         },
@@ -63,7 +70,6 @@
       "settings": {
         "logo_position": "left",
         "menu_position": "center",
-        "menu_row": "top",
         "show_search": true,
         "search_position": "right",
         "search_row": "top",
