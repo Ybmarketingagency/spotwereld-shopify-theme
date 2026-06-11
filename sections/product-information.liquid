@@ -176,206 +176,174 @@
   additional_blocks: additional_blocks
 %}
 
-{%- comment -%} ARISTO family: hardcoded (was tag-based, nu handle-based voor betrouwbaarheid) {%- endcomment -%}
-{%- if product.handle contains 'aristo' -%}
+{%- comment -%} LESTO family: hardcoded (was tag-based, nu handle-based voor betrouwbaarheid) {%- endcomment -%}
+{%- if product.handle contains 'lesto' -%}
   {%- liquid
     case product.handle
-      when 'led-inbouwspot-aristo-goud'
-        assign sw_ck_aristo = 'Goud'
-      when 'led-inbouwspot-aristo-koper'
-        assign sw_ck_aristo = 'Koper'
-      when 'led-inbouwspot-aristo-mat-zwart'
-        assign sw_ck_aristo = 'Mat Zwart'
-      when 'led-inbouwspot-aristo-zilver'
-        assign sw_ck_aristo = 'Zilver'
-      when 'led-inbouwspot-aristo-satin-metallic'
-        assign sw_ck_aristo = 'Satin Metallic'
+      when 'led-inbouwspot-lesto-goud'
+        assign sw_ck_lesto = 'Goud'
+      when 'led-inbouwspot-lesto-koper'
+        assign sw_ck_lesto = 'Koper'
+      when 'led-inbouwspot-lesto-mat-zwart'
+        assign sw_ck_lesto = 'Mat Zwart'
+      when 'led-inbouwspot-lesto-zilver'
+        assign sw_ck_lesto = 'Zilver'
+      when 'led-inbouwspot-lesto-satin-metallic'
+        assign sw_ck_lesto = 'Satin Metallic'
       else
-        assign sw_ck_aristo = 'Mat Wit'
+        assign sw_ck_lesto = 'Mat Wit'
     endcase
   -%}
-  <div id="sw-color-data" style="display:none" data-current-handle="{{ product.handle }}" data-current-color="{{ sw_ck_aristo | escape }}">
-    <span data-handle="led-inbouwspot-aristo-mat-wit" data-color="Mat Wit" data-url="/products/led-inbouwspot-aristo-mat-wit"></span>
-    <span data-handle="led-inbouwspot-aristo-mat-zwart" data-color="Mat Zwart" data-url="/products/led-inbouwspot-aristo-mat-zwart"></span>
-    <span data-handle="led-inbouwspot-aristo-zilver" data-color="Zilver" data-url="/products/led-inbouwspot-aristo-zilver"></span>
-    <span data-handle="led-inbouwspot-aristo-koper" data-color="Koper" data-url="/products/led-inbouwspot-aristo-koper"></span>
-    <span data-handle="led-inbouwspot-aristo-goud" data-color="Goud" data-url="/products/led-inbouwspot-aristo-goud"></span>
-    <span data-handle="led-inbouwspot-aristo-satin-metallic" data-color="Satin Metallic" data-url="/products/led-inbouwspot-aristo-satin-metallic"></span>
+  <div id="sw-color-data" style="display:none" data-current-handle="{{ product.handle }}" data-current-color="{{ sw_ck_lesto | escape }}">
+    <span data-handle="led-inbouwspot-lesto-mat-wit" data-color="Mat Wit" data-url="/products/led-inbouwspot-lesto-mat-wit"></span>
+    <span data-handle="led-inbouwspot-lesto-mat-zwart" data-color="Mat Zwart" data-url="/products/led-inbouwspot-lesto-mat-zwart"></span>
+    <span data-handle="led-inbouwspot-lesto-zilver" data-color="Zilver" data-url="/products/led-inbouwspot-lesto-zilver"></span>
+    <span data-handle="led-inbouwspot-lesto-koper" data-color="Koper" data-url="/products/led-inbouwspot-lesto-koper"></span>
+    <span data-handle="led-inbouwspot-lesto-goud" data-color="Goud" data-url="/products/led-inbouwspot-lesto-goud"></span>
+    <span data-handle="led-inbouwspot-lesto-satin-metallic" data-color="Satin Metallic" data-url="/products/led-inbouwspot-lesto-satin-metallic"></span>
   </div>
 {%- endif -%}
 
-{%- comment -%} MIRAN family: hardcoded (was tag-based, nu handle-based voor betrouwbaarheid) {%- endcomment -%}
-{%- if product.handle contains 'miran' -%}
+{%- comment -%} LYVO family: hardcoded (was tag-based, nu handle-based voor betrouwbaarheid) {%- endcomment -%}
+{%- if product.handle contains 'lyvo' -%}
   {%- liquid
     case product.handle
-      when 'led-inbouwspot-miran-goud'
-        assign sw_ck_miran = 'Goud'
-      when 'led-inbouwspot-miran-mat-zwart'
-        assign sw_ck_miran = 'Mat Zwart'
+      when 'led-inbouwspot-lyvo-goud'
+        assign sw_ck_lyvo = 'Goud'
+      when 'led-inbouwspot-lyvo-mat-zwart'
+        assign sw_ck_lyvo = 'Mat Zwart'
       else
-        assign sw_ck_miran = 'Mat Wit'
+        assign sw_ck_lyvo = 'Mat Wit'
     endcase
   -%}
-  <div id="sw-color-data" style="display:none" data-current-handle="{{ product.handle }}" data-current-color="{{ sw_ck_miran | escape }}">
-    <span data-handle="led-inbouwspot-miran-mat-wit" data-color="Mat Wit" data-url="/products/led-inbouwspot-miran-mat-wit"></span>
-    <span data-handle="led-inbouwspot-miran-mat-zwart" data-color="Mat Zwart" data-url="/products/led-inbouwspot-miran-mat-zwart"></span>
-    <span data-handle="led-inbouwspot-miran-goud" data-color="Goud" data-url="/products/led-inbouwspot-miran-goud"></span>
+  <div id="sw-color-data" style="display:none" data-current-handle="{{ product.handle }}" data-current-color="{{ sw_ck_lyvo | escape }}">
+    <span data-handle="led-inbouwspot-lyvo-mat-wit" data-color="Mat Wit" data-url="/products/led-inbouwspot-lyvo-mat-wit"></span>
+    <span data-handle="led-inbouwspot-lyvo-mat-zwart" data-color="Mat Zwart" data-url="/products/led-inbouwspot-lyvo-mat-zwart"></span>
+    <span data-handle="led-inbouwspot-lyvo-goud" data-color="Goud" data-url="/products/led-inbouwspot-lyvo-goud"></span>
   </div>
 {%- endif -%}
 
-{%- comment -%} LAOM family: hardcoded omdat producten geen tag/optie hebben {%- endcomment -%}
-{%- if product.handle == 'led-inbouwspot-laom-wit' or product.handle == 'led-inbouwspot-laom-mat-zwart' or product.handle == 'led-inbouwspot-laom-zilver' -%}
+{%- comment -%} QUARO family: hardcoded omdat producten geen tag/optie hebben {%- endcomment -%}
+{%- if product.handle == 'led-inbouwspot-quaro-wit' or product.handle == 'led-inbouwspot-quaro-mat-zwart' or product.handle == 'led-inbouwspot-quaro-zilver' -%}
   {%- liquid
     case product.handle
-      when 'led-inbouwspot-laom-wit'
-        assign sw_ck_laom = 'Wit'
-      when 'led-inbouwspot-laom-mat-zwart'
-        assign sw_ck_laom = 'Mat Zwart'
-      when 'led-inbouwspot-laom-zilver'
-        assign sw_ck_laom = 'Zilver'
+      when 'led-inbouwspot-quaro-wit'
+        assign sw_ck_quaro = 'Wit'
+      when 'led-inbouwspot-quaro-mat-zwart'
+        assign sw_ck_quaro = 'Mat Zwart'
+      when 'led-inbouwspot-quaro-zilver'
+        assign sw_ck_quaro = 'Zilver'
     endcase
   -%}
-  <div id="sw-color-data" style="display:none" data-current-handle="{{ product.handle }}" data-current-color="{{ sw_ck_laom | escape }}">
-    <span data-handle="led-inbouwspot-laom-wit" data-color="Wit" data-url="/products/led-inbouwspot-laom-wit"></span>
-    <span data-handle="led-inbouwspot-laom-mat-zwart" data-color="Mat Zwart" data-url="/products/led-inbouwspot-laom-mat-zwart"></span>
-    <span data-handle="led-inbouwspot-laom-zilver" data-color="Zilver" data-url="/products/led-inbouwspot-laom-zilver"></span>
+  <div id="sw-color-data" style="display:none" data-current-handle="{{ product.handle }}" data-current-color="{{ sw_ck_quaro | escape }}">
+    <span data-handle="led-inbouwspot-quaro-wit" data-color="Wit" data-url="/products/led-inbouwspot-quaro-wit"></span>
+    <span data-handle="led-inbouwspot-quaro-mat-zwart" data-color="Mat Zwart" data-url="/products/led-inbouwspot-quaro-mat-zwart"></span>
+    <span data-handle="led-inbouwspot-quaro-zilver" data-color="Zilver" data-url="/products/led-inbouwspot-quaro-zilver"></span>
   </div>
 {%- endif -%}
 
-{%- comment -%} HUGO family: hardcoded kleurpicker {%- endcomment -%}
-{%- if product.handle contains 'hugo' -%}
+{%- comment -%} FERRO family: hardcoded kleurpicker {%- endcomment -%}
+{%- if product.handle contains 'ferro' -%}
   {%- liquid
     case product.handle
-      when 'led-inbouwspot-hugo-goud'
-        assign sw_ck_hugo = 'Goud'
-      when 'led-inbouwspot-hugo-koper'
-        assign sw_ck_hugo = 'Koper'
-      when 'led-inbouwspot-hugo-wit'
-        assign sw_ck_hugo = 'Mat Wit'
-      when 'led-inbouwspot-hugo-zilver'
-        assign sw_ck_hugo = 'Zilver'
+      when 'led-inbouwspot-ferro-goud'
+        assign sw_ck_ferro = 'Goud'
+      when 'led-inbouwspot-ferro-koper'
+        assign sw_ck_ferro = 'Koper'
+      when 'led-inbouwspot-ferro-wit'
+        assign sw_ck_ferro = 'Mat Wit'
+      when 'led-inbouwspot-ferro-zilver'
+        assign sw_ck_ferro = 'Zilver'
       else
-        assign sw_ck_hugo = 'Mat Zwart'
+        assign sw_ck_ferro = 'Mat Zwart'
     endcase
   -%}
-  <div id="sw-color-data" style="display:none" data-current-handle="{{ product.handle }}" data-current-color="{{ sw_ck_hugo | escape }}">
-    <span data-handle="led-inbouwspot-hugo-wit" data-color="Mat Wit" data-url="/products/led-inbouwspot-hugo-wit"></span>
-    <span data-handle="led-inbouwspot-hugo-zwart" data-color="Mat Zwart" data-url="/products/led-inbouwspot-hugo-zwart"></span>
-    <span data-handle="led-inbouwspot-hugo-zilver" data-color="Zilver" data-url="/products/led-inbouwspot-hugo-zilver"></span>
-    <span data-handle="led-inbouwspot-hugo-koper" data-color="Koper" data-url="/products/led-inbouwspot-hugo-koper"></span>
-    <span data-handle="led-inbouwspot-hugo-goud" data-color="Goud" data-url="/products/led-inbouwspot-hugo-goud"></span>
+  <div id="sw-color-data" style="display:none" data-current-handle="{{ product.handle }}" data-current-color="{{ sw_ck_ferro | escape }}">
+    <span data-handle="led-inbouwspot-ferro-wit" data-color="Mat Wit" data-url="/products/led-inbouwspot-ferro-wit"></span>
+    <span data-handle="led-inbouwspot-ferro-zwart" data-color="Mat Zwart" data-url="/products/led-inbouwspot-ferro-zwart"></span>
+    <span data-handle="led-inbouwspot-ferro-zilver" data-color="Zilver" data-url="/products/led-inbouwspot-ferro-zilver"></span>
+    <span data-handle="led-inbouwspot-ferro-koper" data-color="Koper" data-url="/products/led-inbouwspot-ferro-koper"></span>
+    <span data-handle="led-inbouwspot-ferro-goud" data-color="Goud" data-url="/products/led-inbouwspot-ferro-goud"></span>
   </div>
 {%- endif -%}
 
-{%- comment -%} AURORA family {%- endcomment -%}
-{%- if product.handle contains 'aurora' -%}
+{%- comment -%} LUMA family {%- endcomment -%}
+{%- if product.handle contains 'luma' -%}
   {%- liquid
     case product.handle
-      when 'led-inbouwspot-aurora-rvs'
-        assign sw_ck_aurora = 'RVS'
-      when 'led-inbouwspot-aurora-wit'
-        assign sw_ck_aurora = 'Mat Wit'
+      when 'led-inbouwspot-luma-rvs'
+        assign sw_ck_luma = 'RVS'
+      when 'led-inbouwspot-luma-wit'
+        assign sw_ck_luma = 'Mat Wit'
       else
-        assign sw_ck_aurora = 'Mat Zwart'
+        assign sw_ck_luma = 'Mat Zwart'
     endcase
   -%}
-  <div id="sw-color-data" style="display:none" data-current-handle="{{ product.handle }}" data-current-color="{{ sw_ck_aurora | escape }}">
-    <span data-handle="led-inbouwspot-aurora-rvs" data-color="RVS" data-url="/products/led-inbouwspot-aurora-rvs"></span>
-    <span data-handle="led-inbouwspot-aurora-wit" data-color="Mat Wit" data-url="/products/led-inbouwspot-aurora-wit"></span>
-    <span data-handle="led-inbouwspot-aurora-zwart" data-color="Mat Zwart" data-url="/products/led-inbouwspot-aurora-zwart"></span>
+  <div id="sw-color-data" style="display:none" data-current-handle="{{ product.handle }}" data-current-color="{{ sw_ck_luma | escape }}">
+    <span data-handle="led-inbouwspot-luma-rvs" data-color="RVS" data-url="/products/led-inbouwspot-luma-rvs"></span>
+    <span data-handle="led-inbouwspot-luma-wit" data-color="Mat Wit" data-url="/products/led-inbouwspot-luma-wit"></span>
+    <span data-handle="led-inbouwspot-luma-zwart" data-color="Mat Zwart" data-url="/products/led-inbouwspot-luma-zwart"></span>
   </div>
 {%- endif -%}
 
-{%- comment -%} BALDR family {%- endcomment -%}
-{%- if product.handle contains 'baldr' -%}
+{%- comment -%} FENO family {%- endcomment -%}
+{%- if product.handle contains 'feno' -%}
   {%- liquid
     case product.handle
-      when 'led-inbouwspot-baldr-aluminium'
-        assign sw_ck_baldr = 'Aluminium'
-      when 'led-inbouwspot-baldr-wit'
-        assign sw_ck_baldr = 'Mat Wit'
+      when 'led-inbouwspot-feno-aluminium'
+        assign sw_ck_feno = 'Aluminium'
+      when 'led-inbouwspot-feno-wit'
+        assign sw_ck_feno = 'Mat Wit'
       else
-        assign sw_ck_baldr = 'Mat Zwart'
+        assign sw_ck_feno = 'Mat Zwart'
     endcase
   -%}
-  <div id="sw-color-data" style="display:none" data-current-handle="{{ product.handle }}" data-current-color="{{ sw_ck_baldr | escape }}">
-    <span data-handle="led-inbouwspot-baldr-aluminium" data-color="Aluminium" data-url="/products/led-inbouwspot-baldr-aluminium"></span>
-    <span data-handle="led-inbouwspot-baldr-wit" data-color="Mat Wit" data-url="/products/led-inbouwspot-baldr-wit"></span>
-    <span data-handle="led-inbouwspot-baldr-zwart" data-color="Mat Zwart" data-url="/products/led-inbouwspot-baldr-zwart"></span>
+  <div id="sw-color-data" style="display:none" data-current-handle="{{ product.handle }}" data-current-color="{{ sw_ck_feno | escape }}">
+    <span data-handle="led-inbouwspot-feno-aluminium" data-color="Aluminium" data-url="/products/led-inbouwspot-feno-aluminium"></span>
+    <span data-handle="led-inbouwspot-feno-wit" data-color="Mat Wit" data-url="/products/led-inbouwspot-feno-wit"></span>
+    <span data-handle="led-inbouwspot-feno-zwart" data-color="Mat Zwart" data-url="/products/led-inbouwspot-feno-zwart"></span>
   </div>
 {%- endif -%}
 
-{%- comment -%} CERES VIERKANT family {%- endcomment -%}
-{%- if product.handle contains 'ceres' -%}
+{%- comment -%} PLANO VIERKANT family {%- endcomment -%}
+{%- if product.handle contains 'plano' -%}
   {%- liquid
     case product.handle
-      when 'led-inbouwspot-ceres-vierkant-aluminium'
-        assign sw_ck_ceres = 'Aluminium'
-      when 'led-inbouwspot-ceres-vierkant-wit'
-        assign sw_ck_ceres = 'Mat Wit'
+      when 'led-inbouwspot-plano-vierkant-aluminium'
+        assign sw_ck_plano = 'Aluminium'
+      when 'led-inbouwspot-plano-vierkant-wit'
+        assign sw_ck_plano = 'Mat Wit'
       else
-        assign sw_ck_ceres = 'Mat Zwart'
+        assign sw_ck_plano = 'Mat Zwart'
     endcase
   -%}
-  <div id="sw-color-data" style="display:none" data-current-handle="{{ product.handle }}" data-current-color="{{ sw_ck_ceres | escape }}">
-    <span data-handle="led-inbouwspot-ceres-vierkant-aluminium" data-color="Aluminium" data-url="/products/led-inbouwspot-ceres-vierkant-aluminium"></span>
-    <span data-handle="led-inbouwspot-ceres-vierkant-wit" data-color="Mat Wit" data-url="/products/led-inbouwspot-ceres-vierkant-wit"></span>
-    <span data-handle="led-inbouwspot-ceres-vierkant-zwart" data-color="Mat Zwart" data-url="/products/led-inbouwspot-ceres-vierkant-zwart"></span>
+  <div id="sw-color-data" style="display:none" data-current-handle="{{ product.handle }}" data-current-color="{{ sw_ck_plano | escape }}">
+    <span data-handle="led-inbouwspot-plano-vierkant-aluminium" data-color="Aluminium" data-url="/products/led-inbouwspot-plano-vierkant-aluminium"></span>
+    <span data-handle="led-inbouwspot-plano-vierkant-wit" data-color="Mat Wit" data-url="/products/led-inbouwspot-plano-vierkant-wit"></span>
+    <span data-handle="led-inbouwspot-plano-vierkant-zwart" data-color="Mat Zwart" data-url="/products/led-inbouwspot-plano-vierkant-zwart"></span>
   </div>
 {%- endif -%}
 
-{%- comment -%} HESSLE family {%- endcomment -%}
-{%- if product.handle contains 'hessle' -%}
+{%- comment -%} PRIVO family {%- endcomment -%}
+{%- if product.handle contains 'privo' -%}
   {%- liquid
     case product.handle
-      when 'led-inbouwspot-hessle-wit'
-        assign sw_ck_hessle = 'Mat Wit'
+      when 'led-inbouwspot-privo-wit'
+        assign sw_ck_privo = 'Mat Wit'
       else
-        assign sw_ck_hessle = 'Mat Zwart'
+        assign sw_ck_privo = 'Mat Zwart'
     endcase
   -%}
-  <div id="sw-color-data" style="display:none" data-current-handle="{{ product.handle }}" data-current-color="{{ sw_ck_hessle | escape }}">
-    <span data-handle="led-inbouwspot-hessle-wit" data-color="Mat Wit" data-url="/products/led-inbouwspot-hessle-wit"></span>
-    <span data-handle="led-inbouwspot-hessle-zwart" data-color="Mat Zwart" data-url="/products/led-inbouwspot-hessle-zwart"></span>
+  <div id="sw-color-data" style="display:none" data-current-handle="{{ product.handle }}" data-current-color="{{ sw_ck_privo | escape }}">
+    <span data-handle="led-inbouwspot-privo-wit" data-color="Mat Wit" data-url="/products/led-inbouwspot-privo-wit"></span>
+    <span data-handle="led-inbouwspot-privo-zwart" data-color="Mat Zwart" data-url="/products/led-inbouwspot-privo-zwart"></span>
   </div>
 {%- endif -%}
 
-<!-- Spotwereld: Thumbnails - lookup table met extra outledtl foto's per product handle -->
+<!-- Spotwereld: Thumbnails - extras uit product.media; geen externe lookups meer -->
 {%- liquid
-  case product.handle
-    when 'led-inbouwspot-aristo-mat-wit'
-      assign sw_extras = 'https://www.outledtl.nl/wp-content/uploads/2025/11/Led-inbouwspot-aristo-outledtl.nl_.jpg|https://www.outledtl.nl/wp-content/uploads/2025/11/Led-inbouwspot-aristo.webp|https://www.outledtl.nl/wp-content/uploads/2025/11/led-inbouwspot-varda-outledtl-6w-dim-wit-cct-switch.webp|https://www.outledtl.nl/wp-content/uploads/2025/11/led-inbouwspot-varda-slim-fit-driver.webp'
-    when 'led-inbouwspot-aristo-mat-zwart'
-      assign sw_extras = 'https://www.outledtl.nl/wp-content/uploads/2025/11/led-inbouwspot-varda-dimbaar-zwart-outledtl.nl-kopie.jpg|https://www.outledtl.nl/wp-content/uploads/2025/11/outledtl-led-inbouwspot-varda-slim-fit-6w-dim-zwart.webp|https://www.outledtl.nl/wp-content/uploads/2025/11/led-inbouwspot-varda-6w-dim-zwart-cct-switch.webp|https://www.outledtl.nl/wp-content/uploads/2025/11/led-inbouwspot-varda-slim-fit-driver.webp'
-    when 'led-inbouwspot-aristo-zilver'
-      assign sw_extras = 'https://www.outledtl.nl/wp-content/uploads/2021/02/Led-inbouwspot-zilver.webp|https://www.outledtl.nl/wp-content/uploads/2021/02/led-inbouwspot-varda-slim-fit-6w-dim-zilver-cct-switch.webp|https://www.outledtl.nl/wp-content/uploads/2025/11/led-inbouwspot-varda-slim-fit-6w-dimbaar-zilver-cct-switch.webp|https://www.outledtl.nl/wp-content/uploads/2025/11/led-inbouwspot-varda-slim-driver.webp'
-    when 'led-inbouwspot-aristo-koper'
-      assign sw_extras = 'https://www.outledtl.nl/wp-content/uploads/2020/01/led-inbouwspot-varda-outledtl-5w-koper-kopie.jpg|https://www.outledtl.nl/wp-content/uploads/2020/01/led-inbouwspot-varda-slim-fit-5w-koper.webp|https://www.outledtl.nl/wp-content/uploads/2020/01/outledtl-led-inbouwspot-varda-slim-fit-5w-koper.webp|https://www.outledtl.nl/wp-content/uploads/2025/11/led-inbouwspot-6w-dim-koper-cct-switch.webp'
-    when 'led-inbouwspot-aristo-goud'
-      assign sw_extras = 'https://www.outledtl.nl/wp-content/uploads/2025/11/led-inbouwspot-varda-slim-fit-6w-dim-goud-cct-switch-outledtl.nl_.jpg|https://www.outledtl.nl/wp-content/uploads/2025/11/led-inbouwspot-slim-fit-6w-dim-goud-cct-switch.jpg|https://www.outledtl.nl/wp-content/uploads/2025/11/outledtl.nl-led-inbouwspot-varda-slim-fit-6w-dim-goud-cct-switch.jpg|https://www.outledtl.nl/wp-content/uploads/2025/11/led-inbouwspot-varda-slim-fit-goud-cct-switch.jpg'
-    when 'led-inbouwspot-aristo-satin-metallic'
-      assign sw_extras = 'https://www.outledtl.nl/wp-content/uploads/2025/11/led-inbouwspot-varda-slim-fit-6w-dim-brons-cct-switch-outledtl.jpg|https://www.outledtl.nl/wp-content/uploads/2025/11/outledtl-led-inbouwspot-varda-slim-fit-6w-dim-brons-cct-switch.jpg|https://www.outledtl.nl/wp-content/uploads/2025/11/led-inbouwspot-slim-fit-6w-dim-messing-cct-switch.jpg|https://www.outledtl.nl/wp-content/uploads/2025/11/led-inbouwspot-slim-fit-6w-messing-cct-switch.jpg'
-    when 'led-inbouwspot-miran-mat-wit'
-      assign sw_extras = 'https://www.outledtl.nl/wp-content/uploads/2025/07/led-inbouwspot-slim-fit-5w-7w-cct-switch-wit.webp|https://www.outledtl.nl/wp-content/uploads/2025/07/led-inbouwspot-miran-5w-7w-cct-switch-wit.webp|https://www.outledtl.nl/wp-content/uploads/2025/07/inbouwspot-miran-slim-fit-5w-7w-cct-switch-wit.png|https://www.outledtl.nl/wp-content/uploads/2025/07/inbouwspot-outledtl.nl-5w-7w-cct-switch-wit.jpg'
-    when 'led-inbouwspot-miran-mat-zwart'
-      assign sw_extras = 'https://www.outledtl.nl/wp-content/uploads/2025/07/led-inbouwspots-miran-slim-fit-5w-7w-cct-switch-zwart.webp|https://www.outledtl.nl/wp-content/uploads/2025/07/led-inbouwspot-miran-slim-fit-5w-7w-cct-switch-zwart.webp|https://www.outledtl.nl/wp-content/uploads/2025/07/led-inbouwspot-slim-fit-5w-7w-cct-switch-zwart.webp|https://www.outledtl.nl/wp-content/uploads/2025/07/inbouwspot-5w-7w-cct-switch-zwart.jpg'
-    when 'led-inbouwspot-miran-goud'
-      assign sw_extras = 'https://www.outledtl.nl/wp-content/uploads/2025/07/led-inbouwspot-miran-slim-fit-5w-7w-cct-switch-brass.webp|https://www.outledtl.nl/wp-content/uploads/2025/07/led-inbouwspot-miran-slim-fit-5w-7w-cct-switch-brass-goud.webp|https://www.outledtl.nl/wp-content/uploads/2025/07/led-inbouwspot-slim-fit-5w-7w-cct-switch-goud.webp|https://www.outledtl.nl/wp-content/uploads/2025/07/inbouwspot-miran-slim-fit-5w-7w-outledtl.nl-cct-switch-goud.jpg'
-    when 'led-inbouwspot-laom-wit'
-      assign sw_main_override = 'https://www.outledtl.nl/wp-content/uploads/2023/10/LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIMBAAR-WIT.png'
-      assign sw_extras = 'https://www.outledtl.nl/wp-content/uploads/2023/10/OUTLEDTL-LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIMBAAR-WIT.png|https://www.outledtl.nl/wp-content/uploads/2023/10/LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIMBAAR-WIT-OUTLEDTL.png|https://www.outledtl.nl/wp-content/uploads/2023/10/LED-INBOUWSPOT-LAOM-6W-DIMBAAR-WIT.png'
-    when 'led-inbouwspot-laom-mat-zwart'
-      assign sw_main_override = 'https://www.outledtl.nl/wp-content/uploads/2019/12/LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIMBAAR-ZWART.png'
-      assign sw_extras = 'https://www.outledtl.nl/wp-content/uploads/2019/12/OUTLEDTL-LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIMBAAR-ZWART.png|https://www.outledtl.nl/wp-content/uploads/2019/12/LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIMBAAR-ZWART-OUTLEDTL.NL_.png|https://www.outledtl.nl/wp-content/uploads/2019/12/LED-INBOUWSPOT-LAOM-6W-DIMBAAR-ZWART.png'
-    when 'led-inbouwspot-laom-zilver'
-      assign sw_main_override = 'https://www.outledtl.nl/wp-content/uploads/2023/10/LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIM-ZILVER.png'
-      assign sw_extras = 'https://www.outledtl.nl/wp-content/uploads/2023/10/OUTLEDTL-LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIMBAAR-ZILVER.png|https://www.outledtl.nl/wp-content/uploads/2023/10/LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIMBAAR-ZILVER.png|https://www.outledtl.nl/wp-content/uploads/2023/10/LED-INBOUWSPOT-LAOM-6W-DIMBAAR-ZILVER.png'
-    else
-      assign sw_extras = ''
-  endcase
-  if sw_extras != ''
-    assign sw_extras_arr = sw_extras | split: '|'
-  endif
+  assign sw_main_override = blank
+  assign sw_extras = ''
 -%}
 <div id="sw-thumbs-source" style="display:none" data-main-override="{{ sw_main_override }}">
   <div class="sw-thumbs" style="display:flex;gap:8px;margin-top:10px;flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px">

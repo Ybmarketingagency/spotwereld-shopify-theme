@@ -270,7 +270,7 @@
 <meta name="twitter:title" content="{{ sw_title | escape }}" data-sw-override>
 <meta name="twitter:description" content="{{ sw_desc | strip_html | escape }}" data-sw-override>
 
-{%- comment -%} Card image override (collection/index): swap placeholder met outledtl foto's {%- endcomment -%}
+{%- comment -%} Card image override mechanisme (uitgeschakeld; images serverside correct) {%- endcomment -%}
 <style>
 /* Unify card titles: collection page (product-card H3/text-block) matches homepage (sw-pp-card .sw-pp-name) */
 .sw-pp-name,
@@ -334,23 +334,7 @@ html.sw-product-page.sw-title-ready .product-information__details h1,
 html.sw-product-page.sw-title-ready h1.product__title{opacity:1}
 @keyframes swTitleFallback{to{opacity:1}}
 html.sw-product-page .product-information__details h1,html.sw-product-page h1.product__title{animation:swTitleFallback 0s linear 1.2s forwards}
-/* Verberg LAOM card images tot JS de outledtl swap heeft gedaan (FOUC fix) — gebruik data-sw-img-done als show signaal */
-.sw-pp-card[href*="laom-wit"]:not([data-sw-img-done]) img,
-.sw-pp-card[href*="laom-mat-zwart"]:not([data-sw-img-done]) img,
-.sw-pp-card[href*="laom-zilver"]:not([data-sw-img-done]) img,
-product-card:has(a[href*="laom-wit"]):not([data-sw-img-done]) img,
-product-card:has(a[href*="laom-mat-zwart"]):not([data-sw-img-done]) img,
-product-card:has(a[href*="laom-zilver"]):not([data-sw-img-done]) img{opacity:0;transition:opacity .15s}
-/* Product detail page: hide main media op LAOM pagina's tot override — gebruik HTML class (vroeger beschikbaar dan body) */
-html.sw-product-laom-html .product-information__media img:not(.sw-thumbs img),
-html.sw-product-laom-html .product-information__media source{opacity:0;transition:opacity .2s}
-html.sw-product-laom-html.sw-main-img-ready-html .product-information__media img:not(.sw-thumbs img),
-html.sw-product-laom-html.sw-main-img-ready-html .product-information__media source{opacity:1}
-/* Fallback: na max 1.5s altijd tonen (vangt mislukte JS) */
-@keyframes swImgFallback{0%{opacity:0}100%{opacity:1}}
-.sw-pp-card[href*="laom-"]:not([data-sw-img-done]) img,
-product-card:has(a[href*="laom-"]):not([data-sw-img-done]) img,
-html.sw-product-laom-html .product-information__media img:not(.sw-thumbs img){animation:swImgFallback .1s linear 1.5s forwards}
+/* (LAOM FOUC-regels verwijderd: product images zijn nu correct serverside) */
 /* Verberg facets sidebar tot mijn JS klaar is met layout (voorkomt flicker bij page load) */
 body:not(.sw-filters-ready) .facets-block-wrapper--vertical,body:not(.sw-filters-ready) .facets__form-wrapper{opacity:0 !important;transition:none !important}
 body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .facets__form-wrapper{opacity:1 !important;transition:opacity .15s ease}
@@ -446,18 +430,18 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
     try {
       var path = location.pathname || '';
       var isProduct = path.indexOf('/products/') > -1;
-      var isLaom = /\/products\/led-inbouwspot-laom-(wit|mat-zwart|zilver)/.test(path);
+      var isLaom = /\/products\/led-inbouwspot-quaro-(wit|mat-zwart|zilver)/.test(path);
       var html = document.documentElement;
       // Reset ready flags bij navigation
       html.classList.remove('sw-title-ready');
       if (!isProduct){
         html.classList.remove('sw-product-page');
-        html.classList.remove('sw-product-laom-html');
+        html.classList.remove('sw-product-quaro-html');
         html.classList.remove('sw-main-img-ready-html');
       }
       if (isProduct) html.classList.add('sw-product-page');
-      if (isLaom) html.classList.add('sw-product-laom-html');
-      else { html.classList.remove('sw-product-laom-html'); html.classList.remove('sw-main-img-ready-html'); }
+      if (isLaom) html.classList.add('sw-product-quaro-html');
+      else { html.classList.remove('sw-product-quaro-html'); html.classList.remove('sw-main-img-ready-html'); }
     } catch(e){}
   }
   checkProductPage();
@@ -469,17 +453,13 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
     if (!a) return;
     document.documentElement.classList.add('sw-product-page');
     document.documentElement.classList.remove('sw-title-ready');
-    if (a.getAttribute('href').indexOf('led-inbouwspot-laom-') > -1){
-      document.documentElement.classList.add('sw-product-laom-html');
+    if (a.getAttribute('href').indexOf('led-inbouwspot-quaro-') > -1){
+      document.documentElement.classList.add('sw-product-quaro-html');
       document.documentElement.classList.remove('sw-main-img-ready-html');
     }
   }, true);
   // Hardcoded overrides per handle voor cards waar geen liquid marker te plaatsen is (sw-pp-card op homepage etc)
-  var SW_HANDLE_OVERRIDES = {
-    'led-inbouwspot-laom-wit': 'https://www.outledtl.nl/wp-content/uploads/2023/10/LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIMBAAR-WIT.png',
-    'led-inbouwspot-laom-mat-zwart': 'https://www.outledtl.nl/wp-content/uploads/2019/12/LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIMBAAR-ZWART.png',
-    'led-inbouwspot-laom-zilver': 'https://www.outledtl.nl/wp-content/uploads/2023/10/LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIM-ZILVER.png'
-  };
+  var SW_HANDLE_OVERRIDES = {};
   function swapImgs(scope, url){
     scope.querySelectorAll('img, source').forEach(function(el){
       if (el.tagName === 'SOURCE') { el.srcset = url; return; }
@@ -528,20 +508,7 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
 
   // ============== TITLE SPEC REWRITER ==============
   // Per handle, the full descriptive title
-  var SW_TITLES = {
-    'led-inbouwspot-aristo-mat-wit':        'LED Inbouwspot Aristo | Dimbaar | IP65 | 4W en 6W | CCT Switch | Zaagmaat: Ø68-75 mm | Inbouwdiepte: 25/30 mm | Mat Wit',
-    'led-inbouwspot-aristo-mat-zwart':      'LED Inbouwspot Aristo | Dimbaar | IP65 | 4W en 6W | CCT Switch | Zaagmaat: Ø68-75 mm | Inbouwdiepte: 25/30 mm | Mat Zwart',
-    'led-inbouwspot-aristo-zilver':         'LED Inbouwspot Aristo | Dimbaar | IP65 | 4W en 6W | CCT Switch | Zaagmaat: Ø68-75 mm | Inbouwdiepte: 25/30 mm | Zilver',
-    'led-inbouwspot-aristo-koper':          'LED Inbouwspot Aristo | Dimbaar | IP65 | 4W en 6W | CCT Switch | Zaagmaat: Ø68-75 mm | Inbouwdiepte: 25/30 mm | Koper',
-    'led-inbouwspot-aristo-goud':           'LED Inbouwspot Aristo | Dimbaar | IP65 | 4W en 6W | CCT Switch | Zaagmaat: Ø68-75 mm | Inbouwdiepte: 25/30 mm | Goud',
-    'led-inbouwspot-aristo-satin-metallic': 'LED Inbouwspot Aristo | Dimbaar | IP65 | 4W en 6W | CCT Switch | Zaagmaat: Ø68-75 mm | Inbouwdiepte: 25/30 mm | Satin Metallic',
-    'led-inbouwspot-miran-mat-wit':         'LED Inbouwspot Miran | Dimbaar | IP65 | 5W en 7W | CCT Switch | Zaagmaat: Ø68-75 mm | Inbouwdiepte: 25 mm | Mat Wit',
-    'led-inbouwspot-miran-mat-zwart':       'LED Inbouwspot Miran | Dimbaar | IP65 | 5W en 7W | CCT Switch | Zaagmaat: Ø68-75 mm | Inbouwdiepte: 25 mm | Mat Zwart',
-    'led-inbouwspot-miran-goud':            'LED Inbouwspot Miran | Dimbaar | IP65 | 5W en 7W | CCT Switch | Zaagmaat: Ø68-75 mm | Inbouwdiepte: 25 mm | Goud',
-    'led-inbouwspot-laom-wit':              'LED Inbouwspot Laom | Dimbaar | IP44 | 6W | 2700K Extra warm-wit | Vierkant | Zaagmaat: Ø75-80 mm | Inbouwdiepte: 26 mm | Wit',
-    'led-inbouwspot-laom-mat-zwart':        'LED Inbouwspot Laom | Dimbaar | IP44 | 6W | 2700K Extra warm-wit | Vierkant | Zaagmaat: Ø75-80 mm | Inbouwdiepte: 26 mm | Mat Zwart',
-    'led-inbouwspot-laom-zilver':           'LED Inbouwspot Laom | Dimbaar | IP44 | 6W | 2700K Extra warm-wit | Vierkant | Zaagmaat: Ø75-80 mm | Inbouwdiepte: 26 mm | Zilver'
-  };
+  var SW_TITLES = {};
   function rewriteTitles(){
     // Cards (collection/home) — find any <a href="/products/HANDLE"> and rewrite text
     document.querySelectorAll('a[href*="/products/"]').forEach(function(a){
@@ -623,18 +590,18 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
   // diepte = array van mogelijke waarden; wattage = array (CCT spots zijn vaak 2 wattages)
   // buitenmaat = outer diameter/zijde in mm (Aristo 85, Miran 86, LAOM 95 vierkant)
   var SW_PRODUCT_SPECS = {
-    'led-inbouwspot-aristo-mat-wit':        {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25,30], lk:CCT_LK, watt:[4,6], buiten:85, kantel:'ja'},
-    'led-inbouwspot-aristo-mat-zwart':      {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25,30], lk:CCT_LK, watt:[4,6], buiten:85, kantel:'ja'},
-    'led-inbouwspot-aristo-zilver':         {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25,30], lk:CCT_LK, watt:[4,6], buiten:85, kantel:'ja'},
-    'led-inbouwspot-aristo-koper':          {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25,30], lk:CCT_LK, watt:[4,6], buiten:85, kantel:'ja'},
-    'led-inbouwspot-aristo-goud':           {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25,30], lk:CCT_LK, watt:[4,6], buiten:85, kantel:'ja'},
-    'led-inbouwspot-aristo-satin-metallic': {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25,30], lk:CCT_LK, watt:[4,6], buiten:85, kantel:'ja'},
-    'led-inbouwspot-miran-mat-wit':         {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25], lk:CCT_LK, watt:[5,7], buiten:86, kantel:'ja'},
-    'led-inbouwspot-miran-mat-zwart':       {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25], lk:CCT_LK, watt:[5,7], buiten:86, kantel:'ja'},
-    'led-inbouwspot-miran-goud':            {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25], lk:CCT_LK, watt:[5,7], buiten:86, kantel:'ja'},
-    'led-inbouwspot-laom-wit':              {vorm:'vierkant', ip:'IP44', zaag:[75,80], diepte:[26], lk:LAOM_LK, watt:[6], buiten:95, kantel:'ja'},
-    'led-inbouwspot-laom-mat-zwart':        {vorm:'vierkant', ip:'IP44', zaag:[75,80], diepte:[26], lk:LAOM_LK, watt:[6], buiten:95, kantel:'ja'},
-    'led-inbouwspot-laom-zilver':           {vorm:'vierkant', ip:'IP44', zaag:[75,80], diepte:[26], lk:LAOM_LK, watt:[6], buiten:95, kantel:'ja'}
+    'led-inbouwspot-lesto-mat-wit':        {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25,30], lk:CCT_LK, watt:[4,6], buiten:85, kantel:'ja'},
+    'led-inbouwspot-lesto-mat-zwart':      {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25,30], lk:CCT_LK, watt:[4,6], buiten:85, kantel:'ja'},
+    'led-inbouwspot-lesto-zilver':         {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25,30], lk:CCT_LK, watt:[4,6], buiten:85, kantel:'ja'},
+    'led-inbouwspot-lesto-koper':          {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25,30], lk:CCT_LK, watt:[4,6], buiten:85, kantel:'ja'},
+    'led-inbouwspot-lesto-goud':           {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25,30], lk:CCT_LK, watt:[4,6], buiten:85, kantel:'ja'},
+    'led-inbouwspot-lesto-satin-metallic': {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25,30], lk:CCT_LK, watt:[4,6], buiten:85, kantel:'ja'},
+    'led-inbouwspot-lyvo-mat-wit':         {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25], lk:CCT_LK, watt:[5,7], buiten:86, kantel:'ja'},
+    'led-inbouwspot-lyvo-mat-zwart':       {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25], lk:CCT_LK, watt:[5,7], buiten:86, kantel:'ja'},
+    'led-inbouwspot-lyvo-goud':            {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25], lk:CCT_LK, watt:[5,7], buiten:86, kantel:'ja'},
+    'led-inbouwspot-quaro-wit':              {vorm:'vierkant', ip:'IP44', zaag:[75,80], diepte:[26], lk:LAOM_LK, watt:[6], buiten:95, kantel:'ja'},
+    'led-inbouwspot-quaro-mat-zwart':        {vorm:'vierkant', ip:'IP44', zaag:[75,80], diepte:[26], lk:LAOM_LK, watt:[6], buiten:95, kantel:'ja'},
+    'led-inbouwspot-quaro-zilver':           {vorm:'vierkant', ip:'IP44', zaag:[75,80], diepte:[26], lk:LAOM_LK, watt:[6], buiten:95, kantel:'ja'}
   };
   function getHandle(card){
     var link = card.querySelector('a[href*="/products/"]');
@@ -1506,16 +1473,7 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
 {%- comment -%} Preconnect voor performance {%- endcomment -%}
 <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
 <link rel="preconnect" href="https://i.imgur.com" crossorigin>
-<link rel="preconnect" href="https://www.outledtl.nl" crossorigin>
 <link rel="dns-prefetch" href="https://cdn.shopify.com">
-<link rel="dns-prefetch" href="https://www.outledtl.nl">
-
-{%- comment -%} Preload LAOM card images (outledtl.nl is trager dan Shopify CDN) {%- endcomment -%}
-{%- if request.page_type == 'index' or request.page_type == 'collection' or template contains 'collection' -%}
-  <link rel="preload" as="image" href="https://www.outledtl.nl/wp-content/uploads/2023/10/LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIMBAAR-WIT.png" fetchpriority="high">
-  <link rel="preload" as="image" href="https://www.outledtl.nl/wp-content/uploads/2019/12/LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIMBAAR-ZWART.png" fetchpriority="high">
-  <link rel="preload" as="image" href="https://www.outledtl.nl/wp-content/uploads/2023/10/LED-INBOUWSPOT-LAOM-SLIM-FIT-6W-DIM-ZILVER.png" fetchpriority="high">
-{%- endif -%}
 
 {% if page_description %}
   <meta
