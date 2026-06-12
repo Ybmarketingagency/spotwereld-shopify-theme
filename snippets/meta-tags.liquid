@@ -1086,7 +1086,7 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
     // Update visual active classes
     document.querySelectorAll('.sw-vorm-facet input, .sw-ip-facet input, .sw-zaag-facet input').forEach(function(i){
       var li = i.closest('li'); if (li) li.classList.toggle('sw-vorm-active', i.checked);
-    });
+    });
   }
   function renderActiveChips(){
     var holder = document.querySelector('.facets-block-wrapper--vertical, .facets__form-wrapper');
@@ -1100,7 +1100,7 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
         {param:'sw_diepte', label:'Inbouwdiepte', facetSel:'.sw-diepte-facet', map:{}},
         {param:'sw_watt', label:'Wattage', facetSel:'.sw-watt-facet', map:{}},
         {param:'sw_buiten', label:'Buitenmaat', facetSel:'.sw-buiten-facet', map:{}},
-        {param:'sw_kantel', label:'Kantelbaar', facetSel:'.sw-kantel-facet', map:{ja:'Ja',nee:'Nee'}},
+        {param:'sw_kantel', label:'Kantelbaar', facetSel:'.sw-kantel-facet', map:{ja:'Ja',nee:'Nee'}},
         {param:'sw_dim', label:'Dimbaar', facetSel:'.sw-fake-nee', map:{nee:'Nee'}}
       ];
       defs.forEach(function(def){
@@ -1127,6 +1127,49 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
         });
       });
   }
+  // Verberg "Instelbaar (GU10)" uit het Lichtkleur-facet — lichtkleur hangt daar af van de
+  // gekozen GU10-lamp, dus geen echte filterwaarde. Facet helemaal weg als er niets overblijft.
+  function hideInstelbaarGu10(){
+    var lkFacet = findFacet('Lichtkleur');
+    if (!lkFacet) return;
+    var items = Array.from(lkFacet.querySelectorAll('.facets__inputs-list-item, li'));
+    if (!items.length) return;
+    items.forEach(function(it){
+      var t = (it.textContent || '').toLowerCase().replace(/\s+/g, ' ');
+      if (t.indexOf('instelbaar (gu10)') > -1) it.style.display = 'none';
+    });
+    var visible = items.filter(function(it){ return it.style.display !== 'none'; });
+    lkFacet.style.display = visible.length === 0 ? 'none' : '';
+  }
+  // Merkvolgorde bij standaard sortering (best verkocht): Lesto, Lyvo, Quaro, Ferro eerst
+  var SW_BRAND_ORDER = ['lesto', 'lyvo', 'quaro', 'ferro'];
+  function swBrandRank(handle){
+    for (var i = 0; i < SW_BRAND_ORDER.length; i++){ if (handle.indexOf(SW_BRAND_ORDER[i]) > -1) return i; }
+    return SW_BRAND_ORDER.length;
+  }
+  function reorderBrandPriority(){
+    if (new URLSearchParams(location.search).get('sort_by')) return;
+    var cards = document.querySelectorAll('product-card, .product-card');
+    if (!cards.length) return;
+    var wrappers = [];
+    cards.forEach(function(c){
+      var h = getHandle(c);
+      var w = c.closest('li, .grid__item, .product-grid__card-wrapper') || c;
+      if (wrappers.some(function(x){ return x.el === w; })) return;
+      wrappers.push({el: w, rank: swBrandRank(h)});
+    });
+    if (wrappers.length < 2) return;
+    var container = wrappers[0].el.parentNode;
+    if (!container || container.dataset.swBrandSorted === '1') return;
+    if (wrappers.some(function(w){ return w.el.parentNode !== container; })) return;
+    var alreadySorted = wrappers.every(function(w, i){ return i === 0 || wrappers[i-1].rank <= w.rank; });
+    if (!alreadySorted){
+      wrappers.forEach(function(w, i){ w.idx = i; });
+      wrappers.sort(function(a, b){ return a.rank - b.rank || a.idx - b.idx; });
+      wrappers.forEach(function(w){ container.appendChild(w.el); });
+    }
+    container.dataset.swBrandSorted = '1';
+  }
   function runAllSwFilters(){
     fixVormInputs();
     addIPFilter();
@@ -1134,12 +1177,14 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
     addDiepteFilter();
     addWattFilter();
     addBuitenFilter();
-    addKantelFilter();
+    addKantelFilter();
     fixDimbaarNee();
     renameKleurLabels();
     dedupeAndOrderFacets();
+    hideInstelbaarGu10();
     applyAllFilters();
     renderActiveChips();
+    reorderBrandPriority();
   }
   function runAllSwFiltersGuarded(){
     withGuard(runAllSwFilters);
