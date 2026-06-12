@@ -4269,3 +4269,5 @@ product-recommendations:has([data-has-recommendations='false']) {
 /* sync-trigger: product template resync 14 dagen */
 
 /* sync-trigger: ptpl */
+
+/* sync-trigger: cleanup ptpl */
