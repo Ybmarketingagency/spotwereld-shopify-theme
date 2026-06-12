@@ -590,18 +590,46 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
   // diepte = array van mogelijke waarden; wattage = array (CCT spots zijn vaak 2 wattages)
   // buitenmaat = outer diameter/zijde in mm (Aristo 85, Miran 86, LAOM 95 vierkant)
   var SW_PRODUCT_SPECS = {
-    'led-inbouwspot-lesto-mat-wit':        {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25,30], lk:CCT_LK, watt:[4,6], buiten:85, kantel:'ja'},
-    'led-inbouwspot-lesto-mat-zwart':      {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25,30], lk:CCT_LK, watt:[4,6], buiten:85, kantel:'ja'},
-    'led-inbouwspot-lesto-zilver':         {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25,30], lk:CCT_LK, watt:[4,6], buiten:85, kantel:'ja'},
-    'led-inbouwspot-lesto-koper':          {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25,30], lk:CCT_LK, watt:[4,6], buiten:85, kantel:'ja'},
-    'led-inbouwspot-lesto-goud':           {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25,30], lk:CCT_LK, watt:[4,6], buiten:85, kantel:'ja'},
-    'led-inbouwspot-lesto-satin-metallic': {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25,30], lk:CCT_LK, watt:[4,6], buiten:85, kantel:'ja'},
-    'led-inbouwspot-lyvo-mat-wit':         {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25], lk:CCT_LK, watt:[5,7], buiten:86, kantel:'ja'},
-    'led-inbouwspot-lyvo-mat-zwart':       {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25], lk:CCT_LK, watt:[5,7], buiten:86, kantel:'ja'},
-    'led-inbouwspot-lyvo-goud':            {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25], lk:CCT_LK, watt:[5,7], buiten:86, kantel:'ja'},
-    'led-inbouwspot-quaro-wit':              {vorm:'vierkant', ip:'IP44', zaag:[75,80], diepte:[26], lk:LAOM_LK, watt:[6], buiten:95, kantel:'ja'},
-    'led-inbouwspot-quaro-mat-zwart':        {vorm:'vierkant', ip:'IP44', zaag:[75,80], diepte:[26], lk:LAOM_LK, watt:[6], buiten:95, kantel:'ja'},
-    'led-inbouwspot-quaro-zilver':           {vorm:'vierkant', ip:'IP44', zaag:[75,80], diepte:[26], lk:LAOM_LK, watt:[6], buiten:95, kantel:'ja'}
+    'orvo-moderne-inbouwspot-zwart': {vorm:'rond', ip:'IP20', zaag:null, diepte:null, lk:[], watt:null, kantel:'ja'},
+    'balo-moderne-inbouwspot-wit': {vorm:'rond', ip:'IP44', zaag:null, diepte:null, lk:[], watt:null, kantel:'ja'},
+    'viko-moderne-inbouwspot-brons': {vorm:'rond', ip:'IP20', zaag:null, diepte:null, lk:[], watt:null, kantel:'ja'},
+    'viko-moderne-inbouwspot-wit': {vorm:'rond', ip:'IP20', zaag:null, diepte:null, lk:[], watt:null, kantel:'ja'},
+    'arco-inbouwspot-donkerbrons': {vorm:'rond', ip:'IP20', zaag:null, diepte:null, lk:['gu10'], watt:null, kantel:'ja'},
+    'orvo-inbouwspot-staal': {vorm:'rond', ip:'IP20', zaag:null, diepte:null, lk:[], watt:null, kantel:'ja'},
+    'led-inbouwspot-lesto-mat-wit': {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[29], lk:CCT_LK, watt:[4,6], kantel:'ja', buiten:85},
+    'led-inbouwspot-lesto-mat-zwart': {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[29], lk:CCT_LK, watt:[4,6], kantel:'ja', buiten:85},
+    'led-inbouwspot-lesto-zilver': {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[29], lk:CCT_LK, watt:[4,6], kantel:'ja', buiten:85},
+    'led-inbouwspot-lesto-koper': {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[29], lk:CCT_LK, watt:[4,6], kantel:'ja', buiten:85},
+    'led-inbouwspot-lesto-goud': {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[29], lk:CCT_LK, watt:[4,6], kantel:'ja', buiten:85},
+    'led-inbouwspot-lesto-satin-metallic': {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[29], lk:CCT_LK, watt:[4,6], kantel:'ja', buiten:85},
+    'led-inbouwspot-lyvo-mat-wit': {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25], lk:CCT_LK, watt:[5,7], kantel:'ja', buiten:86},
+    'led-inbouwspot-lyvo-mat-zwart': {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25], lk:CCT_LK, watt:[5,7], kantel:'ja', buiten:86},
+    'led-inbouwspot-lyvo-goud': {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25], lk:CCT_LK, watt:[5,7], kantel:'ja', buiten:86},
+    'led-inbouwspot-quaro-wit': {vorm:'vierkant', ip:'IP65', zaag:[75,80], diepte:[29], lk:CCT_LK, watt:[4,6], kantel:'ja', buiten:95},
+    'led-inbouwspot-quaro-mat-zwart': {vorm:'vierkant', ip:'IP65', zaag:[75,80], diepte:[29], lk:CCT_LK, watt:[4,6], kantel:'ja', buiten:95},
+    'led-inbouwspot-quaro-zilver': {vorm:'vierkant', ip:'IP65', zaag:[75,80], diepte:[29], lk:CCT_LK, watt:[4,6], kantel:'ja', buiten:95},
+    'led-inbouwspot-privo-wit': {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[60], lk:CCT_LK, watt:[3,5], kantel:'ja'},
+    'led-inbouwspot-privo-zwart': {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[60], lk:CCT_LK, watt:[5], kantel:'ja'},
+    'led-inbouwspot-therma-zilver': {vorm:'rond', ip:'IP44', zaag:[70,75], diepte:[25], lk:[], watt:[5], kantel:'ja'},
+    'led-inbouwspot-depro-wit': {vorm:'rond', ip:'IP20', zaag:[85,85], diepte:[60], lk:CCT_LK, watt:[5], kantel:'ja'},
+    'led-inbouwspot-rendo-aluminium': {vorm:'rond', ip:'IP20', zaag:[70,70], diepte:[38], lk:['2700','4000'], watt:[3.8], kantel:'ja'},
+    'led-inbouwspot-tillo-mat-wit': {vorm:'rond', ip:'IP20', zaag:[70,70], diepte:[38], lk:['2700'], watt:[3.8], kantel:'ja'},
+    'led-inbouwspot-svena-aluminium': {vorm:'rond', ip:'IP20', zaag:[70,70], diepte:[38], lk:['2700','4000'], watt:[3.8], kantel:'ja'},
+    'led-inbouwspot-feno-wit': {vorm:'rond', ip:'IP20', zaag:[80,85], diepte:[38], lk:['2700'], watt:[3.8], kantel:'ja'},
+    'led-inbouwspot-feno-zwart': {vorm:'rond', ip:'IP20', zaag:[80,85], diepte:[38], lk:['2700','4000'], watt:[3.8], kantel:'ja'},
+    'led-inbouwspot-feno-aluminium': {vorm:'rond', ip:'IP20', zaag:[80,85], diepte:[38], lk:['2700','4000'], watt:[3.8], kantel:'ja'},
+    'led-inbouwspot-luma-wit': {vorm:'rond', ip:'IP20', zaag:[70,75], diepte:[38], lk:['2700','4000'], watt:[3.8], kantel:'ja'},
+    'led-inbouwspot-luma-zwart': {vorm:'rond', ip:'IP20', zaag:[70,75], diepte:[38], lk:['2700','4000'], watt:[3.8], kantel:'ja'},
+    'led-inbouwspot-luma-rvs': {vorm:'rond', ip:'IP20', zaag:[70,75], diepte:[38], lk:['2700','4000'], watt:[3.8], kantel:'ja'},
+    'led-inbouwspot-plano-vierkant-wit': {vorm:'vierkant', ip:'IP20', zaag:[80,85], diepte:[38], lk:['2700','4000'], watt:[3.8], kantel:'ja'},
+    'led-inbouwspot-plano-vierkant-zwart': {vorm:'vierkant', ip:'IP20', zaag:[80,85], diepte:[38], lk:['2700','4000'], watt:[3.8], kantel:'ja'},
+    'led-inbouwspot-plano-vierkant-aluminium': {vorm:'vierkant', ip:'IP20', zaag:[80,85], diepte:[38], lk:['2700','4000'], watt:[3.8], kantel:'ja'},
+    'led-inbouwspot-ferro-wit': {vorm:'rond', ip:'IP65', zaag:[50,70], diepte:[32], lk:CCT_LK, watt:[6], kantel:'ja'},
+    'led-inbouwspot-ferro-zwart': {vorm:'rond', ip:'IP65', zaag:[50,70], diepte:[32], lk:CCT_LK, watt:[6], kantel:'ja'},
+    'led-inbouwspot-ferro-zilver': {vorm:'rond', ip:'IP65', zaag:[50,70], diepte:[32], lk:CCT_LK, watt:[6], kantel:'ja'},
+    'led-inbouwspot-ferro-goud': {vorm:'rond', ip:'IP65', zaag:[50,70], diepte:[32], lk:CCT_LK, watt:[6], kantel:'ja'},
+    'led-inbouwspot-ferro-koper': {vorm:'rond', ip:'IP65', zaag:[50,70], diepte:[32], lk:CCT_LK, watt:[6], kantel:'ja'},
+    'led-inbouwspot-cosmo-zwart': {vorm:'rond', ip:'IP65', zaag:[70,75], diepte:[25], lk:CCT_LK, watt:[6], kantel:'ja'}
   };
   function getHandle(card){
     var link = card.querySelector('a[href*="/products/"]');
@@ -1062,83 +1090,12 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
       inp.addEventListener('change', function(e){ e.stopPropagation(); e.stopImmediatePropagation(); }, true);
     });
   }
-  function expandLichtkleur(){
-    var lkFacet = findFacet('Lichtkleur');
-    if (!lkFacet) return;
-    var list = lkFacet.querySelector('.facets__inputs, ul, .facets__inputs-list');
-    if (!list) return;
-    // ALTIJD oude sw-fake-lk-* clones uit collection.json verwijderen
-    list.querySelectorAll('[class*="sw-fake-lk-"]').forEach(function(el){ el.remove(); });
-    if (lkFacet.dataset.swLkExpanded) { syncLkInputs(); return; }
-    // Vind origineel item (Instelbaar) als template, kloon, dan VERWIJDER het origineel
-    var origItem = list.querySelector('.facets__inputs-list-item:not([class*="sw-lk-opt-"]), li:not([class*="sw-lk-opt-"])');
-    if (!origItem) return;
-    var origItemRef = origItem; // bewaar referentie om later te verwijderen
-    // Hide original (Instelbaar) shown items already done by old code; we add comprehensive set
-    var allOpts = [
-      {v:'2200', n:'2200K (flame-wit)'},
-      {v:'2700', n:'2700K (extra warm-wit)'},
-      {v:'2700d', n:'2700K (extra warm-wit) (dimbaar)'},
-      {v:'3000', n:'3000K (warm-wit)'},
-      {v:'4000', n:'4000K (neutraal-wit)'},
-      {v:'dim2warm', n:'Dim-to-warm'},
-      {v:'rgbww', n:'RGBWW'},
-      {v:'tri', n:'Tri-color (2700K, 3000K en 4000K)'}
-    ];
-    // Remove existing fake-lk clones to rebuild cleanly
-    list.querySelectorAll('[class*="sw-fake-lk-"], [class*="sw-lk-opt-"]').forEach(function(el){ el.remove(); });
-    allOpts.forEach(function(opt){
-      var clone = origItem.cloneNode(true);
-      clone.style.display = '';
-      clone.classList.add('sw-lk-opt-'+opt.v);
-      clone.setAttribute('data-sw-lk', opt.v);
-      var lbl = clone.querySelector('.checkbox__label-text, label span');
-      if (lbl) lbl.textContent = opt.n;
-      var input = clone.querySelector('input');
-      if (input){
-        var uid = 'sw-lk-input-' + opt.v;
-        input.id = uid;
-        input.name = 'sw_lk';
-        input.value = opt.v;
-        input.checked = false;
-        input.disabled = false;
-        input.removeAttribute('disabled');
-        // Fix labels in deze clone om naar de juiste input te wijzen
-        clone.querySelectorAll('label').forEach(function(l){
-          if (l.hasAttribute('for')) l.setAttribute('for', uid);
-        });
-        input.addEventListener('click', function(e){
-          e.stopPropagation(); e.stopImmediatePropagation();
-          setTimeout(function(){ toggleParamFromInputs('[data-sw-lk]','sw_lk', list); }, 0);
-        }, true);
-        input.addEventListener('change', function(e){ e.stopPropagation(); e.stopImmediatePropagation(); }, true);
-      }
-      list.appendChild(clone);
-    });
-    // Verwijder ALLE originele Shopify-items (4000K, Instelbaar, GU10, etc.) — alleen onze eigen lijst blijft
-    list.querySelectorAll('.facets__inputs-list-item, li').forEach(function(el){
-      if (!/sw-lk-opt-/.test(el.className)) el.remove();
-    });
-    // Verwijder ook eventuele input[name*="lichtkleur"] elders in DOM (Shopify form hidden inputs)
-    document.querySelectorAll('input[name="filter.v.option.lichtkleur"], input[name="filter.p.product_option.lichtkleur"]').forEach(function(i){
-      // Alleen verwijderen als NIET een van mijn clones
-      if (!i.closest('[class*="sw-lk-opt-"]')) i.remove();
-    });
-    lkFacet.dataset.swLkExpanded = '1';
-    syncLkInputs();
-  }
-  function syncLkInputs(){
-    var actives = new URLSearchParams(location.search).getAll('sw_lk');
-    document.querySelectorAll('[class*="sw-lk-opt-"]').forEach(function(li){
-      var inp = li.querySelector('input');
-      if (inp){ inp.checked = actives.indexOf(inp.value) > -1; li.classList.toggle('sw-lk-active', inp.checked); }
-    });
-  }
+  /* Lichtkleur-filter: native Shopify facet (datagedreven) */
   function toggleParamFromInputs(scopeSel, paramName, optionalScope){
     var scope = optionalScope || document;
     var p = new URLSearchParams(location.search);
     p.delete(paramName);
-    (typeof scopeSel === 'string' ? scope.querySelectorAll(scopeSel + ' input:checked, ' + scopeSel + '[data-sw-lk] input:checked') : scope.querySelectorAll('input:checked')).forEach(function(i){
+    (typeof scopeSel === 'string' ? scope.querySelectorAll(scopeSel + ' input:checked, ') : scope.querySelectorAll('input:checked')).forEach(function(i){
       if (i.name === paramName) p.append(paramName, i.value);
     });
     var s = p.toString();
@@ -1148,8 +1105,7 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
     // Update visual active classes
     document.querySelectorAll('.sw-vorm-facet input, .sw-ip-facet input, .sw-zaag-facet input').forEach(function(i){
       var li = i.closest('li'); if (li) li.classList.toggle('sw-vorm-active', i.checked);
-    });
-    syncLkInputs();
+    });
   }
   function renderActiveChips(){
     var holder = document.querySelector('.facets-block-wrapper--vertical, .facets__form-wrapper');
@@ -1163,8 +1119,7 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
         {param:'sw_diepte', label:'Inbouwdiepte', facetSel:'.sw-diepte-facet', map:{}},
         {param:'sw_watt', label:'Wattage', facetSel:'.sw-watt-facet', map:{}},
         {param:'sw_buiten', label:'Buitenmaat', facetSel:'.sw-buiten-facet', map:{}},
-        {param:'sw_kantel', label:'Kantelbaar', facetSel:'.sw-kantel-facet', map:{ja:'Ja',nee:'Nee'}},
-        {param:'sw_lk', label:'Lichtkleur', facetSel:'[data-sw-lk]', map:{'2200':'2200K','2700':'2700K','2700d':'2700K dimbaar','3000':'3000K','4000':'4000K','dim2warm':'Dim-to-warm','rgbww':'RGBWW','tri':'Tri-color'}},
+        {param:'sw_kantel', label:'Kantelbaar', facetSel:'.sw-kantel-facet', map:{ja:'Ja',nee:'Nee'}},
         {param:'sw_dim', label:'Dimbaar', facetSel:'.sw-fake-nee', map:{nee:'Nee'}}
       ];
       defs.forEach(function(def){
@@ -1198,8 +1153,7 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
     addDiepteFilter();
     addWattFilter();
     addBuitenFilter();
-    addKantelFilter();
-    expandLichtkleur();
+    addKantelFilter();
     fixDimbaarNee();
     renameKleurLabels();
     dedupeAndOrderFacets();
