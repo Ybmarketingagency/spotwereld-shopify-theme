@@ -1,7 +1,9 @@
-<!-- v4 cache bust -->
+<!-- v5 cache bust -->
 <style>
 /* Verberg dimbaar 2700K variant uit lichtkleur filter */
 li.facets__inputs-list-item:has(input[data-label="2700K (extra warm-wit) (dimbaar)"]) { display: none !important; }
+/* Verberg Instelbaar (GU10) uit lichtkleur filter */
+li.facets__inputs-list-item:has(input[data-label="Instelbaar (GU10)"]) { display: none !important; }
 /* Verberg tweede (duplicate) 4000K neutraal-wit */
 li.facets__inputs-list-item:has(input[data-label="4000K (neutraal-wit)"]) ~ li.facets__inputs-list-item:has(input[data-label="4000K (neutraal-wit)"]) { display: none !important; }
 .sw-coll-stock{position:absolute;top:.5rem;right:.5rem;z-index:5;font-size:.65rem;font-weight:600;color:#16a34a;background:rgba(255,255,255,.95);padding:.18rem .45rem;border-radius:4px;display:inline-flex;align-items:center;gap:.25rem}
@@ -109,15 +111,51 @@ li.facets__inputs-list-item:has(input[data-label="4000K (neutraal-wit)"]) ~ li.f
     var list=lkFacet.querySelector('.facets__inputs,ul,.facets__inputs-list');
     if(!list)return;
     var seen4000=false;
-    Array.from(list.querySelectorAll('.facets__inputs-list-item,li')).forEach(function(it){
+    var items=Array.from(list.querySelectorAll('.facets__inputs-list-item,li'));
+    items.forEach(function(it){
       var t=it.textContent.trim().toLowerCase().replace(/\s+/g,' ');
       // verberg dimbaar 2700k variant
       if(t.indexOf('2700k')>-1&&t.indexOf('dimbaar')>-1){it.style.display='none';return;}
+      // verberg Instelbaar (GU10) — lichtkleur hangt af van de gekozen lamp, geen echte filterwaarde
+      if(t.indexOf('instelbaar (gu10)')>-1){it.style.display='none';return;}
       // dedupliceer 4000k neutraal-wit: eerste zichtbaar laten, tweede verbergen
       if(t.indexOf('4000k')>-1&&t.indexOf('neutraal')>-1){
         if(seen4000){it.style.display='none';}else{seen4000=true;}
       }
     });
+    // verberg het hele Lichtkleur-facet als er geen zichtbare opties overblijven
+    var visible=items.filter(function(it){return it.style.display!=='none';});
+    lkFacet.style.display=visible.length===0?'none':'';
+  }
+  // Merkvolgorde bij standaard sortering (best verkocht): Lesto, Lyvo, Quaro, Ferro eerst
+  var SW_BRAND_ORDER=['lesto','lyvo','quaro','ferro'];
+  function swBrandRank(handle){
+    for(var i=0;i<SW_BRAND_ORDER.length;i++){if(handle.indexOf(SW_BRAND_ORDER[i])>-1)return i;}
+    return SW_BRAND_ORDER.length;
+  }
+  function reorderBrandPriority(){
+    if(new URLSearchParams(location.search).get('sort_by'))return;
+    var cards=document.querySelectorAll('product-card, .product-card');
+    if(!cards.length)return;
+    var wrappers=[];
+    cards.forEach(function(c){
+      var link=c.querySelector('a[href*="/products/"]');
+      var handle=link?(link.getAttribute('href').split('/products/')[1]||'').split(/[?#\/]/)[0]:'';
+      var w=c.closest('li, .grid__item, .product-grid__card-wrapper')||c;
+      if(wrappers.some(function(x){return x.el===w;}))return;
+      wrappers.push({el:w,rank:swBrandRank(handle)});
+    });
+    if(wrappers.length<2)return;
+    var container=wrappers[0].el.parentNode;
+    if(!container||container.dataset.swBrandSorted==='1')return;
+    if(wrappers.some(function(w){return w.el.parentNode!==container;}))return;
+    var alreadySorted=wrappers.every(function(w,i){return i===0||wrappers[i-1].rank<=w.rank;});
+    if(!alreadySorted){
+      wrappers.forEach(function(w,i){w.idx=i;});
+      wrappers.sort(function(a,b){return a.rank-b.rank||a.idx-b.idx;});
+      wrappers.forEach(function(w){container.appendChild(w.el);});
+    }
+    container.dataset.swBrandSorted='1';
   }
   // Map: product handle pattern -> vorm
   function getVorm(handle){
@@ -170,7 +208,7 @@ li.facets__inputs-list-item:has(input[data-label="4000K (neutraal-wit)"]) ~ li.f
     applyVormFilter();
   }
   var _runTimer=null;
-  function runAll(){rnK();addNeeOption();fixLichtkleur();addVormFilter();enhanceColCards();applyVormFilter();}
+  function runAll(){rnK();addNeeOption();fixLichtkleur();addVormFilter();enhanceColCards();applyVormFilter();reorderBrandPriority();}
   function runAllDebounced(){
     if(_runTimer)clearTimeout(_runTimer);
     _runTimer=setTimeout(runAll,120);
@@ -189,6 +227,14 @@ li.facets__inputs-list-item:has(input[data-label="4000K (neutraal-wit)"]) ~ li.f
   document.addEventListener('DOMContentLoaded',function(){
     var f=document.querySelector('.facets-block-wrapper--vertical,.facets__form-wrapper');
     if(f)obs.observe(f,{childList:true,subtree:true});
+    // her-sorteer op merkprioriteit wanneer het productgrid opnieuw gerenderd wordt (filters/sortering)
+    var firstCard=document.querySelector('product-card, .product-card');
+    var grid=firstCard&&(firstCard.closest('li, .grid__item, .product-grid__card-wrapper')||firstCard).parentNode;
+    if(grid&&grid.parentNode){
+      new MutationObserver(function(){
+        setTimeout(function(){reorderBrandPriority();enhanceColCards();},150);
+      }).observe(grid.parentNode,{childList:true,subtree:true});
+    }
   });
 })();
 </script>
