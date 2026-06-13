@@ -1194,7 +1194,8 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
           if (!has) p.append(nm, val);
           location.search = p.toString();
         }, true);
-        list.appendChild(clone);
+        // in DEZELFDE container als de native opties plaatsen (anders kan sortLichtkleur ze niet ordenen)
+        (template.parentNode || list).appendChild(clone);
       });
     });
   }
