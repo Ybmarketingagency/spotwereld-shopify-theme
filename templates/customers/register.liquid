@@ -36,6 +36,18 @@
 .sw-auth-errors{background:#fef2f2;border:1px solid #fecaca;color:#991b1b;padding:.75rem 1rem;border-radius:8px;margin:0 0 1rem;font-size:.85rem;line-height:1.5}
 .sw-auth-errors ul{margin:0;padding-left:1.25rem}
 .sw-auth-tiny{font-size:.7rem;color:#94a3b8;text-align:center;margin:.75rem 0 0;line-height:1.5}
+.sw-acct-toggle{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:1.1rem}
+.sw-acct-toggle input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.sw-acct-toggle label{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.15rem;padding:.7rem .5rem;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.92rem;font-weight:700;color:#475569;cursor:pointer;transition:all .15s;text-align:center}
+.sw-acct-toggle label small{font-weight:500;font-size:.7rem;color:#94a3b8}
+.sw-acct-toggle input:checked + label{border-color:#0F6FE3;background:rgba(15,111,227,.07);color:#0F6FE3}
+.sw-acct-toggle input:checked + label small{color:#0F6FE3}
+.sw-acct-toggle input:focus-visible + label{box-shadow:0 0 0 3px rgba(15,111,227,.12)}
+.sw-biz-fields{display:none}
+.sw-biz-fields.sw-show{display:block;animation:swFade .2s ease}
+@keyframes swFade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.sw-biz-badge{display:flex;align-items:flex-start;gap:.5rem;background:rgba(15,111,227,.06);border:1px solid rgba(15,111,227,.18);border-radius:8px;padding:.7rem .85rem;margin-bottom:1rem;font-size:.8rem;line-height:1.45;color:#0a4a9e}
+.sw-biz-badge svg{flex-shrink:0;margin-top:.1rem;color:#0F6FE3}
 @media(max-width:880px){.sw-reg-grid{grid-template-columns:1fr;max-width:480px}.sw-reg-benefits{order:2;padding:0;text-align:center}.sw-reg-benefits ul{text-align:left}.sw-reg-benefits h2{font-size:1.5rem}}
 @media(max-width:480px){.sw-auth-card{padding:1.75rem 1.25rem}.sw-auth-title{font-size:1.4rem}.sw-auth-field-row{grid-template-columns:1fr}}
 </style>
@@ -89,6 +101,13 @@
           </div>
         {%- endif -%}
 
+        <div class="sw-acct-toggle">
+          <input type="radio" name="sw_acct_type" id="sw_acct_part" value="particulier" checked>
+          <label for="sw_acct_part">Particulier<small>Voor thuisgebruik</small></label>
+          <input type="radio" name="sw_acct_type" id="sw_acct_zak" value="zakelijk">
+          <label for="sw_acct_zak">Zakelijk<small>10% korting</small></label>
+        </div>
+
         <div class="sw-auth-field-row">
           <div class="sw-auth-field">
             <label for="FirstName" class="sw-auth-label">Voornaam</label>
@@ -104,6 +123,23 @@
           <label for="RegEmail" class="sw-auth-label">E-mail</label>
           <input type="email" name="customer[email]" id="RegEmail" class="sw-auth-input" autocomplete="email" autocapitalize="off" autocorrect="off" required placeholder="jouw@email.nl">
         </div>
+
+        <div class="sw-biz-fields" id="swBizFields">
+          <div class="sw-biz-badge">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            <span>Zakelijke accounts krijgen <strong>automatisch 10% korting</strong> op elke bestelling, na verificatie van je KvK-nummer.</span>
+          </div>
+          <div class="sw-auth-field">
+            <label for="SwCompany" class="sw-auth-label">Bedrijfsnaam</label>
+            <input type="text" id="SwCompany" class="sw-auth-input" autocomplete="organization" placeholder="Bedrijf B.V.">
+          </div>
+          <div class="sw-auth-field">
+            <label for="SwKvk" class="sw-auth-label">KvK-nummer</label>
+            <input type="text" id="SwKvk" class="sw-auth-input" inputmode="numeric" maxlength="8" placeholder="12345678">
+          </div>
+        </div>
+
+        <input type="hidden" name="customer[note]" id="SwNote">
 
         <div class="sw-auth-field">
           <label for="RegPassword" class="sw-auth-label">Wachtwoord (min. 5 tekens)</label>
@@ -123,3 +159,33 @@
     </div>
   </div>
 </div>
+
+<script>
+(function(){
+  var part = document.getElementById('sw_acct_part'),
+      zak  = document.getElementById('sw_acct_zak'),
+      biz  = document.getElementById('swBizFields'),
+      company = document.getElementById('SwCompany'),
+      kvk  = document.getElementById('SwKvk'),
+      note = document.getElementById('SwNote');
+  if (!part || !zak || !note) return;
+  var form = note.closest('form');
+  function sync(){
+    var isZak = zak.checked;
+    if (biz) biz.classList.toggle('sw-show', isZak);
+    if (kvk) kvk.required = isZak;
+    if (company) company.required = isZak;
+    // Klanttype + zakelijke gegevens vastleggen in de klantnotitie (basis voor auto-tag via Shopify Flow)
+    if (isZak) {
+      note.value = 'Klanttype: Zakelijk | Bedrijf: ' + ((company && company.value) || '') + ' | KvK: ' + ((kvk && kvk.value) || '');
+    } else {
+      note.value = 'Klanttype: Particulier';
+    }
+  }
+  [part, zak, company, kvk].forEach(function(el){
+    if (el){ el.addEventListener('input', sync); el.addEventListener('change', sync); }
+  });
+  if (form) form.addEventListener('submit', sync);
+  sync();
+})();
+</script>
