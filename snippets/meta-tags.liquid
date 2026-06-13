@@ -1139,53 +1139,68 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
     s.textContent = '.facets__item li.facets__inputs-list-item:has(input[value="Instelbaar (GU10)"]){display:none!important;}';
     (document.head || document.documentElement).appendChild(s);
   }
-  function ensureRgbwwOption(){
-    var activeRgbww = false;
+  // Extra lichtkleur-opties die we ALTIJD willen tonen, ook als (nog) geen product die heeft.
+  // value = de native filterwaarde; bestaat het product met die waarde, dan filtert het echt,
+  // anders een bewust leeg filter (0 producten) voor toekomstige producten.
+  var SW_LK_EXTRAS = [
+    { label: '2200K (flame-wit)',     value: '2200K (flame-wit)',     cls: 'sw-lk-2200k' },
+    { label: '3000K (warm-wit)',      value: '3000K (warm-wit)',      cls: 'sw-lk-3000k' },
+    { label: 'RGBWW',                 value: 'RGBWW',                 cls: 'sw-lk-rgbww' }
+  ];
+  function ensureLichtkleurExtras(){
     document.querySelectorAll('.facets__item, details.facets__item').forEach(function(f){
       var lbl = f.querySelector('.facets__label');
       if (!lbl || lbl.textContent.trim() !== 'Lichtkleur') return;
       var list = f.querySelector('.facets__inputs, ul, .facets__inputs-list');
-      if (!list || list.querySelector('.sw-lk-rgbww')) return;
+      if (!list) return;
+      var items = Array.from(list.querySelectorAll('.facets__inputs-list-item, li'));
+      // labels die al aanwezig zijn (native of eerder geïnjecteerd)
+      var existing = {};
+      items.forEach(function(it){ existing[(it.textContent||'').trim().toLowerCase().replace(/\s+/g,' ')] = true; });
+      // template = eerste echte item met checkbox/radio
       var template = null;
-      Array.from(list.querySelectorAll('.facets__inputs-list-item, li')).forEach(function(it){
-        if (!template && it.querySelector('input[type="checkbox"], input[type="radio"]')) template = it;
-      });
+      items.forEach(function(it){ if (!template && it.querySelector('input[type="checkbox"], input[type="radio"]')) template = it; });
       if (!template) return;
-      var clone = template.cloneNode(true);
-      clone.classList.add('sw-lk-rgbww');
-      clone.style.display = '';
-      var span = clone.querySelector('.checkbox__label-text, label span');
-      if (span) span.textContent = 'RGBWW';
-      var nm = 'filter.v.option.lichtkleur';
-      var inp = clone.querySelector('input');
-      if (inp) {
-        nm = inp.name || nm;
-        inp.value = 'RGBWW';
-        inp.id = 'sw-lk-rgbww-input';
-        inp.checked = new URLSearchParams(location.search).getAll(nm).indexOf('RGBWW') > -1;
-        clone.querySelectorAll('label[for]').forEach(function(l){ l.setAttribute('for', 'sw-lk-rgbww-input'); });
-      }
-      var cnt = clone.querySelector('.facets__count, .facets__item-count');
-      if (cnt) cnt.textContent = '';
-      // Shopify's facet-component kent onze dynamische input niet → eigen navigatie naar de
-      // native filter-URL (matcht 0 producten = bewust leeg filter).
-      clone.addEventListener('click', function(e){
-        e.preventDefault();
-        e.stopPropagation();
-        var p = new URLSearchParams(location.search);
-        var has = p.getAll(nm).indexOf('RGBWW') > -1;
-        var keep = p.getAll(nm).filter(function(v){ return v !== 'RGBWW'; });
-        p.delete(nm);
-        keep.forEach(function(v){ p.append(nm, v); });
-        if (!has) p.append(nm, 'RGBWW');
-        location.search = p.toString();
-      }, true);
-      list.appendChild(clone);
+      SW_LK_EXTRAS.forEach(function(opt){
+        if (existing[opt.label.toLowerCase()]) return;     // al aanwezig als echte optie
+        if (list.querySelector('.' + opt.cls)) return;     // al geïnjecteerd
+        var clone = template.cloneNode(true);
+        clone.classList.add('sw-lk-extra', opt.cls);
+        clone.style.display = '';
+        var span = clone.querySelector('.checkbox__label-text, label span');
+        if (span) span.textContent = opt.label;
+        var nm = 'filter.v.option.lichtkleur';
+        var inp = clone.querySelector('input');
+        if (inp) {
+          nm = inp.name || nm;
+          inp.value = opt.value;
+          inp.id = 'sw-lk-input-' + opt.cls;
+          inp.checked = new URLSearchParams(location.search).getAll(nm).indexOf(opt.value) > -1;
+          clone.querySelectorAll('label[for]').forEach(function(l){ l.setAttribute('for', inp.id); });
+        }
+        var cnt = clone.querySelector('.facets__count, .facets__item-count');
+        if (cnt) cnt.textContent = '';
+        // Shopify's facet-component kent onze dynamische input niet → eigen navigatie naar de
+        // native filter-URL (matcht 0 producten = bewust leeg filter zolang er geen product is).
+        var val = opt.value;
+        clone.addEventListener('click', function(e){
+          e.preventDefault();
+          e.stopPropagation();
+          var p = new URLSearchParams(location.search);
+          var has = p.getAll(nm).indexOf(val) > -1;
+          var keep = p.getAll(nm).filter(function(v){ return v !== val; });
+          p.delete(nm);
+          keep.forEach(function(v){ p.append(nm, v); });
+          if (!has) p.append(nm, val);
+          location.search = p.toString();
+        }, true);
+        list.appendChild(clone);
+      });
     });
   }
-  function fixLichtkleurOptions(){ injectLkStyle(); ensureRgbwwOption(); }
-  // Morph zet RGBWW telkens terug — blijf 'm herstellen
-  setInterval(ensureRgbwwOption, 500);
+  function fixLichtkleurOptions(){ injectLkStyle(); ensureLichtkleurExtras(); }
+  // Morph zet de extra opties telkens terug — blijf ze herstellen
+  setInterval(ensureLichtkleurExtras, 500);
   // Merkvolgorde bij standaard sortering (best verkocht): Lesto, Lyvo, Quaro, Ferro eerst
   var SW_BRAND_ORDER = ['lesto', 'lyvo', 'quaro', 'ferro'];
   function swBrandRank(handle){
