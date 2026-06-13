@@ -1198,9 +1198,33 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
       });
     });
   }
-  function fixLichtkleurOptions(){ injectLkStyle(); ensureLichtkleurExtras(); }
-  // Morph zet de extra opties telkens terug — blijf ze herstellen
-  setInterval(ensureLichtkleurExtras, 500);
+  // Sorteer de Lichtkleur-opties op kleurtemperatuur (laag → hoog), specials onderaan.
+  function lkRank(label){
+    var t = (label || '').toLowerCase();
+    if (t.indexOf('rgbww') > -1) return 9990;
+    if (t.indexOf('instelbaar') > -1) return 9980;
+    if (t.indexOf('dim-to-warm') > -1 || t.indexOf('dim to warm') > -1) return 9970;
+    var m = t.match(/(\d{3,4})\s*k/);
+    return m ? parseInt(m[1], 10) : 9999;
+  }
+  function sortLichtkleur(){
+    document.querySelectorAll('.facets__item, details.facets__item').forEach(function(f){
+      var lbl = f.querySelector('.facets__label');
+      if (!lbl || lbl.textContent.trim() !== 'Lichtkleur') return;
+      var items = Array.from(f.querySelectorAll('.facets__inputs-list-item, li')).filter(function(it){ return it.querySelector('input'); });
+      if (items.length < 2) return;
+      var parent = items[0].parentNode;
+      items = items.filter(function(it){ return it.parentNode === parent; });
+      var sorted = items.slice().sort(function(a, b){ return lkRank(a.textContent.trim()) - lkRank(b.textContent.trim()); });
+      // alleen herordenen als de volgorde echt afwijkt (voorkomt DOM-thrash elke tick)
+      if (sorted.some(function(el, i){ return el !== items[i]; })) {
+        sorted.forEach(function(el){ parent.appendChild(el); });
+      }
+    });
+  }
+  function fixLichtkleurOptions(){ injectLkStyle(); ensureLichtkleurExtras(); sortLichtkleur(); }
+  // Morph zet de extra opties + volgorde telkens terug — blijf ze herstellen
+  setInterval(function(){ ensureLichtkleurExtras(); sortLichtkleur(); }, 500);
   // Merkvolgorde bij standaard sortering (best verkocht): Lesto, Lyvo, Quaro, Ferro eerst
   var SW_BRAND_ORDER = ['lesto', 'lyvo', 'quaro', 'ferro'];
   function swBrandRank(handle){
