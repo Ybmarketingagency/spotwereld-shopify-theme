@@ -1156,9 +1156,10 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
       clone.style.display = '';
       var span = clone.querySelector('.checkbox__label-text, label span');
       if (span) span.textContent = 'RGBWW';
+      var nm = 'filter.v.option.lichtkleur';
       var inp = clone.querySelector('input');
       if (inp) {
-        var nm = inp.name;
+        nm = inp.name || nm;
         inp.value = 'RGBWW';
         inp.id = 'sw-lk-rgbww-input';
         inp.checked = new URLSearchParams(location.search).getAll(nm).indexOf('RGBWW') > -1;
@@ -1166,6 +1167,19 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
       }
       var cnt = clone.querySelector('.facets__count, .facets__item-count');
       if (cnt) cnt.textContent = '';
+      // Shopify's facet-component kent onze dynamische input niet → eigen navigatie naar de
+      // native filter-URL (matcht 0 producten = bewust leeg filter).
+      clone.addEventListener('click', function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        var p = new URLSearchParams(location.search);
+        var has = p.getAll(nm).indexOf('RGBWW') > -1;
+        var keep = p.getAll(nm).filter(function(v){ return v !== 'RGBWW'; });
+        p.delete(nm);
+        keep.forEach(function(v){ p.append(nm, v); });
+        if (!has) p.append(nm, 'RGBWW');
+        location.search = p.toString();
+      }, true);
       list.appendChild(clone);
     });
   }
