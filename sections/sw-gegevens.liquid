@@ -249,6 +249,25 @@
   var SHOP_DOMAIN = 'spotwereld-3.myshopify.com';
   var STOREFRONT_TOKEN = '52a93466d311fb11db9c71ceed5ace29';
   var API_VERSION = '2024-10';
+  // Google Sheets fallback — alle ingevulde klantdata wordt hier als backup opgeslagen
+  var SW_SHEET_URL = 'https://script.google.com/macros/s/AKfycbzNZc9PETXgDlZ5I8gO8o2V5nyt-CDWeyQ8qJsrPu8YeyU1LeVXem89REd9Fn105mMb/exec';
+  function swSaveToSheet(data, cart){
+    try {
+      var items = (cart && cart.items || []).map(function(it){ return it.quantity + 'x ' + it.title; }).join(' | ');
+      var total = cart ? (cart.total_price/100).toFixed(2).replace('.', ',') : '';
+      fetch(SW_SHEET_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: JSON.stringify({
+          email: data.email || '', first_name: data.firstName || '', last_name: data.lastName || '',
+          company: data.company || '', type: data.type === 'bedrijf' ? 'Bedrijf' : 'Particulier',
+          phone: data.phone || '', address1: data.address1 || '', house_number: '', address2: '',
+          zip: data.zip || '', city: data.city || '', country: 'Netherlands',
+          line_items: items, total: total, source: 'custom-checkout', kvk: data.kvk || ''
+        })
+      });
+    } catch(e){}
+  }
 
   // Type toggle (Particulier / Bedrijf)
   var typeBtns = document.querySelectorAll('.swg-type-btn');
@@ -433,6 +452,9 @@
           return { merchandiseId: 'gid://shopify/ProductVariant/' + it.variant_id, quantity: it.quantity };
         });
         if (!lines.length) throw new Error('Winkelmand is leeg.');
+
+        // Backup: alle ingevulde klantdata + winkelmand naar Google Sheet (fire-and-forget, blokkeert checkout nooit)
+        swSaveToSheet(data, cart);
 
         // 2. Build Storefront API cartCreate — adres meegestuurd zodat checkout pre-filled is
         var attributes = [
