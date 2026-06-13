@@ -1127,19 +1127,47 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
         });
       });
   }
-  // Verberg "Instelbaar (GU10)" uit het Lichtkleur-facet — lichtkleur hangt daar af van de
-  // gekozen GU10-lamp, dus geen echte filterwaarde. Facet helemaal weg als er niets overblijft.
-  function hideInstelbaarGu10(){
-    var lkFacet = findFacet('Lichtkleur');
-    if (!lkFacet) return;
-    var items = Array.from(lkFacet.querySelectorAll('.facets__inputs-list-item, li'));
-    if (!items.length) return;
-    items.forEach(function(it){
-      var t = (it.textContent || '').toLowerCase().replace(/\s+/g, ' ');
-      if (t.indexOf('instelbaar (gu10)') > -1) it.style.display = 'none';
+  // Lichtkleur-facet opschonen op ALLE facets (desktop + mobiele drawer):
+  // (1) "Instelbaar (GU10)" verbergen — lichtkleur hangt daar af van de gekozen GU10-lamp,
+  //     dus geen echte filterwaarde.
+  // (2) RGBWW als optie toevoegen (matcht nu 0 producten — bewust leeg filter voor toekomstige
+  //     RGBWW-producten; klant kan er al op filteren zodra die er zijn).
+  function fixLichtkleurOptions(){
+    document.querySelectorAll('.facets__item, details.facets__item').forEach(function(f){
+      var lbl = f.querySelector('.facets__label');
+      if (!lbl || lbl.textContent.trim() !== 'Lichtkleur') return;
+      var list = f.querySelector('.facets__inputs, ul, .facets__inputs-list');
+      if (!list) return;
+      var template = null;
+      Array.from(list.querySelectorAll('.facets__inputs-list-item, li')).forEach(function(it){
+        if (it.classList.contains('sw-lk-rgbww')) return;
+        var t = (it.textContent || '').toLowerCase().replace(/\s+/g, ' ');
+        if (t.indexOf('instelbaar (gu10)') > -1) it.style.display = 'none';
+        if (!template && it.querySelector('input') && it.style.display !== 'none') template = it;
+      });
+      // RGBWW toevoegen (1x per facet) — gekloond van een bestaand item zodat styling klopt
+      if (template && !list.querySelector('.sw-lk-rgbww')) {
+        var clone = template.cloneNode(true);
+        clone.classList.add('sw-lk-rgbww');
+        clone.style.display = '';
+        var span = clone.querySelector('.checkbox__label-text, label span');
+        if (span) span.textContent = 'RGBWW';
+        var inp = clone.querySelector('input');
+        if (inp) {
+          inp.checked = false;
+          inp.value = 'RGBWW';
+          var uid = 'sw-lk-rgbww-' + Math.random().toString(36).slice(2, 8);
+          inp.id = uid;
+          clone.querySelectorAll('label[for]').forEach(function(l){ l.setAttribute('for', uid); });
+        }
+        var cnt = clone.querySelector('.facets__count, .facets__item-count');
+        if (cnt) cnt.textContent = '';
+        list.appendChild(clone);
+      }
+      var visible = Array.from(list.querySelectorAll('.facets__inputs-list-item, li'))
+        .filter(function(it){ return it.style.display !== 'none'; });
+      f.style.display = visible.length === 0 ? 'none' : '';
     });
-    var visible = items.filter(function(it){ return it.style.display !== 'none'; });
-    lkFacet.style.display = visible.length === 0 ? 'none' : '';
   }
   // Merkvolgorde bij standaard sortering (best verkocht): Lesto, Lyvo, Quaro, Ferro eerst
   var SW_BRAND_ORDER = ['lesto', 'lyvo', 'quaro', 'ferro'];
@@ -1181,7 +1209,7 @@ body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .fac
     fixDimbaarNee();
     renameKleurLabels();
     dedupeAndOrderFacets();
-    hideInstelbaarGu10();
+    fixLichtkleurOptions();
     applyAllFilters();
     renderActiveChips();
     reorderBrandPriority();
