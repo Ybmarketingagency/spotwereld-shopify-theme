@@ -4283,3 +4283,4 @@ product-recommendations:has([data-has-recommendations='false']) {
 /* sync-trigger: registratie particulier-zakelijk + kvk 173836 */
 /* sync-trigger: checkout kvk-veld bedrijf 180053 */
 /* sync-trigger: checkout -> google sheet fallback 180554 */
+/* sync-trigger: checkout kvk weg + bedrijfsnaam naar shopify-adres 184652 */

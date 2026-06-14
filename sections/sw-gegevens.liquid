@@ -127,15 +127,10 @@
         <input type="hidden" id="swg-type" value="particulier">
 
         <div class="swg-field" id="swg-bedrijf-veld" style="display:none">
-          <div class="swg-floating" style="margin-bottom:.75rem">
+          <div class="swg-floating">
             <input type="text" id="swg-company" class="swg-input" autocomplete="organization" placeholder=" ">
             <label for="swg-company">Bedrijfsnaam</label>
           </div>
-          <div class="swg-floating">
-            <input type="text" id="swg-kvk" class="swg-input" inputmode="numeric" maxlength="8" placeholder=" ">
-            <label for="swg-kvk">KvK-nummer</label>
-          </div>
-          <p style="margin:.5rem 0 0;font-size:.78rem;color:#0a4a9e;line-height:1.45">Zakelijke klanten krijgen 10% korting na verificatie van je KvK-nummer.</p>
         </div>
 
         <div class="swg-field-row">
@@ -263,7 +258,7 @@
           company: data.company || '', type: data.type === 'bedrijf' ? 'Bedrijf' : 'Particulier',
           phone: data.phone || '', address1: data.address1 || '', house_number: '', address2: '',
           zip: data.zip || '', city: data.city || '', country: 'Netherlands',
-          line_items: items, total: total, source: 'custom-checkout', kvk: data.kvk || ''
+          line_items: items, total: total, source: 'custom-checkout'
         })
       });
     } catch(e){}
@@ -414,7 +409,6 @@
       email: val('swg-email'),
       type: val('swg-type'),
       company: val('swg-company'),
-      kvk: val('swg-kvk'),
       firstName: val('swg-firstname'),
       lastName: val('swg-lastname'),
       address1: val('swg-address1'),
@@ -433,7 +427,6 @@
     if (!data.zip) errors.push('Postcode is verplicht.');
     if (!data.city) errors.push('Stad is verplicht.');
     if (data.type === 'bedrijf' && !data.company) errors.push('Bedrijfsnaam is verplicht.');
-    if (data.type === 'bedrijf' && !data.kvk) errors.push('KvK-nummer is verplicht.');
     if (errors.length) { showErrors(errors); return; }
 
     var btn = document.getElementById('swg-submit');
@@ -463,7 +456,6 @@
           { key: 'Achternaam', value: data.lastName }
         ];
         if (data.type === 'bedrijf' && data.company) attributes.push({key:'Bedrijfsnaam',value:data.company});
-        if (data.type === 'bedrijf' && data.kvk) attributes.push({key:'KvK-nummer',value:data.kvk});
 
         var query = 'mutation cartCreate($input: CartInput!) {' +
           '  cartCreate(input: $input) {' +
@@ -482,6 +474,7 @@
               deliveryAddress: {
                 firstName: data.firstName,
                 lastName: data.lastName,
+                company: (data.type === 'bedrijf' && data.company) ? data.company : null,
                 address1: data.address1,
                 city: data.city,
                 zip: data.zip,
