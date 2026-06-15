@@ -293,6 +293,12 @@
         "padding-block-end": 0
       }
     },
+    "sw_frequently_bought": {
+      "type": "sw-frequently-bought",
+      "settings": {
+        "heading": "Vaak samen gekocht met"
+      }
+    },
     "product_recommendations": {
       "type": "product-recommendations",
       "blocks": {
@@ -457,6 +463,7 @@
   "order": [
     "sw_lichtkleur_fix",
     "main",
+    "sw_frequently_bought",
     "product_recommendations",
     "product_reviews"
   ]
