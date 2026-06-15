@@ -4285,3 +4285,4 @@ product-recommendations:has([data-has-recommendations='false']) {
 /* sync-trigger: checkout -> google sheet fallback 180554 */
 /* sync-trigger: checkout kvk weg + bedrijfsnaam naar shopify-adres 184652 */
 /* sync-trigger: vaak-samen-gekocht accessoires op productpagina 125411 */
+/* sync-trigger: fbt kaart-grid layout 140637 */

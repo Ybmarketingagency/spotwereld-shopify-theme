@@ -1,8 +1,9 @@
 {%- comment -%}
   Spotwereld — "Vaak samen gekocht met"
+  Kaart-grid (2 koloms) met afbeelding, titel, prijs (Incl. BTW) en cart-knop.
   Toont de vaste accessoires (lasklem, stekker, LED-trafo) op elke productpagina.
-  Voegt toe via AJAX naar /cart/add.js en ververst de winkelwagen-bubbel + drawer
-  via het thema-event 'cart:update'. Sluit het huidige product uit van de lijst.
+  AJAX add-to-cart → ververst winkelwagen-bubbel + drawer via thema-event 'cart:update'.
+  Sluit het huidige product uit van de lijst.
 {%- endcomment -%}
 
 {%- liquid
@@ -37,21 +38,26 @@
           <div class="sw-fbt__card">
             <a class="sw-fbt__media" href="{{ acc.url }}">
               {%- if acc.featured_image -%}
-                <img src="{{ acc.featured_image | image_url: width: 200 }}"
+                <img src="{{ acc.featured_image | image_url: width: 240 }}"
                      alt="{{ acc.featured_image.alt | default: acc.title | escape }}"
-                     width="80" height="80" loading="lazy">
+                     width="110" height="110" loading="lazy">
               {%- else -%}
                 <span class="sw-fbt__noimg">{{ acc.title | slice: 0 }}</span>
               {%- endif -%}
             </a>
-            <div class="sw-fbt__info">
+            <div class="sw-fbt__body">
               <a class="sw-fbt__title" href="{{ acc.url }}">{{ acc.title }}</a>
-              <span class="sw-fbt__price">{{ v.price | money }}</span>
+              <div class="sw-fbt__row">
+                <div class="sw-fbt__pricewrap">
+                  <span class="sw-fbt__price">{{ v.price | money }}</span>
+                  <span class="sw-fbt__tax">Incl. BTW</span>
+                </div>
+                <button type="button" class="sw-fbt__add" data-variant-id="{{ v.id }}" aria-label="Toevoegen aan winkelwagen" {% unless v.available %}disabled{% endunless %}>
+                  <svg class="sw-fbt__ico-cart" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                  <svg class="sw-fbt__ico-done" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" hidden><polyline points="20 6 9 17 4 12"/></svg>
+                </button>
+              </div>
             </div>
-            <button type="button" class="sw-fbt__add" data-variant-id="{{ v.id }}" {% unless v.available %}disabled{% endunless %}>
-              <span class="sw-fbt__add-default">+ Toevoegen</span>
-              <span class="sw-fbt__add-done" hidden>&#10003; Toegevoegd</span>
-            </button>
           </div>
         {%- endif -%}
       {%- endfor -%}
@@ -64,21 +70,26 @@
 {%- endif -%}
 
 <style>
-  .sw-fbt{padding:8px 0 24px}
+  .sw-fbt{padding:8px 0 28px}
   .sw-fbt__inner{max-width:1280px;margin:0 auto;padding:0 1.5rem}
-  .sw-fbt__heading{font-size:1.25rem;font-weight:800;color:#061f40;margin:0 0 1rem;letter-spacing:-.01em}
-  .sw-fbt__grid{display:grid;grid-template-columns:1fr;gap:.75rem}
-  @media(min-width:700px){.sw-fbt__grid{grid-template-columns:repeat(3,1fr)}}
-  .sw-fbt__card{display:flex;align-items:center;gap:.875rem;background:#fff;border:1px solid #e5e7eb;border-radius:.75rem;padding:.75rem .875rem}
-  .sw-fbt__media{flex-shrink:0;width:56px;height:56px;border-radius:.5rem;overflow:hidden;background:#f3f4f6;display:flex;align-items:center;justify-content:center}
+  .sw-fbt__heading{font-size:1.375rem;font-weight:800;color:#061f40;margin:0 0 1.25rem;letter-spacing:-.01em;display:inline-block;border-bottom:3px solid #0F6FE3;padding-bottom:6px}
+  .sw-fbt__grid{display:grid;grid-template-columns:1fr;gap:1rem}
+  @media(min-width:760px){.sw-fbt__grid{grid-template-columns:repeat(2,1fr)}}
+  .sw-fbt__card{display:flex;align-items:stretch;gap:1rem;background:#fff;border:1px solid #e5e7eb;border-radius:.875rem;padding:1rem;transition:box-shadow .15s,border-color .15s}
+  .sw-fbt__card:hover{box-shadow:0 4px 16px rgba(8,61,125,.08);border-color:#cbd5e1}
+  .sw-fbt__media{flex-shrink:0;width:96px;height:96px;border-radius:.625rem;overflow:hidden;background:#f3f4f6;display:flex;align-items:center;justify-content:center}
   .sw-fbt__media img{width:100%;height:100%;object-fit:contain}
-  .sw-fbt__noimg{font-weight:800;color:#9ca3af;font-size:1.25rem}
-  .sw-fbt__info{flex:1;min-width:0;display:flex;flex-direction:column;gap:.125rem}
-  .sw-fbt__title{font-size:.875rem;font-weight:600;color:#1e293b;text-decoration:none;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .sw-fbt__noimg{font-weight:800;color:#9ca3af;font-size:2rem}
+  .sw-fbt__body{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:space-between;gap:.625rem}
+  .sw-fbt__title{font-size:1rem;font-weight:600;color:#1e293b;text-decoration:none;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
   .sw-fbt__title:hover{color:#0F6FE3}
-  .sw-fbt__price{font-size:.9375rem;font-weight:700;color:#061f40}
-  .sw-fbt__add{flex-shrink:0;background:#0F6FE3;color:#fff;border:none;border-radius:.5rem;padding:.5rem .75rem;font-size:.8125rem;font-weight:700;cursor:pointer;white-space:nowrap;transition:background .15s}
+  .sw-fbt__row{display:flex;align-items:flex-end;justify-content:space-between;gap:.75rem}
+  .sw-fbt__pricewrap{display:flex;flex-direction:column;line-height:1.1}
+  .sw-fbt__price{font-size:1.375rem;font-weight:800;color:#0F6FE3}
+  .sw-fbt__tax{font-size:.75rem;color:#64748b;margin-top:2px}
+  .sw-fbt__add{flex-shrink:0;width:48px;height:48px;display:flex;align-items:center;justify-content:center;background:#0F6FE3;color:#fff;border:none;border-radius:.625rem;cursor:pointer;transition:background .15s,transform .1s}
   .sw-fbt__add:hover{background:#083D7D}
+  .sw-fbt__add:active{transform:scale(.94)}
   .sw-fbt__add:disabled{background:#9ca3af;cursor:not-allowed}
   .sw-fbt__add.is-done{background:#16a34a}
 </style>
@@ -92,7 +103,6 @@
   function addUrl(){
     return (window.Theme && Theme.routes && Theme.routes.cart_add_url) || '/cart/add.js';
   }
-
   function sectionIds(){
     var ids = [];
     document.querySelectorAll('cart-items-component[data-section-id]').forEach(function(el){
@@ -126,14 +136,15 @@
           bubbles: true,
           detail: { resource: cart, sourceId: 'sw-fbt', data: { source: 'sw-fbt', itemCount: cart.item_count, sections: sections } }
         }));
-        // visuele bevestiging
+        var cartIco = btn.querySelector('.sw-fbt__ico-cart');
+        var doneIco = btn.querySelector('.sw-fbt__ico-done');
         btn.classList.add('is-done');
-        btn.querySelector('.sw-fbt__add-default').hidden = true;
-        btn.querySelector('.sw-fbt__add-done').hidden = false;
+        if(cartIco) cartIco.hidden = true;
+        if(doneIco) doneIco.hidden = false;
         setTimeout(function(){
           btn.classList.remove('is-done');
-          btn.querySelector('.sw-fbt__add-default').hidden = false;
-          btn.querySelector('.sw-fbt__add-done').hidden = true;
+          if(cartIco) cartIco.hidden = false;
+          if(doneIco) doneIco.hidden = true;
           btn.disabled = false;
         }, 1800);
       });
