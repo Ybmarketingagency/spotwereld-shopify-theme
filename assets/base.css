@@ -4221,7 +4221,7 @@ product-recommendations:has([data-has-recommendations='false']) {
   display: block !important;
   width: 200px;
   height: 44px;
-  background-image: url("https://i.imgur.com/CAFaRB8.png");
+  background-image: url("https://i.imgur.com/a0coyIm.png");
   background-size: contain;
   background-repeat: no-repeat;
   background-position: left center;
@@ -4288,3 +4288,4 @@ product-recommendations:has([data-has-recommendations='false']) {
 /* sync-trigger: vaak-samen-gekocht accessoires op productpagina 125411 */
 /* sync-trigger: fbt kaart-grid layout 140637 */
 /* sync-trigger: nieuw logo CAFaRB8 + wit-filter 161556 */
+/* sync-trigger: logo a0coyIm 164501 */
