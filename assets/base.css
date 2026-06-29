@@ -4219,12 +4219,13 @@ product-recommendations:has([data-has-recommendations='false']) {
 .header-logo__image-container--original {
   font-size: 0 !important;
   display: block !important;
-  width: 160px;
+  width: 200px;
   height: 44px;
-  background-image: url("https://i.imgur.com/mwLhDyg.jpg");
+  background-image: url("https://i.imgur.com/CAFaRB8.png");
   background-size: contain;
   background-repeat: no-repeat;
   background-position: left center;
+  filter: brightness(0) invert(1);
 }
 /* sync-trigger: verzending layout fix 2026-06-11 */
 
@@ -4286,3 +4287,4 @@ product-recommendations:has([data-has-recommendations='false']) {
 /* sync-trigger: checkout kvk weg + bedrijfsnaam naar shopify-adres 184652 */
 /* sync-trigger: vaak-samen-gekocht accessoires op productpagina 125411 */
 /* sync-trigger: fbt kaart-grid layout 140637 */
+/* sync-trigger: nieuw logo CAFaRB8 + wit-filter 161556 */
