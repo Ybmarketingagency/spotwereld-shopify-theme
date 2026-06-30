@@ -159,17 +159,17 @@
 <meta name="author" content="Spotwereld">
 <meta name="format-detection" content="telephone=no">
 
-{%- comment -%} Favicon - hardcoded gele lamp op blauwe achtergrond, overschrijft Shopify settings favicon {%- endcomment -%}
-<link rel="icon" type="image/png" href="https://i.imgur.com/2ROeTRS.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://i.imgur.com/2ROeTRS.png">
-<link rel="icon" type="image/png" sizes="16x16" href="https://i.imgur.com/2ROeTRS.png">
-<link rel="apple-touch-icon" sizes="180x180" href="https://i.imgur.com/2ROeTRS.png">
-<link rel="shortcut icon" type="image/png" href="https://i.imgur.com/2ROeTRS.png">
+{%- comment -%} Favicon - hardcoded blauwe O-spotlight, overschrijft Shopify settings favicon {%- endcomment -%}
+<link rel="icon" type="image/png" href="https://i.imgur.com/wwoqIM6.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://i.imgur.com/wwoqIM6.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://i.imgur.com/wwoqIM6.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://i.imgur.com/wwoqIM6.png">
+<link rel="shortcut icon" type="image/png" href="https://i.imgur.com/wwoqIM6.png">
 <script>
 (function(){
   function removeOldFavicons(){
     document.querySelectorAll('link[rel*="icon"]').forEach(function(el){
-      if(el.href.indexOf('imgur.com/2ROeTRS') === -1){
+      if(el.href.indexOf('imgur.com/wwoqIM6') === -1){
         el.parentNode.removeChild(el);
       }
     });
@@ -177,7 +177,7 @@
     var fresh = document.createElement('link');
     fresh.rel = 'icon';
     fresh.type = 'image/png';
-    fresh.href = 'https://i.imgur.com/2ROeTRS.png?v=' + Date.now();
+    fresh.href = 'https://i.imgur.com/wwoqIM6.png?v=' + Date.now();
     document.head.appendChild(fresh);
   }
   removeOldFavicons();
@@ -193,7 +193,7 @@
   "name": "Spotwereld",
   "alternateName": "Spotwereld Webshop",
   "url": "{{ request.origin }}",
-  "logo": "https://i.imgur.com/2ROeTRS.png",
+  "logo": "https://i.imgur.com/wwoqIM6.png",
   "description": "{{ sw_tagline }} voor elk interieur. Premium LED inbouwspots, opbouwspots, hanglampen en meer.",
   "sameAs": [
     "https://www.facebook.com/spotwereld",
@@ -259,7 +259,7 @@
 
 {%- comment -%} Open Graph image fallback (1200x630 minimum voor social sharing) {%- endcomment -%}
 {%- unless page_image -%}
-<meta property="og:image" content="https://i.imgur.com/2ROeTRS.png">
+<meta property="og:image" content="https://i.imgur.com/wwoqIM6.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 {%- endunless -%}
