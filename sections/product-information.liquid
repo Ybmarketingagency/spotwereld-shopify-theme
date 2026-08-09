@@ -426,6 +426,17 @@
     {%- assign sw_driver = product.metafields.custom.driver | default: 'Ja, externe driver' -%}
     {%- assign sw_fitting = product.metafields.custom.fitting | default: 'Ge&iuml;ntegreerd' -%}
     {%- assign sw_ip = product.metafields.custom.ip_waarde | default: 'IP65' -%}
+    {%- comment -%} Zaagmaat/Inbouwdiepte: uit metafield, anders uit de titel parsen; Afmetingen uit metafield {%- endcomment -%}
+    {%- assign sw_zaagmaat = product.metafields.custom.zaagmaat -%}
+    {%- assign sw_diepte = product.metafields.custom.inbouwdiepte -%}
+    {%- assign sw_afmetingen = product.metafields.custom.afmetingen -%}
+    {%- assign sw_tparts = product.title | split: '|' -%}
+    {%- for tp in sw_tparts -%}
+      {%- assign tpx = tp | strip -%}
+      {%- if sw_zaagmaat == blank and tpx contains 'Zaagmaat' -%}{%- assign sw_zaagmaat = tpx | split: ':' | last | strip -%}{%- endif -%}
+      {%- if sw_diepte == blank and tpx contains 'Inbouwdiepte' -%}{%- assign sw_diepte = tpx | split: ':' | last | strip -%}{%- endif -%}
+      {%- if sw_zaagmaat == blank and tpx contains 'Gatmaat' -%}{%- assign sw_zaagmaat = tpx | split: ':' | last | strip -%}{%- endif -%}
+    {%- endfor -%}
     <table style="width:100%;border-collapse:collapse;font-size:.875rem">
       <tbody>
         {%- if product.selected_or_first_available_variant.sku != blank -%}
@@ -440,6 +451,9 @@
         <tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Inclusief driver</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_driver }}</td></tr>
         <tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Fitting</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_fitting }}</td></tr>
         <tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">IP-waarde</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_ip }}</td></tr>
+        {%- if sw_zaagmaat != blank -%}<tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Zaagmaat</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_zaagmaat }}</td></tr>{%- endif -%}
+        {%- if sw_diepte != blank -%}<tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Inbouwdiepte</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_diepte }}</td></tr>{%- endif -%}
+        {%- if sw_afmetingen != blank -%}<tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Afmetingen</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_afmetingen }}</td></tr>{%- endif -%}
         {%- for opt in product.options_with_values -%}
           {%- assign opt_name = opt.name | downcase -%}
           {%- unless opt_name == 'title' or opt_name == 'ip-waarde' -%}
