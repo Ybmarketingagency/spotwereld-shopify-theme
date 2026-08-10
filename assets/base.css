@@ -4293,3 +4293,156 @@ product-recommendations:has([data-has-recommendations='false']) {
 /* sync-trigger: favicon overal wwoqIM6 162446 */
 /* sync-trigger: mobiele cart-lade checkout-knop prominenter 095942 */
 /* sync-trigger: specs-tabel zaagmaat/inbouwdiepte/afmetingen 154223 */
+/* sync-trigger: mobiele hamburger-menu branded 2026-08-10 */
+
+/* ===================================================================
+   Mobiele hamburger-menu — Spotwereld branded (alleen < 750px)
+   =================================================================== */
+@media screen and (max-width: 749px) {
+  header-drawer .menu-drawer.menu-drawer {
+    width: 85vw;
+    max-width: 360px;
+    border-right: none;
+    border-radius: 0 20px 20px 0;
+    box-shadow: 14px 0 44px rgba(6, 20, 45, 0.30);
+    padding: 0;
+    overflow-x: hidden;
+  }
+
+  /* Verberg de (lege) localisatie-/utility-strook zodat de footer netjes onderaan pint */
+  header-drawer .menu-drawer .menu-drawer__utility-links {
+    display: none;
+  }
+
+  /* Branded navy kop met Spotwereld-logo */
+  header-drawer .menu-drawer.menu-drawer::before {
+    content: "";
+    display: block;
+    flex: 0 0 auto;
+    height: 70px;
+    background: #142957 url("https://i.imgur.com/a0coyIm.png") no-repeat 22px center;
+    background-size: auto 26px;
+    border-radius: 0 20px 0 0;
+  }
+
+  /* Sluitknop: witte ronde knop rechtsboven, op de band */
+  header-drawer .menu-drawer .menu-drawer__close-button {
+    position: absolute;
+    top: 17px;
+    right: 14px;
+    width: 38px;
+    height: 38px;
+    min-height: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    z-index: 3;
+    box-shadow: none;
+    transition: background 0.15s ease;
+  }
+  header-drawer .menu-drawer .menu-drawer__close-button:hover,
+  header-drawer .menu-drawer .menu-drawer__close-button:active {
+    background: rgba(255, 255, 255, 0.30);
+  }
+  header-drawer .menu-drawer .menu-drawer__close-button svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* Navigatie */
+  header-drawer .menu-drawer .menu-drawer__navigation {
+    margin-top: 8px;
+    padding: 0;
+  }
+  header-drawer .menu-drawer .menu-drawer__menu {
+    padding-inline: 0;
+    margin-block-end: 0;
+  }
+
+  /* Elk menu-item = volledige rij met ruime tikzone + fijne scheidingslijn */
+  header-drawer .menu-drawer .menu-drawer__menu > .menu-drawer__list-item--flat {
+    display: block;
+    margin: 0;
+    min-height: 0;
+    border-bottom: 1px solid #eef1f6;
+  }
+  header-drawer .menu-drawer .menu-drawer__menu-item--mainlist {
+    position: relative;
+    min-height: 56px;
+    padding: 14px 22px;
+    font-size: 1.6rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: #142957;
+    justify-content: space-between;
+    transition: background 0.15s ease, color 0.15s ease, padding-left 0.15s ease;
+  }
+
+  /* Blauw links-accent (verschijnt bij hover/actief) */
+  header-drawer .menu-drawer .menu-drawer__menu-item--mainlist::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 11px;
+    bottom: 11px;
+    width: 3px;
+    border-radius: 0 3px 3px 0;
+    background: #0f6fe3;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+  }
+
+  /* Chevron rechts */
+  header-drawer .menu-drawer .menu-drawer__menu-item--mainlist::after {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-top: 2px solid #b8c2d4;
+    border-right: 2px solid #b8c2d4;
+    transform: rotate(45deg);
+    margin-left: auto;
+    flex-shrink: 0;
+    transition: border-color 0.15s ease, transform 0.15s ease;
+  }
+
+  header-drawer .menu-drawer .menu-drawer__menu-item--mainlist:hover,
+  header-drawer .menu-drawer .menu-drawer__menu-item--mainlist:active,
+  header-drawer .menu-drawer .menu-drawer__menu-item--mainlist[aria-current="page"] {
+    background: #f2f7ff;
+    color: #0f6fe3;
+    padding-left: 26px;
+  }
+  header-drawer .menu-drawer .menu-drawer__menu-item--mainlist:hover::before,
+  header-drawer .menu-drawer .menu-drawer__menu-item--mainlist:active::before,
+  header-drawer .menu-drawer .menu-drawer__menu-item--mainlist[aria-current="page"]::before {
+    opacity: 1;
+  }
+  header-drawer .menu-drawer .menu-drawer__menu-item--mainlist:hover::after,
+  header-drawer .menu-drawer .menu-drawer__menu-item--mainlist:active::after,
+  header-drawer .menu-drawer .menu-drawer__menu-item--mainlist[aria-current="page"]::after {
+    border-color: #0f6fe3;
+    transform: rotate(45deg) translate(1px, -1px);
+  }
+
+  /* Bezorgbelofte-footer, onderaan gepind */
+  header-drawer .menu-drawer.menu-drawer::after {
+    content: "✓ Voor 22:00 besteld, morgen verzonden";
+    display: block;
+    margin-top: auto;
+    padding: 16px 22px calc(16px + env(safe-area-inset-bottom, 0px));
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #2f855a;
+    background: #f5f8fc;
+    border-top: 1px solid #eef1f6;
+  }
+
+  /* Iets rustiger, gepolijste achtergrond-dim */
+  header-drawer .menu-drawer__backdrop {
+    backdrop-filter: blur(2px) brightness(0.6);
+  }
+}
