@@ -644,8 +644,8 @@ section:has(> div > .sw-pr-grid){display:none!important}
     var price = {{ product.price | divided_by: 100.0 }};
     var tiers = [
       { qty: 1, label: '1 stuk', discount: 0 },
-      { qty: 10, label: '10 stuks', discount: 0.08 },
-      { qty: 50, label: '50 stuks', discount: 0.16 }
+      { qty: 10, label: '10 stuks', discount: 0.02 },
+      { qty: 50, label: '50 stuks', discount: 0.05 }
     ];
     var volHtml = '<div class="sw-vol" style="display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap">';
     tiers.forEach(function(tier, i) {
