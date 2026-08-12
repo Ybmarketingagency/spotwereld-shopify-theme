@@ -89,7 +89,7 @@
   </div>
 {% elsif plain_text != blank %}
   <{{ element }} {{ attributes | strip_newlines | strip }}>
-    {{ block.settings.text }}
+    {{ block.settings.text | replace: '2 jaar garantie', '5 jaar garantie' | replace: '2 Jaar garantie', '5 Jaar garantie' | replace: '<td>2 jaar</td>', '<td>5 jaar</td>' | replace: '<td>2 Jaar</td>', '<td>5 Jaar</td>' }}
   </{{ element }}>
 {% endif %}
 
