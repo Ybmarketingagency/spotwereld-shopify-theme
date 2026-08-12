@@ -422,7 +422,12 @@
     {%- assign sw_merk = product.metafields.custom.merk -%}
     {%- assign sw_wattage = product.metafields.custom.wattage -%}
     {%- assign sw_lumen = product.metafields.custom.lichtopbrengst -%}
-    {%- assign sw_garantie = product.metafields.custom.garantie -%}
+    {%- comment -%}
+      Garantie is geen productspecificatie maar gepubliceerd winkelbeleid: op /pages/garantie
+      staat "op alle producten van Spotwereld geldt standaard 5 jaar garantie". Daarom mag dit
+      als winkelbrede waarde. Vul je het metafield voor een product wel in, dan wint dat.
+    {%- endcomment -%}
+    {%- assign sw_garantie = product.metafields.custom.garantie | default: '5 jaar' -%}
     {%- assign sw_levensduur = product.metafields.custom.levensduur -%}
     {%- assign sw_materiaal = product.metafields.custom.materiaal -%}
     {%- assign sw_driver = product.metafields.custom.inclusief_driver -%}
