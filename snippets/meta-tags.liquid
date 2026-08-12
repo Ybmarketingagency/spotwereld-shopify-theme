@@ -119,14 +119,14 @@
     if product.description != blank
       assign sw_desc = product.description | strip_html | truncate: 155
     else
-      assign sw_desc = product.title | append: ' - Premium LED kwaliteit, snelle levering en 2 jaar garantie bij Spotwereld.'
+      assign sw_desc = product.title | append: ' - Premium LED kwaliteit, snelle levering en 5 jaar garantie bij Spotwereld.'
     endif
   elsif request.page_type == 'collection'
     assign sw_title = collection.title | append: ' kopen - LED ' | append: collection.title | append: ' | ' | append: sw_brand
     if collection.description != blank
       assign sw_desc = collection.description | strip_html | truncate: 155
     else
-      assign sw_desc = 'Bekijk onze ' | append: collection.title | append: ' collectie. Premium LED kwaliteit met 2 jaar garantie. Vandaag voor 22:00 besteld, morgen verzonden.'
+      assign sw_desc = 'Bekijk onze ' | append: collection.title | append: ' collectie. Premium LED kwaliteit met 5 jaar garantie. Vandaag voor 22:00 besteld, morgen verzonden.'
     endif
   elsif request.page_type == 'article'
     assign sw_title = article.title | append: ' | ' | append: sw_brand | append: ' Blog'
