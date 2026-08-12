@@ -117,7 +117,7 @@
   elsif request.page_type == 'product'
     assign sw_title = product.title | append: ' kopen | ' | append: sw_brand
     if product.description != blank
-      assign sw_desc = product.description | strip_html | truncate: 155
+      assign sw_desc = product.description | replace: '2 jaar garantie', '5 jaar garantie' | replace: '2 Jaar garantie', '5 Jaar garantie' | replace: '<td>2 jaar</td>', '<td>5 jaar</td>' | replace: '<td>2 Jaar</td>', '<td>5 Jaar</td>' | strip_html | truncate: 155
     else
       assign sw_desc = product.title | append: ' - Premium LED kwaliteit, snelle levering en 5 jaar garantie bij Spotwereld.'
     endif

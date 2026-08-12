@@ -249,7 +249,7 @@
               "type": "text",
               "name": "Productbeschrijving",
               "settings": {
-                "text": "<p><strong>Productbeschrijving</strong></p>{{ closest.product.description }}",
+                "text": "<p><strong>Productbeschrijving</strong></p>{{ closest.product.description | replace: '2 jaar garantie', '5 jaar garantie' | replace: '2 Jaar garantie', '5 Jaar garantie' | replace: '<td>2 jaar</td>', '<td>5 jaar</td>' | replace: '<td>2 Jaar</td>', '<td>5 Jaar</td>' }}",
                 "width": "100%",
                 "max_width": "normal",
                 "alignment": "left",
