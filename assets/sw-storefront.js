@@ -81,6 +81,8 @@
     'led-inbouwspot-lesto-koper': {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[29], lk:CCT_LK, watt:[4,6], kantel:'ja', buiten:85},
     'led-inbouwspot-lesto-goud': {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[29], lk:CCT_LK, watt:[4,6], kantel:'ja', buiten:85},
     'led-inbouwspot-lesto-satin-metallic': {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[29], lk:CCT_LK, watt:[4,6], kantel:'ja', buiten:85},
+    // Slim-Fit uitvoering: zelfde zaagmaat als de rest van de Lesto's, maar 26 mm diep en Ø82 buitenmaat
+    'led-inbouwspot-lesto-donker-brons': {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[26], lk:CCT_LK, watt:[4,6], kantel:'ja', buiten:82},
     'led-inbouwspot-lyvo-mat-wit': {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25], lk:CCT_LK, watt:[5,7], kantel:'ja', buiten:86},
     'led-inbouwspot-lyvo-mat-zwart': {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25], lk:CCT_LK, watt:[5,7], kantel:'ja', buiten:86},
     'led-inbouwspot-lyvo-goud': {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25], lk:CCT_LK, watt:[5,7], kantel:'ja', buiten:86},
