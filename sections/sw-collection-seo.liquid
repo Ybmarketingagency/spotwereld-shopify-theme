@@ -1,0 +1,134 @@
+{%- comment -%}
+  Collectietekst onder de productgrid.
+
+  De collectiebeschrijving werd tot nu toe alleen afgekapt op 120 tekens in de header
+  gebruikt, dus langere tekst was onmogelijk zonder de theme aan te passen. Deze sectie
+  rendert de volledige `collection.description`, zodat er via de Shopify-admin
+  (Collecties > Beschrijving) uitgebreide tekst toegevoegd kan worden zonder code.
+
+  Onder de grid en niet erboven: de producten blijven bovenaan zichtbaar, terwijl Google
+  wel substantiele unieke tekst per collectie te zien krijgt. Dat is de gangbare opzet
+  voor webshops.
+
+  Rendert niets als er geen beschrijving is, dus collecties zonder tekst houden
+  gewoon hun huidige weergave.
+{%- endcomment -%}
+
+{%- if collection.description != blank -%}
+  <div class="sw-coll-seo">
+    <div class="sw-coll-seo__inner">
+      {%- if section.settings.heading != blank -%}
+        <h2 class="sw-coll-seo__heading">
+          {{- section.settings.heading | replace: '[collectie]', collection.title -}}
+        </h2>
+      {%- endif -%}
+      <div class="sw-coll-seo__body rte">
+        {{ collection.description }}
+      </div>
+    </div>
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .sw-coll-seo {
+    border-top: 1px solid #e8edf4;
+    background: #f8fafc;
+    padding: 2.5rem 1.5rem 3rem;
+  }
+
+  .sw-coll-seo__inner {
+    max-width: 820px;
+    margin: 0 auto;
+  }
+
+  .sw-coll-seo__heading {
+    font-size: 1.35rem;
+    font-weight: 900;
+    color: #061f40;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin: 0 0 0.85rem;
+  }
+
+  .sw-coll-seo__body {
+    color: #334155;
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+
+  .sw-coll-seo__body > *:first-child {
+    margin-top: 0;
+  }
+
+  .sw-coll-seo__body > *:last-child {
+    margin-bottom: 0;
+  }
+
+  .sw-coll-seo__body h2,
+  .sw-coll-seo__body h3 {
+    color: #061f40;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    margin: 1.75rem 0 0.6rem;
+  }
+
+  .sw-coll-seo__body h2 {
+    font-size: 1.15rem;
+  }
+
+  .sw-coll-seo__body h3 {
+    font-size: 1rem;
+  }
+
+  .sw-coll-seo__body p {
+    margin: 0 0 1rem;
+  }
+
+  .sw-coll-seo__body ul,
+  .sw-coll-seo__body ol {
+    margin: 0 0 1.15rem;
+    padding-left: 1.4rem;
+  }
+
+  .sw-coll-seo__body li {
+    margin-bottom: 0.4rem;
+  }
+
+  .sw-coll-seo__body a {
+    color: #0f6fe3;
+    text-decoration: underline;
+  }
+
+  .sw-coll-seo__body a:hover {
+    color: #083d7d;
+  }
+
+  .sw-coll-seo__body strong {
+    color: #061f40;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Collectietekst (SEO)",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Toont de volledige collectiebeschrijving onder de productgrid. Bewerk de tekst via Collecties > Beschrijving in de Shopify-admin. Zonder beschrijving wordt er niets getoond."
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Kop",
+      "info": "Gebruik [collectie] als plaatshouder voor de collectienaam. Laat leeg om de kop te verbergen.",
+      "default": "Meer over [collectie]"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collectietekst (SEO)"
+    }
+  ]
+}
+{% endschema %}
