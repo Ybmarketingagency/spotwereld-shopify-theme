@@ -687,7 +687,8 @@
         {param:'sw_watt', label:'Wattage', facetSel:'.sw-watt-facet', map:{}},
         {param:'sw_buiten', label:'Buitenmaat', facetSel:'.sw-buiten-facet', map:{}},
         {param:'sw_kantel', label:'Kantelbaar', facetSel:'.sw-kantel-facet', map:{ja:'Ja',nee:'Nee'}},
-        {param:'sw_dim', label:'Dimbaar', facetSel:'.sw-fake-nee', map:{nee:'Nee'}}
+        {param:'sw_dim', label:'Dimbaar', facetSel:'.sw-fake-nee', map:{nee:'Nee'}},
+        {param:'sw_lk', label:'Lichtkleur', facetSel:'.sw-lk-none', map:{tri:'Instelbaar (2700K-4000K)'}}
       ];
       defs.forEach(function(def){
         p.getAll(def.param).forEach(function(v){
@@ -705,6 +706,8 @@
             history.replaceState({}, '', location.pathname + (s?'?'+s:''));
             var sel = def.facetSel + ' input[value="'+v+'"]';
             var inp = document.querySelector(sel);
+            // sw_lk 'tri' leeft op de native Lichtkleur-facet — daar op waarde zoeken
+            if (!inp && def.param === 'sw_lk' && v === 'tri') inp = document.querySelector('input[value*="Instelbaar (2700K-4000K)"]');
             if (inp){ inp.checked = false; var li = inp.closest('li'); if (li) li.classList.remove('sw-vorm-active','sw-lk-active'); }
             applyAllFilters();
             renderActiveChips();
@@ -809,7 +812,42 @@
       }
     });
   }
-  function fixLichtkleurOptions(){ injectLkStyle(); ensureLichtkleurExtras(); sortLichtkleur(); }
+  // "Instelbaar (2700K-4000K)" koppelen aan het eigen sw_lk-filter (key 'tri').
+  // De native facet matcht alleen producten met die letterlijke optiewaarde (alleen Cielo);
+  // de CCT-reeks (Lesto/Lyvo/Quaro/...) heeft geen Lichtkleur-optie maar wel de cct-tag,
+  // die swDerive al naar s.lk = CCT_LK vertaalt. Client-side filteren dus, net als IP/Zaagmaat.
+  function hookInstelbaarCct(){
+    document.querySelectorAll('.facets__item, details.facets__item').forEach(function(f){
+      var lbl = f.querySelector('.facets__label');
+      if (!lbl || lbl.textContent.trim() !== 'Lichtkleur') return;
+      f.querySelectorAll('input').forEach(function(inp){
+        if (!/instelbaar\s*\(2700K-4000K\)/i.test(inp.value || '')) return;
+        var active = new URLSearchParams(location.search).getAll('sw_lk').indexOf('tri') > -1;
+        inp.checked = active;
+        var li = inp.closest('li'); if (li) li.classList.toggle('sw-vorm-active', active);
+        if (inp.dataset.swCctFixed) return;
+        inp.dataset.swCctFixed = '1';
+        inp.addEventListener('click', function(e){
+          e.stopPropagation(); e.stopImmediatePropagation();
+          setTimeout(function(){
+            var p = new URLSearchParams(location.search);
+            var has = p.getAll('sw_lk').indexOf('tri') > -1;
+            var keep = p.getAll('sw_lk').filter(function(v){ return v !== 'tri'; });
+            p.delete('sw_lk');
+            keep.forEach(function(v){ p.append('sw_lk', v); });
+            if (!has) p.append('sw_lk', 'tri');
+            var s = p.toString();
+            history.replaceState({}, '', location.pathname + (s ? '?' + s : ''));
+            hookInstelbaarCct();
+            applyAllFilters();
+            renderActiveChips();
+          }, 0);
+        }, true);
+        inp.addEventListener('change', function(e){ e.stopPropagation(); e.stopImmediatePropagation(); }, true);
+      });
+    });
+  }
+  function fixLichtkleurOptions(){ injectLkStyle(); ensureLichtkleurExtras(); sortLichtkleur(); hookInstelbaarCct(); }
   // Morph zet de extra opties + volgorde telkens terug — blijf ze herstellen.
   // Deze tick is nodig op collectie- en zoekpagina's, maar draaide voorheen ook eeuwig
   // door op de homepage, productpagina's en de cart, waar geen enkel facet bestaat.
