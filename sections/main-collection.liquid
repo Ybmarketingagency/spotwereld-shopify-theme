@@ -48,43 +48,9 @@
       {% assign products_per_page = section.settings.products_per_page %}
     {% endif %}
 
-    {% comment %}
-      Spotwereld: /collections/all is Shopify's automatische lijst en kan alleen
-      alfabetisch/prijs/datum sorteren — geen handmatige volgorde. De collectie
-      "Alle producten" (automatisch op prijs > 0, dus altijd compleet) staat wel op
-      Handmatig: inbouwspots eerst, accessoires achteraan. Zolang de bezoeker geen
-      sortering of filter kiest tonen we die volgorde; daarna valt alles terug op
-      de normale Shopify-lijst zodat sorteren en filteren gewoon werken.
-    {% endcomment %}
-    {% liquid
-      assign sw_source = collection
-      assign sw_curated = collections['alle-producten']
-
-      comment
-        Alleen active_values gebruiken: bij een prijsfilter is min_value.value 0
-        zolang de bezoeker niets kiest, en 0 is truthy in Liquid.
-      endcomment
-      assign sw_filters_active = false
-      for sw_filter in collection.filters
-        if sw_filter.active_values.size > 0
-          assign sw_filters_active = true
-        endif
-      endfor
-
-      assign sw_default_sort = false
-      if collection.sort_by == blank or collection.sort_by == collection.default_sort_by
-        assign sw_default_sort = true
-      endif
-
-      if collection.handle == 'all' and sw_default_sort and sw_filters_active == false and sw_curated.products_count >= collection.products_count
-        assign sw_source = sw_curated
-      endif
-    %}
-    <!-- sw-dbg handle="{{ collection.handle }}" sort_by="{{ collection.sort_by }}" default_sort="{{ collection.default_sort_by }}" curated_count="{{ sw_curated.products_count }}" all_count="{{ collection.products_count }}" filters_active="{{ sw_filters_active }}" source="{{ sw_source.handle }}" -->
-
-    {% paginate sw_source.products by products_per_page %}
+    {% paginate collection.products by products_per_page %}
       {% capture children %}
-        {% for product in sw_source.products %}
+        {% for product in collection.products %}
           <li
             id="{{ section.id }}-{{ product.id }}"
             class="product-grid__item product-grid__item--{{ forloop.index0 }}"
@@ -102,7 +68,7 @@
       {% render 'product-grid',
         section: section,
         children: children,
-        products: sw_source.products,
+        products: collection.products,
         paginate: paginate,
         enable_infinite_scroll: section.settings.enable_infinite_scroll
       %}
@@ -291,5 +257,3 @@
   "presets": []
 }
 {% endschema %}
-
-{% comment %} sync 2026-08-13 17:20 — standaard paginatie actief {% endcomment %}
