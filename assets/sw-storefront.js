@@ -822,6 +822,9 @@
       if (!lbl || lbl.textContent.trim() !== 'Lichtkleur') return;
       f.querySelectorAll('input').forEach(function(inp){
         if (!/instelbaar\s*\(2700K-4000K\)/i.test(inp.value || '')) return;
+        // Naam wegdraaien zodat Shopify's facet-form deze input NIET serialiseert
+        // (anders komt de native filterparam erbij en filtert de server naar alleen Cielo)
+        if ((inp.name || '').indexOf('filter.') === 0) inp.name = 'sw_lk_tri_proxy';
         var active = new URLSearchParams(location.search).getAll('sw_lk').indexOf('tri') > -1;
         inp.checked = active;
         var li = inp.closest('li'); if (li) li.classList.toggle('sw-vorm-active', active);
@@ -836,6 +839,10 @@
             p.delete('sw_lk');
             keep.forEach(function(v){ p.append('sw_lk', v); });
             if (!has) p.append('sw_lk', 'tri');
+            // native Instelbaar-param (van oude URLs of race met Shopify's handler) altijd strippen
+            var natKeep = p.getAll('filter.v.option.lichtkleur').filter(function(v){ return !/instelbaar\s*\(2700K-4000K\)/i.test(v); });
+            p.delete('filter.v.option.lichtkleur');
+            natKeep.forEach(function(v){ p.append('filter.v.option.lichtkleur', v); });
             var s = p.toString();
             history.replaceState({}, '', location.pathname + (s ? '?' + s : ''));
             hookInstelbaarCct();
