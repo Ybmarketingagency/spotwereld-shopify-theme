@@ -4465,3 +4465,4 @@ product-recommendations:has([data-has-recommendations='false']) {
 /* sync-trigger: main-collection schoon, volgorde via redirect 2026-08-13 */
 /* sync-trigger: instelbaar-vinkje herstel via lkTimer 2026-08-13 */
 /* sync-trigger: kortingscode meegeven aan Storefront cartCreate 2026-08-13 */
+/* sync-trigger: kortingsveld op gegevens-pagina + winkelwagenfoto 2026-08-13 */

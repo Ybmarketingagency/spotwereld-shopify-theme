@@ -62,6 +62,16 @@
 .swg-cart-item .meta{color:#94a3b8;font-size:.72rem}
 .swg-cart-item .price{font-weight:700;color:#061f40;font-size:.85rem;text-align:right;white-space:nowrap;margin-left:.5rem}
 .swg-edit-cart{display:block;text-align:center;color:#0F6FE3;font-weight:600;font-size:.82rem;text-decoration:underline;margin-top:.85rem}
+.swg-discount{margin-top:.9rem;padding-top:.9rem;border-top:1px solid #e8edf4}
+.swg-discount label{display:block;font-size:.78rem;font-weight:700;color:#061f40;margin-bottom:.4rem}
+.swg-discount-row{display:flex;gap:.5rem}
+.swg-discount-row input{flex:1;min-width:0;padding:.7rem .85rem;border:1.5px solid #cbd5e1;border-radius:8px;font-size:.9rem;outline:none;transition:all .15s;box-sizing:border-box;font-family:inherit;background:#fff;color:#1e293b;text-transform:uppercase}
+.swg-discount-row input::placeholder{color:#94a3b8;text-transform:none}
+.swg-discount-row input:focus{border-color:#0F6FE3;box-shadow:0 0 0 3px rgba(15,111,227,.12)}
+.swg-discount-row button{flex-shrink:0;padding:.7rem 1rem;border:0;border-radius:8px;background:#061f40;color:#fff;font-weight:700;font-size:.85rem;cursor:pointer;font-family:inherit;transition:background .15s}
+.swg-discount-row button:hover:not(:disabled){background:#0F6FE3}
+.swg-discount-row button:disabled{opacity:.6;cursor:default}
+.swg-discount-msg{margin:.5rem 0 0;font-size:.8rem;line-height:1.4}
 .swg-trust{display:flex;flex-direction:column;gap:.55rem;color:#475569;font-size:.85rem}
 .swg-trust div{display:flex;align-items:center;gap:.55rem}
 .swg-trust svg{flex-shrink:0;color:#16a34a}
@@ -185,14 +195,23 @@
     <aside class="swg-side">
       <div class="swg-card">
         <h3>Je besteloverzicht</h3>
-        <div class="swg-sum-row"><span>Totaal van alle producten</span><span>{{ cart.items_subtotal_price | money }}</span></div>
-        {%- if cart.cart_level_discount_applications.size > 0 -%}
+        <div class="swg-sum-row"><span>Totaal van alle producten</span><span id="swg-subtotal">{{ cart.items_subtotal_price | money }}</span></div>
+        <div id="swg-discount-rows">
           {%- for d in cart.cart_level_discount_applications -%}
             <div class="swg-sum-row" style="color:#16a34a"><span>{{ d.title }}</span><span>&minus;{{ d.total_allocated_amount | money }}</span></div>
           {%- endfor -%}
-        {%- endif -%}
+        </div>
         <div class="swg-sum-row"><span>Bezorging</span><span style="color:#94a3b8">Berekend bij volgende stap</span></div>
-        <div class="swg-sum-row total"><span>Totaalprijs (incl. BTW)<small>Excl. verzending</small></span><span>{{ cart.total_price | money }}</span></div>
+        <div class="swg-sum-row total"><span>Totaalprijs (incl. BTW)<small>Excl. verzending</small></span><span id="swg-total">{{ cart.total_price | money }}</span></div>
+
+        <div class="swg-discount">
+          <label for="swg-discount-input">Kortingscode</label>
+          <div class="swg-discount-row">
+            <input type="text" id="swg-discount-input" placeholder="Bijv. WELKOM10" autocomplete="off" spellcheck="false">
+            <button type="button" id="swg-discount-apply">Toepassen</button>
+          </div>
+          <p class="swg-discount-msg" id="swg-discount-msg" hidden></p>
+        </div>
       </div>
 
       <div class="swg-card">
@@ -536,6 +555,96 @@
     setIf('swg-city', saved.city);
     setIf('swg-phone', saved.phone);
   } catch(e){}
+})();
+
+/* Kortingscode toepassen vanaf deze pagina. De code gaat via /cart/update.js naar
+   de winkelwagen, en wordt bij het afrekenen uit cart.discount_codes gelezen en
+   meegestuurd naar de Storefront-cart — zie de cartCreate hierboven. */
+(function(){
+  var input = document.getElementById('swg-discount-input');
+  var btn = document.getElementById('swg-discount-apply');
+  if (!input || !btn) return;
+  var msg = document.getElementById('swg-discount-msg');
+
+  function money(cents){ return '€ ' + (cents / 100).toFixed(2).replace('.', ','); }
+
+  function say(text, ok){
+    if (!msg) return;
+    msg.textContent = text;
+    msg.hidden = false;
+    msg.style.color = ok ? '#16a34a' : '#dc2626';
+  }
+
+  function refreshSummary(cart){
+    var sub = document.getElementById('swg-subtotal');
+    var tot = document.getElementById('swg-total');
+    var rows = document.getElementById('swg-discount-rows');
+    if (sub) sub.textContent = money(cart.items_subtotal_price);
+    if (tot) tot.textContent = money(cart.total_price);
+    if (!rows) return;
+    rows.innerHTML = '';
+    (cart.cart_level_discount_applications || []).forEach(function(d){
+      var row = document.createElement('div');
+      row.className = 'swg-sum-row';
+      row.style.color = '#16a34a';
+      var label = document.createElement('span');
+      label.textContent = d.title;
+      var amount = document.createElement('span');
+      amount.textContent = '−' + money(d.total_allocated_amount);
+      row.appendChild(label);
+      row.appendChild(amount);
+      rows.appendChild(row);
+    });
+  }
+
+  function applicableCodes(cart){
+    return (cart.discount_codes || [])
+      .filter(function(d){ return d && d.code && d.applicable !== false; })
+      .map(function(d){ return d.code; });
+  }
+
+  function apply(){
+    var code = (input.value || '').trim();
+    if (!code) return;
+    var label = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Bezig...';
+    if (msg) msg.hidden = true;
+
+    fetch('/cart.js', { credentials: 'same-origin' })
+      .then(function(r){ return r.json(); })
+      .then(function(cart){
+        var codes = applicableCodes(cart);
+        var already = codes.some(function(c){ return c.toLowerCase() === code.toLowerCase(); });
+        if (!already) codes.push(code);
+        return fetch('/cart/update.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          credentials: 'same-origin',
+          body: JSON.stringify({ discount: codes.join(',') })
+        });
+      })
+      .then(function(r){ return r.json(); })
+      .then(function(cart){
+        var match = (cart.discount_codes || []).filter(function(d){
+          return d.code && d.code.toLowerCase() === code.toLowerCase();
+        })[0];
+        if (!match || match.applicable === false) {
+          say('Deze code is niet geldig voor je huidige winkelmand.', false);
+        } else {
+          say('Kortingscode ' + match.code + ' toegepast.', true);
+          input.value = '';
+        }
+        refreshSummary(cart);
+      })
+      .catch(function(){ say('Er ging iets mis. Probeer het zo nog eens.', false); })
+      .then(function(){ btn.disabled = false; btn.textContent = label; });
+  }
+
+  btn.addEventListener('click', apply);
+  input.addEventListener('keydown', function(e){
+    if (e.key === 'Enter') { e.preventDefault(); apply(); }
+  });
 })();
 </script>
 

@@ -635,11 +635,17 @@
     position: relative;
     width: 100%;
     overflow: hidden;
+    /* Productfoto's staan strak in het kader; wat witruimte eromheen voorkomt dat
+       een donker product in de kleine thumbnail een vlek wordt. */
+    box-sizing: border-box;
+    padding: 8%;
+    background: #fff;
+    border-radius: 10px;
   }
 
   .cart-items__media-image {
     aspect-ratio: inherit;
-    object-fit: cover;
+    object-fit: contain;
     object-position: center center;
     width: 100%;
     height: auto;
