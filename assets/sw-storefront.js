@@ -866,6 +866,7 @@
     if (!document.querySelector('.facets__item, details.facets__item')) return;
     ensureLichtkleurExtras();
     sortLichtkleur();
+    hookInstelbaarCct();
   }, 500);
   setTimeout(function(){
     if (!document.querySelector('.facets__item, details.facets__item')) clearInterval(lkTimer);
