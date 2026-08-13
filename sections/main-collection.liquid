@@ -58,24 +58,29 @@
     {% endcomment %}
     {% liquid
       assign sw_source = collection
+      assign sw_curated = collections['alle-producten']
 
+      comment
+        Alleen active_values gebruiken: bij een prijsfilter is min_value.value 0
+        zolang de bezoeker niets kiest, en 0 is truthy in Liquid.
+      endcomment
       assign sw_filters_active = false
       for sw_filter in collection.filters
         if sw_filter.active_values.size > 0
           assign sw_filters_active = true
         endif
-        if sw_filter.min_value.value or sw_filter.max_value.value
-          assign sw_filters_active = true
-        endif
       endfor
 
-      if collection.handle == 'all' and collection.sort_by == blank and sw_filters_active == false
-        assign sw_curated = collections['alle-producten']
-        if sw_curated.products_count >= collection.products_count
-          assign sw_source = sw_curated
-        endif
+      assign sw_default_sort = false
+      if collection.sort_by == blank or collection.sort_by == collection.default_sort_by
+        assign sw_default_sort = true
+      endif
+
+      if collection.handle == 'all' and sw_default_sort and sw_filters_active == false and sw_curated.products_count >= collection.products_count
+        assign sw_source = sw_curated
       endif
     %}
+    <!-- sw-dbg handle="{{ collection.handle }}" sort_by="{{ collection.sort_by }}" default_sort="{{ collection.default_sort_by }}" curated_count="{{ sw_curated.products_count }}" all_count="{{ collection.products_count }}" filters_active="{{ sw_filters_active }}" source="{{ sw_source.handle }}" -->
 
     {% paginate sw_source.products by products_per_page %}
       {% capture children %}
