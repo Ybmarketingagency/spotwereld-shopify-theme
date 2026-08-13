@@ -134,6 +134,12 @@ li.facets__inputs-list-item:has(input[data-label="4000K (neutraal-wit)"]) ~ li.f
     return SW_BRAND_ORDER.length;
   }
   function reorderBrandPriority(){
+    // UITGESCHAKELD. Deze functie herschikte de productkaarten ná het laden, waardoor je
+    // eerst de servervolgorde zag en daarna een sprong naar Lesto — die zichtbare flits.
+    // De volgorde staat nu in de collectie zelf (Handmatig: Lesto, Ferro, ... Dovo achteraan),
+    // waardoor de server meteen goed levert en de homepage dezelfde volgorde toont.
+    return;
+    /* eslint-disable no-unreachable */
     if(new URLSearchParams(location.search).get('sort_by'))return;
     var cards=document.querySelectorAll('product-card, .product-card');
     if(!cards.length)return;
