@@ -801,7 +801,13 @@ section:has(> div > .sw-pr-grid){display:none!important}
     tempDiv.innerHTML = source.innerHTML;
     var seenUrls = {};
     tempDiv.querySelectorAll('img').forEach(function(img) {
-      var url = (img.getAttribute('data-full-src') || img.src || '').split('?')[0].split('_')[0];
+      // Dedupliceren op de volledige bestandsnaam, alleen de Shopify-maatsuffix
+      // (_1200x, _150x150) eraf. NIET op '_' splitsen: Shopify zet een uniek ID
+      // achter een underscore in de bestandsnaam, waardoor alle foto's van een
+      // product dezelfde sleutel kregen en er maar één thumbnail overbleef.
+      var url = (img.getAttribute('data-full-src') || img.src || '')
+        .split('?')[0]
+        .replace(/_(\d+x\d*|x\d+)(?=\.[a-zA-Z]+$)/, '');
       if (seenUrls[url]) {
         img.remove();
       } else {
