@@ -4458,3 +4458,4 @@ product-recommendations:has([data-has-recommendations='false']) {
 /* sync-trigger: instelbaar preventDefault fix 2026-08-13 */
 /* sync-trigger: accessoires achteraan op /collections/all 2026-08-13 */
 /* sync-trigger: main-collection terug naar standaard paginatie 2026-08-13 */
+/* sync-trigger: revert main-collection paginatie 2026-08-13 b */

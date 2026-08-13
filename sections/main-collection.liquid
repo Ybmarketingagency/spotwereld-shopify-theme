@@ -48,63 +48,20 @@
       {% assign products_per_page = section.settings.products_per_page %}
     {% endif %}
 
-    {% comment %}
-      Spotwereld: op /collections/all worden alle producten in één keer gerenderd
-      (twee loops van 50, want een for-loop over collection.products geeft er max 50).
-      Alleen zo kunnen accessoires in de standaardsortering achteraan de héle lijst
-      staan in plaats van achteraan elke pagina. Bij een expliciete sort_by blijft de
-      volgorde van Shopify intact.
-    {% endcomment %}
-    {% liquid
-      assign sw_render_all = false
-      if collection.handle == 'all' and collection.products_count <= 100
-        assign sw_render_all = true
-      endif
-
-      assign sw_accessories_last = false
-      if sw_render_all and collection.sort_by == blank
-        assign sw_accessories_last = true
-      endif
-    %}
-
-    {% if sw_render_all %}
+    {% paginate collection.products by products_per_page %}
       {% capture children %}
-        {% assign sw_passes = 1 %}
-        {% if sw_accessories_last %}
-          {% assign sw_passes = 2 %}
-        {% endif %}
-        {% assign sw_index = 0 %}
-        {% for sw_pass in (1..sw_passes) %}
-          {% for sw_chunk in (0..1) %}
-            {% assign sw_offset = sw_chunk | times: 50 %}
-            {% for product in collection.products limit: 50 offset: sw_offset %}
-              {% assign sw_is_accessory = false %}
-              {% assign sw_type = product.type | downcase %}
-              {% if sw_type contains 'accessoire' %}
-                {% assign sw_is_accessory = true %}
-              {% endif %}
-              {% if sw_accessories_last %}
-                {% if sw_pass == 1 and sw_is_accessory %}
-                  {% continue %}
-                {% endif %}
-                {% if sw_pass == 2 and sw_is_accessory == false %}
-                  {% continue %}
-                {% endif %}
-              {% endif %}
-              <li
-                id="{{ section.id }}-{{ product.id }}"
-                class="product-grid__item product-grid__item--{{ sw_index }}"
-                data-page="1"
-                data-product-id="{{ product.id }}"
-                ref="cards[]"
-              >
-                {% # theme-check-disable %}
-                {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: product %}
-                {% # theme-check-enable %}
-              </li>
-              {% assign sw_index = sw_index | plus: 1 %}
-            {% endfor %}
-          {% endfor %}
+        {% for product in collection.products %}
+          <li
+            id="{{ section.id }}-{{ product.id }}"
+            class="product-grid__item product-grid__item--{{ forloop.index0 }}"
+            data-page="{{ paginate.current_page }}"
+            data-product-id="{{ product.id }}"
+            ref="cards[]"
+          >
+            {% # theme-check-disable %}
+            {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: product %}
+            {% # theme-check-enable %}
+          </li>
         {% endfor %}
       {% endcapture %}
 
@@ -112,35 +69,10 @@
         section: section,
         children: children,
         products: collection.products,
-        enable_infinite_scroll: false
+        paginate: paginate,
+        enable_infinite_scroll: section.settings.enable_infinite_scroll
       %}
-    {% else %}
-      {% paginate collection.products by products_per_page %}
-        {% capture children %}
-          {% for product in collection.products %}
-            <li
-              id="{{ section.id }}-{{ product.id }}"
-              class="product-grid__item product-grid__item--{{ forloop.index0 }}"
-              data-page="{{ paginate.current_page }}"
-              data-product-id="{{ product.id }}"
-              ref="cards[]"
-            >
-              {% # theme-check-disable %}
-              {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: product %}
-              {% # theme-check-enable %}
-            </li>
-          {% endfor %}
-        {% endcapture %}
-
-        {% render 'product-grid',
-          section: section,
-          children: children,
-          products: collection.products,
-          paginate: paginate,
-          enable_infinite_scroll: section.settings.enable_infinite_scroll
-        %}
-      {% endpaginate %}
-    {% endif %}
+    {% endpaginate %}
   </div>
 </results-list>
 
