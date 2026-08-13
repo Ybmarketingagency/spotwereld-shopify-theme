@@ -794,8 +794,9 @@ section:has(> div > .sw-pr-grid){display:none!important}
         }
       });
     }
-    // FOUC fix: laat CSS pas main image tonen na override
-    document.documentElement.classList.add('sw-main-img-ready-html');
+    // (De class sw-main-img-ready-html stond hier voor een FOUC-fix, maar geen enkele
+    //  CSS-regel in de theme leest hem nog — de bijbehorende regels zijn eerder al
+    //  verwijderd. Weggehaald zodat er geen dode flag blijft rondslingeren.)
     // Dedupliceer thumbnails op URL voor injectie
     var tempDiv = document.createElement('div');
     tempDiv.innerHTML = source.innerHTML;

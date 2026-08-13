@@ -1,5 +1,35 @@
 
 
+{%- comment -%}
+  Spotwereld: Blog JSON-LD op de overzichtspagina, zodat Google de blog als geheel herkent
+  en de artikelen aan de OnlineStore koppelt.
+{%- endcomment -%}
+{%- if request.page_type == 'blog' -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  "@id": "{{ request.origin }}{{ blog.url }}#blog",
+  "name": "{{ blog.title | escape }}",
+  "url": "{{ request.origin }}{{ blog.url }}",
+  "inLanguage": "nl-NL",
+  "publisher": { "@id": "{{ request.origin }}/#organization" }
+  {%- if blog.articles.size > 0 -%}
+  ,"blogPost": [
+    {%- for post in blog.articles limit: 10 -%}
+    {
+      "@type": "BlogPosting",
+      "headline": "{{ post.title | escape }}",
+      "url": "{{ request.origin }}{{ post.url }}",
+      "datePublished": "{{ post.published_at | date: '%Y-%m-%dT%H:%M:%S%z' }}"
+    }{%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  ]
+  {%- endif -%}
+}
+</script>
+{%- endif -%}
+
 <script
   src="{{ 'blog-posts-list.js' | asset_url }}"
   type="module"

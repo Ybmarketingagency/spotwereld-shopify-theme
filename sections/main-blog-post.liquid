@@ -63,6 +63,47 @@
   {{ article | structured_data }}
 </script>
 
+{%- comment -%}
+  Spotwereld: aanvulling op Shopify's `article | structured_data`. Dat filter levert wel
+  headline, image, datePublished en author, maar niet publisher, dateModified,
+  mainEntityOfPage of description — allemaal velden die Google voor Article verwacht.
+  Los blok met eigen @id zodat het niet met het bovenstaande botst.
+{%- endcomment -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "@id": "{{ request.origin }}{{ article.url }}#article",
+  "headline": "{{ article.title | escape }}",
+  "description": "{{ article.excerpt_or_content | strip_html | truncate: 200 | escape }}",
+  "url": "{{ request.origin }}{{ article.url }}",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{ request.origin }}{{ article.url }}"
+  },
+  "datePublished": "{{ article.published_at | date: '%Y-%m-%dT%H:%M:%S%z' }}",
+  "dateModified": "{{ article.updated_at | default: article.published_at | date: '%Y-%m-%dT%H:%M:%S%z' }}",
+  {%- if article.image -%}
+  "image": {
+    "@type": "ImageObject",
+    "url": "https:{{ article.image | image_url: width: 1200 }}",
+    "width": 1200,
+    "height": {{ 1200 | divided_by: article.image.aspect_ratio | round }}
+  },
+  {%- endif -%}
+  "author": {
+    "@type": "Organization",
+    "name": "{{ article.author | default: 'Spotwereld' | escape }}",
+    "url": "{{ request.origin }}"
+  },
+  "publisher": { "@id": "{{ request.origin }}/#organization" },
+  "inLanguage": "nl-NL"
+  {%- if article.tags.size > 0 -%}
+  ,"keywords": "{{ article.tags | join: ', ' | escape }}"
+  {%- endif -%}
+}
+</script>
+
 {% stylesheet %}
   .blog-post-comments-container {
     width: 100%;
