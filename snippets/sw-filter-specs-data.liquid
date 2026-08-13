@@ -1,0 +1,31 @@
+{%- comment -%}
+  Voert de ruwe productdata van de huidige collectie als JSON de pagina in, zodat
+  assets/sw-storefront.js de filterspecs (vorm, IP, zaagmaat, inbouwdiepte, wattage,
+  buitenmaat, kantelbaar) kan AFLEIDEN in plaats van ze per handle hardcoded te
+  moeten kennen.
+
+  Waarom ruwe data en geen kant-en-klare specs: het parsen ("Ø68-75 mm" -> [68,75])
+  is met regex in JS betrouwbaar te doen en in Liquid niet. Hier alleen doorgeven.
+
+  Nieuw product = automatisch in de filters, zolang de titel of de metafields de
+  waardes bevatten. De hardcoded tabel in sw-storefront.js blijft alleen nog over
+  als vangnet voor oudere producten met lege metafields.
+{%- endcomment -%}
+{%- if collection != blank and collection.products.size > 0 -%}
+  <script type="application/json" id="sw-filter-specs-data">
+    [
+    {%- for p in collection.products -%}
+      {
+      "h": {{ p.handle | json }},
+      "t": {{ p.title | json }},
+      "g": {{ p.tags | json }},
+      "zaag": {{ p.metafields.custom.zaagmaat.value | default: '' | json }},
+      "diepte": {{ p.metafields.custom.inbouwdiepte.value | default: '' | json }},
+      "ip": {{ p.metafields.custom.ip_waarde.value | default: '' | json }},
+      "watt": {{ p.metafields.custom.wattage.value | default: '' | json }},
+      "afm": {{ p.metafields.custom.afmetingen.value | default: '' | json }}
+      }{%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+    ]
+  </script>
+{%- endif -%}

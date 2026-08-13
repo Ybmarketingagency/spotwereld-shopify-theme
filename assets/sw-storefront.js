@@ -68,6 +68,12 @@
   var LAOM_LK = ['2700'];
   // diepte = array van mogelijke waarden; wattage = array (CCT spots zijn vaak 2 wattages)
   // buitenmaat = outer diameter/zijde in mm (Aristo 85, Miran 86, LAOM 95 vierkant)
+  //
+  // LET OP: deze tabel is sinds 2026-08-13 een VANGNET, geen verplichte stap meer.
+  // De specs worden nu afgeleid uit de echte productdata (zie swDerive hieronder en
+  // snippets/sw-filter-specs-data.liquid). Een nieuw product hoeft hier dus niet meer
+  // bij; alleen producten waarvan titel en metafields een waarde niet prijsgeven,
+  // halen die nog uit deze tabel.
   var SW_PRODUCT_SPECS = {
     'orvo-moderne-inbouwspot-zwart': {vorm:'rond', ip:'IP20', zaag:null, diepte:null, lk:[], watt:null, kantel:'ja'},
     'balo-moderne-inbouwspot-wit': {vorm:'rond', ip:'IP44', zaag:null, diepte:null, lk:[], watt:null, kantel:'ja'},
@@ -81,8 +87,8 @@
     'led-inbouwspot-lesto-koper': {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[29], lk:CCT_LK, watt:[4,6], kantel:'ja', buiten:85},
     'led-inbouwspot-lesto-goud': {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[29], lk:CCT_LK, watt:[4,6], kantel:'ja', buiten:85},
     'led-inbouwspot-lesto-satin-metallic': {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[29], lk:CCT_LK, watt:[4,6], kantel:'ja', buiten:85},
-    // Slim-Fit uitvoering: zelfde zaagmaat als de rest van de Lesto's, maar 26 mm diep en Ø82 buitenmaat
-    'led-inbouwspot-lesto-donker-brons': {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[26], lk:CCT_LK, watt:[4,6], kantel:'ja', buiten:82},
+    // NB: Lesto Donker Brons staat hier bewust NIET in — die draait volledig op de
+    // afgeleide productdata en is meteen de praktijktest of dat pad werkt.
     'led-inbouwspot-lyvo-mat-wit': {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25], lk:CCT_LK, watt:[5,7], kantel:'ja', buiten:86},
     'led-inbouwspot-lyvo-mat-zwart': {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25], lk:CCT_LK, watt:[5,7], kantel:'ja', buiten:86},
     'led-inbouwspot-lyvo-goud': {vorm:'rond', ip:'IP65', zaag:[68,75], diepte:[25], lk:CCT_LK, watt:[5,7], kantel:'ja', buiten:86},
@@ -117,7 +123,96 @@
     if (!link) return '';
     return (link.getAttribute('href').split('/products/')[1]||'').split(/[?#\/]/)[0];
   }
-  function getSpecs(handle){ return SW_PRODUCT_SPECS[handle] || null; }
+  // ---- Specs AFLEIDEN uit echte productdata (snippets/sw-filter-specs-data.liquid) ----
+  // De tabel hierboven is hiermee een vangnet geworden en geen verplichte stap meer:
+  // een nieuw product komt vanzelf in de filters zolang de titel of de metafields
+  // (custom.zaagmaat / inbouwdiepte / ip_waarde / wattage / afmetingen) de waardes bevatten.
+  function swNums(str){
+    var m = String(str == null ? '' : str).match(/\d+(?:[.,]\d+)?/g);
+    if (!m) return null;
+    return m.map(function(n){ return parseFloat(n.replace(',', '.')); });
+  }
+  function swTitlePart(title, label){
+    // "… | Zaagmaat: Ø68-75 mm | …" -> "Ø68-75 mm"
+    var re = new RegExp(label + '\\s*:\\s*([^|]+)', 'i');
+    var m = String(title).match(re);
+    return m ? m[1].trim() : '';
+  }
+  function swDerive(e){
+    var title = e.t || '';
+    var low = title.toLowerCase();
+    var tags = (e.g || []).map(function(t){ return String(t).toLowerCase(); });
+    var s = {};
+
+    s.vorm = (low.indexOf('vierkant') > -1 || tags.indexOf('vorm-vierkant') > -1) ? 'vierkant' : 'rond';
+
+    // IP: metafield eerst (kan "IP65 (voorzijde) / IP20 (achterzijde)" zijn -> eerste wint), anders titel
+    var ipHit = String(e.ip || '').match(/IP\s?(20|44|54|65|66|67|68)/i) ||
+                title.match(/IP\s?(20|44|54|65|66|67|68)/i);
+    s.ip = ipHit ? ('IP' + ipHit[1]) : null;
+
+    // Zaagmaat -> [laag, hoog]; "Ø68-75 mm" = bereik, "Ø48 mm" = vast
+    var z = swNums(e.zaag || swTitlePart(title, 'Zaagmaat'));
+    s.zaag = z ? [z[0], z[z.length - 1]] : null;
+
+    // Inbouwdiepte -> array met mogelijke waardes
+    s.diepte = swNums(e.diepte || swTitlePart(title, 'Inbouwdiepte'));
+
+    // Wattage: alleen getallen die direct door een W gevolgd worden, zodat 2700K niet meetelt
+    var wSrc = e.watt || title;
+    var wHits = String(wSrc).match(/\d+(?:[.,]\d+)?\s*W\b/gi);
+    s.watt = wHits ? wHits.map(function(w){ return parseFloat(w.replace(',', '.')); }) : null;
+
+    // Buitenmaat = eerste maat uit afmetingen ("Ø82 x 26 mm" -> 82)
+    var a = swNums(e.afm);
+    s.buiten = a ? a[0] : null;
+
+    // Kantelbaar: alleen 'nee' als de titel het product expliciet vast noemt
+    s.kantel = /\|\s*vast\s*\|/i.test(title) ? 'nee' : 'ja';
+
+    // Lichtkleur: cct-tag of "CCT" in de titel dekt de hele CCT-reeks,
+    // anders de Kelvin-waardes die letterlijk in de titel staan
+    if (tags.indexOf('cct') > -1 || /cct/i.test(title)) {
+      s.lk = CCT_LK;
+    } else {
+      var kelvin = title.match(/(\d{4})K/g);
+      s.lk = kelvin ? kelvin.map(function(k){ return k.replace('K', ''); }) : [];
+    }
+    return s;
+  }
+  var SW_DERIVED_SPECS = null;
+  function swDerivedSpecs(){
+    if (SW_DERIVED_SPECS) return SW_DERIVED_SPECS;
+    SW_DERIVED_SPECS = {};
+    var el = document.getElementById('sw-filter-specs-data');
+    if (!el) return SW_DERIVED_SPECS;
+    try {
+      JSON.parse(el.textContent).forEach(function(e){
+        if (e && e.h) SW_DERIVED_SPECS[e.h] = swDerive(e);
+      });
+    } catch (err) {
+      // Kapotte JSON mag de filters niet slopen: dan gewoon terugvallen op de tabel.
+    }
+    return SW_DERIVED_SPECS;
+  }
+  function getSpecs(handle){
+    var derived = swDerivedSpecs()[handle];
+    var fixed = SW_PRODUCT_SPECS[handle];
+    if (!derived) return fixed || null;
+    if (!fixed) return derived;
+    // Staat een product nog in de tabel, dan wint die waarde: die is destijds handmatig
+    // van de leverancier overgenomen en soms preciezer dan wat de titel prijsgeeft
+    // (bv. een instelbare zaagmaat die in de titel als een enkel getal staat).
+    // De afgeleide data vult alleen de gaten. Zodra de metafields van een product
+    // compleet zijn, kan de regel uit de tabel weg en verandert er niets.
+    var out = {};
+    ['vorm', 'ip', 'zaag', 'diepte', 'lk', 'watt', 'kantel', 'buiten'].forEach(function(k){
+      var f = fixed[k];
+      var isEmpty = f == null || (Array.isArray(f) && f.length === 0);
+      out[k] = isEmpty ? derived[k] : f;
+    });
+    return out;
+  }
   function zaagInRange(zaag, rangeKey){
     if (!zaag) return false;
     var lo=zaag[0], hi=zaag[1];
@@ -318,7 +413,17 @@
     if (document.querySelector('.sw-buiten-facet')) { syncBuitenInputs(); return; }
     var anchor = document.querySelector('.sw-watt-facet') || document.querySelector('.sw-diepte-facet') || findFacet('Kleur');
     if (!anchor) return;
-    var opts = [80,85,86,90,95,100,110,120,150].map(function(b){return {v:String(b), n:b+' mm'};});
+    // Basislijst aangevuld met de buitenmaten die de producten op deze pagina echt hebben,
+    // zodat een nieuwe maat (bv. Ø82) niet stilletjes onselecteerbaar blijft.
+    var buitenSet = {};
+    [80,85,86,90,95,100,110,120,150].forEach(function(b){ buitenSet[b] = true; });
+    var derivedAll = swDerivedSpecs();
+    Object.keys(derivedAll).forEach(function(h){
+      var b = derivedAll[h].buiten;
+      if (b) buitenSet[b] = true;
+    });
+    var opts = Object.keys(buitenSet).map(Number).sort(function(a,b){return a-b;})
+      .map(function(b){return {v:String(b), n:b+' mm'};});
     var html = '<details class="facets__item sw-buiten-facet" open><summary class="facets__summary"><span class="facets__label">Buitenmaat</span><span class="facets__icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span></summary><div class="facets__panel"><ul class="facets__inputs facets__inputs-list">'+
       opts.map(function(o,i){
         var hidden = i >= 5 ? ' style="display:none" data-sw-hidden="1"' : '';
@@ -726,27 +831,42 @@
     for (var i = 0; i < SW_BRAND_ORDER.length; i++){ if (handle.indexOf(SW_BRAND_ORDER[i]) > -1) return i; }
     return SW_BRAND_ORDER.length;
   }
+  // Modelnaam uit de handle: 'led-inbouwspot-lesto-donker-brons' -> 'lesto'.
+  // Hiermee blijft elke kleurvariant automatisch bij zijn familie staan, ook als de
+  // collectie handmatig gesorteerd is en een nieuw product dus onderaan is aangeplakt.
+  function swFamily(handle){
+    var parts = String(handle || '').split('-').filter(Boolean);
+    if (parts[0] === 'led') parts.shift();
+    if (parts.length > 1 && /^(in|op)bouwspots?$|^(hang|wand|plafond)lamp(en)?$|^steplights?$|^spots?$/.test(parts[0])) parts.shift();
+    if (parts[0] === 'set' && parts.length > 1) return 'set-' + parts[1];
+    return parts[0] || String(handle);
+  }
   function reorderBrandPriority(){
     if (new URLSearchParams(location.search).get('sort_by')) return;
     var cards = document.querySelectorAll('product-card, .product-card');
     if (!cards.length) return;
     var wrappers = [];
+    var familyFirst = {};
     cards.forEach(function(c){
       var h = getHandle(c);
       var w = c.closest('li, .grid__item, .product-grid__card-wrapper') || c;
       if (wrappers.some(function(x){ return x.el === w; })) return;
-      wrappers.push({el: w, rank: swBrandRank(h)});
+      var fam = swFamily(h);
+      if (!(fam in familyFirst)) familyFirst[fam] = wrappers.length;
+      wrappers.push({el: w, rank: swBrandRank(h), fam: fam, idx: wrappers.length});
     });
     if (wrappers.length < 2) return;
     var container = wrappers[0].el.parentNode;
     if (!container || container.dataset.swBrandSorted === '1') return;
     if (wrappers.some(function(w){ return w.el.parentNode !== container; })) return;
-    var alreadySorted = wrappers.every(function(w, i){ return i === 0 || wrappers[i-1].rank <= w.rank; });
-    if (!alreadySorted){
-      wrappers.forEach(function(w, i){ w.idx = i; });
-      wrappers.sort(function(a, b){ return a.rank - b.rank || a.idx - b.idx; });
-      wrappers.forEach(function(w){ container.appendChild(w.el); });
-    }
+    // Sorteervolgorde: merkprioriteit, dan familie (op de plek waar die familie voor het
+    // eerst voorkomt), dan de oorspronkelijke volgorde. Een nieuwe kleur schuift daardoor
+    // vanzelf naar zijn broertjes toe in plaats van achteraan te blijven hangen.
+    var target = wrappers.slice().sort(function(a, b){
+      return a.rank - b.rank || familyFirst[a.fam] - familyFirst[b.fam] || a.idx - b.idx;
+    });
+    var changed = target.some(function(w, i){ return w !== wrappers[i]; });
+    if (changed) target.forEach(function(w){ container.appendChild(w.el); });
     container.dataset.swBrandSorted = '1';
   }
   function runAllSwFilters(){

@@ -195,5 +195,8 @@
     {% if settings.quick_add or settings.mobile_quick_add %}
       {% render 'quick-add-modal' %}
     {% endif %}
+
+    {%- comment -%} Productdata voor de eigen collectiefilters in sw-storefront.js {%- endcomment -%}
+    {% render 'sw-filter-specs-data' %}
   </body>
 </html>
