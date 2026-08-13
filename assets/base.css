@@ -4455,3 +4455,4 @@ product-recommendations:has([data-has-recommendations='false']) {
 /* sync-trigger: Accessoires in footer-categorieen 2026-08-13 */
 /* sync-trigger: CCT instelbaar-filter gekoppeld aan sw_lk 2026-08-13 */
 /* sync-trigger: instelbaar-proxy naam + native param strip 2026-08-13 */
+/* sync-trigger: instelbaar preventDefault fix 2026-08-13 */

@@ -830,25 +830,25 @@
         var li = inp.closest('li'); if (li) li.classList.toggle('sw-vorm-active', active);
         if (inp.dataset.swCctFixed) return;
         inp.dataset.swCctFixed = '1';
+        // preventDefault: geen checkbox-toggle → geen change-event → Shopify's facet-component
+        // doet géén fetch/morph (die zou de grid vers renderen ná ons filter). Status zelf beheren.
         inp.addEventListener('click', function(e){
-          e.stopPropagation(); e.stopImmediatePropagation();
-          setTimeout(function(){
-            var p = new URLSearchParams(location.search);
-            var has = p.getAll('sw_lk').indexOf('tri') > -1;
-            var keep = p.getAll('sw_lk').filter(function(v){ return v !== 'tri'; });
-            p.delete('sw_lk');
-            keep.forEach(function(v){ p.append('sw_lk', v); });
-            if (!has) p.append('sw_lk', 'tri');
-            // native Instelbaar-param (van oude URLs of race met Shopify's handler) altijd strippen
-            var natKeep = p.getAll('filter.v.option.lichtkleur').filter(function(v){ return !/instelbaar\s*\(2700K-4000K\)/i.test(v); });
-            p.delete('filter.v.option.lichtkleur');
-            natKeep.forEach(function(v){ p.append('filter.v.option.lichtkleur', v); });
-            var s = p.toString();
-            history.replaceState({}, '', location.pathname + (s ? '?' + s : ''));
-            hookInstelbaarCct();
-            applyAllFilters();
-            renderActiveChips();
-          }, 0);
+          e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+          var p = new URLSearchParams(location.search);
+          var has = p.getAll('sw_lk').indexOf('tri') > -1;
+          var keep = p.getAll('sw_lk').filter(function(v){ return v !== 'tri'; });
+          p.delete('sw_lk');
+          keep.forEach(function(v){ p.append('sw_lk', v); });
+          if (!has) p.append('sw_lk', 'tri');
+          // native Instelbaar-param (van oude URLs) altijd strippen
+          var natKeep = p.getAll('filter.v.option.lichtkleur').filter(function(v){ return !/instelbaar\s*\(2700K-4000K\)/i.test(v); });
+          p.delete('filter.v.option.lichtkleur');
+          natKeep.forEach(function(v){ p.append('filter.v.option.lichtkleur', v); });
+          var s = p.toString();
+          history.replaceState({}, '', location.pathname + (s ? '?' + s : ''));
+          hookInstelbaarCct();
+          applyAllFilters();
+          renderActiveChips();
         }, true);
         inp.addEventListener('change', function(e){ e.stopPropagation(); e.stopImmediatePropagation(); }, true);
       });
