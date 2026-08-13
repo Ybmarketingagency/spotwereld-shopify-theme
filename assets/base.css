@@ -4464,3 +4464,4 @@ product-recommendations:has([data-has-recommendations='false']) {
 /* sync-trigger: collections-all conditie robuuster + debug 2026-08-13 */
 /* sync-trigger: main-collection schoon, volgorde via redirect 2026-08-13 */
 /* sync-trigger: instelbaar-vinkje herstel via lkTimer 2026-08-13 */
+/* sync-trigger: kortingscode meegeven aan Storefront cartCreate 2026-08-13 */

@@ -446,6 +446,13 @@
         });
         if (!lines.length) throw new Error('Winkelmand is leeg.');
 
+        // Kortingscodes uit de winkelwagen overnemen. Zonder dit vervalt een code
+        // die de klant in de winkelwagen invulde zodra hier een nieuwe cart wordt
+        // aangemaakt, en betaalt hij bij Shopify alsnog de volle prijs.
+        var discountCodes = (cart.discount_codes || [])
+          .filter(function(d){ return d && d.code && d.applicable !== false; })
+          .map(function(d){ return d.code; });
+
         // Backup: alle ingevulde klantdata + winkelmand naar Google Sheet (fire-and-forget, blokkeert checkout nooit)
         swSaveToSheet(data, cart);
 
@@ -485,6 +492,7 @@
           },
           attributes: attributes.length ? attributes : undefined
         };
+        if (discountCodes.length) input.discountCodes = discountCodes;
 
         // 3. Call Storefront API
         return fetch('https://' + SHOP_DOMAIN + '/api/' + API_VERSION + '/graphql.json', {
