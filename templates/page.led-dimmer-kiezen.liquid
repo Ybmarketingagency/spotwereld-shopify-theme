@@ -1,5 +1,33 @@
 {% layout 'theme' %}
 
+{%- comment -%}
+  FAQPage JSON-LD voor de "Veelgestelde vragen" sectie verderop. Tekst moet woordelijk
+  overeenkomen met de zichtbare h3/p-paren.
+{%- endcomment -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Werkt elke LED-dimmer met elke LED-spot?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Nee. Sommige goedkope LED's zijn niet dimbaar en moeten 100% aan of uit zijn. Alle inbouwspots van Spotwereld zijn dimbaar — mits je een fase-afsnijdingsdimmer gebruikt." }
+    },
+    {
+      "@type": "Question",
+      "name": "Kan ik dimmen via een app?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Voor onze CCT-switch spots moet je nog steeds een fysieke dimmer aan de muur hebben. Smart-dimmers (Loxone, Niko Home Control, Shelly Dimmer 2) werken ook prima — mits fase-afsnijding." }
+    },
+    {
+      "@type": "Question",
+      "name": "Wat als ik geen dimmer wil?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Geen probleem. Onze spots werken zonder dimmer perfect op 100% lichtopbrengst. Wel kun je de lichtkleur instellen via de CCT-switch op de driver (2700K / 3000K / 4000K)." }
+    }
+  ]
+}
+</script>
+
 <style>
 .sw-guide{max-width:780px;margin:0 auto;padding:2.5rem 1.5rem 4rem;font-family:inherit;color:#1e293b;line-height:1.65}
 .sw-guide-crumb{display:flex;align-items:center;gap:.4rem;font-size:.82rem;color:#64748b;margin:0 0 1rem}
@@ -77,14 +105,14 @@
   </div>
 
   <div class="callout">
-    <strong>Voor Spotwereld spots:</strong> kies altijd een <strong>fase-afsnijdingsdimmer</strong> (vaak gemarkeerd met &ldquo;C&rdquo; of &ldquo;trailing edge&rdquo;). Onze Aristo en Miran dimmen daarmee vloeiend van 1% tot 100%.
+    <strong>Voor Spotwereld spots:</strong> kies altijd een <strong>fase-afsnijdingsdimmer</strong> (vaak gemarkeerd met &ldquo;C&rdquo; of &ldquo;trailing edge&rdquo;). Onze Lesto en Lyvo dimmen daarmee vloeiend van 1% tot 100%.
   </div>
 
   <h2>Hoeveel spots op &eacute;&eacute;n dimmer?</h2>
   <p>Een dimmer heeft een minimum- en maximum-belasting. Veel populaire LED-dimmers werken van <strong>0,3W tot 200W</strong>. Reken even uit:</p>
   <ul>
-    <li>10 Aristo's van 6W = 60W &rarr; ruim binnen de marge</li>
-    <li>20 Aristo's van 6W = 120W &rarr; nog steeds prima</li>
+    <li>10 Lesto's van 6W = 60W &rarr; ruim binnen de marge</li>
+    <li>20 Lesto's van 6W = 120W &rarr; nog steeds prima</li>
     <li>40 spots? Splits dan over twee dimmers of kies een dimmer met hogere capaciteit</li>
   </ul>
 

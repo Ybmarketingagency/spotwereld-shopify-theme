@@ -1,0 +1,34 @@
+{%- comment -%}
+  Spotwereld robots.txt
+
+  Neemt Shopify's standaardregels over en voegt er eigen Disallow-regels aan toe voor de
+  client-side filterparameters uit sections/spotwereld-filter-enhancements.liquid en
+  snippets/meta-tags.liquid (sw_vorm, sw_ip, sw_zaag, sw_diepte, sw_lk, sw_watt,
+  sw_buiten, sw_kantel, sw_dim).
+
+  Die parameters filteren de productgrid puur in JavaScript — ze leveren geen andere
+  server-side HTML op dan de kale collectiepagina. De canonical wijst al naar de schone
+  URL, maar zonder deze regels crawlt Google alsnog elke combinatie. Bij tientallen
+  producten x 9 parameters zijn dat duizenden nutteloze requests.
+{%- endcomment -%}
+{% for group in robots.default_groups %}
+{{- group.user_agent }}
+{% for rule in group.rules %}{{ rule }}
+{% endfor %}
+{%- if group.user_agent.value == '*' -%}
+{{ 'Disallow: /*sw_vorm*' }}
+{{ 'Disallow: /*sw_ip*' }}
+{{ 'Disallow: /*sw_zaag*' }}
+{{ 'Disallow: /*sw_diepte*' }}
+{{ 'Disallow: /*sw_lk*' }}
+{{ 'Disallow: /*sw_watt*' }}
+{{ 'Disallow: /*sw_buiten*' }}
+{{ 'Disallow: /*sw_kantel*' }}
+{{ 'Disallow: /*sw_dim*' }}
+{{ 'Disallow: /pages/gegevens' }}
+{% endif -%}
+
+{%- if group.sitemap != blank -%}
+{{ group.sitemap }}
+{% endif -%}
+{% endfor %}

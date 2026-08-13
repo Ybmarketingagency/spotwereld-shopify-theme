@@ -19,7 +19,7 @@
 >
 <meta
   name="theme-color"
-  content=""
+  content="#061f40"
 >
 
 {%- liquid
@@ -185,16 +185,48 @@
 })();
 </script>
 
-{%- comment -%} JSON-LD Organization (alle pagina's) {%- endcomment -%}
+{%- comment -%} JSON-LD OnlineStore (alle pagina's) — @id zodat Product/Breadcrumb ernaar kunnen verwijzen {%- endcomment -%}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Organization",
+  "@type": "OnlineStore",
+  "@id": "{{ request.origin }}/#organization",
   "name": "Spotwereld",
   "alternateName": "Spotwereld Webshop",
+  "legalName": "Spotwereld",
   "url": "{{ request.origin }}",
-  "logo": "https://i.imgur.com/wwoqIM6.png",
+  "logo": {
+    "@type": "ImageObject",
+    "url": "https://i.imgur.com/wwoqIM6.png",
+    "width": 1254,
+    "height": 1254
+  },
+  "image": "https://i.imgur.com/wwoqIM6.png",
   "description": "{{ sw_tagline }} voor elk interieur. Premium LED inbouwspots, opbouwspots, hanglampen en meer.",
+  "email": "info@spotwereld.nl",
+  "telephone": "+31853332672",
+  "vatID": "NL863304941B01",
+  "taxID": "NL863304941B01",
+  "identifier": [
+    {
+      "@type": "PropertyValue",
+      "name": "KvK-nummer",
+      "propertyID": "https://www.kvk.nl",
+      "value": "84665688"
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "BTW-identificatienummer",
+      "propertyID": "VAT",
+      "value": "NL863304941B01"
+    }
+  ],
+  "areaServed": {
+    "@type": "Country",
+    "name": "Nederland"
+  },
+  "currenciesAccepted": "EUR",
+  "paymentAccepted": "iDEAL, Visa, Mastercard, Klarna, PayPal, Bancontact",
   "sameAs": [
     "https://www.facebook.com/spotwereld",
     "https://www.instagram.com/spotwereld"
@@ -202,6 +234,9 @@
   "contactPoint": {
     "@type": "ContactPoint",
     "contactType": "Customer Service",
+    "telephone": "+31853332672",
+    "email": "info@spotwereld.nl",
+    "areaServed": "NL",
     "availableLanguage": ["Dutch", "Nederlands"]
   }
 }
@@ -257,11 +292,108 @@
 </script>
 {%- endif -%}
 
-{%- comment -%} Open Graph image fallback (1200x630 minimum voor social sharing) {%- endcomment -%}
+{%- comment -%}
+  Spotwereld: ItemList op collectiepagina's — geeft Google de productvolgorde van de listing.
+{%- endcomment -%}
+{%- if request.page_type == 'collection' and collection.products.size > 0 -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "{{ collection.title | escape }}",
+  "url": "{{ request.origin }}{{ collection.url }}",
+  "numberOfItems": {{ collection.products_count }},
+  "itemListElement": [
+    {%- for item in collection.products limit: 30 -%}
+    {
+      "@type": "ListItem",
+      "position": {{ forloop.index }},
+      "url": "{{ request.origin }}{{ item.url }}",
+      "name": "{{ item.title | escape }}"
+    }{%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  ]
+}
+</script>
+{%- endif -%}
+
+{%- comment -%}
+  Spotwereld: merchant listing velden die Shopify's `structured_data` filter NIET meelevert.
+  shippingDetails + hasMerchantReturnPolicy zorgen dat Google levertijd, verzendkosten en
+  retourtermijn direct in het zoekresultaat toont. Los <script> blok, gekoppeld via @id
+  aan het Product dat sections/product-information.liquid rendert.
+  Bron van de waarden: /pages/verzending en de FAQ — bij wijziging daar ook hier aanpassen.
+{%- endcomment -%}
+{%- if request.page_type == 'product' and product != blank -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "@id": "{{ request.origin }}{{ product.url }}#product",
+  "name": "{{ product.title | escape }}",
+  "url": "{{ request.origin }}{{ product.url }}",
+  "brand": {
+    "@type": "Brand",
+    "name": "{{ product.vendor | default: 'Spotwereld' | escape }}"
+  },
+  "offers": {
+    "@type": "Offer",
+    "url": "{{ request.origin }}{{ product.url }}",
+    "priceCurrency": "{{ cart.currency.iso_code }}",
+    "price": "{{ product.price | divided_by: 100.0 }}",
+    "availability": "https://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}",
+    "seller": { "@id": "{{ request.origin }}/#organization" },
+    "shippingDetails": {
+      "@type": "OfferShippingDetails",
+      "shippingRate": {
+        "@type": "MonetaryAmount",
+        "value": "{% if product.price >= 5000 %}0{% else %}4.95{% endif %}",
+        "currency": "EUR"
+      },
+      "shippingDestination": {
+        "@type": "DefinedRegion",
+        "addressCountry": "NL"
+      },
+      "deliveryTime": {
+        "@type": "ShippingDeliveryTime",
+        "handlingTime": {
+          "@type": "QuantitativeValue",
+          "minValue": 0,
+          "maxValue": 1,
+          "unitCode": "DAY"
+        },
+        "transitTime": {
+          "@type": "QuantitativeValue",
+          "minValue": 1,
+          "maxValue": 2,
+          "unitCode": "DAY"
+        }
+      }
+    },
+    "hasMerchantReturnPolicy": {
+      "@type": "MerchantReturnPolicy",
+      "applicableCountry": "NL",
+      "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+      "merchantReturnDays": 14,
+      "returnMethod": "https://schema.org/ReturnByMail",
+      {%- comment -%}
+        returnShippingFeesAmount bewust weggelaten: het exacte retourbedrag staat nergens
+        vastgelegd (FAQ zegt alleen "voor rekening van de koper"). Zodra dat bekend is
+        hier toevoegen als MonetaryAmount.
+      {%- endcomment -%}
+      "returnFees": "https://schema.org/ReturnShippingFees"
+    }
+  }
+}
+</script>
+{%- endif -%}
+
+{%- comment -%} Open Graph image fallback — vierkant logo, echte afmetingen 1254x1254 {%- endcomment -%}
 {%- unless page_image -%}
 <meta property="og:image" content="https://i.imgur.com/wwoqIM6.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
+<meta property="og:image:width" content="1254">
+<meta property="og:image:height" content="1254">
+<meta property="og:image:alt" content="Spotwereld — {{ sw_tagline }}">
 {%- endunless -%}
 
 {%- comment -%} Override Open Graph title/description met onze SEO versie {%- endcomment -%}

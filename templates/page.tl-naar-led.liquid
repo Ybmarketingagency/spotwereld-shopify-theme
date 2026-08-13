@@ -1,5 +1,58 @@
 {% layout 'theme' %}
 
+{%- comment -%}
+  HowTo JSON-LD voor de 5 stappen onder "De wissel in 5 minuten".
+{%- endcomment -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "TL-buis vervangen door LED-TL",
+  "description": "In 5 stappen een oude TL-buis vervangen door een LED-TL buis: oude buis eruit, starter vervangen door LED-starter, LED-TL plaatsen en testen.",
+  "url": "{{ request.origin }}{{ page.url }}",
+  "totalTime": "PT5M",
+  "tool": [
+    { "@type": "HowToTool", "name": "Spanningszoeker" }
+  ],
+  "supply": [
+    { "@type": "HowToSupply", "name": "LED-TL buis" },
+    { "@type": "HowToSupply", "name": "LED-starter" }
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Draai de oude TL-buis eruit",
+      "text": "Schakel eerst de stroom uit op de groep en test met je spanningszoeker. Draai de oude TL-buis 90 graden en trek hem voorzichtig uit het armatuur."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Verwijder de starter",
+      "text": "Verwijder de starter — het ronde schakelaartje, meestal aan de zijkant van het armatuur. Draai 90 graden en trek hem eruit."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Plaats de LED-starter",
+      "text": "Plaats de LED-starter, meegeleverd bij een Plug & Play LED-TL, in dezelfde houder."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 4,
+      "name": "Plaats de LED-TL buis",
+      "text": "Plaats de LED-TL buis in het armatuur en draai hem vast."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 5,
+      "name": "Stroom aan en testen",
+      "text": "Schakel de stroom weer in en test. De buis brandt direct op vol licht — geen geknipper meer."
+    }
+  ]
+}
+</script>
+
 <style>
 .sw-guide{max-width:780px;margin:0 auto;padding:2.5rem 1.5rem 4rem;font-family:inherit;color:#1e293b;line-height:1.65}
 .sw-guide-crumb{display:flex;align-items:center;gap:.4rem;font-size:.82rem;color:#64748b;margin:0 0 1rem}

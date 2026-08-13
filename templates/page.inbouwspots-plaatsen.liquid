@@ -1,5 +1,74 @@
 ﻿{% layout 'theme' %}
 
+{%- comment -%}
+  HowTo JSON-LD — stappen moeten overeenkomen met de zichtbare .step-blokken hieronder.
+{%- endcomment -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Inbouwspots plaatsen — stappenplan voor een strak resultaat",
+  "description": "In 6 stappen inbouwspots monteren in een gipsplafond: positie markeren, gaten zagen, bedrading trekken, driver aansluiten, spot vastklemmen en testen.",
+  "url": "{{ request.origin }}{{ page.url }}",
+  "totalTime": "PT2H",
+  "tool": [
+    { "@type": "HowToTool", "name": "Gatenzaag met de juiste zaagmaat" },
+    { "@type": "HowToTool", "name": "Boormachine" },
+    { "@type": "HowToTool", "name": "Potlood en rolmaat" },
+    { "@type": "HowToTool", "name": "Spanningszoeker" },
+    { "@type": "HowToTool", "name": "Stofzuiger" }
+  ],
+  "supply": [
+    { "@type": "HowToSupply", "name": "LED inbouwspots" },
+    { "@type": "HowToSupply", "name": "Lasdoppen" }
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Markeer de positie",
+      "text": "Bepaal waar je spots wilt. Houd minimaal 20 cm afstand van de muur en 60–80 cm onderlinge afstand voor gelijkmatig licht. Teken de cirkels af met een potlood — controleer dat er geen balk of leiding zit waar je gaat zagen.",
+      "url": "{{ request.origin }}{{ page.url }}#stap-1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Zaag de gaten",
+      "text": "Klik de juiste gatenzaag op je boormachine. Boor langzaam op laag toerental — te snel scheurt het gips. Stofzuig direct het stof op zodat je zicht houdt.",
+      "url": "{{ request.origin }}{{ page.url }}#stap-2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Trek de bedrading door",
+      "text": "Trek voorzichtig de aanwezige lichtdraad door het gat. Heb je geen lichtpunt op die plek? Dan moet je eerst kabel trekken vanaf het dichtstbijzijnde lichtpunt. Vraag bij twijfel een elektricien.",
+      "url": "{{ request.origin }}{{ page.url }}#stap-3"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 4,
+      "name": "Sluit de driver aan",
+      "text": "Verbind de blauwe en bruine draad uit het plafond met de blauwe en bruine draad van de driver via een lasdop. Klik daarna de connector van de spot in de driver. Geen schroefjes nodig — pluggable systeem.",
+      "url": "{{ request.origin }}{{ page.url }}#stap-4"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 5,
+      "name": "Druk de spot vast",
+      "text": "Knijp de veerklemmen aan beide kanten van de spot in en duw de spot in het gat. Laat de klemmen los — de spot zit nu vast. Druk hem helemaal aan tot de rand het plafond raakt.",
+      "url": "{{ request.origin }}{{ page.url }}#stap-5"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 6,
+      "name": "Stroom aan en testen",
+      "text": "Schakel de groep weer in en test je spot. Gebruik onze Lesto of Lyvo met CCT-switch om de lichtkleur naar 2700K, 3000K of 4000K te zetten — dat doe je vóór de installatie via een schuif op de driver.",
+      "url": "{{ request.origin }}{{ page.url }}#stap-6"
+    }
+  ]
+}
+</script>
+
 <style>
 .sw-guide{max-width:780px;margin:0 auto;padding:2.5rem 1.5rem 4rem;font-family:inherit;color:#1e293b;line-height:1.65}
 .sw-guide-crumb{display:flex;align-items:center;gap:.4rem;font-size:.82rem;color:#64748b;margin:0 0 1rem}
@@ -52,7 +121,7 @@
 
   <h2>Voor je begint: dit heb je nodig</h2>
   <ul>
-    <li><strong>Gatenzaag</strong> &mdash; let op de zaagmaat van je spot (de Aristo en Miran van Spotwereld zijn &Oslash; 68&ndash;75 mm, de Laom is &Oslash; 75&ndash;80 mm)</li>
+    <li><strong>Gatenzaag</strong> &mdash; let op de zaagmaat van je spot (de Lesto en Lyvo van Spotwereld zijn &Oslash; 68&ndash;75 mm, de Quaro is &Oslash; 75&ndash;80 mm)</li>
     <li><strong>Boormachine</strong> met variabele snelheid</li>
     <li><strong>Spanningszoeker</strong> om te controleren of er stroom op de draden staat</li>
     <li><strong>Lasdoppen of kroonsteen</strong> om de draadjes te verbinden</li>
@@ -66,7 +135,7 @@
 
   <h2>In 6 stappen klaar</h2>
 
-  <div class="step">
+  <div class="step" id="stap-1">
     <div class="step-num">1</div>
     <div>
       <h3>Markeer de positie</h3>
@@ -74,7 +143,7 @@
     </div>
   </div>
 
-  <div class="step">
+  <div class="step" id="stap-2">
     <div class="step-num">2</div>
     <div>
       <h3>Zaag de gaten</h3>
@@ -82,7 +151,7 @@
     </div>
   </div>
 
-  <div class="step">
+  <div class="step" id="stap-3">
     <div class="step-num">3</div>
     <div>
       <h3>Trek de bedrading door</h3>
@@ -90,7 +159,7 @@
     </div>
   </div>
 
-  <div class="step">
+  <div class="step" id="stap-4">
     <div class="step-num">4</div>
     <div>
       <h3>Sluit de driver aan</h3>
@@ -98,7 +167,7 @@
     </div>
   </div>
 
-  <div class="step">
+  <div class="step" id="stap-5">
     <div class="step-num">5</div>
     <div>
       <h3>Druk de spot vast</h3>
@@ -106,11 +175,11 @@
     </div>
   </div>
 
-  <div class="step">
+  <div class="step" id="stap-6">
     <div class="step-num">6</div>
     <div>
       <h3>Stroom aan en testen</h3>
-      <p>Schakel de groep weer in en test je spot. Gebruik onze Aristo of Miran met CCT-switch om de lichtkleur naar 2700K, 3000K of 4000K te zetten &mdash; dat doe je v&oacute;&oacute;r de installatie via een schuif op de driver.</p>
+      <p>Schakel de groep weer in en test je spot. Gebruik onze Lesto of Lyvo met CCT-switch om de lichtkleur naar 2700K, 3000K of 4000K te zetten &mdash; dat doe je v&oacute;&oacute;r de installatie via een schuif op de driver.</p>
     </div>
   </div>
 
