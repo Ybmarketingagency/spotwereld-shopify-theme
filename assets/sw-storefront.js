@@ -233,7 +233,6 @@
     var ips = params.getAll('sw_ip');
     var zaags = params.getAll('sw_zaag');
     var dieptes = params.getAll('sw_diepte');
-    var lks = params.getAll('sw_lk');
     document.querySelectorAll('product-card, .product-card').forEach(function(c){
       var h = getHandle(c);
       var s = getSpecs(h);
@@ -246,7 +245,6 @@
         var prodDieptes = Array.isArray(s && s.diepte) ? s.diepte : (s ? [s.diepte] : []);
         keep = keep && prodDieptes.some(function(d){ return dieptes.indexOf(String(d)) > -1; });
       }
-      if (lks.length>0) keep = keep && s && s.lk && lks.some(function(l){return s.lk.indexOf(l)>-1});
       // Dimbaar Nee: all our products zijn dimbaar, dus Nee → altijd verbergen
       if (params.getAll('sw_dim').indexOf('nee') > -1) keep = false;
       // Wattage (sw_watt) — product watts is array
@@ -687,8 +685,7 @@
         {param:'sw_watt', label:'Wattage', facetSel:'.sw-watt-facet', map:{}},
         {param:'sw_buiten', label:'Buitenmaat', facetSel:'.sw-buiten-facet', map:{}},
         {param:'sw_kantel', label:'Kantelbaar', facetSel:'.sw-kantel-facet', map:{ja:'Ja',nee:'Nee'}},
-        {param:'sw_dim', label:'Dimbaar', facetSel:'.sw-fake-nee', map:{nee:'Nee'}},
-        {param:'sw_lk', label:'Lichtkleur', facetSel:'.sw-lk-none', map:{tri:'Instelbaar (2700K-4000K)'}}
+        {param:'sw_dim', label:'Dimbaar', facetSel:'.sw-fake-nee', map:{nee:'Nee'}}
       ];
       defs.forEach(function(def){
         p.getAll(def.param).forEach(function(v){
@@ -706,8 +703,6 @@
             history.replaceState({}, '', location.pathname + (s?'?'+s:''));
             var sel = def.facetSel + ' input[value="'+v+'"]';
             var inp = document.querySelector(sel);
-            // sw_lk 'tri' leeft op de native Lichtkleur-facet — daar op waarde zoeken
-            if (!inp && def.param === 'sw_lk' && v === 'tri') inp = document.querySelector('input[value*="Instelbaar (2700K-4000K)"]');
             if (inp){ inp.checked = false; var li = inp.closest('li'); if (li) li.classList.remove('sw-vorm-active','sw-lk-active'); }
             applyAllFilters();
             renderActiveChips();
@@ -716,23 +711,6 @@
         });
       });
   }
-  // Lichtkleur-facet opschonen. LET OP: Shopify morpht de native facet-lijst (items hebben
-  // data-skip-node-update), waardoor inline style/extra nodes weer verdwijnen. Daarom:
-  // "Instelbaar (GU10)" verbergen via CSS in <head> (morph-proof): de lichtkleur van zo'n
-  // armatuur hangt af van de losse lichtbron die de klant kiest, dus filteren heeft geen zin.
-  function injectLkStyle(){
-    if (document.getElementById('sw-lk-style')) return;
-    var s = document.createElement('style');
-    s.id = 'sw-lk-style';
-    // verberg "Instelbaar (GU10)" overal (lichtkleur hangt af van de gekozen GU10-lamp)
-    s.textContent = '.facets__item li.facets__inputs-list-item:has(input[value="Instelbaar (GU10)"]){display:none!important;}';
-    (document.head || document.documentElement).appendChild(s);
-  }
-  // Geen verzonnen filteropties meer: de Lichtkleur-lijst toont alleen waardes die
-  // echt op producten staan. Eerder werden 2200K (flame-wit), 3000K (warm-wit) en RGBWW
-  // hier ingespoten "voor toekomstige producten"; die gaven altijd 0 resultaten en zagen
-  // er voor de klant uit als een kapot filter.
-  function ensureLichtkleurExtras(){ /* bewust leeg */ }
   // Sorteer de Lichtkleur-opties op kleurtemperatuur (laag → hoog), specials onderaan.
   function lkRank(label){
     var t = (label || '').toLowerCase();
@@ -757,50 +735,10 @@
       }
     });
   }
-  // "Instelbaar (2700K-4000K)" koppelen aan het eigen sw_lk-filter (key 'tri').
-  // De native facet matcht alleen producten met die letterlijke optiewaarde (alleen Cielo);
-  // de CCT-reeks (Lesto/Lyvo/Quaro/...) heeft geen Lichtkleur-optie maar wel de cct-tag,
-  // die swDerive al naar s.lk = CCT_LK vertaalt. Client-side filteren dus, net als IP/Zaagmaat.
-  function hookInstelbaarCct(){
-    document.querySelectorAll('.facets__item, details.facets__item').forEach(function(f){
-      var lbl = f.querySelector('.facets__label');
-      if (!lbl || lbl.textContent.trim() !== 'Lichtkleur') return;
-      f.querySelectorAll('input').forEach(function(inp){
-        if (!/instelbaar\s*\(2700K-4000K\)/i.test(inp.value || '')) return;
-        // Naam wegdraaien zodat Shopify's facet-form deze input NIET serialiseert
-        // (anders komt de native filterparam erbij en filtert de server naar alleen Cielo)
-        if ((inp.name || '').indexOf('filter.') === 0) inp.name = 'sw_lk_tri_proxy';
-        var active = new URLSearchParams(location.search).getAll('sw_lk').indexOf('tri') > -1;
-        inp.checked = active;
-        var li = inp.closest('li'); if (li) li.classList.toggle('sw-vorm-active', active);
-        if (inp.dataset.swCctFixed) return;
-        inp.dataset.swCctFixed = '1';
-        // preventDefault: geen checkbox-toggle → geen change-event → Shopify's facet-component
-        // doet géén fetch/morph (die zou de grid vers renderen ná ons filter). Status zelf beheren.
-        inp.addEventListener('click', function(e){
-          e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
-          var p = new URLSearchParams(location.search);
-          var has = p.getAll('sw_lk').indexOf('tri') > -1;
-          var keep = p.getAll('sw_lk').filter(function(v){ return v !== 'tri'; });
-          p.delete('sw_lk');
-          keep.forEach(function(v){ p.append('sw_lk', v); });
-          if (!has) p.append('sw_lk', 'tri');
-          // native Instelbaar-param (van oude URLs) altijd strippen
-          var natKeep = p.getAll('filter.v.option.lichtkleur').filter(function(v){ return !/instelbaar\s*\(2700K-4000K\)/i.test(v); });
-          p.delete('filter.v.option.lichtkleur');
-          natKeep.forEach(function(v){ p.append('filter.v.option.lichtkleur', v); });
-          var s = p.toString();
-          history.replaceState({}, '', location.pathname + (s ? '?' + s : ''));
-          hookInstelbaarCct();
-          applyAllFilters();
-          renderActiveChips();
-        }, true);
-        inp.addEventListener('change', function(e){ e.stopPropagation(); e.stopImmediatePropagation(); }, true);
-      });
-    });
-  }
-  function fixLichtkleurOptions(){ injectLkStyle(); ensureLichtkleurExtras(); sortLichtkleur(); hookInstelbaarCct(); }
-  // Morph zet de extra opties + volgorde telkens terug — blijf ze herstellen.
+  function fixLichtkleurOptions(){ sortLichtkleur(); }
+  // Shopify morpht de facet-lijst en zet de alfabetische volgorde telkens terug —
+  // blijf hem op kleurtemperatuur sorteren. Puur presentatie: welke opties er staan en
+  // welke producten ze teruggeven bepaalt Shopify, daar zit geen theme-logica meer op.
   // Deze tick is nodig op collectie- en zoekpagina's, maar draaide voorheen ook eeuwig
   // door op de homepage, productpagina's en de cart, waar geen enkel facet bestaat.
   // Nu: overslaan als het tabblad onzichtbaar is, en helemaal stoppen op pagina's die
@@ -809,9 +747,7 @@
   var lkTimer = setInterval(function(){
     if (document.hidden) return;
     if (!document.querySelector('.facets__item, details.facets__item')) return;
-    ensureLichtkleurExtras();
     sortLichtkleur();
-    hookInstelbaarCct();
   }, 500);
   setTimeout(function(){
     if (!document.querySelector('.facets__item, details.facets__item')) clearInterval(lkTimer);
