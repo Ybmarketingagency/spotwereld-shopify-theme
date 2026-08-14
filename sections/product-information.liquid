@@ -439,6 +439,16 @@
     {%- assign sw_zaagmaat = product.metafields.custom.zaagmaat -%}
     {%- assign sw_diepte = product.metafields.custom.inbouwdiepte -%}
     {%- assign sw_afmetingen = product.metafields.custom.afmetingen -%}
+    {%- comment -%}
+      Deze vijf stonden tot 2026-08-14 als losse HTML-tabel in de productbeschrijving.
+      Nu metavelden, zodat elk product dezelfde opbouw heeft: één alinea tekst plus
+      deze tabel. Leeg = de rij verdwijnt, er wordt nooit iets ingevuld dat er niet is.
+    {%- endcomment -%}
+    {%- assign sw_dimbaar = product.metafields.custom.dimbaar -%}
+    {%- assign sw_cri = product.metafields.custom.cri -%}
+    {%- assign sw_lichthoek = product.metafields.custom.lichthoek -%}
+    {%- assign sw_voltage = product.metafields.custom.voltage -%}
+    {%- assign sw_maxwatt = product.metafields.custom.max_wattage -%}
 
     {%- comment -%} Terugval: uitsluitend waardes die letterlijk in de titel staan {%- endcomment -%}
     {%- assign sw_tparts = product.title | split: '|' -%}
@@ -473,13 +483,18 @@
         {%- if sw_garantie != blank -%}<tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Garantie</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_garantie }}</td></tr>{%- endif -%}
         {%- if sw_materiaal != blank -%}<tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Materiaal</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_materiaal }}</td></tr>{%- endif -%}
         {%- if sw_wattage != blank -%}<tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Wattage</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_wattage }}</td></tr>{%- endif -%}
-        {%- if sw_lumen != blank -%}<tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Lichtopbrengst</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_lumen }}</td></tr>{%- endif -%}
+        {%- if sw_maxwatt != blank -%}<tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Max. wattage lichtbron</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_maxwatt }}</td></tr>{%- endif -%}
+        {%- if sw_lumen != blank -%}<tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Lichtopbrengst</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_lumen }}</td></tr>{%- endif -%}
+        {%- if sw_lichthoek != blank -%}<tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Lichthoek</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_lichthoek }}</td></tr>{%- endif -%}
+        {%- if sw_cri != blank -%}<tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Kleurweergave (CRI)</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_cri }}</td></tr>{%- endif -%}
+        {%- if sw_dimbaar != blank -%}<tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Dimbaar</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_dimbaar }}</td></tr>{%- endif -%}
         {%- if sw_driver != blank -%}<tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Inclusief driver</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_driver }}</td></tr>{%- endif -%}
         {%- if sw_fitting != blank -%}<tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Fitting</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_fitting }}</td></tr>{%- endif -%}
         {%- if sw_ip != blank -%}<tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">IP-waarde</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_ip }}</td></tr>{%- endif -%}
         {%- if sw_zaagmaat != blank -%}<tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#061f40;font-weight:800">Zaagmaat</td><td style="padding:.6rem 0;color:#061f40;font-weight:800">{{ sw_zaagmaat }}</td></tr>{%- endif -%}
         {%- if sw_diepte != blank -%}<tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.6rem .75rem .6rem 0;color:#061f40;font-weight:800">Inbouwdiepte</td><td style="padding:.6rem 0;color:#061f40;font-weight:800">{{ sw_diepte }}</td></tr>{%- endif -%}
         {%- if sw_afmetingen != blank -%}<tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Afmetingen</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_afmetingen }}</td></tr>{%- endif -%}
+        {%- if sw_voltage != blank -%}<tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Voltage</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_voltage }}</td></tr>{%- endif -%}
         {%- for opt in product.options_with_values -%}
           {%- assign opt_name = opt.name | downcase -%}
           {%- unless opt_name == 'title' or opt_name == 'ip-waarde' -%}
