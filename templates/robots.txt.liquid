@@ -2,14 +2,14 @@
   Spotwereld robots.txt
 
   Neemt Shopify's standaardregels over en voegt er eigen Disallow-regels aan toe voor de
-  client-side filterparameters uit sections/spotwereld-filter-enhancements.liquid en
-  snippets/meta-tags.liquid (sw_vorm, sw_ip, sw_zaag, sw_diepte, sw_lk, sw_watt,
+  oude client-side filterparameters (sw_vorm, sw_ip, sw_zaag, sw_diepte, sw_lk, sw_watt,
   sw_buiten, sw_kantel, sw_dim).
 
-  Die parameters filteren de productgrid puur in JavaScript — ze leveren geen andere
-  server-side HTML op dan de kale collectiepagina. De canonical wijst al naar de schone
-  URL, maar zonder deze regels crawlt Google alsnog elke combinatie. Bij tientallen
-  producten x 9 parameters zijn dat duizenden nutteloze requests.
+  Die filters zijn op 2026-08-14 verwijderd; alles loopt nu via Shopify's eigen
+  filterparameters (filter.p.m.* en filter.v.option.*). De site linkt dus nergens meer
+  naar een sw_-URL. De regels blijven staan voor wat Google in het verleden heeft
+  opgepikt: die combinaties leverden nooit andere HTML op dan de kale collectiepagina,
+  en het zijn er duizenden.
 {%- endcomment -%}
 {% for group in robots.default_groups %}
 {{- group.user_agent }}

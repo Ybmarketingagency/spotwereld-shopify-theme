@@ -469,16 +469,6 @@ product-card .text-block[class*="product_title"]{
   color:#1e293b !important;
   font-weight:600 !important;
 }
-/* Vorm filter active chip & lichtkleur active */
-.sw-active-chip{display:inline-flex;align-items:center;gap:.4rem;background:#f1f5f9;border:1px solid #cbd5e1;border-radius:999px;padding:.35rem .75rem;font-size:.78rem;color:#1e293b;margin:.25rem .35rem .25rem 0;font-weight:500}
-.sw-active-chip button{background:none;border:0;cursor:pointer;color:#64748b;font-size:1rem;line-height:1;padding:0 0 0 .15rem;display:inline-flex;align-items:center}
-.sw-active-chip button:hover{color:#dc2626}
-.sw-lk-active,.sw-vorm-active{background:rgba(15,111,227,.08)!important;border-radius:6px}
-.sw-lk-active .checkbox__label-text,.sw-vorm-active .checkbox__label-text{color:#0F6FE3!important;font-weight:700!important}
-.sw-lk-active .icon-checkmark,.sw-vorm-active .icon-checkmark{background:#0F6FE3!important;border-color:#0F6FE3!important;color:#fff!important}
-.sw-lk-active input[type="checkbox"],.sw-vorm-active input[type="checkbox"]{accent-color:#0F6FE3}
-/* Force checked appearance regardless of native render */
-.sw-lk-active .checkbox__label::before,.sw-vorm-active .checkbox__label::before{background:#0F6FE3!important;border-color:#0F6FE3!important}
 /* Custom + Shopify native facet chevron */
 .facets__item .facets__summary,details.facets__item summary{display:flex !important;justify-content:space-between;align-items:center;cursor:pointer;list-style:none}
 .facets__item .facets__summary::-webkit-details-marker,details.facets__item summary::-webkit-details-marker{display:none}
@@ -501,16 +491,8 @@ details.facets__item[open] .facets__icon:empty::after{transform:rotate(-135deg);
    lege lookup-tabel. De H1 is op productpagina's doorgaans het LCP-element, dus dit
    vertraagde de gemeten Largest Contentful Paint zonder dat het nog iets verborg. */
 /* (LAOM FOUC-regels verwijderd: product images zijn nu correct serverside) */
-/* Verberg facets sidebar tot mijn JS klaar is met layout (voorkomt flicker bij page load) */
-body:not(.sw-filters-ready) .facets-block-wrapper--vertical,body:not(.sw-filters-ready) .facets__form-wrapper{opacity:0 !important;transition:none !important}
-body.sw-filters-ready .facets-block-wrapper--vertical,body.sw-filters-ready .facets__form-wrapper{opacity:1 !important;transition:opacity .15s ease}
-/* Fallback: na max 1.2s altijd tonen */
-@keyframes swFiltersFallback{to{opacity:1}}
-.facets-block-wrapper--vertical,.facets__form-wrapper{animation:swFiltersFallback 0s linear 1.2s forwards}
 /* Dimbaar facet — override pill/button styling, force standard checkbox layout */
-.facets__item button:not(.sw-show-more-diepte),.facets__item .button:not(.sw-show-more-diepte),.facets__item [class*="filter-pill"]{all:unset !important}
-.sw-show-more-diepte{cursor:pointer !important;color:#061f40 !important;text-decoration:underline !important;font-weight:600 !important;font-size:.78rem !important;background:none !important;border:0 !important;padding:.5rem 0 0 !important}
-.sw-show-more-diepte:hover{color:#0F6FE3 !important}
+.facets__item button,.facets__item .button,.facets__item [class*="filter-pill"]{all:unset !important}
 .facets__item .facets__inputs-list-item,.facets__item li{background:transparent !important;border:0 !important;padding:.2rem 0 !important;list-style:none !important}
 .facets__item .facets__inputs-list-item:not([style*="display:none"]):not([data-sw-hidden]),.facets__item li:not([style*="display:none"]):not([data-sw-hidden]){display:block}
 .facets__item [data-sw-hidden]{display:none !important}

@@ -1,0 +1,435 @@
+<title>Spotwereld — SEO status en livegang</title>
+<style>
+  :root {
+    --ground: #fbfaf7;
+    --surface: #ffffff;
+    --surface-sunk: #f4f2ed;
+    --ink: #0b1b2e;
+    --ink-soft: #4a5568;
+    --ink-faint: #7b8794;
+    --navy: #061f40;
+    --accent: #0f6fe3;
+    --accent-soft: #e7f0fd;
+    --clay: #a8541b;
+    --clay-soft: #fbeee2;
+    --rule: #e3ded4;
+    --rule-strong: #cdc6b8;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #0a1420;
+      --surface: #10202f;
+      --surface-sunk: #0d1926;
+      --ink: #eef2f6;
+      --ink-soft: #a9b6c4;
+      --ink-faint: #7d8b9a;
+      --navy: #cddff5;
+      --accent: #6aaaf5;
+      --accent-soft: #12293f;
+      --clay: #e0a06a;
+      --clay-soft: #2b1d12;
+      --rule: #1e3346;
+      --rule-strong: #2c4459;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground: #0a1420;
+    --surface: #10202f;
+    --surface-sunk: #0d1926;
+    --ink: #eef2f6;
+    --ink-soft: #a9b6c4;
+    --ink-faint: #7d8b9a;
+    --navy: #cddff5;
+    --accent: #6aaaf5;
+    --accent-soft: #12293f;
+    --clay: #e0a06a;
+    --clay-soft: #2b1d12;
+    --rule: #1e3346;
+    --rule-strong: #2c4459;
+  }
+
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 16px;
+    line-height: 1.65;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 46rem;
+    margin: 0 auto;
+    padding: 3.5rem 1.5rem 5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  .eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    font-weight: 600;
+    margin: 0;
+  }
+
+  h1 {
+    font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
+    font-size: clamp(1.9rem, 5vw, 2.6rem);
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    font-weight: 400;
+    color: var(--navy);
+    text-wrap: balance;
+    margin: 0.5rem 0 0;
+  }
+
+  .lede {
+    font-size: 1.05rem;
+    color: var(--ink-soft);
+    margin: 0.85rem 0 0;
+    max-width: 34rem;
+  }
+
+  h2 {
+    font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
+    font-size: 1.4rem;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    color: var(--navy);
+    text-wrap: balance;
+    margin: 0;
+  }
+
+  .phase {
+    display: flex;
+    flex-direction: column;
+    gap: 1.15rem;
+  }
+
+  .phase-head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    padding-bottom: 0.85rem;
+    border-bottom: 2px solid var(--rule-strong);
+  }
+
+  .phase-note {
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  .items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .item {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 0.95rem 1.1rem;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.35rem 0.75rem;
+    align-items: baseline;
+  }
+
+  .item-title {
+    font-weight: 600;
+    color: var(--ink);
+    font-size: 0.97rem;
+  }
+
+  .item-body {
+    grid-column: 2;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  .item-body + .item-body {
+    margin-top: 0.4rem;
+  }
+
+  .chip {
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+    white-space: nowrap;
+    align-self: center;
+  }
+
+  .chip--done {
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+
+  .chip--admin {
+    background: var(--clay-soft);
+    color: var(--clay);
+  }
+
+  .chip--wait {
+    background: var(--surface-sunk);
+    color: var(--ink-faint);
+  }
+
+  code, .mono {
+    font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+    font-size: 0.87em;
+    background: var(--surface-sunk);
+    padding: 0.1em 0.35em;
+    border-radius: 3px;
+    color: var(--ink);
+  }
+
+  .done-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.92rem;
+    color: var(--ink-soft);
+  }
+
+  .done-list li {
+    display: grid;
+    grid-template-columns: 1.1rem 1fr;
+    gap: 0.6rem;
+    align-items: baseline;
+  }
+
+  .done-list li::before {
+    content: "—";
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .callout {
+    background: var(--surface-sunk);
+    border-left: 3px solid var(--clay);
+    border-radius: 0 5px 5px 0;
+    padding: 1rem 1.15rem;
+    font-size: 0.92rem;
+    color: var(--ink-soft);
+  }
+
+  .callout strong {
+    color: var(--ink);
+  }
+
+  .callout--urgent {
+    border-left-color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  .table-scroll {
+    overflow-x: auto;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 0.88rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  th, td {
+    text-align: left;
+    padding: 0.55rem 0.8rem 0.55rem 0;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+  }
+
+  th {
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    font-weight: 700;
+  }
+
+  footer {
+    border-top: 1px solid var(--rule);
+    padding-top: 1.25rem;
+    font-size: 0.82rem;
+    color: var(--ink-faint);
+  }
+
+  a {
+    color: var(--accent);
+  }
+
+  a:focus-visible, :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+</style>
+
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">Spotwereld · stand van zaken</p>
+    <h1>SEO-werk en wat er nog moet gebeuren</h1>
+    <p class="lede">Het technische werk staat live. Wat rest is content, plus één ding dat aandacht vraagt zolang het wachtwoord aan staat.</p>
+  </header>
+
+  <div class="callout callout--urgent">
+    <strong>Het wachtwoord staat aan terwijl er 112 pagina's geïndexeerd zijn.</strong>
+    Search Console las de sitemap nog succesvol op 11 en 12 augustus, maar vandaag geeft
+    <span class="mono">spotwereld.nl</span> een 302 naar de wachtwoordpagina en <span class="mono">sitemap.xml</span> een 404.
+    Google kan de geïndexeerde pagina's dus niet meer bevestigen. Blijft dat weken staan, dan vallen ze uit de index
+    en moet de posities opnieuw worden opgebouwd. Prima als dit een bewuste tijdelijke keuze is — maar het is geen
+    schakelaar om te vergeten.
+  </div>
+
+  <section class="phase">
+    <div class="phase-head">
+      <h2>Wat er in de theme staat</h2>
+      <p class="phase-note">Gepusht naar <span class="mono">master</span>, Shopify heeft gesynchroniseerd.</p>
+    </div>
+    <ul class="done-list">
+      <li>Structured data: <span class="mono">OnlineStore</span> met KvK, btw-nummer, telefoon en vestigingsadres; <span class="mono">shippingDetails</span> en <span class="mono">hasMerchantReturnPolicy</span> op producten; <span class="mono">FAQPage</span>, <span class="mono">HowTo</span>, <span class="mono">ItemList</span>, <span class="mono">BlogPosting</span> en breadcrumbs.</li>
+      <li><span class="mono">robots.txt.liquid</span> blokkeert de negen filterparameters, die alleen in JavaScript werken en dus geen eigen pagina opleveren.</li>
+      <li>KvK, btw-nummer en adres in de contactkolom van de footer.</li>
+      <li><span class="mono">meta-tags.liquid</span> ging van 1552 naar 567 regels; het storefront-script staat nu in <span class="mono">assets/sw-storefront.js</span> met <span class="mono">defer</span> en wordt gecached.</li>
+      <li>Weggehaald: twee eeuwig draaiende intervallen, een <span class="mono">MutationObserver</span> op <span class="mono">document.body</span>, en de CSS die de H1 op productpagina's verborg tot 1,2 seconden na laden.</li>
+      <li>Oude modelnamen Aristo, Miran en Laom vervangen door Lesto, Lyvo en Quaro in de gidsen.</li>
+      <li>Nieuwe sectie voor collectietekst onder de productgrid.</li>
+      <li>Geverifieerd live: <span class="mono">robots.txt</span> bevat alle negen filterregels en de sitemapverwijzing.</li>
+    </ul>
+  </section>
+
+  <section class="phase">
+    <div class="phase-head">
+      <h2>In de admin aangepast</h2>
+      <p class="phase-note">Gewijzigd en na herladen gecontroleerd.</p>
+    </div>
+    <ul class="done-list">
+      <li><strong>Telefoonnummer <span class="mono">085 060 0936</span> volledig verwijderd.</strong> Het stond op twee plekken: de Privacyverklaring en de Algemene Voorwaarden. Overal vervangen door <span class="mono">085 333 26 72</span>. Alle zes de beleidsdocumenten en de winkelinstellingen hadden het juiste nummer al.</li>
+      <li><strong>Btw-nummer toegevoegd</strong> waar het ontbrak (contactblok Privacyverklaring) en de placeholder "Wordt zo spoedig mogelijk bijgewerkt" in de Algemene Voorwaarden vervangen door NL863304941B01.</li>
+      <li>Contact, Over Ons, Verzending &amp; Retouren en Veelgestelde Vragen hebben lege bodies — die content komt uit theme-secties. Garantie, Retourbeleid en Verzendbeleid bevatten geen bedrijfsgegevens.</li>
+    </ul>
+
+    <div class="callout">
+      <strong>Adres: bewust twee waarden.</strong> De KvK-inschrijving staat officieel nog op Arminiushof 11, 1216KC Hilversum. Daarom staat in alle formele identiteitsblokken weer dat adres — Privacyverklaring, Algemene Voorwaarden, Servicevoorwaarden, Wettelijke kennisgeving en het Contactgegevens-beleid. De footer en het Organization-schema tonen Deltazijde 10T, 1261 ZM Blaricum, omdat dat is waar klanten je bereiken. Zodra de KvK-inschrijving is verhuisd, kunnen die formele blokken mee.
+    </div>
+  </section>
+
+  <section class="phase">
+    <div class="phase-head">
+      <h2>Nu, in de Shopify-admin</h2>
+      <p class="phase-note">Dit zit in content die niet in de theme staat — ik kan het niet vanuit de code aanpassen.</p>
+    </div>
+    <ul class="items">
+
+      <li class="item">
+        <span class="chip chip--admin">Content</span>
+        <span class="item-title">Collectiebeschrijvingen schrijven</span>
+        <p class="item-body">Kan nu zonder code: <em>Collecties → Beschrijving</em>. De tekst verschijnt onder de productgrid. Mik op 200–400 woorden per collectie, met de termen waar mensen echt op zoeken — zaagmaat, IP-waarde, dimbaar, lichtkleur.</p>
+      </li>
+
+      <li class="item">
+        <span class="chip chip--admin">Content</span>
+        <span class="item-title">Alt-teksten op productafbeeldingen</span>
+        <p class="item-body">Per afbeelding in te stellen. Beschrijf wat er te zien is, niet een rij zoekwoorden.</p>
+      </li>
+
+      <li class="item">
+        <span class="chip chip--admin">Content</span>
+        <span class="item-title">Eerste blogartikelen</span>
+        <p class="item-body">De blog heeft nul artikelen. De drie gidsen blijven waar ze zijn — die zijn zwaar vormgegeven en dienen als pijlerpagina's. Blogartikelen zijn de lichtere stukken die daarnaartoe linken.</p>
+      </li>
+
+    </ul>
+  </section>
+
+  <section class="phase">
+    <div class="phase-head">
+      <h2>Op de dag dat het wachtwoord eraf gaat</h2>
+      <p class="phase-note">Pas zinvol als de winkel publiek bereikbaar is — Google kan er nu niets van zien.</p>
+    </div>
+    <ul class="items">
+
+      <li class="item">
+        <span class="chip chip--wait">1</span>
+        <span class="item-title">Sitemap opnieuw laten lezen</span>
+        <p class="item-body">Search Console is al gekoppeld en de sitemap is op 16 juli ingediend — dat hoeft niet opnieuw. Wel even in Search Console op <em>Opnieuw indienen</em> drukken zodra de winkel weer publiek is, zodat Google niet op zijn eigen crawlritme hoeft te wachten.</p>
+      </li>
+
+      <li class="item">
+        <span class="chip chip--wait">2</span>
+        <span class="item-title">Schema's controleren</span>
+        <p class="item-body">Draai een paar URL's door de Rich Results Test van Google: een productpagina, de FAQ, en het inbouwspots-stappenplan. Ik heb de JSON gevalideerd, maar Google stelt bovenop geldige JSON nog eigen eisen aan welke velden aanwezig moeten zijn.</p>
+      </li>
+
+      <li class="item">
+        <span class="chip chip--wait">3</span>
+        <span class="item-title">Bing Webmaster Tools</span>
+        <p class="item-body">Kan de Search Console-gegevens importeren. Kost vijf minuten en levert ook de Copilot-zichtbaarheid op.</p>
+      </li>
+
+      <li class="item">
+        <span class="chip chip--wait">4</span>
+        <span class="item-title">Merchant Center</span>
+        <p class="item-body">Voor de gratis productvermeldingen in Google Shopping. De <span class="mono">shippingDetails</span> en het retourbeleid die nu in het schema staan, worden daar meteen gebruikt.</p>
+      </li>
+
+    </ul>
+  </section>
+
+  <section class="phase">
+    <div class="phase-head">
+      <h2>Openstaand</h2>
+    </div>
+
+    <div class="callout">
+      <strong>Reviews.</strong> De meta description van de homepage claimt "4.9/5 klantbeoordeling" terwijl er nog geen klanten zijn. Op jouw verzoek nog niet aangepast. Zodra er echte reviews zijn: review-app kiezen, en pas dán <span class="mono">aggregateRating</span> aan het productschema toevoegen. Review-schema zonder onderliggende reviews levert een handmatige maatregel van Google op.
+    </div>
+
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr><th>Kans</th><th>Waar het op leunt</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Landingspagina's per specificatie</td>
+            <td>De specdata per product (zaagmaat, IP, wattage, vorm, inbouwdiepte) staat al in <span class="mono">sw-storefront.js</span>. Daar zijn pagina's uit te genereren als "inbouwspots zaagmaat 68 mm" of "IP65 spots voor de badkamer" — precies wat mensen intypen.</td>
+          </tr>
+          <tr>
+            <td>Meer gidsen</td>
+            <td>Hoeveel inbouwspots per m², GU10 versus geïntegreerde LED, wat CCT-switch betekent.</td>
+          </tr>
+          <tr>
+            <td>Interne links</td>
+            <td>Vanuit de gidsen naar de collecties, en vanuit collectieteksten terug naar de gidsen.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    Bijgewerkt 13 augustus 2026 · theme-repo <span class="mono">Ybmarketingagency/spotwereld-shopify-theme</span> · Search Console gekoppeld sinds 16 juli 2026
+  </footer>
+
+</div>
