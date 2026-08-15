@@ -1,50 +1,165 @@
-<style>
-.sw-vg-wrap{max-width:1280px;margin:0 auto;padding:3rem 1.5rem 5rem;display:grid;grid-template-columns:1fr;gap:2.5rem}
-@media(min-width:768px){.sw-vg-wrap{grid-template-columns:220px 1fr}}
-.sw-vg-sidebar{align-self:start;position:sticky;top:7rem}
-.sw-vg-sidebar-head{font-size:.75rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.1em;margin:0 0 .75rem;padding:0 .75rem}
-.sw-vg-sidebar nav{display:flex;flex-direction:column;gap:.125rem}
-.sw-vg-sidebar a{display:block;padding:.5rem .75rem;border-radius:.5rem;color:#374151;font-size:.9375rem;text-decoration:none;font-weight:500;transition:background .15s,color .15s;line-height:1.4}
-.sw-vg-sidebar a:hover{background:#EBF2FF;color:#0F6FE3}
-.sw-vg-sidebar a.sw-active{background:#EBF2FF;color:#083D7D;font-weight:700;border-left:3px solid #0F6FE3;padding-left:calc(.75rem - 3px)}
-.sw-vg-sidebar .sw-vg-divider{height:1px;background:#f0f0f0;margin:.5rem .75rem}
-.sw-vg-sidebar .sw-vg-cat{font-size:.6875rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.08em;padding:.375rem .75rem 0;margin-top:.25rem}
+{%- comment -%}
+  Schil om alle verlichtingsgids-pagina's. De opmaak van de artikelen zit hier, niet in de
+  paginabody — die bevat alleen semantische HTML (h1/h2/p/ol.sw-steps/div.sw-note/...).
+  Zo staat het ontwerp op één plek in git en hoeft de tekst in de admin niets van CSS te weten.
 
-/* Content area */
-.sw-vg-content{min-width:0}
+  Palet bewust beperkt: inkt, grijs, hairline en één donkerblauw accent voor links.
+  Geen gradients, geen groen, geen amber.
+{%- endcomment -%}
+
+<style>
+.sw-vg{
+  --sw-ink:#12181f;
+  --sw-body:#414a55;
+  --sw-muted:#767f8b;
+  --sw-rule:#e2e5e9;
+  --sw-fill:#f7f8f9;
+  --sw-accent:#0a3a72;
+  background:#fff;
+}
+.sw-vg-wrap{max-width:1140px;margin:0 auto;padding:2.5rem 1.5rem 5rem;display:grid;grid-template-columns:1fr;gap:2.5rem}
+@media(min-width:900px){.sw-vg-wrap{grid-template-columns:216px 1fr;gap:3.5rem;padding-top:3.5rem}}
+
+/* ---------- zijbalk ---------- */
+.sw-vg-sidebar{order:2;font-size:.9375rem}
+@media(min-width:900px){
+  .sw-vg-sidebar{order:0;align-self:start;position:sticky;top:6.5rem;border-right:1px solid var(--sw-rule);padding-right:1.75rem}
+}
+.sw-vg-sidebar-head{font-size:.6875rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--sw-muted);margin:0 0 1.25rem}
+.sw-vg-sidebar nav{display:block}
+.sw-vg-cat{display:block;font-size:.6875rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#a7aeb6;margin:1.5rem 0 .5rem}
+.sw-vg-cat.sw-first{margin-top:0}
+.sw-vg-sidebar nav a{display:block;padding:.375rem 0 .375rem .875rem;border-left:2px solid var(--sw-rule);color:var(--sw-body);text-decoration:none;line-height:1.45;transition:color .15s,border-color .15s}
+.sw-vg-sidebar nav a:hover{color:var(--sw-ink);border-left-color:#b9c0c8}
+.sw-vg-sidebar nav a.sw-active{color:var(--sw-ink);font-weight:600;border-left-color:var(--sw-accent)}
+.sw-vg-more{margin-top:1.75rem;padding-top:1.25rem;border-top:1px solid var(--sw-rule)}
+.sw-vg-more a{color:var(--sw-accent);text-decoration:none;font-weight:600;font-size:.875rem}
+.sw-vg-more a:hover{text-decoration:underline}
+@media(max-width:899px){
+  .sw-vg-sidebar{border-top:1px solid var(--sw-rule);padding-top:1.75rem;margin-top:1rem}
+}
+
+/* ---------- artikel ---------- */
+.sw-vg-content{min-width:0;color:var(--sw-body);font-size:1.0625rem;line-height:1.7}
+.sw-vg-content > *{max-width:44rem}
+.sw-vg-content .sw-crumb{font-size:.8125rem;color:var(--sw-muted);margin:0 0 1.75rem}
+.sw-vg-content .sw-crumb a{color:var(--sw-muted);text-decoration:none}
+.sw-vg-content .sw-crumb a:hover{color:var(--sw-ink);text-decoration:underline}
+.sw-vg-content .sw-crumb span{padding:0 .4rem;color:#c3c9d0}
+.sw-vg-content .sw-kicker{font-size:.6875rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--sw-muted);margin:0 0 .875rem}
+.sw-vg-content h1{font-size:clamp(1.75rem,3.4vw,2.375rem);font-weight:700;color:var(--sw-ink);letter-spacing:-.02em;line-height:1.18;margin:0 0 1rem}
+.sw-vg-content .sw-lead{font-size:1.1875rem;line-height:1.6;color:#525b66;margin:0 0 1.75rem}
+.sw-vg-content .sw-meta{display:flex;flex-wrap:wrap;gap:.5rem 1.5rem;font-size:.8125rem;color:var(--sw-muted);padding:.875rem 0;border-top:1px solid var(--sw-rule);border-bottom:1px solid var(--sw-rule);margin:0 0 2.5rem}
+.sw-vg-content h2{font-size:1.375rem;font-weight:700;color:var(--sw-ink);letter-spacing:-.012em;line-height:1.3;margin:2.75rem 0 .875rem}
+.sw-vg-content h3{font-size:1.0625rem;font-weight:700;color:var(--sw-ink);line-height:1.4;margin:1.75rem 0 .5rem}
+.sw-vg-content p{margin:0 0 1.125rem}
+.sw-vg-content a{color:var(--sw-accent);text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px}
+.sw-vg-content strong{color:var(--sw-ink);font-weight:600}
+.sw-vg-content ul,.sw-vg-content ol{margin:0 0 1.25rem;padding-left:1.25rem}
+.sw-vg-content li{margin-bottom:.5rem}
+.sw-vg-content li > ul,.sw-vg-content li > ol{margin-top:.5rem}
+
+/* inhoudsopgave */
+.sw-vg-content .sw-toc{background:var(--sw-fill);border:1px solid var(--sw-rule);padding:1.25rem 1.5rem;margin:0 0 2.5rem}
+.sw-vg-content .sw-toc p{font-size:.6875rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--sw-muted);margin:0 0 .625rem}
+.sw-vg-content .sw-toc ol{margin:0;padding-left:1.1rem;font-size:.9375rem}
+.sw-vg-content .sw-toc li{margin-bottom:.3rem}
+.sw-vg-content .sw-toc a{color:var(--sw-body);text-decoration:none}
+.sw-vg-content .sw-toc a:hover{color:var(--sw-ink);text-decoration:underline}
+
+/* stappen */
+.sw-vg-content .sw-steps{list-style:none;margin:1.75rem 0 2rem;padding:0;counter-reset:swstep}
+.sw-vg-content .sw-steps > li{counter-increment:swstep;position:relative;margin:0 0 0 .8125rem;padding:0 0 1.75rem 2.5rem;border-left:1px solid var(--sw-rule)}
+.sw-vg-content .sw-steps > li:last-child{border-left-color:transparent;padding-bottom:0}
+.sw-vg-content .sw-steps > li::before{content:counter(swstep);position:absolute;left:-.8125rem;top:-.125rem;width:1.625rem;height:1.625rem;border-radius:50%;background:#fff;border:1px solid var(--sw-rule);color:var(--sw-ink);font-size:.75rem;font-weight:700;display:flex;align-items:center;justify-content:center}
+.sw-vg-content .sw-steps h3{margin:0 0 .375rem}
+.sw-vg-content .sw-steps p{margin:0 0 .5rem;font-size:1rem}
+.sw-vg-content .sw-steps p:last-child{margin-bottom:0}
+
+/* notities */
+.sw-vg-content .sw-note{border-left:3px solid var(--sw-ink);background:var(--sw-fill);padding:1.125rem 1.375rem;margin:1.75rem 0;font-size:.9688rem;line-height:1.65}
+.sw-vg-content .sw-note--tip{border-left-color:#c3c9d0}
+.sw-vg-content .sw-note p{margin:0 0 .625rem}
+.sw-vg-content .sw-note p:last-child{margin-bottom:0}
+.sw-vg-content .sw-note-label{display:block;font-size:.6875rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--sw-ink);margin-bottom:.5rem}
+
+/* tabellen */
+.sw-vg-content .sw-table-scroll{overflow-x:auto;margin:1.75rem 0 2rem}
+.sw-vg-content .sw-table{width:100%;border-collapse:collapse;font-size:.9375rem;margin:1.75rem 0 2rem}
+.sw-vg-content .sw-table-scroll .sw-table{margin:0;min-width:30rem}
+.sw-vg-content .sw-table th{text-align:left;font-size:.6875rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--sw-ink);padding:0 1.25rem .625rem 0;border-bottom:1px solid var(--sw-ink);white-space:nowrap}
+.sw-vg-content .sw-table td{padding:.75rem 1.25rem .75rem 0;border-bottom:1px solid var(--sw-rule);vertical-align:top}
+.sw-vg-content .sw-table td:first-child{color:var(--sw-ink);font-weight:600}
+.sw-vg-content .sw-table th:last-child,.sw-vg-content .sw-table td:last-child{padding-right:0}
+
+/* twee kolommen */
+.sw-vg-content .sw-cols{display:grid;grid-template-columns:1fr;gap:1.25rem;margin:1.75rem 0 2rem}
+@media(min-width:640px){.sw-vg-content .sw-cols{grid-template-columns:1fr 1fr}}
+.sw-vg-content .sw-cols > div{border:1px solid var(--sw-rule);padding:1.25rem 1.375rem}
+.sw-vg-content .sw-cols h3{margin:0 0 .625rem;font-size:1rem}
+.sw-vg-content .sw-cols p{font-size:.9375rem;margin:0 0 .625rem}
+.sw-vg-content .sw-cols p:last-child{margin-bottom:0}
+.sw-vg-content .sw-cols ul{margin:0;padding-left:1.1rem;font-size:.9375rem}
+.sw-vg-content .sw-cols li{margin-bottom:.375rem}
+
+/* veelgestelde vragen */
+.sw-vg-content .sw-faq{border-top:1px solid var(--sw-rule);margin:1.75rem 0 2rem}
+.sw-vg-content .sw-faq > div{border-bottom:1px solid var(--sw-rule);padding:1.125rem 0}
+.sw-vg-content .sw-faq h3{margin:0 0 .375rem;font-size:1rem}
+.sw-vg-content .sw-faq p{margin:0;font-size:.9688rem}
+
+/* afsluiter */
+.sw-vg-content .sw-cta{border:1px solid var(--sw-rule);border-top:2px solid var(--sw-ink);padding:1.75rem;margin:3rem 0 0}
+.sw-vg-content .sw-cta h2{margin:0 0 .5rem;font-size:1.125rem}
+.sw-vg-content .sw-cta p{margin:0 0 1.25rem;font-size:.9688rem}
+.sw-vg-content a.sw-btn{display:inline-block;background:var(--sw-ink);color:#fff;text-decoration:none;padding:.75rem 1.375rem;font-weight:600;font-size:.9375rem;transition:background .15s}
+.sw-vg-content a.sw-btn:hover{background:var(--sw-accent);color:#fff}
+
+/* overzichtspagina */
+.sw-vg-content .sw-hub{border-top:1px solid var(--sw-rule);margin:2rem 0 0}
+.sw-vg-content .sw-hub a{display:grid;grid-template-columns:1fr;gap:1.125rem;padding:1.75rem 0;border-bottom:1px solid var(--sw-rule);text-decoration:none;color:inherit}
+@media(min-width:640px){.sw-vg-content .sw-hub a{grid-template-columns:196px 1fr;gap:1.75rem;align-items:start}}
+.sw-vg-content .sw-hub img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:var(--sw-fill)}
+.sw-vg-content .sw-hub .sw-kicker{margin:0 0 .375rem}
+.sw-vg-content .sw-hub h2{margin:0 0 .5rem;font-size:1.1875rem;line-height:1.35}
+.sw-vg-content .sw-hub p{margin:0 0 .625rem;font-size:.9375rem;line-height:1.6}
+.sw-vg-content .sw-hub .sw-more{font-size:.875rem;font-weight:600;color:var(--sw-accent)}
+.sw-vg-content .sw-hub a:hover h2{text-decoration:underline}
+
+/* het thema zet zelf een page-width om page.content heen */
 .sw-vg-content .page-width{max-width:100%!important;padding:0!important}
 </style>
 
-<div style="background:#f9fafb">
+<div class="sw-vg">
   <div class="sw-vg-wrap">
 
     <aside class="sw-vg-sidebar">
       <p class="sw-vg-sidebar-head">Verlichtingsgids</p>
       <nav>
-        <span class="sw-vg-cat">Installatie</span>
+        <span class="sw-vg-cat sw-first">Installatie</span>
         <a href="/pages/inbouwspots-plaatsen">Inbouwspots plaatsen</a>
-        <a href="/pages/tl-naar-led">TL naar LED vervangen</a>
-        <div class="sw-vg-divider"></div>
-        <span class="sw-vg-cat">Keuze &amp; advies</span>
-        <a href="/pages/led-dimmer-kiezen">De juiste LED-dimmer kiezen</a>
-        <div class="sw-vg-divider"></div>
-        <a href="/collections/all" style="margin-top:.25rem;color:#0F6FE3;font-weight:600">
-          <svg style="display:inline;vertical-align:-2px;margin-right:.25rem" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-          Bekijk alle producten
-        </a>
+        <a href="/pages/tl-naar-led">TL vervangen door LED-TL</a>
+        <span class="sw-vg-cat">Advies</span>
+        <a href="/pages/led-dimmer-kiezen">De juiste dimmer kiezen</a>
       </nav>
+      <div class="sw-vg-more">
+        <a href="/pages/verlichtingsgids">Alle gidsen</a>
+      </div>
+      <div class="sw-vg-more">
+        <a href="/collections/inbouwspots">Naar de inbouwspots</a>
+      </div>
     </aside>
 
-    <div class="sw-vg-content">
+    <article class="sw-vg-content">
       {{ page.content }}
-    </div>
+    </article>
 
   </div>
 </div>
 
 <script>
-document.querySelectorAll('.sw-vg-sidebar a').forEach(function(a){
-  if(a.pathname===window.location.pathname){a.classList.add('sw-active');}
+document.querySelectorAll('.sw-vg-sidebar a').forEach(function (a) {
+  if (a.pathname === window.location.pathname) { a.classList.add('sw-active'); }
 });
 </script>
 
