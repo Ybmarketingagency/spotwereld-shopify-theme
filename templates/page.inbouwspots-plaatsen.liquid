@@ -1,204 +1,212 @@
-﻿{% layout 'theme' %}
+{% layout 'theme' %}
 
-{%- comment -%}
-  HowTo JSON-LD — stappen moeten overeenkomen met de zichtbare .step-blokken hieronder.
-{%- endcomment -%}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "HowTo",
-  "name": "Inbouwspots plaatsen — stappenplan voor een strak resultaat",
-  "description": "In 6 stappen inbouwspots monteren in een gipsplafond: positie markeren, gaten zagen, bedrading trekken, driver aansluiten, spot vastklemmen en testen.",
-  "url": "{{ request.origin }}{{ page.url }}",
+  "name": "Inbouwspots plaatsen in een gipsplafond",
+  "description": "Van het opmeten van de ruimte boven het plafond tot het vastklikken van de spot: het volledige stappenplan voor het monteren van LED-inbouwspots.",
+  "url": "https://spotwereld.nl/pages/inbouwspots-plaatsen",
   "totalTime": "PT2H",
   "tool": [
-    { "@type": "HowToTool", "name": "Gatenzaag met de juiste zaagmaat" },
-    { "@type": "HowToTool", "name": "Boormachine" },
-    { "@type": "HowToTool", "name": "Potlood en rolmaat" },
+    { "@type": "HowToTool", "name": "Gatenzaag in de juiste zaagmaat" },
+    { "@type": "HowToTool", "name": "Boormachine met regelbaar toerental" },
     { "@type": "HowToTool", "name": "Spanningszoeker" },
+    { "@type": "HowToTool", "name": "Rolmaat en potlood" },
     { "@type": "HowToTool", "name": "Stofzuiger" }
   ],
   "supply": [
-    { "@type": "HowToSupply", "name": "LED inbouwspots" },
-    { "@type": "HowToSupply", "name": "Lasdoppen" }
+    { "@type": "HowToSupply", "name": "LED-inbouwspots met driver" },
+    { "@type": "HowToSupply", "name": "Lasklemmen" }
   ],
   "step": [
     {
       "@type": "HowToStep",
       "position": 1,
-      "name": "Markeer de positie",
-      "text": "Bepaal waar je spots wilt. Houd minimaal 20 cm afstand van de muur en 60–80 cm onderlinge afstand voor gelijkmatig licht. Teken de cirkels af met een potlood — controleer dat er geen balk of leiding zit waar je gaat zagen.",
-      "url": "{{ request.origin }}{{ page.url }}#stap-1"
+      "name": "Groep uit en controleren",
+      "text": "Schakel de groep uit in de meterkast, niet alleen de schakelaar aan de muur. Controleer met een spanningszoeker aan de draad zelf of er geen spanning meer op staat.",
+      "url": "https://spotwereld.nl/pages/inbouwspots-plaatsen#stap-1"
     },
     {
       "@type": "HowToStep",
       "position": 2,
-      "name": "Zaag de gaten",
-      "text": "Klik de juiste gatenzaag op je boormachine. Boor langzaam op laag toerental — te snel scheurt het gips. Stofzuig direct het stof op zodat je zicht houdt.",
-      "url": "{{ request.origin }}{{ page.url }}#stap-2"
+      "name": "Aftekenen en controleren wat erachter zit",
+      "text": "Teken de posities af en boor eerst een gaatje van 6 mm. Voel met een stuk stugge draad rond of er een regel, balk of leiding in de weg zit voordat je de gatenzaag pakt.",
+      "url": "https://spotwereld.nl/pages/inbouwspots-plaatsen#stap-2"
     },
     {
       "@type": "HowToStep",
       "position": 3,
-      "name": "Trek de bedrading door",
-      "text": "Trek voorzichtig de aanwezige lichtdraad door het gat. Heb je geen lichtpunt op die plek? Dan moet je eerst kabel trekken vanaf het dichtstbijzijnde lichtpunt. Vraag bij twijfel een elektricien.",
-      "url": "{{ request.origin }}{{ page.url }}#stap-3"
+      "name": "Zagen op laag toerental",
+      "text": "Zet de gatenzaag in de boormachine en zaag op laag toerental. Het centerboortje trekt de zaag naar binnen, dus laat de zaag het werk doen. Houd de stofzuiger onder het gat.",
+      "url": "https://spotwereld.nl/pages/inbouwspots-plaatsen#stap-3"
     },
     {
       "@type": "HowToStep",
       "position": 4,
-      "name": "Sluit de driver aan",
-      "text": "Verbind de blauwe en bruine draad uit het plafond met de blauwe en bruine draad van de driver via een lasdop. Klik daarna de connector van de spot in de driver. Geen schroefjes nodig — pluggable systeem.",
-      "url": "{{ request.origin }}{{ page.url }}#stap-4"
+      "name": "De draad naar beneden halen",
+      "text": "Trek de lichtdraad door het gat. Is er op die plek geen lichtpunt, dan trek je eerst kabel vanaf het dichtstbijzijnde punt. Doorlussen naar de volgende spot doe je met een lasklem.",
+      "url": "https://spotwereld.nl/pages/inbouwspots-plaatsen#stap-4"
     },
     {
       "@type": "HowToStep",
       "position": 5,
-      "name": "Druk de spot vast",
-      "text": "Knijp de veerklemmen aan beide kanten van de spot in en duw de spot in het gat. Laat de klemmen los — de spot zit nu vast. Druk hem helemaal aan tot de rand het plafond raakt.",
-      "url": "{{ request.origin }}{{ page.url }}#stap-5"
+      "name": "Driver aansluiten en wegleggen",
+      "text": "Bruin op bruin, blauw op blauw via een lasklem, daarna de connector van de spot in de driver klikken. Leg de driver los naast het gat op het plafond zodat de warmte weg kan.",
+      "url": "https://spotwereld.nl/pages/inbouwspots-plaatsen#stap-5"
     },
     {
       "@type": "HowToStep",
       "position": 6,
-      "name": "Stroom aan en testen",
-      "text": "Schakel de groep weer in en test je spot. Gebruik onze Lesto of Lyvo met CCT-switch om de lichtkleur naar 2700K, 3000K of 4000K te zetten — dat doe je vóór de installatie via een schuif op de driver.",
-      "url": "{{ request.origin }}{{ page.url }}#stap-6"
+      "name": "Wattage en lichtkleur instellen",
+      "text": "Zet de wattageschakelaar en de CCT-switch op de driver in de juiste stand voordat de spot in het plafond verdwijnt. Daarna kom je er alleen bij door de spot er weer uit te halen.",
+      "url": "https://spotwereld.nl/pages/inbouwspots-plaatsen#stap-6"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 7,
+      "name": "Vastklikken en controleren",
+      "text": "Knijp de veerklemmen in, duw de spot in het gat en druk hem aan tot de rand het plafond raakt. Zet de groep terug en controleer of alle spots dezelfde lichtkleur geven.",
+      "url": "https://spotwereld.nl/pages/inbouwspots-plaatsen#stap-7"
     }
   ]
 }
 </script>
 
-<style>
-.sw-guide{max-width:780px;margin:0 auto;padding:2.5rem 1.5rem 4rem;font-family:inherit;color:#1e293b;line-height:1.65}
-.sw-guide-crumb{display:flex;align-items:center;gap:.4rem;font-size:.82rem;color:#64748b;margin:0 0 1rem}
-.sw-guide-crumb a{color:#0F6FE3;text-decoration:none}
-.sw-guide-crumb a:hover{text-decoration:underline}
-.sw-guide-hero{background:linear-gradient(135deg,#061f40,#0a2d5e);color:#fff;border-radius:16px;padding:2.5rem 2rem;margin:0 0 2rem;position:relative;overflow:hidden}
-.sw-guide-hero::before{content:'';position:absolute;right:-100px;top:-100px;width:280px;height:280px;border-radius:50%;background:rgba(255,255,255,.05);pointer-events:none}
-.sw-guide-hero .tag{display:inline-block;background:rgba(255,255,255,.15);color:#fff;font-size:.7rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:.3rem .65rem;border-radius:4px;margin-bottom:.85rem}
-.sw-guide-hero h1{font-size:2.1rem;font-weight:900;letter-spacing:-.025em;margin:0 0 .5rem;line-height:1.15;position:relative}
-.sw-guide-hero p{color:rgba(255,255,255,.85);font-size:1.05rem;margin:0;max-width:580px;position:relative}
-.sw-guide-meta{display:flex;gap:1.25rem;font-size:.8rem;color:rgba(255,255,255,.7);margin-top:1rem;flex-wrap:wrap;position:relative}
-.sw-guide-meta span{display:inline-flex;align-items:center;gap:.35rem}
-.sw-guide h2{font-size:1.45rem;font-weight:900;color:#061f40;margin:2rem 0 .85rem;letter-spacing:-.02em;line-height:1.25}
-.sw-guide h3{font-size:1.1rem;font-weight:800;color:#061f40;margin:1.5rem 0 .6rem;letter-spacing:-.01em}
-.sw-guide p{margin:0 0 1rem;color:#334155}
-.sw-guide ul,.sw-guide ol{margin:0 0 1.25rem;padding-left:1.4rem;color:#334155}
-.sw-guide li{margin-bottom:.45rem}
-.sw-guide strong{color:#061f40}
-.sw-guide .callout{background:#eff6ff;border-left:4px solid #0F6FE3;padding:1rem 1.25rem;border-radius:0 8px 8px 0;margin:1.5rem 0;color:#1e293b;font-size:.94rem}
-.sw-guide .callout strong{color:#0F6FE3}
-.sw-guide .warn{background:#fef3c7;border-left:4px solid #f59e0b;padding:1rem 1.25rem;border-radius:0 8px 8px 0;margin:1.5rem 0;color:#78350f;font-size:.94rem}
-.sw-guide .step{display:grid;grid-template-columns:48px 1fr;gap:1rem;align-items:flex-start;margin:1.25rem 0;padding:1.1rem 1.25rem;background:#f8fafc;border:1px solid #e8edf4;border-radius:10px}
-.sw-guide .step-num{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#083D7D,#0F6FE3);color:#fff;font-weight:900;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.sw-guide .step h3{margin:0 0 .25rem}
-.sw-guide .step p{margin:0 0 .35rem;font-size:.95rem}
-.sw-guide-cta-block{background:linear-gradient(135deg,#083D7D,#0F6FE3);color:#fff;border-radius:14px;padding:2rem 1.75rem;text-align:center;margin:2.5rem 0 1rem}
-.sw-guide-cta-block h2{color:#fff;margin:0 0 .5rem;font-size:1.5rem}
-.sw-guide-cta-block p{color:rgba(255,255,255,.85);margin:0 0 1.25rem}
-.sw-guide-cta-btn{display:inline-flex;align-items:center;gap:.5rem;background:#fff;color:#061f40;text-decoration:none;padding:.85rem 1.5rem;border-radius:8px;font-weight:800;font-size:.95rem;transition:all .15s}
-.sw-guide-cta-btn:hover{background:#facc15;transform:translateY(-1px)}
-.sw-guide-back{display:inline-flex;align-items:center;gap:.4rem;color:#0F6FE3;font-weight:600;text-decoration:none;margin-top:2rem;font-size:.92rem}
-.sw-guide-back:hover{text-decoration:underline}
-</style>
+<p class="sw-crumb"><a href="/">Home</a><span>&rsaquo;</span><a href="/pages/verlichtingsgids">Verlichtingsgids</a><span>&rsaquo;</span>Inbouwspots plaatsen</p>
 
-<div class="sw-guide">
-  <div class="sw-guide-crumb">
-    <a href="/">Home</a> <span>&rsaquo;</span> <a href="/pages/verlichtingsgids">Verlichtingsgids</a> <span>&rsaquo;</span> <span>Inbouwspots plaatsen</span>
-  </div>
+<p class="sw-kicker">Installatie</p>
 
-  <div class="sw-guide-hero">
-    <span class="tag">Installatie</span>
-    <h1>Inbouwspots plaatsen — stappenplan voor een strak resultaat</h1>
-    <p>Een gat zagen, de bedrading aansluiten en de spot vastklikken. In deze gids leggen we de hele installatie uit, zodat je inbouwspots in &eacute;&eacute;n middag professioneel monteert.</p>
-    <div class="sw-guide-meta">
-      <span>&#128338; 10 min lezen</span>
-      <span>&#128295; Doe-het-zelf</span>
-      <span>&#9989; Geschikt voor beginners</span>
-    </div>
-  </div>
+<h1>Inbouwspots plaatsen in een gipsplafond</h1>
 
-  <h2>Voor je begint: dit heb je nodig</h2>
-  <ul>
-    <li><strong>Gatenzaag</strong> &mdash; let op de zaagmaat van je spot (de Lesto en Lyvo van Spotwereld zijn &Oslash; 68&ndash;75 mm, de Quaro is &Oslash; 75&ndash;80 mm)</li>
-    <li><strong>Boormachine</strong> met variabele snelheid</li>
-    <li><strong>Spanningszoeker</strong> om te controleren of er stroom op de draden staat</li>
-    <li><strong>Lasdoppen of kroonsteen</strong> om de draadjes te verbinden</li>
-    <li><strong>Stofzuiger</strong> &mdash; bij een gipsplafond komt veel stof vrij</li>
-    <li>De LED-inbouwspot zelf, inclusief driver</li>
-  </ul>
+<p class="sw-lead">Het lastige aan inbouwspots zit niet in het zagen &mdash; dat is zo gebeurd. Het zit in wat je v&oacute;&oacute;r het zagen beslist: hoeveel ruimte er boven het plafond zit, waar de gaten komen en of de driver ergens kwijt kan. Deze gids loopt eerst die keuzes langs en daarna de montage zelf.</p>
 
-  <div class="warn">
-    <strong>Veiligheid eerst:</strong> schakel altijd de groep uit in de meterkast voordat je aan een lichtpunt werkt. Test met je spanningszoeker dat er ge&eacute;n spanning meer op staat.
-  </div>
-
-  <h2>In 6 stappen klaar</h2>
-
-  <div class="step" id="stap-1">
-    <div class="step-num">1</div>
-    <div>
-      <h3>Markeer de positie</h3>
-      <p>Bepaal waar je spots wilt. Houd minimaal 20 cm afstand van de muur en 60&ndash;80 cm onderlinge afstand voor gelijkmatig licht. Teken de cirkels af met een potlood &mdash; controleer dat er geen balk of leiding zit waar je gaat zagen.</p>
-    </div>
-  </div>
-
-  <div class="step" id="stap-2">
-    <div class="step-num">2</div>
-    <div>
-      <h3>Zaag de gaten</h3>
-      <p>Klik de juiste gatenzaag op je boormachine. Boor langzaam op laag toerental &mdash; te snel scheurt het gips. Stofzuig direct het stof op zodat je zicht houdt.</p>
-    </div>
-  </div>
-
-  <div class="step" id="stap-3">
-    <div class="step-num">3</div>
-    <div>
-      <h3>Trek de bedrading door</h3>
-      <p>Trek voorzichtig de aanwezige lichtdraad door het gat. Heb je geen lichtpunt op die plek? Dan moet je eerst kabel trekken vanaf het dichtstbijzijnde lichtpunt. Vraag bij twijfel een elektricien.</p>
-    </div>
-  </div>
-
-  <div class="step" id="stap-4">
-    <div class="step-num">4</div>
-    <div>
-      <h3>Sluit de driver aan</h3>
-      <p>Verbind de blauwe en bruine draad uit het plafond met de blauwe en bruine draad van de driver via een lasdop. Klik daarna de connector van de spot in de driver. Geen schroefjes nodig &mdash; pluggable systeem.</p>
-    </div>
-  </div>
-
-  <div class="step" id="stap-5">
-    <div class="step-num">5</div>
-    <div>
-      <h3>Druk de spot vast</h3>
-      <p>Knijp de veerklemmen aan beide kanten van de spot in en duw de spot in het gat. Laat de klemmen los &mdash; de spot zit nu vast. Druk hem helemaal aan tot de rand het plafond raakt.</p>
-    </div>
-  </div>
-
-  <div class="step" id="stap-6">
-    <div class="step-num">6</div>
-    <div>
-      <h3>Stroom aan en testen</h3>
-      <p>Schakel de groep weer in en test je spot. Gebruik onze Lesto of Lyvo met CCT-switch om de lichtkleur naar 2700K, 3000K of 4000K te zetten &mdash; dat doe je v&oacute;&oacute;r de installatie via een schuif op de driver.</p>
-    </div>
-  </div>
-
-  <div class="callout">
-    <strong>Tip:</strong> wil je dimbaar? Kies dan een fase-afsnijdingsdimmer voor onze LED-spots. Lees onze gids <a href="/pages/led-dimmer-kiezen" style="color:#0F6FE3;font-weight:700">De juiste LED-dimmer kiezen</a>.
-  </div>
-
-  <h2>Veelgemaakte fouten</h2>
-  <ul>
-    <li><strong>Te dicht bij elkaar plaatsen</strong> &mdash; geeft hotspots en oncomfortabel licht. Houd minimaal 60 cm aan.</li>
-    <li><strong>Verkeerde zaagmaat</strong> &mdash; te groot? Spot valt erdoorheen. Te klein? Past niet. Controleer altijd de specificaties.</li>
-    <li><strong>Driver in een afgesloten ruimte</strong> &mdash; geeft oververhitting. Zorg dat de driver bovenop het plafond ligt waar lucht omheen kan.</li>
-  </ul>
-
-  <div class="sw-guide-cta-block">
-    <h2>Klaar om te beginnen?</h2>
-    <p>Onze LED-inbouwspots zijn er in 6 kleuren met CCT-switch en IP65. Vandaag voor 22:00 besteld, morgen verzonden.</p>
-    <a href="/collections/inbouwspots" class="sw-guide-cta-btn">Bekijk inbouwspots &rarr;</a>
-  </div>
-
-  <a href="/" class="sw-guide-back">&larr; Terug naar de homepage</a>
+<div class="sw-meta">
+  <span>9 minuten lezen</span>
+  <span>Gatenzaag, boormachine, spanningszoeker</span>
+  <span>Doe-het-zelf tot aan de meterkast</span>
 </div>
+
+<div class="sw-toc">
+  <p>In dit artikel</p>
+  <ol>
+    <li><a href="#ruimte">Meet eerst de ruimte boven je plafond</a></li>
+    <li><a href="#aantal">Hoeveel spots, en hoe ver uit elkaar</a></li>
+    <li><a href="#zaagmaat">Waarom er een reeks op de doos staat en geen maat</a></li>
+    <li><a href="#montage">De montage, stap voor stap</a></li>
+    <li><a href="#fouten">Wat er meestal misgaat</a></li>
+  </ol>
+</div>
+
+<h2 id="ruimte">Meet eerst de ruimte boven je plafond</h2>
+
+<p>Dit is de maat die bepaalt wat je kunt kopen, dus begin daar. Een verlaagd gipsplafond heeft meestal ruim voldoende ruimte erboven, maar een plafondplaat die direct onder beton is weggewerkt laat soms nog geen vier centimeter over. Meet het na door bij een bestaand lichtpunt of een rookmelder omhoog te kijken.</p>
+
+<p>De inbouwspots die wij voeren zijn allemaal slim-fit, dus gebouwd voor krappe plafonds:</p>
+
+<div class="sw-table-scroll">
+  <table class="sw-table">
+    <thead>
+      <tr><th>Serie</th><th>Inbouwdiepte</th><th>Zaagmaat</th><th>Zichtbare maat</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Lesto</td><td>26 mm</td><td>&Oslash;68&ndash;75 mm</td><td>&Oslash;82 mm, rond</td></tr>
+      <tr><td>Lyvo</td><td>25 mm</td><td>&Oslash;68&ndash;75 mm</td><td>&Oslash;82 mm, rond</td></tr>
+      <tr><td>Warmo</td><td>25 mm</td><td>&Oslash;68&ndash;75 mm</td><td>&Oslash;82 mm, rond</td></tr>
+      <tr><td>Quaro</td><td>28 mm hoog</td><td>&Oslash;75 mm</td><td>82 &times; 82 mm, vierkant</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<p>Tel bij die inbouwdiepte de driver op. Die zit niet in de spot maar ligt er los naast, aan een kabeltje, en heeft zelf ook plek nodig plus wat lucht eromheen om zijn warmte kwijt te kunnen. Reken dus niet met 26 mm maar met een centimeter of vijf werkruimte.</p>
+
+<p>Kom je daar niet aan, dan is een <a href="/collections/opbouwspots">opbouwspot</a> een eerlijker keuze dan wrikken. Een spot die je met geweld in een te ondiep gat duwt, komt met de rand niet vlak tegen het plafond &mdash; en dat zie je de rest van de tijd.</p>
+
+<h2 id="aantal">Hoeveel spots, en hoe ver uit elkaar</h2>
+
+<p>Er bestaat geen formule die voor elk plafond klopt, maar wel een bruikbare vuistregel. Een Lesto geeft in de 6&nbsp;watt-stand tot 400 lumen. Voor een woonkamer van 25 m&sup2; kom je met acht spots dus rond de 3.200 lumen uit, en dat is een prima basis &mdash; op voorwaarde dat er ook nog een hanglamp of een staande lamp bij komt. Alleen inbouwspots geven vlak licht van boven; je hebt iets op ooghoogte nodig om een kamer diepte te geven.</p>
+
+<p>Voor de plaatsing:</p>
+
+<ul>
+  <li><strong>60 tot 80 cm tussen de spots.</strong> Dichter bij elkaar en je ziet losse lichtplekken in plaats van een gelijkmatige laag.</li>
+  <li><strong>Minimaal 20 cm van de muur, liever 30.</strong> Te dicht op de wand geeft felle bogen op het stucwerk. Wil je die bogen juist wel, bijvoorbeeld langs een boekenkast, kies dan bewust voor 20 cm en houd die afstand overal exact gelijk.</li>
+  <li><strong>Werk vanuit het midden naar buiten.</strong> Deel de ruimte in gelijke vakken op en zet de spot in het hart van elk vak. Dan valt een half vak vanzelf aan de randen weg in plaats van scheef in het midden.</li>
+</ul>
+
+<div class="sw-note sw-note--tip">
+  <span class="sw-note-label">Voordat je gaat zagen</span>
+  <p>Leg de posities eerst met schilderstape op de vloer, precies onder waar de gaten komen. Dan sta je een dag later niet met zeven gaten in het plafond te bedenken dat de rij niet parallel loopt aan de wand.</p>
+</div>
+
+<h2 id="zaagmaat">Waarom er een reeks op de doos staat en geen maat</h2>
+
+<p>Bij de Lesto, Lyvo en Warmo staat &Oslash;68&ndash;75 mm vermeld, geen enkel getal. Dat komt door de veerklemmen: die staan wijd genoeg om over die hele marge te klemmen. Zaag je op 68 mm, dan zit de spot strak en dekt de rand van 82 mm ruim af. Zitten er al gaten van 75 mm van een vorige serie in je plafond, dan passen deze spots daar &oacute;&oacute;k nog in zonder dat je iets hoeft te repareren.</p>
+
+<p>De Quaro is de uitzondering in vorm: die is aan de buitenkant vierkant (82 &times; 82 mm), maar het gat dat je zaagt is gewoon rond, &Oslash;75 mm.</p>
+
+<p>Zaag altijd op de kleinste maat van de reeks. Groter maken kan altijd nog; kleiner niet.</p>
+
+<div class="sw-note sw-note--tip">
+  <span class="sw-note-label">Strak inpleisteren</span>
+  <p>Wil je geen zichtbare rand maar een spot die vlak in het plafond verdwijnt, dan heb je een stucframe nodig dat mee wordt gepleisterd. Die voeren we in wit en zwart bij de <a href="/collections/accessoires">accessoires</a>. Dat is wel een keuze die je v&oacute;&oacute;r het stukadoren maakt, niet erna.</p>
+</div>
+
+<h2 id="montage">De montage, stap voor stap</h2>
+
+<div class="sw-note">
+  <span class="sw-note-label">Veiligheid</span>
+  <p>Werk nooit aan een lichtpunt met de groep erop. De schakelaar aan de muur onderbreekt alleen de geschakelde draad; op de andere draad kan gewoon spanning staan. Zet de groep uit in de meterkast en controleer met een spanningszoeker aan de draden zelf. Twijfel je over de bedrading, haal er dan een installateur bij &mdash; die is goedkoper dan een brand.</p>
+</div>
+
+<ol class="sw-steps">
+  <li id="stap-1">
+    <h3>Groep uit en controleren</h3>
+    <p>Groep uit in de meterkast. Spanningszoeker tegen de draad zelf, niet tegen de armatuur. Pas als die niets aangeeft, ga je verder.</p>
+  </li>
+  <li id="stap-2">
+    <h3>Aftekenen en controleren wat erachter zit</h3>
+    <p>Teken de cirkels af. Boor op elke positie eerst een gaatje van 6 mm en voel met een stuk stugge draad rond of er een regel, balk of leiding in de weg zit. Een gipsplaatplafond hangt op regels die op vaste afstand van elkaar zitten, dus loopt er &eacute;&eacute;n spot verkeerd, dan doen de andere dat waarschijnlijk ook.</p>
+  </li>
+  <li id="stap-3">
+    <h3>Zagen op laag toerental</h3>
+    <p>Gatenzaag in de boormachine, toerental laag. Het centerboortje trekt de zaag naar binnen, dus je hoeft niet te duwen. Snel draaien scheurt de kartonlaag van het gips en dan krijg je een rafelige rand die net onder de spotrand vandaan piept.</p>
+    <p>Laat iemand de stofzuiger onder het gat houden. Dat scheelt een half uur schoonmaken per kamer.</p>
+  </li>
+  <li id="stap-4">
+    <h3>De draad naar beneden halen</h3>
+    <p>Trek de lichtdraad door het gat. Zit er op die plek geen lichtpunt, dan trek je eerst kabel vanaf het dichtstbijzijnde punt. Van spot naar spot doorlussen doe je met een lasklem; drievoudige lasklemmen staan bij de <a href="/collections/accessoires">accessoires</a>.</p>
+  </li>
+  <li id="stap-5">
+    <h3>Driver aansluiten en wegleggen</h3>
+    <p>Bruin op bruin, blauw op blauw, via de lasklem. Daarna klik je de connector van de spot in de driver &mdash; dat is een steekverbinding, er komt geen schroevendraaier aan te pas.</p>
+    <p>Leg de driver los naast het gat op het plafond. Niet opgerold in het gat proppen en niet ingepakt in isolatiemateriaal: hij wordt warm en moet die warmte kwijt kunnen. Let er ook op dat de driver droog ligt. De IP65 van onze spots geldt voor de v&oacute;&oacute;rkant; de achterzijde en de driver zijn IP20.</p>
+  </li>
+  <li id="stap-6">
+    <h3>Wattage en lichtkleur instellen</h3>
+    <p>Op de driver zitten twee schuifjes. Het ene kiest het vermogen (4W of 6W bij de Lesto, 5W of 7W bij de Lyvo en Warmo), het andere de lichtkleur: 2700K, 3000K of 4000K.</p>
+    <p>Zet ze goed v&oacute;&oacute;rdat de spot het plafond in gaat. Daarna kom je er alleen bij door de spot er weer uit te wrikken, en dat wil je niet acht keer doen.</p>
+  </li>
+  <li id="stap-7">
+    <h3>Vastklikken en controleren</h3>
+    <p>Knijp de veerklemmen aan weerszijden in, steek de spot in het gat en laat los. Druk hem aan tot de rand overal tegen het plafond ligt.</p>
+    <p>Groep weer aan. Loop de rij langs en kijk of ze allemaal dezelfde kleur geven &mdash; dat is het moment waarop je merkt dat er &eacute;&eacute;n op 4000K is blijven staan.</p>
+  </li>
+</ol>
+
+<h2 id="fouten">Wat er meestal misgaat</h2>
+
+<ul>
+  <li><strong>De drivers liggen op een hoop.</strong> Zes drivers tegen elkaar aan boven &eacute;&eacute;n gat houden elkaars warmte vast. Leg elke driver bij zijn eigen spot, uit elkaar.</li>
+  <li><strong>Verschillende standen van de CCT-switch.</strong> De klassieke: zes spots op 3000K en &eacute;&eacute;n op 4000K. In een lege kamer zie je het nauwelijks, tegen een witte wand meteen. Controleer alle drivers voordat je de eerste vastklikt.</li>
+  <li><strong>Te dicht op de muur.</strong> Onder de 20 cm krijg je bogen op het stucwerk. Dat is niet te repareren zonder opnieuw te zagen.</li>
+  <li><strong>De wattageschakelaar over het hoofd gezien.</strong> Spots die in de laagste stand uit de doos komen, geven aanzienlijk minder licht dan waar je op gerekend had. Dat is geen defect, dat is een schuifje.</li>
+</ul>
+
+<div class="sw-cta">
+  <h2>De spots zelf</h2>
+  <p>De Lesto (&Oslash;68&ndash;75 mm, 26 mm diep, 4W/6W) is er in zeven afwerkingen. Wil je dat het licht warmer wordt naarmate je dimt, dan is dat de Warmo; zoek je een vierkante spot, dan de Quaro. Vandaag besteld is morgen verzonden, en vanaf &euro;&nbsp;50 verzenden we gratis.</p>
+  <p><a href="/collections/inbouwspots" class="sw-btn">Bekijk alle inbouwspots</a></p>
+</div>
+
+<p style="margin-top:2rem"><a href="/pages/led-dimmer-kiezen">Volgende gids: welke dimmer werkt met onze LED-spots?</a></p>

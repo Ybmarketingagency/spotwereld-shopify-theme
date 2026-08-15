@@ -1,9 +1,5 @@
 {% layout 'theme' %}
 
-{%- comment -%}
-  FAQPage JSON-LD voor de "Veelgestelde vragen" sectie verderop. Tekst moet woordelijk
-  overeenkomen met de zichtbare h3/p-paren.
-{%- endcomment -%}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -11,138 +7,168 @@
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "Werkt elke LED-dimmer met elke LED-spot?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Nee. Sommige goedkope LED's zijn niet dimbaar en moeten 100% aan of uit zijn. Alle inbouwspots van Spotwereld zijn dimbaar — mits je een fase-afsnijdingsdimmer gebruikt." }
+      "name": "Kan ik de spots met een slimme dimmer bedienen?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Ja, mits de dimmermodule fase-aansnijding ondersteunt. Controleer per model of leading edge of triac in de specificatie staat, want dezelfde fabrikant levert vaak beide varianten. Spotwereld verkoopt zelf geen wanddimmers, dus je bent vrij in de merkkeuze." }
     },
     {
       "@type": "Question",
-      "name": "Kan ik dimmen via een app?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Voor onze CCT-switch spots moet je nog steeds een fysieke dimmer aan de muur hebben. Smart-dimmers (Loxone, Niko Home Control, Shelly Dimmer 2) werken ook prima — mits fase-afsnijding." }
+      "name": "Kan ik met de dimmer ook de lichtkleur veranderen?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Nee. De CCT-switch is een schuifje op de driver dat je voor de montage instelt op 2700K, 3000K of 4000K. De dimmer regelt alleen hoe fel de spot brandt. De Warmo is de uitzondering: die wordt warmer van kleur naarmate je hem verder dimt." }
     },
     {
       "@type": "Question",
-      "name": "Wat als ik geen dimmer wil?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Geen probleem. Onze spots werken zonder dimmer perfect op 100% lichtopbrengst. Wel kun je de lichtkleur instellen via de CCT-switch op de driver (2700K / 3000K / 4000K)." }
+      "name": "Wat als ik helemaal geen dimmer wil?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Dan werkt alles gewoon op vol vermogen. De wattageschakelaar en de CCT-switch op de driver staan los van een dimmer, dus je kunt de lichtkleur en het vermogen ook zonder dimmer kiezen." }
+    },
+    {
+      "@type": "Question",
+      "name": "Waarom gaan mijn LED-spots niet helemaal uit op de laagste stand?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Dat is meestal een gloeiend restje spanning dat de dimmer doorlaat. Bij weinig aangesloten watt is dat genoeg om de LED zwak te laten meegloeien. Meer spots op dezelfde dimmer hangen lost het vaak op." }
     }
   ]
 }
 </script>
 
-<style>
-.sw-guide{max-width:780px;margin:0 auto;padding:2.5rem 1.5rem 4rem;font-family:inherit;color:#1e293b;line-height:1.65}
-.sw-guide-crumb{display:flex;align-items:center;gap:.4rem;font-size:.82rem;color:#64748b;margin:0 0 1rem}
-.sw-guide-crumb a{color:#0F6FE3;text-decoration:none}
-.sw-guide-crumb a:hover{text-decoration:underline}
-.sw-guide-hero{background:linear-gradient(135deg,#061f40,#0a2d5e);color:#fff;border-radius:16px;padding:2.5rem 2rem;margin:0 0 2rem;position:relative;overflow:hidden}
-.sw-guide-hero::before{content:'';position:absolute;right:-100px;top:-100px;width:280px;height:280px;border-radius:50%;background:rgba(255,255,255,.05);pointer-events:none}
-.sw-guide-hero .tag{display:inline-block;background:rgba(255,255,255,.15);color:#fff;font-size:.7rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:.3rem .65rem;border-radius:4px;margin-bottom:.85rem}
-.sw-guide-hero h1{font-size:2.1rem;font-weight:900;letter-spacing:-.025em;margin:0 0 .5rem;line-height:1.15;position:relative}
-.sw-guide-hero p{color:rgba(255,255,255,.85);font-size:1.05rem;margin:0;max-width:580px;position:relative}
-.sw-guide-meta{display:flex;gap:1.25rem;font-size:.8rem;color:rgba(255,255,255,.7);margin-top:1rem;flex-wrap:wrap;position:relative}
-.sw-guide-meta span{display:inline-flex;align-items:center;gap:.35rem}
-.sw-guide h2{font-size:1.45rem;font-weight:900;color:#061f40;margin:2rem 0 .85rem;letter-spacing:-.02em;line-height:1.25}
-.sw-guide h3{font-size:1.1rem;font-weight:800;color:#061f40;margin:1.5rem 0 .6rem;letter-spacing:-.01em}
-.sw-guide p{margin:0 0 1rem;color:#334155}
-.sw-guide ul,.sw-guide ol{margin:0 0 1.25rem;padding-left:1.4rem;color:#334155}
-.sw-guide li{margin-bottom:.45rem}
-.sw-guide strong{color:#061f40}
-.sw-guide .callout{background:#eff6ff;border-left:4px solid #0F6FE3;padding:1rem 1.25rem;border-radius:0 8px 8px 0;margin:1.5rem 0;color:#1e293b;font-size:.94rem}
-.sw-guide .callout strong{color:#0F6FE3}
-.sw-guide .warn{background:#fef3c7;border-left:4px solid #f59e0b;padding:1rem 1.25rem;border-radius:0 8px 8px 0;margin:1.5rem 0;color:#78350f;font-size:.94rem}
-.sw-guide-compare{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0}
-.sw-guide-compare .c{background:#f8fafc;border:1px solid #e8edf4;border-radius:10px;padding:1.25rem}
-.sw-guide-compare h3{margin:0 0 .65rem;font-size:1rem;color:#061f40}
-.sw-guide-compare ul{margin:0;padding-left:1.1rem;font-size:.88rem}
-.sw-guide-cta-block{background:linear-gradient(135deg,#083D7D,#0F6FE3);color:#fff;border-radius:14px;padding:2rem 1.75rem;text-align:center;margin:2.5rem 0 1rem}
-.sw-guide-cta-block h2{color:#fff;margin:0 0 .5rem;font-size:1.5rem}
-.sw-guide-cta-block p{color:rgba(255,255,255,.85);margin:0 0 1.25rem}
-.sw-guide-cta-btn{display:inline-flex;align-items:center;gap:.5rem;background:#fff;color:#061f40;text-decoration:none;padding:.85rem 1.5rem;border-radius:8px;font-weight:800;font-size:.95rem;transition:all .15s}
-.sw-guide-cta-btn:hover{background:#facc15;transform:translateY(-1px)}
-.sw-guide-back{display:inline-flex;align-items:center;gap:.4rem;color:#0F6FE3;font-weight:600;text-decoration:none;margin-top:2rem;font-size:.92rem}
-.sw-guide-back:hover{text-decoration:underline}
-@media(max-width:600px){.sw-guide-compare{grid-template-columns:1fr}}
-</style>
+<p class="sw-crumb"><a href="/">Home</a><span>&rsaquo;</span><a href="/pages/verlichtingsgids">Verlichtingsgids</a><span>&rsaquo;</span>De juiste dimmer kiezen</p>
 
-<div class="sw-guide">
-  <div class="sw-guide-crumb">
-    <a href="/">Home</a> <span>&rsaquo;</span> <a href="/pages/verlichtingsgids">Verlichtingsgids</a> <span>&rsaquo;</span> <span>LED-dimmer kiezen</span>
-  </div>
+<p class="sw-kicker">Advies</p>
 
-  <div class="sw-guide-hero">
-    <span class="tag">Tips</span>
-    <h1>De juiste LED-dimmer kiezen (en aansluiten)</h1>
-    <p>Een gewone gloeilampdimmer werkt niet met LED. Sterker nog: hij kan je spots stuk maken. We helpen je kiezen tussen fase-aansnijding en fase-afsnijding, en hoe je geflikker voorkomt.</p>
-    <div class="sw-guide-meta">
-      <span>&#128338; 5 min lezen</span>
-      <span>&#128161; Niveau: beginner</span>
-    </div>
-  </div>
+<h1>Welke dimmer werkt met onze LED-spots?</h1>
 
-  <h2>Waarom een speciale LED-dimmer?</h2>
-  <p>Een ouderwetse dimmer was gebouwd voor gloeilampen die makkelijk 40 tot 60 Watt trokken. Een LED-spot van 6W ziet zo'n dimmer nauwelijks &mdash; het resultaat: geflikker, gebrom, of een spot die helemaal niet meer aanslaat. Een <strong>LED-geschikte dimmer</strong> levert minder vermogen (vanaf 0,3W) en gebruikt een andere schakeltechniek.</p>
+<p class="sw-lead">Een dimmer die voor gloeilampen is gemaakt gaat het niet doen, maar &ldquo;een LED-dimmer&rdquo; is ook niet genoeg &mdash; die bestaan in twee smaken en er is er maar &eacute;&eacute;n de goede. Welke dat is, staat in de specificatie van de spot.</p>
 
-  <h2>Fase-aansnijding vs fase-afsnijding</h2>
-  <p>Bij LED-dimmers heb je twee technieken. De keuze ligt aan jouw spots:</p>
-
-  <div class="sw-guide-compare">
-    <div class="c">
-      <h3>Fase-aansnijding (L)</h3>
-      <ul>
-        <li>Geschikt voor LED's met conventionele driver</li>
-        <li>Voor zwaardere belastingen (5W+)</li>
-        <li>Niet aan te raden voor moderne low-watt LED</li>
-      </ul>
-    </div>
-    <div class="c">
-      <h3>Fase-afsnijding (C)</h3>
-      <ul>
-        <li><strong>Voor onze LED-inbouwspots</strong></li>
-        <li>Werkt vanaf 0,3W</li>
-        <li>Stille werking, geen brom</li>
-        <li>Vloeiend dimmen van 0&ndash;100%</li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="callout">
-    <strong>Voor Spotwereld spots:</strong> kies altijd een <strong>fase-afsnijdingsdimmer</strong> (vaak gemarkeerd met &ldquo;C&rdquo; of &ldquo;trailing edge&rdquo;). Onze Lesto en Lyvo dimmen daarmee vloeiend van 1% tot 100%.
-  </div>
-
-  <h2>Hoeveel spots op &eacute;&eacute;n dimmer?</h2>
-  <p>Een dimmer heeft een minimum- en maximum-belasting. Veel populaire LED-dimmers werken van <strong>0,3W tot 200W</strong>. Reken even uit:</p>
-  <ul>
-    <li>10 Lesto's van 6W = 60W &rarr; ruim binnen de marge</li>
-    <li>20 Lesto's van 6W = 120W &rarr; nog steeds prima</li>
-    <li>40 spots? Splits dan over twee dimmers of kies een dimmer met hogere capaciteit</li>
-  </ul>
-
-  <h2>Aansluiten in 4 stappen</h2>
-  <ol>
-    <li><strong>Schakel de groep uit</strong> in de meterkast. Controleer met je spanningszoeker.</li>
-    <li><strong>Verwijder de oude schakelaar.</strong> Onthoud welke draad waar zat (foto maken helpt).</li>
-    <li><strong>Sluit de dimmer aan:</strong> meestal komt de fase (bruin) op de L-aansluiting en de geschakelde draad op de andere kant. Volg de meegeleverde handleiding van de dimmer.</li>
-    <li><strong>Monteer de dimmer</strong> in de inbouwdoos, plaats het bedieningsknopje en de afdekplaat. Stroom weer aan en testen.</li>
-  </ol>
-
-  <div class="warn">
-    <strong>Geflikker na installatie?</strong> Check of je dimmer fase-afsnijding heeft (niet aansnijding). Werkt nog steeds niet vloeiend? Mogelijk is het minimum-vermogen van de dimmer te hoog voor het aantal spots dat je dimt.
-  </div>
-
-  <h2>Veelgestelde vragen</h2>
-  <h3>Werkt elke LED-dimmer met elke LED-spot?</h3>
-  <p>Nee. Sommige goedkope LED's zijn niet dimbaar en moeten 100% aan of uit zijn. Alle inbouwspots van Spotwereld zijn dimbaar &mdash; mits je een fase-afsnijdingsdimmer gebruikt.</p>
-
-  <h3>Kan ik dimmen via een app?</h3>
-  <p>Voor onze CCT-switch spots moet je nog steeds een fysieke dimmer aan de muur hebben. Smart-dimmers (Loxone, Niko Home Control, Shelly Dimmer 2) werken ook prima &mdash; mits fase-afsnijding.</p>
-
-  <h3>Wat als ik geen dimmer wil?</h3>
-  <p>Geen probleem. Onze spots werken zonder dimmer perfect op 100% lichtopbrengst. Wel kun je de lichtkleur instellen via de CCT-switch op de driver (2700K / 3000K / 4000K).</p>
-
-  <div class="sw-guide-cta-block">
-    <h2>Spots kiezen voor dimbare verlichting?</h2>
-    <p>Alle Spotwereld LED-inbouwspots zijn dimbaar met een fase-afsnijdingsdimmer. Vrij te kiezen kleur behuizing.</p>
-    <a href="/collections/inbouwspots" class="sw-guide-cta-btn">Bekijk inbouwspots &rarr;</a>
-  </div>
-
-  <a href="/" class="sw-guide-back">&larr; Terug naar de homepage</a>
+<div class="sw-meta">
+  <span>6 minuten lezen</span>
+  <span>Advies</span>
+  <span>Geldt voor alle inbouwspots in ons assortiment</span>
 </div>
+
+<div class="sw-note">
+  <span class="sw-note-label">Kort antwoord</span>
+  <p>Alle inbouwspots die wij verkopen zijn <strong>triac-dimbaar</strong>. Zoek dus een dimmer waarop <strong>triac</strong>, <strong>fase-aansnijding</strong> of <strong>leading edge</strong> staat (vaak aangeduid als R,L) &eacute;n die geschikt is voor LED-belasting, dus met een laag minimumvermogen. Een dimmer die alleen fase-afsnijding doet (trailing edge, C) is de verkeerde.</p>
+</div>
+
+<div class="sw-toc">
+  <p>In dit artikel</p>
+  <ol>
+    <li><a href="#oud">Waarom een oude dimmer niet werkt</a></li>
+    <li><a href="#technieken">Aansnijding en afsnijding, in gewone taal</a></li>
+    <li><a href="#assortiment">Wat er in onze specificaties staat</a></li>
+    <li><a href="#aantal">Hoeveel spots op &eacute;&eacute;n dimmer</a></li>
+    <li><a href="#flikkeren">Het flikkert &mdash; wat nu</a></li>
+    <li><a href="#faq">Veelgestelde vragen</a></li>
+  </ol>
+</div>
+
+<h2 id="oud">Waarom een oude dimmer niet werkt</h2>
+
+<p>Een dimmer die er nog uit de gloeilampentijd zit, is gebouwd voor een flinke belasting. Vaak staat er een minimum van veertig watt op. Dat was destijds &eacute;&eacute;n lamp; nu zijn zes Lesto-spots op de 6&nbsp;watt-stand samen 36 watt en komen ze niet eens aan dat minimum.</p>
+
+<p>Onder dat minimum weet de dimmer niet goed wat hij aan het doen is. Het resultaat is knipperen in de lage standen, brommen, of spots die pas aanslaan als je de knop al half hebt opengedraaid. Er is dan niets kapot &mdash; de dimmer past alleen niet bij de belasting.</p>
+
+<p>Een dimmer die als LED-geschikt wordt verkocht, begint bij enkele watts en heeft elektronica die met de pulsvormige stroomopname van een LED-driver kan omgaan. Dat is de eerste eis. De tweede is de techniek.</p>
+
+<h2 id="technieken">Aansnijding en afsnijding, in gewone taal</h2>
+
+<p>Het net levert wisselspanning: een golf die honderd keer per seconde door nul gaat. Een dimmer maakt licht zwakker door van elke halve golf een stuk weg te knippen. Er zijn twee plekken om dat te doen, en dat is het hele verschil.</p>
+
+<div class="sw-cols">
+  <div>
+    <h3>Fase-aansnijding &mdash; leading edge</h3>
+    <p>Knipt het <strong>begin</strong> van elke halve golf weg. Wordt geschakeld met een triac, vandaar de naam. Herkenbaar aan <em>R,L</em> of <em>triac</em> op de verpakking.</p>
+    <p>Goedkoop en robuust, en het is waar de meeste LED-drivers voor gebouwd zijn &mdash; ook die van ons.</p>
+  </div>
+  <div>
+    <h3>Fase-afsnijding &mdash; trailing edge</h3>
+    <p>Knipt het <strong>eind</strong> van elke halve golf weg. Herkenbaar aan <em>C</em> of <em>trailing edge</em>.</p>
+    <p>Werkt stiller en vaak vloeiender, maar alleen met drivers die daarvoor zijn ontworpen.</p>
+  </div>
+</div>
+
+<p>Het is dus geen kwestie van welke techniek de betere is. Het is een kwestie van welke techniek bij jouw driver hoort. Zet je een driver die voor aansnijding is gemaakt op een afsnijdingsdimmer, dan is knipperen of helemaal niet aanslaan het gebruikelijke resultaat.</p>
+
+<p>Twijfel je? Er bestaan universele dimmers die beide technieken aankunnen en zichzelf instellen. Die zijn wat duurder, maar als je nog niet weet wat er ooit aan die groep komt te hangen, is dat het geld waard.</p>
+
+<h2 id="assortiment">Wat er in onze specificaties staat</h2>
+
+<div class="sw-table-scroll">
+  <table class="sw-table">
+    <thead>
+      <tr><th>Serie</th><th>Vermogen</th><th>Dimbaar</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Lesto</td><td>4W / 6W</td><td>Ja, triac</td></tr>
+      <tr><td>Lyvo</td><td>5W / 7W</td><td>Ja, triac</td></tr>
+      <tr><td>Warmo</td><td>5W / 7W</td><td>Ja, triac &mdash; en Dim2Warm</td></tr>
+      <tr><td>Quaro</td><td>6W</td><td>Ja, triac</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<p>Je vindt hetzelfde terug op elke productpagina, in de specificatietabel onder <em>Dimbaar</em>. Kijk daar even, want het is de enige plek waar het per artikel klopt.</p>
+
+<p>Twee dingen die daarbij horen:</p>
+
+<ul>
+  <li><strong>Bij lege armaturen hangt het af van het lampje.</strong> Verkopen we een armatuur zonder ingebouwde led &mdash; een GU10- of G9-armatuur bijvoorbeeld &mdash; dan bepaalt de lichtbron die je erin draait of het geheel dimbaar is, niet het armatuur.</li>
+  <li><strong>De Warmo doet er iets bovenop.</strong> Die heeft Dim2Warm: hoe verder je dimt, hoe warmer het licht wordt, van 3000K richting een gloeilampachtige gloed. Dat werkt alleen als er ook echt gedimd wordt, dus met een dimmer op de groep. Zonder dimmer heb je een gewone CCT-spot.</li>
+</ul>
+
+<h2 id="aantal">Hoeveel spots op &eacute;&eacute;n dimmer</h2>
+
+<p>Een dimmer heeft een ondergrens en een bovengrens. De ondergrens haal je bij LED bijna nooit als je een LED-geschikte dimmer koopt; de bovengrens is waar je op moet rekenen.</p>
+
+<ul>
+  <li>6 &times; Lesto op 6W = 36 watt</li>
+  <li>12 &times; Lesto op 6W = 72 watt</li>
+  <li>20 &times; Lyvo op 7W = 140 watt</li>
+</ul>
+
+<p>Dat past ruim binnen wat een gangbare LED-dimmer aankan.</p>
+
+<div class="sw-note">
+  <span class="sw-note-label">Let op de LED-tabel, niet de voorkant</span>
+  <p>Op de verpakking staat vaak groot een maximum van een paar honderd watt. Dat getal geldt voor gloeilampen. Voor LED-belasting geven fabrikanten meestal een apart, veel lager maximum op &mdash; soms een kwart daarvan &mdash; omdat LED-drivers een veel grotere inschakelstroom trekken. Zoek in de handleiding de regel waar LED staat en reken met dat getal.</p>
+</div>
+
+<h2 id="flikkeren">Het flikkert &mdash; wat nu</h2>
+
+<p>Loop het in deze volgorde na:</p>
+
+<ol>
+  <li><strong>Klopt de techniek?</strong> Staat er C of trailing edge op de dimmer, dan is dat de oorzaak. Onze spots willen aansnijding.</li>
+  <li><strong>Hangt er genoeg aan?</strong> Twee spots op een dimmer die een minimum van 20 watt heeft, is te weinig. Meer spots op dezelfde dimmer hangen helpt vaker dan je denkt.</li>
+  <li><strong>Staan alle spots in dezelfde stand?</strong> Een groep waarin de wattageschakelaars door elkaar staan, dimt ongelijkmatig.</li>
+  <li><strong>Heeft de dimmer een instelschroefje?</strong> Veel LED-dimmers hebben achter de knop een trimmer waarmee je de laagste stand bijstelt. Draai die iets omhoog tot het knipperen in de onderste stand weg is.</li>
+</ol>
+
+<p>Blijft het na deze vier punten flikkeren, dan is de combinatie driver en dimmer gewoon geen gelukkige. Dat gebeurt, ook tussen merken die allebei doen wat ze beloven.</p>
+
+<h2 id="faq">Veelgestelde vragen</h2>
+
+<div class="sw-faq">
+  <div>
+    <h3>Kan ik de spots met een slimme dimmer bedienen?</h3>
+    <p>Ja, mits de module fase-aansnijding ondersteunt. Controleer dat per model, want dezelfde fabrikant levert vaak zowel een leading- als een trailing-edge-uitvoering. Wij verkopen zelf geen wanddimmers, dus je bent vrij in de merkkeuze.</p>
+  </div>
+  <div>
+    <h3>Kan ik met de dimmer ook de lichtkleur veranderen?</h3>
+    <p>Nee. De CCT-switch is een schuifje op de driver dat je v&oacute;&oacute;r de montage instelt. De dimmer regelt alleen hoe fel de spot brandt. De Warmo is de uitzondering: die wordt warmer van kleur naarmate je verder dimt.</p>
+  </div>
+  <div>
+    <h3>Wat als ik helemaal geen dimmer wil?</h3>
+    <p>Dan werkt alles gewoon op vol vermogen. De wattageschakelaar en de CCT-switch staan los van een dimmer, dus lichtkleur en vermogen kies je ook zonder.</p>
+  </div>
+  <div>
+    <h3>Waarom gaan de spots op de laagste stand niet helemaal uit?</h3>
+    <p>Een dimmer laat op zijn laagste stand een restje spanning door. Bij weinig aangesloten watt is dat genoeg om de LED zwak te laten meegloeien. Meer spots op dezelfde dimmer, of het instelschroefje bijstellen, lost het meestal op.</p>
+  </div>
+</div>
+
+<div class="sw-cta">
+  <h2>Dimbare spots</h2>
+  <p>Alle inbouwspots in het assortiment zijn triac-dimbaar en hebben een CCT-switch op de driver. Op elke productpagina staat de volledige specificatietabel, inclusief zaagmaat en inbouwdiepte.</p>
+  <p><a href="/collections/inbouwspots" class="sw-btn">Bekijk alle inbouwspots</a></p>
+</div>
+
+<p style="margin-top:2rem"><a href="/pages/inbouwspots-plaatsen">Ook nuttig: inbouwspots plaatsen in een gipsplafond</a></p>

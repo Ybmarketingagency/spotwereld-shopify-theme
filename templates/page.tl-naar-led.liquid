@@ -1,188 +1,188 @@
 {% layout 'theme' %}
 
-{%- comment -%}
-  HowTo JSON-LD voor de 5 stappen onder "De wissel in 5 minuten".
-{%- endcomment -%}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "HowTo",
-  "name": "TL-buis vervangen door LED-TL",
-  "description": "In 5 stappen een oude TL-buis vervangen door een LED-TL buis: oude buis eruit, starter vervangen door LED-starter, LED-TL plaatsen en testen.",
-  "url": "{{ request.origin }}{{ page.url }}",
-  "totalTime": "PT5M",
+  "name": "Een TL-buis vervangen door een LED-TL buis",
+  "description": "De oude buis eruit, de starter vervangen door een LED-starter en de LED-buis plaatsen. Geldt voor armaturen met een conventioneel voorschakelapparaat.",
+  "url": "https://spotwereld.nl/pages/tl-naar-led",
+  "totalTime": "PT10M",
   "tool": [
     { "@type": "HowToTool", "name": "Spanningszoeker" }
   ],
   "supply": [
-    { "@type": "HowToSupply", "name": "LED-TL buis" },
+    { "@type": "HowToSupply", "name": "LED-TL buis in de juiste lengte" },
     { "@type": "HowToSupply", "name": "LED-starter" }
   ],
   "step": [
     {
       "@type": "HowToStep",
       "position": 1,
-      "name": "Draai de oude TL-buis eruit",
-      "text": "Schakel eerst de stroom uit op de groep en test met je spanningszoeker. Draai de oude TL-buis 90 graden en trek hem voorzichtig uit het armatuur."
+      "name": "Groep uit en controleren",
+      "text": "Schakel de groep uit in de meterkast en controleer met een spanningszoeker dat er geen spanning meer op het armatuur staat."
     },
     {
       "@type": "HowToStep",
       "position": 2,
-      "name": "Verwijder de starter",
-      "text": "Verwijder de starter — het ronde schakelaartje, meestal aan de zijkant van het armatuur. Draai 90 graden en trek hem eruit."
+      "name": "De oude buis eruit",
+      "text": "Draai de buis een kwartslag tot de pennen door de sleuf van de fitting kunnen en trek hem er recht uit. Ondersteun hem aan beide kanten."
     },
     {
       "@type": "HowToStep",
       "position": 3,
-      "name": "Plaats de LED-starter",
-      "text": "Plaats de LED-starter, meegeleverd bij een Plug & Play LED-TL, in dezelfde houder."
+      "name": "Starter vervangen",
+      "text": "Draai de starter een kwartslag los en trek hem uit de houder. Plaats de meegeleverde LED-starter in dezelfde houder."
     },
     {
       "@type": "HowToStep",
       "position": 4,
-      "name": "Plaats de LED-TL buis",
-      "text": "Plaats de LED-TL buis in het armatuur en draai hem vast."
+      "name": "De LED-buis plaatsen",
+      "text": "Schuif de pennen door de sleuven en draai de buis een kwartslag vast. Let bij een eenzijdig aangesloten buis op de gemarkeerde kant."
     },
     {
       "@type": "HowToStep",
       "position": 5,
-      "name": "Stroom aan en testen",
-      "text": "Schakel de stroom weer in en test. De buis brandt direct op vol licht — geen geknipper meer."
+      "name": "Stroom aan en controleren",
+      "text": "Zet de groep terug. De buis hoort direct op vol licht te branden, zonder aanloop of geknipper."
     }
   ]
 }
 </script>
 
-<style>
-.sw-guide{max-width:780px;margin:0 auto;padding:2.5rem 1.5rem 4rem;font-family:inherit;color:#1e293b;line-height:1.65}
-.sw-guide-crumb{display:flex;align-items:center;gap:.4rem;font-size:.82rem;color:#64748b;margin:0 0 1rem}
-.sw-guide-crumb a{color:#0F6FE3;text-decoration:none}
-.sw-guide-crumb a:hover{text-decoration:underline}
-.sw-guide-hero{background:linear-gradient(135deg,#061f40,#0a2d5e);color:#fff;border-radius:16px;padding:2.5rem 2rem;margin:0 0 2rem;position:relative;overflow:hidden}
-.sw-guide-hero::before{content:'';position:absolute;right:-100px;top:-100px;width:280px;height:280px;border-radius:50%;background:rgba(255,255,255,.05);pointer-events:none}
-.sw-guide-hero .tag{display:inline-block;background:rgba(255,255,255,.15);color:#fff;font-size:.7rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:.3rem .65rem;border-radius:4px;margin-bottom:.85rem}
-.sw-guide-hero h1{font-size:2.1rem;font-weight:900;letter-spacing:-.025em;margin:0 0 .5rem;line-height:1.15;position:relative}
-.sw-guide-hero p{color:rgba(255,255,255,.85);font-size:1.05rem;margin:0;max-width:580px;position:relative}
-.sw-guide-meta{display:flex;gap:1.25rem;font-size:.8rem;color:rgba(255,255,255,.7);margin-top:1rem;flex-wrap:wrap;position:relative}
-.sw-guide-meta span{display:inline-flex;align-items:center;gap:.35rem}
-.sw-guide h2{font-size:1.45rem;font-weight:900;color:#061f40;margin:2rem 0 .85rem;letter-spacing:-.02em;line-height:1.25}
-.sw-guide h3{font-size:1.1rem;font-weight:800;color:#061f40;margin:1.5rem 0 .6rem;letter-spacing:-.01em}
-.sw-guide p{margin:0 0 1rem;color:#334155}
-.sw-guide ul,.sw-guide ol{margin:0 0 1.25rem;padding-left:1.4rem;color:#334155}
-.sw-guide li{margin-bottom:.45rem}
-.sw-guide strong{color:#061f40}
-.sw-guide .callout{background:#eff6ff;border-left:4px solid #0F6FE3;padding:1rem 1.25rem;border-radius:0 8px 8px 0;margin:1.5rem 0;color:#1e293b;font-size:.94rem}
-.sw-guide .callout strong{color:#0F6FE3}
-.sw-guide .warn{background:#fef3c7;border-left:4px solid #f59e0b;padding:1rem 1.25rem;border-radius:0 8px 8px 0;margin:1.5rem 0;color:#78350f;font-size:.94rem}
-.sw-savings{background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;border-radius:12px;padding:1.5rem;margin:1.5rem 0;text-align:center}
-.sw-savings .big{font-size:2.5rem;font-weight:900;letter-spacing:-.03em;line-height:1;margin:.25rem 0}
-.sw-savings .label{font-size:.78rem;text-transform:uppercase;letter-spacing:.1em;opacity:.9}
-.sw-savings p{color:rgba(255,255,255,.85);margin:.5rem 0 0;font-size:.88rem}
-.sw-guide .step{display:grid;grid-template-columns:48px 1fr;gap:1rem;align-items:flex-start;margin:1.25rem 0;padding:1.1rem 1.25rem;background:#f8fafc;border:1px solid #e8edf4;border-radius:10px}
-.sw-guide .step-num{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#083D7D,#0F6FE3);color:#fff;font-weight:900;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.sw-guide .step h3{margin:0 0 .25rem}
-.sw-guide .step p{margin:0 0 .35rem;font-size:.95rem}
-.sw-guide-cta-block{background:linear-gradient(135deg,#083D7D,#0F6FE3);color:#fff;border-radius:14px;padding:2rem 1.75rem;text-align:center;margin:2.5rem 0 1rem}
-.sw-guide-cta-block h2{color:#fff;margin:0 0 .5rem;font-size:1.5rem}
-.sw-guide-cta-block p{color:rgba(255,255,255,.85);margin:0 0 1.25rem}
-.sw-guide-cta-btn{display:inline-flex;align-items:center;gap:.5rem;background:#fff;color:#061f40;text-decoration:none;padding:.85rem 1.5rem;border-radius:8px;font-weight:800;font-size:.95rem;transition:all .15s}
-.sw-guide-cta-btn:hover{background:#facc15;transform:translateY(-1px)}
-.sw-guide-back{display:inline-flex;align-items:center;gap:.4rem;color:#0F6FE3;font-weight:600;text-decoration:none;margin-top:2rem;font-size:.92rem}
-.sw-guide-back:hover{text-decoration:underline}
-</style>
+<p class="sw-crumb"><a href="/">Home</a><span>&rsaquo;</span><a href="/pages/verlichtingsgids">Verlichtingsgids</a><span>&rsaquo;</span>TL vervangen door LED-TL</p>
 
-<div class="sw-guide">
-  <div class="sw-guide-crumb">
-    <a href="/">Home</a> <span>&rsaquo;</span> <a href="/pages/verlichtingsgids">Verlichtingsgids</a> <span>&rsaquo;</span> <span>TL naar LED</span>
-  </div>
+<p class="sw-kicker">Besparen</p>
 
-  <div class="sw-guide-hero">
-    <span class="tag">Besparen</span>
-    <h1>Bespaar tot 60% door je TL te vervangen door LED-TL</h1>
-    <p>Oude TL-buizen verbruiken veel meer stroom dan je denkt en gaan ook nog eens korter mee. Een LED-TL bespaart fors op je energierekening &mdash; en de wissel zelf duurt nog geen 5 minuten.</p>
-    <div class="sw-guide-meta">
-      <span>&#128338; 4 min lezen</span>
-      <span>&#128176; Geld besparen</span>
-      <span>&#127939; Snel klusje</span>
-    </div>
-  </div>
+<h1>TL vervangen door LED-TL: de rekensom</h1>
 
-  <h2>Waarom overstappen op LED-TL?</h2>
-  <p>Een traditionele TL-buis van 36W brandt gemiddeld 12 uur per dag in een werkplaats of garage. Per jaar kost dat al snel <strong>&euro;43</strong> aan stroom (bij &euro;0,27/kWh). Een vergelijkbare LED-TL van 18W kost in dezelfde tijd <strong>&euro;21</strong>. Per buis bespaar je dus &euro;22 per jaar &mdash; en bij meerdere armaturen tikt dat hard aan.</p>
+<p class="sw-lead">Of het de moeite is, hangt vooral af van hoeveel uur de buis brandt. Voor een garage waar het licht af en toe een half uur aan is, verdien je een LED-buis nooit terug. Voor een werkplaats waar hij de hele dag aan staat, is het binnen een jaar rond. Hieronder de som en de vraag die je eerst moet beantwoorden: welk type past in jouw armatuur?</p>
 
-  <div class="sw-savings">
-    <div class="label">Gemiddelde besparing per buis per jaar</div>
-    <div class="big">&euro; 22,&minus;</div>
-    <p>Plus minder vervangingsbeurten: LED-TL gaat 50.000 uur mee, traditionele TL maar 8.000 uur.</p>
-  </div>
-
-  <h2>Wat is het verschil?</h2>
-  <ul>
-    <li><strong>Energieverbruik:</strong> LED-TL gebruikt 50&ndash;60% minder Watt voor dezelfde lichtopbrengst</li>
-    <li><strong>Levensduur:</strong> 50.000 uur vs 8.000 uur voor traditionele TL</li>
-    <li><strong>Opstart:</strong> direct vol licht, geen knipperend &ldquo;opwarmen&rdquo;</li>
-    <li><strong>Geluid:</strong> geen brommend voorschakelapparaat meer</li>
-    <li><strong>Geen kwik:</strong> LED-TL bevat geen schadelijke stoffen</li>
-  </ul>
-
-  <h2>Heb ik een nieuwe armatuur nodig?</h2>
-  <p>In de meeste gevallen <strong>niet</strong>. Je bestaande TL-armatuur kun je hergebruiken &mdash; mits je de starter en eventueel het voorschakelapparaat aanpast. Er zijn drie soorten LED-TL buizen:</p>
-
-  <div class="step">
-    <div class="step-num">1</div>
-    <div>
-      <h3>Plug &amp; Play (KVG bypass)</h3>
-      <p>Werkt direct in armaturen met een conventioneel voorschakelapparaat. Je hoeft alleen de starter te vervangen door een LED-starter (vaak meegeleverd).</p>
-    </div>
-  </div>
-
-  <div class="step">
-    <div class="step-num">2</div>
-    <div>
-      <h3>Direct op netspanning (HF bypass)</h3>
-      <p>Voor armaturen met elektronisch voorschakelapparaat. Je moet het VSA bypassen &mdash; dan brandt de buis direct op 230V. Iets meer werk maar wel het zuinigst.</p>
-    </div>
-  </div>
-
-  <div class="step">
-    <div class="step-num">3</div>
-    <div>
-      <h3>Universele LED-TL</h3>
-      <p>Werkt op beide systemen. Iets duurder maar je hoeft niets te weten over je bestaande armatuur. Ideaal voor doe-het-zelvers.</p>
-    </div>
-  </div>
-
-  <h2>De wissel in 5 minuten</h2>
-  <div class="warn">
-    <strong>Voordat je begint:</strong> schakel de stroom uit op de groep. Test met je spanningszoeker. Vervang nooit een TL terwijl er stroom op staat.
-  </div>
-
-  <ol>
-    <li><strong>Draai de oude TL-buis</strong> 90 graden en trek hem voorzichtig uit het armatuur.</li>
-    <li><strong>Verwijder de starter</strong> (rond schakelaartje, meestal aan zijkant van armatuur). Draai 90 graden en trek hem eruit.</li>
-    <li><strong>Plaats de LED-starter</strong> (meegeleverd bij Plug &amp; Play LED-TL) in dezelfde houder.</li>
-    <li><strong>Plaats de LED-TL buis</strong> in het armatuur, draai vast.</li>
-    <li><strong>Stroom weer aan</strong> en testen. Brandt direct op vol licht &mdash; geen geknipper meer.</li>
-  </ol>
-
-  <div class="callout">
-    <strong>Tip:</strong> wil je de werkplaats of garage volledig vernieuwen? Combineer LED-TL met een paar krachtige LED-inbouwspots boven de werkbank voor extra accentverlichting waar je het nodig hebt.
-  </div>
-
-  <h2>Welke maat heb ik nodig?</h2>
-  <p>LED-TL buizen komen in dezelfde maten als gewone TL:</p>
-  <ul>
-    <li><strong>T8 60 cm</strong> &mdash; 9W LED vervangt 18W TL</li>
-    <li><strong>T8 120 cm</strong> &mdash; 18W LED vervangt 36W TL (meest voorkomend)</li>
-    <li><strong>T8 150 cm</strong> &mdash; 24W LED vervangt 58W TL</li>
-  </ul>
-  <p>Meet je oude buis na voordat je bestelt. Pas op: T5-buizen (dunner, 16mm) zijn een ander formaat dan T8 (26mm).</p>
-
-  <div class="sw-guide-cta-block">
-    <h2>Modern LED-licht in je hele huis</h2>
-    <p>Begin met inbouwspots voor de woonkamer en badkamer. CCT-switch zodat je zelf de lichtkleur kiest.</p>
-    <a href="/collections/inbouwspots" class="sw-guide-cta-btn">Bekijk inbouwspots &rarr;</a>
-  </div>
-
-  <a href="/" class="sw-guide-back">&larr; Terug naar de homepage</a>
+<div class="sw-meta">
+  <span>5 minuten lezen</span>
+  <span>Besparen</span>
+  <span>Klusje van tien minuten</span>
 </div>
+
+<div class="sw-note sw-note--tip">
+  <span class="sw-note-label">Even eerlijk</span>
+  <p>Spotwereld verkoopt geen TL- of LED-TL-buizen. Deze gids staat er omdat we er regelmatig naar gevraagd worden; er hangt geen product van ons aan vast.</p>
+</div>
+
+<div class="sw-toc">
+  <p>In dit artikel</p>
+  <ol>
+    <li><a href="#som">Wat het per jaar scheelt</a></li>
+    <li><a href="#levensduur">Levensduur telt ook mee</a></li>
+    <li><a href="#type">Welk type past in mijn armatuur</a></li>
+    <li><a href="#wissel">De wissel, stap voor stap</a></li>
+    <li><a href="#maten">Maten en valkuilen</a></li>
+  </ol>
+</div>
+
+<h2 id="som">Wat het per jaar scheelt</h2>
+
+<p>Neem de meest voorkomende situatie: een T8-buis van 36 watt die je vervangt door een LED-buis van 18 watt met vergelijkbare lichtopbrengst. Twaalf uur per dag aan, het hele jaar door, bij een stroomprijs van &euro;&nbsp;0,27 per kWh.</p>
+
+<div class="sw-table-scroll">
+  <table class="sw-table">
+    <thead>
+      <tr><th>&nbsp;</th><th>TL 36W</th><th>LED-TL 18W</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Opgenomen vermogen</td><td>36 W</td><td>18 W</td></tr>
+      <tr><td>12 uur per dag, 365 dagen</td><td>158 kWh</td><td>79 kWh</td></tr>
+      <tr><td>Bij &euro; 0,27 per kWh</td><td>&euro; 43 per jaar</td><td>&euro; 21 per jaar</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<p>Verschil: ongeveer <strong>&euro; 21 per buis per jaar</strong>. Hangen er zes armaturen in een werkplaats, dan is dat 126 euro.</p>
+
+<p>Maar reken het na met jouw eigen uren, want daar zit de hele beslissing. Brandt diezelfde buis twee uur per dag, dan bespaar je nog geen vier euro per jaar en doe je er jaren over om de buis terug te verdienen. De formule is simpel:</p>
+
+<p><strong>watt &times; uren per dag &times; 365 &divide; 1.000 &times; prijs per kWh</strong></p>
+
+<p>Nog iets wat in het voordeel van LED werkt: bij een conventioneel voorschakelapparaat &mdash; de zware spoel in oudere armaturen, te herkennen aan de starter &mdash; komt bij de 36 watt van de buis nog het verlies van die spoel. Het werkelijk opgenomen vermogen ligt dus hoger dan wat er op de buis staat. Bij LED-buizen die het voorschakelapparaat overbruggen, valt dat verlies helemaal weg.</p>
+
+<h2 id="levensduur">Levensduur telt ook mee</h2>
+
+<p>Voor LED-buizen wordt doorgaans 30.000 tot 50.000 uur opgegeven, tegen 8.000 &agrave; 15.000 uur voor TL. De spreiding is groot, dus kijk wat er op de verpakking staat in plaats van uit te gaan van een vuistregel.</p>
+
+<p>Belangrijker dan het getal is wat een vervangingsbeurt jou kost. Hangt het armatuur op vier meter hoogte in een loods, dan is de hoogwerker duurder dan de buis en telt levensduur zwaarder mee dan stroomverbruik. Hangt hij boven je werkbank, dan is het een klusje van tien minuten en geeft de stroomrekening de doorslag.</p>
+
+<p>Verder: LED-buizen bevatten geen kwik, ze branden direct op vol licht in plaats van eerst te knipperen, en het brommen van het voorschakelapparaat verdwijnt zodra dat wordt overbrugd.</p>
+
+<h2 id="type">Welk type past in mijn armatuur</h2>
+
+<p>Er zijn drie uitvoeringen en je moet vooraf weten welke je nodig hebt. De test is eenvoudig: <strong>kijk of er een starter in het armatuur zit</strong> &mdash; een klein rond of vierkant busje aan de zijkant, dat je met een kwartslag los kunt draaien.</p>
+
+<div class="sw-cols">
+  <div>
+    <h3>Wel een starter</h3>
+    <p>Dan heb je een conventioneel voorschakelapparaat (KVG). Je hebt een <strong>plug &amp; play</strong> LED-buis nodig. De LED-starter zit er meestal bij; die vervangt de oude en verder verandert er niets aan de bedrading.</p>
+  </div>
+  <div>
+    <h3>Geen starter</h3>
+    <p>Dan zit er een elektronisch voorschakelapparaat (HF/EVSA) in. Je hebt een buis nodig die <strong>direct op netspanning</strong> werkt, en het voorschakelapparaat moet worden overbrugd.</p>
+  </div>
+</div>
+
+<p>Weet je het niet zeker, of hangen er in hetzelfde pand allebei de types? Dan is een <strong>universele</strong> LED-buis het antwoord. Die werkt op beide systemen, kost wat meer en bespaart je het uitzoekwerk.</p>
+
+<h2 id="wissel">De wissel, stap voor stap</h2>
+
+<div class="sw-note">
+  <span class="sw-note-label">Veiligheid</span>
+  <p>Zet de groep uit in de meterkast en controleer met een spanningszoeker. Bij een armatuur waarvan het voorschakelapparaat moet worden overbrugd, wordt er in de bedrading gewerkt &mdash; dat is elektrotechnisch werk. Laat dat doen door iemand die weet wat hij doet.</p>
+</div>
+
+<ol class="sw-steps">
+  <li>
+    <h3>Groep uit en controleren</h3>
+    <p>Meterkast, niet de schakelaar. Spanningszoeker erbij.</p>
+  </li>
+  <li>
+    <h3>De oude buis eruit</h3>
+    <p>Draai de buis een kwartslag, tot de pennen door de sleuf in de fitting kunnen, en trek hem er recht uit. Ondersteun hem aan beide kanten &mdash; een TL-buis breekt makkelijk en er zit kwik in. Lever hem in bij het milieustation, niet bij het glas.</p>
+  </li>
+  <li>
+    <h3>Starter vervangen</h3>
+    <p>Draai de starter een kwartslag los en trek hem uit de houder. De LED-starter gaat in dezelfde houder. Sla deze stap niet over: de oude starter laten zitten kan de LED-buis beschadigen.</p>
+  </li>
+  <li>
+    <h3>De LED-buis plaatsen</h3>
+    <p>Pennen door de sleuven, kwartslag draaien, klaar. Let bij een buis die maar aan &eacute;&eacute;n kant is aangesloten op de markering: er staat op welke kant de spanning binnenkomt.</p>
+  </li>
+  <li>
+    <h3>Stroom aan en controleren</h3>
+    <p>De buis hoort direct op vol licht te branden, zonder aanloop en zonder geknipper. Gebeurt dat niet, controleer dan eerst of de LED-starter er goed in zit.</p>
+  </li>
+</ol>
+
+<div class="sw-note">
+  <span class="sw-note-label">Plak het label erop</span>
+  <p>Bij een armatuur waarvan het voorschakelapparaat is overbrugd, staat er nu netspanning op de fittingen. Draait iemand daar later een gewone TL-buis in, dan gaat die stuk &mdash; en dat is niet ongevaarlijk. Bij zulke buizen zit een sticker in de verpakking om op het armatuur te plakken. Doe dat ook echt.</p>
+</div>
+
+<h2 id="maten">Maten en valkuilen</h2>
+
+<p>LED-buizen komen in dezelfde lengtes als TL:</p>
+
+<ul>
+  <li><strong>T8 60 cm</strong> &mdash; vervangt een TL van 18W</li>
+  <li><strong>T8 120 cm</strong> &mdash; vervangt een TL van 36W, veruit het meest voorkomend</li>
+  <li><strong>T8 150 cm</strong> &mdash; vervangt een TL van 58W</li>
+</ul>
+
+<p>Meet de oude buis na v&oacute;&oacute;r je bestelt, en let op de dikte. Een T8 is 26 mm in doorsnede, een T5 maar 16 mm. Die twee passen niet in elkaars fitting, hoe goed de lengte ook lijkt te kloppen.</p>
+
+<p>Kijk tot slot naar de lichtkleur. TL-buizen werden vaak in 4000K of 6500K geleverd &mdash; koel wit tot daglicht. Dat is prima boven een werkbank, maar in een berging of hobbyruimte waar je ook zit, is 3000K aangenamer. Het is een keuze die je bij LED per buis maakt en achteraf niet meer kunt bijstellen.</p>
+
+<div class="sw-cta">
+  <h2>De ruimte verder aanpakken</h2>
+  <p>Als de basisverlichting toch onder handen wordt genomen: gericht licht boven een werkbank of in een kastopstelling doe je met inbouwspots. De onze hebben een schakelaar op de driver waarmee je de lichtkleur op 2700K, 3000K of 4000K zet.</p>
+  <p><a href="/collections/inbouwspots" class="sw-btn">Bekijk alle inbouwspots</a></p>
+</div>
+
+<p style="margin-top:2rem"><a href="/pages/led-dimmer-kiezen">Ook nuttig: welke dimmer werkt met onze LED-spots?</a></p>
