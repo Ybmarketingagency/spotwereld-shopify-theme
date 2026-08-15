@@ -196,12 +196,95 @@
            style="width:76px;height:76px;flex-shrink:0;object-fit:cover;border-radius:6px;border:2px solid #061f40;cursor:pointer;transition:all .15s;background:#fff"
            onclick="swSwitchMain(this)">
     {%- elsif product.media.size > 0 -%}
-      {%- comment -%} Eerst echte product media {%- endcomment -%}
-      {%- for sw_media in product.media limit: 8 -%}
-        <img src="{{ sw_media | image_url: width: 150 }}" alt="{{ product.title | escape }}" loading="lazy"
-             data-full-src="{{ sw_media | image_url: width: 1200 }}"
-             style="width:76px;height:76px;flex-shrink:0;object-fit:cover;border-radius:6px;border:{% if forloop.first %}2px solid #061f40{% else %}1.5px solid #e2e8f0{% endif %};cursor:pointer;transition:all .15s;background:#fff"
-             onclick="swSwitchMain(this)">
+      {%- comment -%}
+        Alleen de foto's van de gekozen kleur. Sinds de kleuren varianten van één product
+        zijn, hangt per kleur maar één foto aan zijn variant; de overige staan los en die
+        toonde Shopify onder élke kleur. Je zag dan zwarte platen bij Mat Wit.
+
+        Twee regels, in deze volgorde:
+          1. is de foto de hoofdfoto van een ándere kleur, dan hoort hij hier niet;
+          2. staat er een kleurnaam in de bestandsnaam die niet de gekozen kleur is, ook niet.
+        De woordenlijst komt uit de kleurwaarden van dit product zelf, dus bij Faro zijn dat
+        'zwart-goud' en 'wit-goud' en niet los 'zwart' of 'goud'.
+
+        Een foto zonder kleurnaam blijft staan; die is meestal een detail- of maatfoto.
+        Levert het filter niets op, dan tonen we gewoon alles.
+      {%- endcomment -%}
+      {%- liquid
+        assign sw_kleur = ''
+        assign sw_kleur_pos = 0
+        for sw_o in product.options_with_values
+          if sw_o.name == 'Kleur'
+            assign sw_kleur_pos = forloop.index
+            assign sw_kleur_waarden = sw_o.values
+          endif
+        endfor
+        assign sw_var = product.selected_or_first_available_variant
+        if sw_kleur_pos == 1
+          assign sw_kleur = sw_var.option1
+        elsif sw_kleur_pos == 2
+          assign sw_kleur = sw_var.option2
+        elsif sw_kleur_pos == 3
+          assign sw_kleur = sw_var.option3
+        endif
+        assign sw_slug = sw_kleur | downcase | replace: ' ', '-' | replace: 'mat-', '' | replace: 'geborsteld-', ''
+
+        # hoofdfoto's van de andere kleuren verzamelen
+        assign sw_andere = ''
+        for sw_v in product.variants
+          if sw_v.id != sw_var.id and sw_v.featured_media
+            assign sw_andere = sw_andere | append: sw_v.featured_media.id | append: ','
+          endif
+        endfor
+        if sw_var.featured_media
+          assign sw_eigen = sw_var.featured_media.id
+        else
+          assign sw_eigen = 0
+        endif
+      -%}
+      {%- capture sw_zichtbaar -%}
+        {%- for sw_media in product.media -%}
+          {%- liquid
+            assign sw_toon = true
+            assign sw_id_zoek = ',' | append: sw_media.id | append: ','
+            assign sw_andere_zoek = ',' | append: sw_andere
+            if sw_media.id != sw_eigen and sw_andere_zoek contains sw_id_zoek
+              assign sw_toon = false
+            endif
+            if sw_toon and sw_slug != ''
+              assign sw_best = sw_media.preview_image.src | split: '/' | last | split: '?' | first | downcase | replace: '_', '-' | replace: '.', '-'
+              assign sw_best = '-' | append: sw_best | append: '-'
+              assign sw_eigen_zoek = '-' | append: sw_slug | append: '-'
+              unless sw_best contains sw_eigen_zoek
+                for sw_w in sw_kleur_waarden
+                  assign sw_wslug = sw_w | downcase | replace: ' ', '-' | replace: 'mat-', '' | replace: 'geborsteld-', ''
+                  assign sw_wzoek = '-' | append: sw_wslug | append: '-'
+                  if sw_wslug != sw_slug and sw_best contains sw_wzoek
+                    assign sw_toon = false
+                  endif
+                endfor
+              endunless
+            endif
+          -%}
+          {%- if sw_toon -%}{{ sw_media.id }},{%- endif -%}
+        {%- endfor -%}
+      {%- endcapture -%}
+      {%- assign sw_zichtbaar = sw_zichtbaar | strip -%}
+      {%- comment -%}
+        Tel pas ná het filteren tot acht. Knip je eerst af, dan houdt een kleur waarvan de
+        foto's achteraan staan — Lesto heeft er 36 — een lege strook over.
+      {%- endcomment -%}
+      {%- assign sw_getoond = 0 -%}
+      {%- for sw_media in product.media -%}
+        {%- assign sw_check = ',' | append: sw_zichtbaar -%}
+        {%- assign sw_dit = ',' | append: sw_media.id | append: ',' -%}
+        {%- if sw_getoond < 8 and sw_zichtbaar == '' or sw_getoond < 8 and sw_check contains sw_dit -%}
+          <img src="{{ sw_media | image_url: width: 150 }}" alt="{{ product.title | escape }}" loading="lazy"
+               data-full-src="{{ sw_media | image_url: width: 1200 }}"
+               style="width:76px;height:76px;flex-shrink:0;object-fit:cover;border-radius:6px;border:{% if sw_getoond == 0 %}2px solid #061f40{% else %}1.5px solid #e2e8f0{% endif %};cursor:pointer;transition:all .15s;background:#fff"
+               onclick="swSwitchMain(this)">
+          {%- assign sw_getoond = sw_getoond | plus: 1 -%}
+        {%- endif -%}
       {%- endfor -%}
     {%- endif -%}
     {%- comment -%} Daarna extra outledtl thumbnails (lookup-based) {%- endcomment -%}
