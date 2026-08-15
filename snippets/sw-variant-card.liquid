@@ -26,7 +26,10 @@
   assign model = titel_delen[0] | strip
   assign staart = ''
   for deel in titel_delen offset: 1
-    assign staart = staart | append: ' | ' | append: deel | strip
+    # strip eerst het losse deel; ketenen we hem achteraan, dan haalt strip de spatie
+    # weg die we net voor de pipe hadden gezet
+    assign schoon_deel = deel | strip
+    assign staart = staart | append: ' | ' | append: schoon_deel
   endfor
   assign kaart_titel = model | append: ' ' | append: kleur | append: staart
 
