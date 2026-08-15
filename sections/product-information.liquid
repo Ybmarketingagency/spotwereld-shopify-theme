@@ -626,7 +626,17 @@ section:has(> div > .sw-pr-grid){display:none!important}
     }
 
     // Volume pricing (clickable, updates quantity)
-    var price = {{ product.price | divided_by: 100.0 }};
+    // Bij een product met meerdere varianten verandert de prijs zonder herladen. De staffel
+    // moet dan mee. We lezen daarom de prijs die op het scherm staat in plaats van de
+    // Liquid-waarde, en herberekenen zodra die tekst verandert.
+    var swPriceEl = document.querySelector('.price__regular .price, .price-item--sale');
+    function swLeesPrijs(val) {
+      if (!swPriceEl) return val;
+      var m = (swPriceEl.textContent || '').replace(/\s/g, '').match(/([\d.]+),(\d{2})/);
+      if (!m) return val;
+      return parseFloat(m[1].replace(/\./g, '') + '.' + m[2]);
+    }
+    var price = swLeesPrijs({{ product.price | divided_by: 100.0 }});
     var tiers = [
       { qty: 1, label: '1 stuk', discount: 0 },
       { qty: 10, label: '10 stuks', discount: 0.02 },
@@ -668,6 +678,22 @@ section:has(> div > .sw-pr-grid){display:none!important}
         this.style.background = '#f8faff';
       });
     });
+
+    // Wisselt de klant van variant, dan verandert de prijs zonder herladen. Deze observer
+    // rekent de staffelbedragen opnieuw uit zodra de getoonde prijs verandert.
+    if (swPriceEl) {
+      new MutationObserver(function() {
+        var nieuw = swLeesPrijs(price);
+        if (!nieuw || nieuw === price) return;
+        price = nieuw;
+        document.querySelectorAll('.sw-vol-tier').forEach(function(t) {
+          var idx = parseInt(t.dataset.index, 10);
+          var bedrag = price * (1 - tiers[idx].discount);
+          var regel = t.children[1];
+          if (regel) regel.textContent = '€' + bedrag.toFixed(2).replace('.', ',') + '/stuk';
+        });
+      }).observe(swPriceEl, { childList: true, characterData: true, subtree: true });
+    }
 
     // Stars + Op voorraad after price (universal)
     var priceWrap = Array.from(document.querySelectorAll('.price__regular')).find(function(el) {
