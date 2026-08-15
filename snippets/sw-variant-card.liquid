@@ -1,0 +1,105 @@
+{%- doc -%}
+  Toont één kleurvariant als een eigen tegel in de collectie.
+
+  Sinds de kleuren echte varianten zijn, staat er per model nog maar één tegel in het
+  raster. Deze kaart zet elke kleur weer apart neer, zonder de producten te splitsen:
+  foto, prijs en link komen van de variant, de rest van het product.
+
+  Alles wordt door Liquid gerenderd. Bewust geen JavaScript dat na het laden de foto of
+  prijs omwisselt — dat leverde eerder een kaart op die een andere kleur toonde dan er
+  in het winkelmandje belandde.
+
+  @param {object} product - het product
+  @param {object} variant - de variant die deze tegel toont
+{%- enddoc -%}
+
+{%- liquid
+  assign kleur = variant.option1
+  for opt in product.options_with_values
+    if opt.name == 'Kleur'
+      assign kleur = variant.options[forloop.index0]
+    endif
+  endfor
+
+  # kleur direct achter de modelnaam, vóór de specificaties
+  assign titel_delen = product.title | split: '|'
+  assign model = titel_delen[0] | strip
+  assign staart = ''
+  for deel in titel_delen offset: 1
+    assign staart = staart | append: ' | ' | append: deel | strip
+  endfor
+  assign kaart_titel = model | append: ' ' | append: kleur | append: staart
+
+  assign foto = variant.featured_media | default: product.featured_media
+
+  assign lichtkleur = product.metafields.custom.lichtkleur.value
+  assign ip_filter = product.metafields.custom.ip_waarde_filter.value
+  assign sw_badges = ''
+  if lichtkleur contains 'Dim2Warm'
+    assign sw_badges = sw_badges | append: 'Dim2Warm|'
+  endif
+  if lichtkleur contains 'Instelbaar'
+    assign sw_badges = sw_badges | append: 'CCT-switch|'
+  endif
+  if ip_filter contains 'IP65'
+    assign sw_badges = sw_badges | append: 'IP65|'
+  endif
+  assign sw_badge_list = sw_badges | split: '|'
+-%}
+
+<product-card class="product-card sw-vcard" data-product-id="{{ product.id }}" data-variant-id="{{ variant.id }}">
+  <a href="{{ variant.url }}" class="product-card__link sw-vcard-link">
+    <span class="visually-hidden">{{ kaart_titel }}</span>
+  </a>
+  <div class="product-card__content sw-vcard-content">
+    <div class="sw-vcard-media">
+      {%- if foto -%}
+        <img
+          src="{{ foto | image_url: width: 600 }}"
+          srcset="{{ foto | image_url: width: 300 }} 300w, {{ foto | image_url: width: 600 }} 600w, {{ foto | image_url: width: 900 }} 900w"
+          sizes="(min-width: 990px) 300px, (min-width: 750px) 33vw, 50vw"
+          alt="{{ kaart_titel | escape }}"
+          width="{{ foto.width }}"
+          height="{{ foto.height }}"
+          loading="lazy"
+        >
+      {%- endif -%}
+    </div>
+
+    {%- if sw_badge_list.size > 0 -%}
+      <div class="sw-card-badges">
+        {%- for badge in sw_badge_list limit: 2 -%}
+          <span class="sw-card-badge{% if badge == 'Dim2Warm' %} sw-card-badge--fill{% endif %}">{{ badge }}</span>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+    {%- if variant.available -%}
+      <span class="sw-card-stock">Op voorraad</span>
+    {%- endif -%}
+
+    <p class="sw-vcard-title">{{ kaart_titel }}</p>
+    <p class="sw-vcard-price">
+      {{ variant.price | money }}
+      {%- if variant.compare_at_price > variant.price -%}
+        <s>{{ variant.compare_at_price | money }}</s>
+      {%- endif -%}
+    </p>
+    <div class="sw-card-stars">&#9733;&#9733;&#9733;&#9733;&#9733;<span>(4.9)</span></div>
+    <a href="{{ variant.url }}" class="sw-card-bekijk" tabindex="-1" aria-hidden="true">
+      Bekijk Product
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+    </a>
+  </div>
+</product-card>
+
+{% stylesheet %}
+  product-card.sw-vcard{position:relative;display:flex;flex-direction:column;height:100%}
+  .sw-vcard .sw-vcard-content{display:flex;flex-direction:column;height:100%;gap:.35rem}
+  .sw-vcard .sw-vcard-link{position:absolute;inset:0;z-index:1}
+  .sw-vcard .sw-vcard-media{position:relative;width:100%;aspect-ratio:1/1;overflow:hidden;border-radius:.5rem;background:#fff}
+  .sw-vcard .sw-vcard-media img{width:100%;height:100%;object-fit:contain;display:block;transition:transform .25s}
+  .sw-vcard:hover .sw-vcard-media img{transform:scale(1.03)}
+  .sw-vcard .sw-vcard-title{font-size:.85rem;font-weight:700;color:#12181f;margin:.4rem 0 0;line-height:1.35;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;min-height:3.4em}
+  .sw-vcard .sw-vcard-price{font-size:.95rem;font-weight:700;color:#083D7D;margin:0;line-height:1.2}
+  .sw-vcard .sw-vcard-price s{color:#94a3b8;font-weight:500;font-size:.8rem;margin-left:.35rem}
+{% endstylesheet %}
