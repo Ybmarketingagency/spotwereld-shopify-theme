@@ -211,35 +211,47 @@
         Foto's vóór de eerste hoofdfoto horen bij niemand en blijven staan. Levert het
         filter niets op, dan tonen we gewoon alles.
       {%- endcomment -%}
-      {%- assign sw_var = product.selected_or_first_available_variant -%}
-      {%- capture sw_zichtbaar -%}
-        {%- assign sw_eigenaar = '' -%}
-        {%- for sw_media in product.media -%}
-          {%- for sw_v in product.variants -%}
-            {%- if sw_v.featured_media and sw_v.featured_media.id == sw_media.id -%}
-              {%- assign sw_eigenaar = sw_v.id -%}
-            {%- endif -%}
-          {%- endfor -%}
-          {%- if sw_eigenaar == '' or sw_eigenaar == sw_var.id -%}{{ sw_media.id }},{%- endif -%}
-        {%- endfor -%}
-      {%- endcapture -%}
-      {%- assign sw_zichtbaar = sw_zichtbaar | strip -%}
       {%- comment -%}
-        Tel pas ná het filteren tot acht. Knip je eerst af, dan houdt een kleur waarvan de
-        foto's achteraan staan — Lesto heeft er 36 — een lege strook over.
+        Eén doorloop: we lopen de media op volgorde langs en houden bij van welke kleur we
+        bezig zijn. Zodra we de hoofdfoto van een kleur tegenkomen, is die kleur de
+        eigenaar tot de hoofdfoto van de volgende kleur langskomt.
+
+        Eerder deed ik dit in twee passes met een lijst van id's als tekst. Dat gaf bij
+        Faro Wit-Goud vier foto's van Zwart-Goud terug. Zo hoeft er niets vergeleken te
+        worden en kan die fout niet meer optreden.
       {%- endcomment -%}
+      {%- assign sw_var = product.selected_or_first_available_variant -%}
+      {%- assign sw_eigenaar = blank -%}
       {%- assign sw_getoond = 0 -%}
+      {%- assign sw_eerste = blank -%}
       {%- for sw_media in product.media -%}
-        {%- assign sw_check = ',' | append: sw_zichtbaar -%}
-        {%- assign sw_dit = ',' | append: sw_media.id | append: ',' -%}
-        {%- if sw_getoond < 8 and sw_zichtbaar == '' or sw_getoond < 8 and sw_check contains sw_dit -%}
-          <img src="{{ sw_media | image_url: width: 150 }}" alt="{{ product.title | escape }}" loading="lazy"
-               data-full-src="{{ sw_media | image_url: width: 1200 }}"
-               style="width:76px;height:76px;flex-shrink:0;object-fit:cover;border-radius:6px;border:{% if sw_getoond == 0 %}2px solid #061f40{% else %}1.5px solid #e2e8f0{% endif %};cursor:pointer;transition:all .15s;background:#fff"
-               onclick="swSwitchMain(this)">
-          {%- assign sw_getoond = sw_getoond | plus: 1 -%}
+        {%- for sw_v in product.variants -%}
+          {%- if sw_v.featured_media.id == sw_media.id -%}
+            {%- assign sw_eigenaar = sw_v.id -%}
+          {%- endif -%}
+        {%- endfor -%}
+        {%- if sw_getoond < 8 -%}
+          {%- if sw_eigenaar == blank or sw_eigenaar == sw_var.id -%}
+            {%- if sw_eerste == blank -%}{%- assign sw_eerste = sw_media -%}{%- endif -%}
+            <img src="{{ sw_media | image_url: width: 150 }}" alt="{{ product.title | escape }}" loading="lazy"
+                 data-full-src="{{ sw_media | image_url: width: 1200 }}"
+                 style="width:76px;height:76px;flex-shrink:0;object-fit:cover;border-radius:6px;border:{% if sw_getoond == 0 %}2px solid #061f40{% else %}1.5px solid #e2e8f0{% endif %};cursor:pointer;transition:all .15s;background:#fff"
+                 onclick="swSwitchMain(this)">
+            {%- assign sw_getoond = sw_getoond | plus: 1 -%}
+          {%- endif -%}
         {%- endif -%}
       {%- endfor -%}
+      {%- comment -%} Vangnet: houdt een kleur niets over, toon dan gewoon alles. {%- endcomment -%}
+      {%- if sw_getoond == 0 -%}
+        {%- for sw_media in product.media limit: 8 -%}
+          {%- if sw_eerste == blank -%}{%- assign sw_eerste = sw_media -%}{%- endif -%}
+          <img src="{{ sw_media | image_url: width: 150 }}" alt="{{ product.title | escape }}" loading="lazy"
+               data-full-src="{{ sw_media | image_url: width: 1200 }}"
+               style="width:76px;height:76px;flex-shrink:0;object-fit:cover;border-radius:6px;border:{% if forloop.first %}2px solid #061f40{% else %}1.5px solid #e2e8f0{% endif %};cursor:pointer;transition:all .15s;background:#fff"
+               onclick="swSwitchMain(this)">
+          {%- assign sw_getoond = sw_getoond | plus: 1 -%}
+        {%- endfor -%}
+      {%- endif -%}
     {%- endif -%}
     {%- comment -%} Daarna extra outledtl thumbnails (lookup-based) {%- endcomment -%}
     {%- if sw_extras != '' -%}
@@ -251,12 +263,12 @@
       {%- endfor -%}
     {%- else -%}
       {%- comment -%}
-        Heeft een product minder dan vijf foto's, dan vulden we de strook aan met kopieën.
-        Dat gebeurde met product.featured_image, de foto van de éérste kleur — bij Marlo
-        stond daardoor de witte spot onder zwart, zilver en goud. Nu de foto van de gekozen
-        variant, en alleen aanvullen zolang die kleur zelf te weinig foto's heeft.
+        Heeft een kleur minder dan vijf foto's, dan vulden we de strook aan met kopieën van
+        product.featured_image — de foto van de éérste kleur. Bij Marlo stond daardoor de
+        witte spot onder zwart, zilver en goud, en bij Zaro dook de witte wandlamp op onder
+        Mat Zwart. We kopiëren nu de eerste foto die we hierboven echt getoond hebben.
       {%- endcomment -%}
-      {%- assign sw_main = sw_var.featured_image | default: product.featured_image -%}
+      {%- assign sw_main = sw_eerste -%}
       {%- if sw_main != blank and sw_getoond > 0 and sw_getoond < 5 -%}
         {%- assign sw_clones_needed = 5 | minus: sw_getoond -%}
         {%- for i in (1..sw_clones_needed) -%}
