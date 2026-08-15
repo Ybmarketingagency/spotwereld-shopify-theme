@@ -176,172 +176,11 @@
   additional_blocks: additional_blocks
 %}
 
-{%- comment -%} LESTO family: hardcoded (was tag-based, nu handle-based voor betrouwbaarheid) {%- endcomment -%}
-{%- if product.handle contains 'lesto' -%}
-  {%- liquid
-    case product.handle
-      when 'led-inbouwspot-lesto-goud'
-        assign sw_ck_lesto = 'Goud'
-      when 'led-inbouwspot-lesto-koper'
-        assign sw_ck_lesto = 'Koper'
-      when 'led-inbouwspot-lesto-mat-zwart'
-        assign sw_ck_lesto = 'Mat Zwart'
-      when 'led-inbouwspot-lesto-zilver'
-        assign sw_ck_lesto = 'Zilver'
-      when 'led-inbouwspot-lesto-satin-metallic'
-        assign sw_ck_lesto = 'Satin Metallic'
-      when 'led-inbouwspot-lesto-donker-brons'
-        assign sw_ck_lesto = 'Donker Brons'
-      else
-        assign sw_ck_lesto = 'Mat Wit'
-    endcase
-  -%}
-  <div id="sw-color-data" style="display:none" data-current-handle="{{ product.handle }}" data-current-color="{{ sw_ck_lesto | escape }}">
-    <span data-handle="led-inbouwspot-lesto-mat-wit" data-color="Mat Wit" data-url="/products/led-inbouwspot-lesto-mat-wit"></span>
-    <span data-handle="led-inbouwspot-lesto-mat-zwart" data-color="Mat Zwart" data-url="/products/led-inbouwspot-lesto-mat-zwart"></span>
-    <span data-handle="led-inbouwspot-lesto-zilver" data-color="Zilver" data-url="/products/led-inbouwspot-lesto-zilver"></span>
-    <span data-handle="led-inbouwspot-lesto-koper" data-color="Koper" data-url="/products/led-inbouwspot-lesto-koper"></span>
-    <span data-handle="led-inbouwspot-lesto-goud" data-color="Goud" data-url="/products/led-inbouwspot-lesto-goud"></span>
-    <span data-handle="led-inbouwspot-lesto-satin-metallic" data-color="Satin Metallic" data-url="/products/led-inbouwspot-lesto-satin-metallic"></span>
-    <span data-handle="led-inbouwspot-lesto-donker-brons" data-color="Donker Brons" data-url="/products/led-inbouwspot-lesto-donker-brons"></span>
-  </div>
-{%- endif -%}
-
-{%- comment -%} LYVO family: hardcoded (was tag-based, nu handle-based voor betrouwbaarheid) {%- endcomment -%}
-{%- if product.handle contains 'lyvo' -%}
-  {%- liquid
-    case product.handle
-      when 'led-inbouwspot-lyvo-goud'
-        assign sw_ck_lyvo = 'Goud'
-      when 'led-inbouwspot-lyvo-mat-zwart'
-        assign sw_ck_lyvo = 'Mat Zwart'
-      else
-        assign sw_ck_lyvo = 'Mat Wit'
-    endcase
-  -%}
-  <div id="sw-color-data" style="display:none" data-current-handle="{{ product.handle }}" data-current-color="{{ sw_ck_lyvo | escape }}">
-    <span data-handle="led-inbouwspot-lyvo-mat-wit" data-color="Mat Wit" data-url="/products/led-inbouwspot-lyvo-mat-wit"></span>
-    <span data-handle="led-inbouwspot-lyvo-mat-zwart" data-color="Mat Zwart" data-url="/products/led-inbouwspot-lyvo-mat-zwart"></span>
-    <span data-handle="led-inbouwspot-lyvo-goud" data-color="Goud" data-url="/products/led-inbouwspot-lyvo-goud"></span>
-  </div>
-{%- endif -%}
-
-{%- comment -%} QUARO family: hardcoded omdat producten geen tag/optie hebben {%- endcomment -%}
-{%- if product.handle == 'led-inbouwspot-quaro-wit' or product.handle == 'led-inbouwspot-quaro-mat-zwart' or product.handle == 'led-inbouwspot-quaro-zilver' -%}
-  {%- liquid
-    case product.handle
-      when 'led-inbouwspot-quaro-wit'
-        assign sw_ck_quaro = 'Wit'
-      when 'led-inbouwspot-quaro-mat-zwart'
-        assign sw_ck_quaro = 'Mat Zwart'
-      when 'led-inbouwspot-quaro-zilver'
-        assign sw_ck_quaro = 'Zilver'
-    endcase
-  -%}
-  <div id="sw-color-data" style="display:none" data-current-handle="{{ product.handle }}" data-current-color="{{ sw_ck_quaro | escape }}">
-    <span data-handle="led-inbouwspot-quaro-wit" data-color="Wit" data-url="/products/led-inbouwspot-quaro-wit"></span>
-    <span data-handle="led-inbouwspot-quaro-mat-zwart" data-color="Mat Zwart" data-url="/products/led-inbouwspot-quaro-mat-zwart"></span>
-    <span data-handle="led-inbouwspot-quaro-zilver" data-color="Zilver" data-url="/products/led-inbouwspot-quaro-zilver"></span>
-  </div>
-{%- endif -%}
-
-{%- comment -%} FERRO family: hardcoded kleurpicker {%- endcomment -%}
-{%- if product.handle contains 'ferro' -%}
-  {%- liquid
-    case product.handle
-      when 'led-inbouwspot-ferro-goud'
-        assign sw_ck_ferro = 'Goud'
-      when 'led-inbouwspot-ferro-koper'
-        assign sw_ck_ferro = 'Koper'
-      when 'led-inbouwspot-ferro-wit'
-        assign sw_ck_ferro = 'Mat Wit'
-      when 'led-inbouwspot-ferro-zilver'
-        assign sw_ck_ferro = 'Zilver'
-      else
-        assign sw_ck_ferro = 'Mat Zwart'
-    endcase
-  -%}
-  <div id="sw-color-data" style="display:none" data-current-handle="{{ product.handle }}" data-current-color="{{ sw_ck_ferro | escape }}">
-    <span data-handle="led-inbouwspot-ferro-wit" data-color="Mat Wit" data-url="/products/led-inbouwspot-ferro-wit"></span>
-    <span data-handle="led-inbouwspot-ferro-zwart" data-color="Mat Zwart" data-url="/products/led-inbouwspot-ferro-zwart"></span>
-    <span data-handle="led-inbouwspot-ferro-zilver" data-color="Zilver" data-url="/products/led-inbouwspot-ferro-zilver"></span>
-    <span data-handle="led-inbouwspot-ferro-koper" data-color="Koper" data-url="/products/led-inbouwspot-ferro-koper"></span>
-    <span data-handle="led-inbouwspot-ferro-goud" data-color="Goud" data-url="/products/led-inbouwspot-ferro-goud"></span>
-  </div>
-{%- endif -%}
-
-{%- comment -%} LUMA family {%- endcomment -%}
-{%- if product.handle contains 'luma' -%}
-  {%- liquid
-    case product.handle
-      when 'led-inbouwspot-luma-rvs'
-        assign sw_ck_luma = 'RVS'
-      when 'led-inbouwspot-luma-wit'
-        assign sw_ck_luma = 'Mat Wit'
-      else
-        assign sw_ck_luma = 'Mat Zwart'
-    endcase
-  -%}
-  <div id="sw-color-data" style="display:none" data-current-handle="{{ product.handle }}" data-current-color="{{ sw_ck_luma | escape }}">
-    <span data-handle="led-inbouwspot-luma-rvs" data-color="RVS" data-url="/products/led-inbouwspot-luma-rvs"></span>
-    <span data-handle="led-inbouwspot-luma-wit" data-color="Mat Wit" data-url="/products/led-inbouwspot-luma-wit"></span>
-    <span data-handle="led-inbouwspot-luma-zwart" data-color="Mat Zwart" data-url="/products/led-inbouwspot-luma-zwart"></span>
-  </div>
-{%- endif -%}
-
-{%- comment -%} FENO family {%- endcomment -%}
-{%- if product.handle contains 'feno' -%}
-  {%- liquid
-    case product.handle
-      when 'led-inbouwspot-feno-aluminium'
-        assign sw_ck_feno = 'Aluminium'
-      when 'led-inbouwspot-feno-wit'
-        assign sw_ck_feno = 'Mat Wit'
-      else
-        assign sw_ck_feno = 'Mat Zwart'
-    endcase
-  -%}
-  <div id="sw-color-data" style="display:none" data-current-handle="{{ product.handle }}" data-current-color="{{ sw_ck_feno | escape }}">
-    <span data-handle="led-inbouwspot-feno-aluminium" data-color="Aluminium" data-url="/products/led-inbouwspot-feno-aluminium"></span>
-    <span data-handle="led-inbouwspot-feno-wit" data-color="Mat Wit" data-url="/products/led-inbouwspot-feno-wit"></span>
-    <span data-handle="led-inbouwspot-feno-zwart" data-color="Mat Zwart" data-url="/products/led-inbouwspot-feno-zwart"></span>
-  </div>
-{%- endif -%}
-
-{%- comment -%} PLANO VIERKANT family {%- endcomment -%}
-{%- if product.handle contains 'plano' -%}
-  {%- liquid
-    case product.handle
-      when 'led-inbouwspot-plano-vierkant-aluminium'
-        assign sw_ck_plano = 'Aluminium'
-      when 'led-inbouwspot-plano-vierkant-wit'
-        assign sw_ck_plano = 'Mat Wit'
-      else
-        assign sw_ck_plano = 'Mat Zwart'
-    endcase
-  -%}
-  <div id="sw-color-data" style="display:none" data-current-handle="{{ product.handle }}" data-current-color="{{ sw_ck_plano | escape }}">
-    <span data-handle="led-inbouwspot-plano-vierkant-aluminium" data-color="Aluminium" data-url="/products/led-inbouwspot-plano-vierkant-aluminium"></span>
-    <span data-handle="led-inbouwspot-plano-vierkant-wit" data-color="Mat Wit" data-url="/products/led-inbouwspot-plano-vierkant-wit"></span>
-    <span data-handle="led-inbouwspot-plano-vierkant-zwart" data-color="Mat Zwart" data-url="/products/led-inbouwspot-plano-vierkant-zwart"></span>
-  </div>
-{%- endif -%}
-
-{%- comment -%} PRIVO family {%- endcomment -%}
-{%- if product.handle contains 'privo' -%}
-  {%- liquid
-    case product.handle
-      when 'led-inbouwspot-privo-wit'
-        assign sw_ck_privo = 'Mat Wit'
-      else
-        assign sw_ck_privo = 'Mat Zwart'
-    endcase
-  -%}
-  <div id="sw-color-data" style="display:none" data-current-handle="{{ product.handle }}" data-current-color="{{ sw_ck_privo | escape }}">
-    <span data-handle="led-inbouwspot-privo-wit" data-color="Mat Wit" data-url="/products/led-inbouwspot-privo-wit"></span>
-    <span data-handle="led-inbouwspot-privo-zwart" data-color="Mat Zwart" data-url="/products/led-inbouwspot-privo-zwart"></span>
-  </div>
-{%- endif -%}
+{%- comment -%}
+  De handgeschreven kleurkiezer is weg. Elke kleurfamilie is nu één product met echte
+  Kleur-varianten, dus Shopify tekent de kiezer zelf en prijs, SKU, foto en variant-ID
+  lopen automatisch mee.
+{%- endcomment -%}
 
 <!-- Spotwereld: Thumbnails - extras uit product.media; geen externe lookups meer -->
 {%- liquid
@@ -604,26 +443,7 @@ section:has(> div > .sw-pr-grid){display:none!important}
     if (!form) { form = document.querySelector('button[name="add"]'); }
     if (!form || form.closest('cart-drawer-component, [id*="CartDrawer"], .cart-drawer')) return;
 
-    // Color picker (only for products with color siblings)
-    var d = document.getElementById('sw-color-data');
-    if (d && !document.querySelector('.sw-color-picker')) {
-      var currentHandle = d.dataset.currentHandle;
-      var currentColor = d.dataset.currentColor;
-      var items = Array.from(d.querySelectorAll('span'));
-      if (items.length > 0) {
-        var colorBtns = items.map(function(s) {
-          var isAct = s.dataset.handle === currentHandle;
-          // Bewust een gewone link en geen AJAX-wissel. De vorige versie verving alleen de
-          // media-gallery, waardoor prijs, SKU, specs en — het ergste — het variant-ID in
-          // het bestelformulier op het oude product bleven staan. Je zag dan een andere
-          // kleur maar legde de vorige in je mandje. Een echte navigatie laadt alles kloppend.
-          return '<a href="' + s.dataset.url + '" class="sw-cp-btn" data-handle="' + s.dataset.handle + '" data-color="' + s.dataset.color + '" style="display:inline-flex;align-items:center;padding:.375rem .875rem;border:' + (isAct ? '2px solid #061f40' : '1.5px solid #d1d5db') + ';border-radius:4px;font-size:.875rem;text-decoration:none;color:' + (isAct ? '#fff' : '#061f40') + ';background:' + (isAct ? '#061f40' : '#fff') + ';cursor:pointer;font-family:inherit;font-weight:' + (isAct ? '600' : '400') + '">' + s.dataset.color + '</a>';
-        }).join('');
-        var pickerHtml = '<div class="sw-color-picker" style="margin:0 0 1.25rem"><p style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#6b7280;margin:0 0 .625rem">Kleur: <strong class="sw-cp-lbl" style="color:#061f40">' + currentColor + '</strong></p><div style="display:flex;flex-wrap:wrap;gap:.5rem">' + colorBtns + '</div></div>';
-        form.insertAdjacentHTML('beforebegin', pickerHtml);
-
-      }
-    }
+    // De kleurkiezer is verwijderd: Shopify tekent hem nu zelf uit de Kleur-variant.
 
     // Volume pricing (clickable, updates quantity)
     // Bij een product met meerdere varianten verandert de prijs zonder herladen. De staffel
@@ -854,10 +674,10 @@ section:has(> div > .sw-pr-grid){display:none!important}
 body.sw-product-ready .product-information__details variant-picker-component,
 body.sw-product-ready .product-information__details .product-form,
 body.sw-product-ready .product-information__details product-form-component{opacity:1}
-/* Reserveer ruimte voor injected elementen (kleurpicker + volume) zodat layout niet shift */
+/* Reserveer ruimte voor de ingevoegde staffelprijzen zodat de layout niet verspringt */
 .product-information__details:not(.sw-product-ready) .product-form{min-height:280px}
 /* Smooth fade voor sw-injected elementen */
-.sw-color-picker,.sw-vol,.sw-extras,.sw-delivery,.sw-payment-icons,.sw-specs-table,.sw-thumbs{animation:swFadeIn .2s ease-out}
+.sw-vol,.sw-extras,.sw-delivery,.sw-payment-icons,.sw-specs-table,.sw-thumbs{animation:swFadeIn .2s ease-out}
 @keyframes swFadeIn{from{opacity:0}to{opacity:1}}
 /* Fix: toon Lichtkleur picker voor 2-temp producten — Horizon zet fieldset op display:none tijdens init */
 variant-picker fieldset.variant-option{display:grid !important}
@@ -1092,11 +912,6 @@ variant-picker fieldset.variant-option{display:grid !important}
   .shopify-payment-button__button--unbranded {
     background: linear-gradient(135deg, #0F6FE3 0%, #083D7D 100%) !important;
     border-radius: 8px !important;
-  }
-  .sw-color-picker a:hover {
-    border-color: #061f40 !important;
-    color: #061f40 !important;
-    background: #f0f4ff !important;
   }
   .sw-pay-svg {
     height: 24px;
