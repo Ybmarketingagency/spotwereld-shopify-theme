@@ -1,0 +1,59 @@
+{%- doc -%}
+  Kaartje in de zoeksuggesties, maar dan per kleurvariant.
+
+  De suggestielijst toonde één kaartje per product, dus wie "movo" typte zag alleen de
+  witte terwijl de spot ook in mat zwart bestaat. Dit snippet gebruikt dezelfde opmaak
+  en klassen als resource-card, alleen met de foto, de prijs en de ?variant=-link van
+  één variant. De titel krijgt de kleur direct achter de modelnaam, net als op de
+  collectietegel.
+
+  @param {object} product - het product
+  @param {object} variant - de variant die dit kaartje toont
+{%- enddoc -%}
+{%- liquid
+  assign kleur = ''
+  for opt in product.options_with_values
+    if opt.name == 'Kleur'
+      assign kleur = variant.options[forloop.index0]
+    endif
+  endfor
+
+  assign titel_delen = product.title | split: '|'
+  assign model = titel_delen[0] | strip
+  assign staart = ''
+  for deel in titel_delen offset: 1
+    assign schoon_deel = deel | strip
+    assign staart = staart | append: ' | ' | append: schoon_deel
+  endfor
+  assign kaart_titel = model | append: ' ' | append: kleur | append: staart
+
+  assign foto = variant.image | default: product.featured_media.preview_image | default: product.featured_image
+-%}
+<div class="resource-card" data-resource-type="product">
+  <a class="resource-card__link" href="{{ variant.url }}">
+    <span class="visually-hidden">{{ kaart_titel }}</span>
+  </a>
+  <div class="resource-card__media" style="--resource-card-aspect-ratio: 4 / 5;">
+    {%- if foto != blank -%}
+      {{
+        foto
+        | image_url: width: 500
+        | image_tag: loading: 'lazy', class: 'resource-card__image', widths: '240, 352, 832, 1200', sizes: 'auto'
+      }}
+    {%- else -%}
+      <div aria-hidden="true" class="resource-card__image-placeholder">
+        {{- kaart_titel | truncate: 60 -}}
+      </div>
+    {%- endif -%}
+  </div>
+
+  <div class="resource-card__content">
+    <p class="resource-card__title paragraph">{{ kaart_titel }}</p>
+    <p class="resource-card__subtext paragraph">
+      {{- variant.price | money -}}
+      {%- if variant.compare_at_price > variant.price %}
+        <s>{{ variant.compare_at_price | money }}</s>
+      {%- endif -%}
+    </p>
+  </div>
+</div>

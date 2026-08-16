@@ -90,19 +90,52 @@
       {% liquid
         assign limit = limit | default: 8
       %}
-      {% for product in products limit: limit %}
-        <li
-          class="predictive-search-results__card predictive-search-results__card--product"
-          ref="resultsItems[]"
-        >
-          {% render 'resource-card',
-            resource_type: 'product',
-            resource: product,
-            image_width: 500,
-            image_hover: true,
-            image_aspect_ratio: '4 / 5'
-          %}
-        </li>
+      {% liquid
+        # Zelfde regel als op de collectie- en zoekresultatenpagina: een product met meerdere
+        # kleuren levert een kaartje per kleur op. De limiet telt kaartjes, niet producten,
+        # anders puilt de suggestielijst uit bij een familie van zeven kleuren.
+        assign sw_getoond = 0
+      %}
+      {% for product in products %}
+        {%- if sw_getoond >= limit -%}
+          {%- break -%}
+        {%- endif -%}
+        {%- liquid
+          assign sw_kleuren = 0
+          for sw_opt in product.options_with_values
+            if sw_opt.name == 'Kleur'
+              assign sw_kleuren = sw_opt.values.size
+            endif
+          endfor
+        -%}
+        {%- if sw_kleuren > 1 -%}
+          {%- for variant in product.variants -%}
+            {%- if sw_getoond >= limit -%}
+              {%- break -%}
+            {%- endif -%}
+            {%- assign sw_getoond = sw_getoond | plus: 1 -%}
+            <li
+              class="predictive-search-results__card predictive-search-results__card--product"
+              ref="resultsItems[]"
+            >
+              {% render 'sw-predictive-variant-card', product: product, variant: variant %}
+            </li>
+          {%- endfor -%}
+        {%- else -%}
+          {%- assign sw_getoond = sw_getoond | plus: 1 -%}
+          <li
+            class="predictive-search-results__card predictive-search-results__card--product"
+            ref="resultsItems[]"
+          >
+            {% render 'resource-card',
+              resource_type: 'product',
+              resource: product,
+              image_width: 500,
+              image_hover: true,
+              image_aspect_ratio: '4 / 5'
+            %}
+          </li>
+        {%- endif -%}
       {% endfor %}
     </ul>
   {% endif %}
