@@ -727,18 +727,11 @@ section:has(> div > .sw-pr-grid){display:none!important}
       el.style.display = mee ? '' : 'none';
       el.style.border = (mee && el === tonen[0]) ? '2px solid #061f40' : '1.5px solid #e2e8f0';
     });
-    // Korte strook aanvullen zodat de rij niet half leeg oogt, met de eigen foto.
+    // Geen opvulling meer. Had een kleur minder dan vijf foto's, dan herhaalden we de
+    // eerste tot de rij vol was — bij Lyvo Mat Zwart stond de hoofdfoto daardoor twee
+    // keer in de strook, op plek 1 en 5. Vier foto's tonen is eerlijker dan vijf waarvan
+    // er een dubbel is.
     strip.querySelectorAll('img[data-kloon]').forEach(function(el){ el.remove(); });
-    if (tonen.length > 0 && tonen.length < 5) {
-      for (var i = tonen.length; i < 5; i++) {
-        var kloon = tonen[0].cloneNode(true);
-        kloon.setAttribute('data-kloon', '1');
-        kloon.removeAttribute('data-owner');
-        kloon.style.display = '';
-        kloon.style.border = '1.5px solid #e2e8f0';
-        strip.appendChild(kloon);
-      }
-    }
   }
   window.swFilterThumbs = swFilterThumbs;
 
