@@ -220,38 +220,27 @@
         Faro Wit-Goud vier foto's van Zwart-Goud terug. Zo hoeft er niets vergeleken te
         worden en kan die fout niet meer optreden.
       {%- endcomment -%}
-      {%- assign sw_var = product.selected_or_first_available_variant -%}
-      {%- assign sw_eigenaar = blank -%}
-      {%- assign sw_getoond = 0 -%}
-      {%- assign sw_eerste = blank -%}
-      {%- for sw_media in product.media -%}
+      {%- comment -%}
+        Alle foto's komen mee, elk met de kleur waar hij bij hoort in data-owner. Welke
+        er zichtbaar zijn bepaalt swFilterThumbs in JavaScript.
+
+        Waarom niet hier filteren: bij het wisselen van kleur laadt de pagina niet
+        opnieuw, dus deze Liquid draait maar één keer. Filterde ik hier, dan hield je de
+        foto's van de kleur waarmee je binnenkwam en klopte het pas na een refresh.
+      {%- endcomment -%}
+      {%- assign sw_eigenaar = '' -%}
+      {%- for sw_media in product.media limit: 60 -%}
         {%- for sw_v in product.variants -%}
           {%- if sw_v.featured_media.id == sw_media.id -%}
             {%- assign sw_eigenaar = sw_v.id -%}
           {%- endif -%}
         {%- endfor -%}
-        {%- if sw_getoond < 8 -%}
-          {%- if sw_eigenaar == blank or sw_eigenaar == sw_var.id -%}
-            {%- if sw_eerste == blank -%}{%- assign sw_eerste = sw_media -%}{%- endif -%}
-            <img src="{{ sw_media | image_url: width: 150 }}" alt="{{ product.title | escape }}" loading="lazy"
-                 data-full-src="{{ sw_media | image_url: width: 1200 }}"
-                 style="width:76px;height:76px;flex-shrink:0;object-fit:cover;border-radius:6px;border:{% if sw_getoond == 0 %}2px solid #061f40{% else %}1.5px solid #e2e8f0{% endif %};cursor:pointer;transition:all .15s;background:#fff"
-                 onclick="swSwitchMain(this)">
-            {%- assign sw_getoond = sw_getoond | plus: 1 -%}
-          {%- endif -%}
-        {%- endif -%}
+        <img src="{{ sw_media | image_url: width: 150 }}" alt="{{ product.title | escape }}" loading="lazy"
+             data-full-src="{{ sw_media | image_url: width: 1200 }}"
+             data-owner="{{ sw_eigenaar }}"
+             style="width:76px;height:76px;flex-shrink:0;object-fit:cover;border-radius:6px;border:1.5px solid #e2e8f0;cursor:pointer;transition:all .15s;background:#fff"
+             onclick="swSwitchMain(this)">
       {%- endfor -%}
-      {%- comment -%} Vangnet: houdt een kleur niets over, toon dan gewoon alles. {%- endcomment -%}
-      {%- if sw_getoond == 0 -%}
-        {%- for sw_media in product.media limit: 8 -%}
-          {%- if sw_eerste == blank -%}{%- assign sw_eerste = sw_media -%}{%- endif -%}
-          <img src="{{ sw_media | image_url: width: 150 }}" alt="{{ product.title | escape }}" loading="lazy"
-               data-full-src="{{ sw_media | image_url: width: 1200 }}"
-               style="width:76px;height:76px;flex-shrink:0;object-fit:cover;border-radius:6px;border:{% if forloop.first %}2px solid #061f40{% else %}1.5px solid #e2e8f0{% endif %};cursor:pointer;transition:all .15s;background:#fff"
-               onclick="swSwitchMain(this)">
-          {%- assign sw_getoond = sw_getoond | plus: 1 -%}
-        {%- endfor -%}
-      {%- endif -%}
     {%- endif -%}
     {%- comment -%} Daarna extra outledtl thumbnails (lookup-based) {%- endcomment -%}
     {%- if sw_extras != '' -%}
@@ -263,21 +252,11 @@
       {%- endfor -%}
     {%- else -%}
       {%- comment -%}
-        Heeft een kleur minder dan vijf foto's, dan vulden we de strook aan met kopieën van
-        product.featured_image — de foto van de éérste kleur. Bij Marlo stond daardoor de
-        witte spot onder zwart, zilver en goud, en bij Zaro dook de witte wandlamp op onder
-        Mat Zwart. We kopiëren nu de eerste foto die we hierboven echt getoond hebben.
+        De kopieën waarmee we een korte strook aanvulden zijn weg. Ze gebruikten
+        product.featured_image — de foto van de eerste kleur — en dan stond de witte spot
+        onder zwart, zilver en goud. Hoeveel foto's een kleur heeft weten we nu pas in
+        JavaScript, dus daar wordt zo nodig aangevuld.
       {%- endcomment -%}
-      {%- assign sw_main = sw_eerste -%}
-      {%- if sw_main != blank and sw_getoond > 0 and sw_getoond < 5 -%}
-        {%- assign sw_clones_needed = 5 | minus: sw_getoond -%}
-        {%- for i in (1..sw_clones_needed) -%}
-          <img src="{{ sw_main | image_url: width: 150 }}" alt="{{ product.title | escape }}" loading="lazy"
-               data-full-src="{{ sw_main | image_url: width: 1200 }}"
-               style="width:76px;height:76px;flex-shrink:0;object-fit:cover;border-radius:6px;border:1.5px solid #e2e8f0;cursor:pointer;transition:all .15s;background:#fff"
-               onclick="swSwitchMain(this)">
-        {%- endfor -%}
-      {%- endif -%}
     {%- endif -%}
   </div>
 </div>
@@ -708,9 +687,93 @@ section:has(> div > .sw-pr-grid){display:none!important}
     }
   }
 
+  // Welke variant staat er op dit moment in het bestelformulier? Dat veld is de enige
+  // bron die Horizon bij een kleurwissel meteen bijwerkt; de URL loopt soms achter.
+  function swHuidigeVariant(){
+    var inp = document.querySelector('form.shopify-product-form input[name="id"], product-form-component input[name="id"]');
+    if (inp && inp.value) return String(inp.value);
+    var uit = new URLSearchParams(location.search).get('variant');
+    return uit ? String(uit) : '';
+  }
+
+  // Toont alleen de foto's van de gekozen kleur. Elke thumb draagt in data-owner de
+  // variant waar hij bij hoort; foto's zonder eigenaar horen bij het hele product.
+  // Hoort er bij deze kleur niets, dan tonen we alles in plaats van een lege strook.
+  var swBezig = false;
+  var swLaatsteVariant = null;
+  function swFilterThumbs(forceer){
+    if (swBezig) return;
+    var strip = document.querySelector('.product-information__media .sw-thumbs');
+    if (!strip) return;
+    var alle = Array.prototype.slice.call(strip.querySelectorAll('img[data-owner]'));
+    if (!alle.length) return;
+    var vid = swHuidigeVariant();
+    // Zonder deze check zou de observer zichzelf blijven aanroepen: dit filter past de
+    // DOM aan, wat weer een mutatie is.
+    if (!forceer && vid === swLaatsteVariant) return;
+    swLaatsteVariant = vid;
+    swBezig = true;
+    try { swPasFilterToe(strip, alle, vid); } finally { setTimeout(function(){ swBezig = false; }, 0); }
+  }
+  function swPasFilterToe(strip, alle, vid){
+    var tonen = alle.filter(function(el){
+      var o = el.getAttribute('data-owner');
+      return !o || o === vid;
+    });
+    if (!tonen.length) tonen = alle;
+    tonen = tonen.slice(0, 8);
+    alle.forEach(function(el){
+      var mee = tonen.indexOf(el) > -1;
+      el.style.display = mee ? '' : 'none';
+      el.style.border = (mee && el === tonen[0]) ? '2px solid #061f40' : '1.5px solid #e2e8f0';
+    });
+    // Korte strook aanvullen zodat de rij niet half leeg oogt, met de eigen foto.
+    strip.querySelectorAll('img[data-kloon]').forEach(function(el){ el.remove(); });
+    if (tonen.length > 0 && tonen.length < 5) {
+      for (var i = tonen.length; i < 5; i++) {
+        var kloon = tonen[0].cloneNode(true);
+        kloon.setAttribute('data-kloon', '1');
+        kloon.removeAttribute('data-owner');
+        kloon.style.display = '';
+        kloon.style.border = '1.5px solid #e2e8f0';
+        strip.appendChild(kloon);
+      }
+    }
+  }
+  window.swFilterThumbs = swFilterThumbs;
+
+  // Bij een kleurwissel herlaadt de pagina niet. Zonder deze haken bleef de strook op de
+  // kleur staan waarmee je binnenkwam en klopte het pas na een refresh.
+  function swVolgVariantWissel(){
+    document.addEventListener('change', function(e){
+      if (e.target && e.target.closest && e.target.closest('variant-picker, form.shopify-product-form, product-form-component')) {
+        setTimeout(swFilterThumbs, 60);
+      }
+    }, true);
+    document.addEventListener('click', function(e){
+      if (e.target && e.target.closest && e.target.closest('variant-picker')) {
+        setTimeout(swFilterThumbs, 120);
+        setTimeout(swFilterThumbs, 400);
+      }
+    }, true);
+    window.addEventListener('popstate', function(){ setTimeout(swFilterThumbs, 60); });
+
+    // Horizon bouwt de media-gallery opnieuw op bij een wissel; dan is onze strook weg.
+    var mediaCol = document.querySelector('.product-information__media');
+    if (mediaCol) {
+      new MutationObserver(function(){
+        if (swBezig) return;
+        if (!mediaCol.querySelector('.sw-thumbs')) { initSwThumbs(); swFilterThumbs(true); }
+        else { swFilterThumbs(); }
+      }).observe(mediaCol, { childList: true, subtree: true });
+    }
+  }
+
   function initAll(){
     initSwProductPage();
     initSwThumbs();
+    swFilterThumbs();
+    swVolgVariantWissel();
     if(document.body) document.body.classList.add('sw-product-ready');
   }
   if (document.readyState === 'loading') {
