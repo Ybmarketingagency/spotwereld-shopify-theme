@@ -1,4 +1,4 @@
-/* sync-trigger: 2026-08-16-v80-kleurkaartjes-in-zoeksuggesties */
+/* sync-trigger: 2026-08-16-v81-vierkante-productkaarten */
 * {
   box-sizing: border-box;
 }
@@ -4480,3 +4480,13 @@ product-recommendations:has([data-has-recommendations='false']) {
 /* sync-trigger: vaak-samen-gekocht via Search en Discovery 2026-08-15 */
 /* sync-trigger: kleurkiezer als echte link 2026-08-15 */
 /* sync-trigger: staffelprijzen volgen de variant 2026-08-15 */
+
+/* Productkaarten: hele foto in beeld, niet bijgesneden.
+   De kaart van het thema stond op object-fit:cover terwijl onze eigen kleurtegel
+   (sw-variant-card) contain gebruikt. Daardoor stond eenzelfde spot op de ene tegel
+   groter dan op de andere, en werd een staande foto zoals die van Largo (600x899)
+   flink uitvergroot. Met contain vult elke foto de vierkante tegel op dezelfde manier. */
+.card-gallery .product-media-container.media-fit img,
+.card-gallery .product-media__image {
+  object-fit: contain;
+}

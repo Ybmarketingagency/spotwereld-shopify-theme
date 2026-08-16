@@ -343,7 +343,7 @@
               "type": "_product-card-gallery",
               "name": "Product media",
               "settings": {
-                "image_ratio": "adapt",
+                "image_ratio": "square",
                 "border": "none",
                 "border_width": 1,
                 "border_opacity": 100,
@@ -484,7 +484,7 @@
               "type": "_product-card-gallery",
               "name": "Product media",
               "settings": {
-                "image_ratio": "adapt",
+                "image_ratio": "square",
                 "border": "none",
                 "border_width": 1,
                 "border_opacity": 100,
