@@ -1,4 +1,4 @@
-/* sync-trigger: 2026-08-16-v77-badges-homepage */
+/* sync-trigger: 2026-08-16-v78-tekstfixes-retour-levertijd-openingstijden */
 * {
   box-sizing: border-box;
 }
@@ -4430,7 +4430,7 @@ product-recommendations:has([data-has-recommendations='false']) {
 
   /* Bezorgbelofte-footer, onderaan gepind */
   header-drawer .menu-drawer.menu-drawer::after {
-    content: "✓ Voor 22:00 besteld, morgen verzonden";
+    content: "✓ Vandaag besteld, morgen verzonden";
     display: block;
     margin-top: auto;
     padding: 16px 22px calc(16px + env(safe-area-inset-bottom, 0px));
