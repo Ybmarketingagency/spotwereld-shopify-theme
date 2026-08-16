@@ -112,65 +112,13 @@
       }
     }
   } catch(err){}
-  // Merkvolgorde bij standaard sortering (best verkocht): Lesto, Lyvo, Quaro, Ferro eerst
-  var SW_BRAND_ORDER = ['lesto', 'lyvo', 'quaro', 'ferro'];
-  function swBrandRank(handle){
-    for (var i = 0; i < SW_BRAND_ORDER.length; i++){ if (handle.indexOf(SW_BRAND_ORDER[i]) > -1) return i; }
-    return SW_BRAND_ORDER.length;
-  }
-  // Modelnaam uit de handle: 'led-inbouwspot-lesto-donker-brons' -> 'lesto'.
-  // Hiermee blijft elke kleurvariant automatisch bij zijn familie staan, ook als de
-  // collectie handmatig gesorteerd is en een nieuw product dus onderaan is aangeplakt.
-  function swFamily(handle){
-    var parts = String(handle || '').split('-').filter(Boolean);
-    if (parts[0] === 'led') parts.shift();
-    if (parts.length > 1 && /^(in|op)bouwspots?$|^(hang|wand|plafond)lamp(en)?$|^steplights?$|^spots?$/.test(parts[0])) parts.shift();
-    if (parts[0] === 'set' && parts.length > 1) return 'set-' + parts[1];
-    return parts[0] || String(handle);
-  }
-  function reorderBrandPriority(){
-    if (new URLSearchParams(location.search).get('sort_by')) return;
-    var cards = document.querySelectorAll('product-card, .product-card');
-    if (!cards.length) return;
-    var wrappers = [];
-    var familyFirst = {};
-    cards.forEach(function(c){
-      var h = getHandle(c);
-      var w = c.closest('li, .grid__item, .product-grid__card-wrapper') || c;
-      if (wrappers.some(function(x){ return x.el === w; })) return;
-      var fam = swFamily(h);
-      if (!(fam in familyFirst)) familyFirst[fam] = wrappers.length;
-      wrappers.push({el: w, rank: swBrandRank(h), fam: fam, idx: wrappers.length});
-    });
-    if (wrappers.length < 2) return;
-    var container = wrappers[0].el.parentNode;
-    if (!container || container.dataset.swBrandSorted === '1') return;
-    if (wrappers.some(function(w){ return w.el.parentNode !== container; })) return;
-    // Sorteervolgorde: merkprioriteit, dan familie (op de plek waar die familie voor het
-    // eerst voorkomt), dan de oorspronkelijke volgorde. Een nieuwe kleur schuift daardoor
-    // vanzelf naar zijn broertjes toe in plaats van achteraan te blijven hangen.
-    var target = wrappers.slice().sort(function(a, b){
-      return a.rank - b.rank || familyFirst[a.fam] - familyFirst[b.fam] || a.idx - b.idx;
-    });
-    var changed = target.some(function(w, i){ return w !== wrappers[i]; });
-    if (changed) target.forEach(function(w){ container.appendChild(w.el); });
-    container.dataset.swBrandSorted = '1';
-  }
-  // Volgorde toepassen bij de eerste render en telkens als Shopify de grid opnieuw
-  // opbouwt na een filterklik.
-  reorderBrandPriority();
-  document.addEventListener('DOMContentLoaded', reorderBrandPriority);
-  setTimeout(reorderBrandPriority, 400);
-  setTimeout(reorderBrandPriority, 1200);
-  var swOrderDebounce = null;
-  var swOrderObs = new MutationObserver(function(){
-    clearTimeout(swOrderDebounce);
-    swOrderDebounce = setTimeout(reorderBrandPriority, 150);
-  });
-  document.addEventListener('DOMContentLoaded', function(){
-    var grid = document.querySelector('.product-grid, .collection__products, #product-grid');
-    if (grid) swOrderObs.observe(grid, {childList: true});
-  });
+  // De volgorde van de collectie komt uit Shopify zelf.
+  //
+  // Hier stond een script dat de tegels na het laden herschikte: eerst Lesto, Lyvo,
+  // Quaro en Ferro, en kleuren van hetzelfde model bij elkaar. Dat tweede is overbodig
+  // sinds elke kleurfamilie één product is, en het eerste hoort in de collectievolgorde
+  // thuis. Bovendien zag je de tegels zichtbaar verspringen: het draaide bij het laden
+  // en daarna nog eens na 400 en 1200 milliseconden.
 })();
 
 

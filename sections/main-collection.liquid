@@ -35,11 +35,38 @@
   <div
     class="collection-wrapper grid gap-style{% if section.settings.product_grid_width == 'full-width' %} collection-wrapper--grid-full-width{% endif %}"
   >
+    {%- comment -%}
+      De teller boven het raster telde producten, terwijl er een tegel per kleur staat:
+      "22 artikelen" boven 58 tegels. Hij telt nu de kleuren mee, net als de badge in de
+      kop. Een for-loop over collection.products stopt bij 50 items, dus bij grotere
+      collecties valt hij terug op het productaantal.
+    {%- endcomment -%}
+    {%- liquid
+      assign sw_tegels = 0
+      if collection.products_count <= 50
+        for sw_p in collection.products
+          assign sw_k = 0
+          for sw_o in sw_p.options_with_values
+            if sw_o.name == 'Kleur'
+              assign sw_k = sw_o.values.size
+            endif
+          endfor
+          if sw_k > 1
+            assign sw_tegels = sw_tegels | plus: sw_p.variants.size
+          else
+            assign sw_tegels = sw_tegels | plus: 1
+          endif
+        endfor
+      endif
+      if sw_tegels <= collection.products_count
+        assign sw_tegels = collection.products_count
+      endif
+    -%}
     {% content_for 'block',
       type: 'filters',
       id: 'filters',
       results: collection,
-      results_size: collection.products_count
+      results_size: sw_tegels
     %}
 
     {% assign products_per_page = 24 %}
