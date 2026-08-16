@@ -37,16 +37,44 @@
       {% endif %}
 
       {% capture children %}
+        {% assign sw_tegel = 0 %}
         {% for product in products %}
-          <li
-            id="{{ section.id }}-{{ product.id }}"
-            class="product-grid__item product-grid__item--{{ forloop.index0 }}"
-            data-page="{{ paginate.current_page }}"
-            data-product-id="{{ product.id }}"
-            ref="cards[]"
-          >
-            {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: product %}
-          </li>
+          {%- liquid
+            # Zelfde regel als op de collectiepagina: heeft een product meerdere kleuren, dan
+            # krijgt elke kleur zijn eigen tegel. Zonder dit gaf een zoekopdracht op "movo"
+            # maar één tegel terwijl de spot in wit en zwart bestaat.
+            assign sw_kleuren = 0
+            for sw_opt in product.options_with_values
+              if sw_opt.name == 'Kleur'
+                assign sw_kleuren = sw_opt.values.size
+              endif
+            endfor
+          -%}
+          {%- if sw_kleuren > 1 -%}
+            {%- for variant in product.variants -%}
+              {%- assign sw_tegel = sw_tegel | plus: 1 -%}
+              <li
+                id="{{ section.id }}-{{ product.id }}-{{ variant.id }}"
+                class="product-grid__item product-grid__item--{{ sw_tegel | minus: 1 }}"
+                data-page="{{ paginate.current_page }}"
+                data-product-id="{{ product.id }}"
+                ref="cards[]"
+              >
+                {% render 'sw-variant-card', product: product, variant: variant %}
+              </li>
+            {%- endfor -%}
+          {%- else -%}
+            {%- assign sw_tegel = sw_tegel | plus: 1 -%}
+            <li
+              id="{{ section.id }}-{{ product.id }}"
+              class="product-grid__item product-grid__item--{{ sw_tegel | minus: 1 }}"
+              data-page="{{ paginate.current_page }}"
+              data-product-id="{{ product.id }}"
+              ref="cards[]"
+            >
+              {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: product %}
+            </li>
+          {%- endif -%}
         {% endfor %}
       {% endcapture %}
 
