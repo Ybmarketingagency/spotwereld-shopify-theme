@@ -58,8 +58,9 @@
           assign sw_tegels = sw_tegels | plus: 1
         endif
       endfor
-      # Heeft de loop niet alle producten gezien, dan is de telling onbetrouwbaar en
-      # vallen we terug op het aantal producten.
+      # Een for-loop over collection.products stopt na 50 items, ook met een hogere limit;
+      # gemeten op /collections/all. Ziet de loop niet alles, dan is de telling
+      # onbetrouwbaar en tonen we het aantal producten.
       if sw_geteld < collection.products_count
         assign sw_tegels = collection.products_count
       endif
@@ -67,7 +68,6 @@
         assign sw_tegels = collection.products_count
       endif
     -%}
-    <span hidden data-sw-geteld="{{ sw_geteld }}" data-sw-tegels="{{ sw_tegels }}" data-sw-producten="{{ collection.products_count }}"></span>
     {% content_for 'block',
       type: 'filters',
       id: 'filters',
