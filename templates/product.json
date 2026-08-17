@@ -6,9 +6,19 @@
  * or related systems. Please exercise caution as any changes
  * made to this file may be overwritten.
  * ------------------------------------------------------------
- * sync: 2026-06-07
- */{
+ */
+{
   "sections": {
+    "sw_lichtkleur_fix": {
+      "type": "custom-liquid",
+      "settings": {
+        "custom_liquid": "<script>function swHideLK(){document.querySelectorAll(\"fieldset.variant-option,div.variant-option,.product-form__input\").forEach(function(el){var l=el.querySelector(\"legend\")||el.querySelector(\"label\");if(l&&l.textContent.trim().toLowerCase().indexOf(\"lichtkleur\")>-1){el.style.display=\"none\";}});} document.addEventListener(\"DOMContentLoaded\",swHideLK);setTimeout(swHideLK,500);setTimeout(swHideLK,1200);</script>",
+        "color_scheme": "",
+        "section_width": "full-width",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
     "main": {
       "type": "product-information",
       "blocks": {
@@ -25,6 +35,7 @@
             "slideshow_mobile_controls_style": "thumbnails",
             "thumbnail_position": "bottom",
             "thumbnail_width": 72,
+            "thumbnail_radius": 0,
             "aspect_ratio": "adapt",
             "constrain_to_viewport": true,
             "media_fit": "contain",
@@ -71,7 +82,6 @@
               "type": "group",
               "name": "Header",
               "settings": {
-                "open_in_new_tab": false,
                 "content_direction": "column",
                 "vertical_on_mobile": true,
                 "horizontal_alignment": "flex-start",
@@ -99,6 +109,9 @@
                 "overlay_color": "#00000026",
                 "overlay_style": "solid",
                 "gradient_direction": "to top",
+                "link": "",
+                "open_in_new_tab": false,
+                "placeholder": "",
                 "padding-block-start": 0,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
@@ -189,6 +202,7 @@
               "settings": {
                 "stacking": true,
                 "show_pickup_availability": false,
+                "gift_card_form": true,
                 "padding-block-start": 0,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
@@ -287,6 +301,7 @@
         "equal_columns": false,
         "limit_details_width": false,
         "gap": 48,
+        "enable_sticky_add_to_cart": true,
         "color_scheme": "",
         "padding-block-start": 24,
         "padding-block-end": 0
@@ -572,15 +587,6 @@
         "color_scheme": "scheme-1",
         "padding-block-start": 48,
         "padding-block-end": 24
-      }
-    },
-    "sw_lichtkleur_fix": {
-      "type": "custom-liquid",
-      "settings": {
-        "custom_liquid": "<script>function swHideLK(){document.querySelectorAll(\"fieldset.variant-option,div.variant-option,.product-form__input\").forEach(function(el){var l=el.querySelector(\"legend\")||el.querySelector(\"label\");if(l&&l.textContent.trim().toLowerCase().indexOf(\"lichtkleur\")>-1){el.style.display=\"none\";}});} document.addEventListener(\"DOMContentLoaded\",swHideLK);setTimeout(swHideLK,500);setTimeout(swHideLK,1200);</script>",
-        "section_width": "full-width",
-        "padding-block-start": 0,
-        "padding-block-end": 0
       }
     }
   },
