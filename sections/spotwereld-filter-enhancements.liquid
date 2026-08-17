@@ -48,7 +48,7 @@ li.facets__inputs-list-item:has(input[data-label="4000K (neutraal-wit)"]) ~ li.f
         if(title){
           var stars = document.createElement('div');
           stars.className = 'sw-coll-stars';
-          stars.innerHTML = '&#9733;&#9733;&#9733;&#9733;&#9733;<span>(4.9)</span>';
+          stars.innerHTML = '';
           var titleEl = title.tagName === 'PRODUCT-TITLE' ? title : title;
           titleEl.insertAdjacentElement('afterend', stars);
         }
