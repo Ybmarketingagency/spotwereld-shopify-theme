@@ -8,8 +8,6 @@ li.facets__inputs-list-item:has(input[data-label="Instelbaar (GU10)"]) { display
 li.facets__inputs-list-item:has(input[data-label="4000K (neutraal-wit)"]) ~ li.facets__inputs-list-item:has(input[data-label="4000K (neutraal-wit)"]) { display: none !important; }
 .sw-coll-stock{position:absolute;top:.5rem;right:.5rem;z-index:5;font-size:.65rem;font-weight:600;color:#16a34a;background:rgba(255,255,255,.95);padding:.18rem .45rem;border-radius:4px;display:inline-flex;align-items:center;gap:.25rem}
 .sw-coll-stock::before{content:'';width:6px;height:6px;border-radius:50%;background:#16a34a}
-.sw-coll-stars{color:#f59e0b;font-size:.78rem;letter-spacing:-.05em;margin:.3rem 0 .1rem;line-height:1}
-.sw-coll-stars span{color:#94a3b8;font-size:.72rem;margin-left:.25rem;letter-spacing:0}
 .sw-coll-cart,.sw-coll-bekijk{display:flex!important;align-items:center;justify-content:center;gap:.4rem;background:linear-gradient(135deg,#083D7D,#0F6FE3)!important;color:#fff!important;border:none!important;border-radius:.5rem!important;padding:.65rem .75rem!important;font-weight:700!important;font-size:.82rem!important;cursor:pointer;width:100%;transition:all .15s;letter-spacing:.01em;margin-top:.5rem;text-decoration:none!important;line-height:1;box-sizing:border-box}
 .sw-coll-cart:hover,.sw-coll-bekijk:hover{background:linear-gradient(135deg,#062d5c,#0a5abf)!important;transform:translateY(-1px);box-shadow:0 4px 12px rgba(8,61,125,.2)}
 .sw-coll-cart svg,.sw-coll-bekijk svg{flex-shrink:0;transition:transform .2s}
@@ -40,17 +38,6 @@ li.facets__inputs-list-item:has(input[data-label="4000K (neutraal-wit)"]) ~ li.f
           stock.className = 'sw-coll-stock';
           stock.textContent = 'Op voorraad';
           mediaContainer.appendChild(stock);
-        }
-      }
-      // Sterren rating onder de titel
-      if(!card.querySelector('.sw-coll-stars')){
-        var title = card.querySelector('.product-card__title, [class*="product-card__title"], product-title, .product-title');
-        if(title){
-          var stars = document.createElement('div');
-          stars.className = 'sw-coll-stars';
-          stars.innerHTML = '';
-          var titleEl = title.tagName === 'PRODUCT-TITLE' ? title : title;
-          titleEl.insertAdjacentElement('afterend', stars);
         }
       }
       // Vervang Quick-add knop door "Bekijk Product" link
