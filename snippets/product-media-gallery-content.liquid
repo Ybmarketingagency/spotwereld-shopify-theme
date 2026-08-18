@@ -106,7 +106,40 @@
   if selected_variant_media
     assign sorted_media = sorted_media | concat: selected_product.media | where: 'id', selected_variant_media.id
 
+    comment
+      Spotwereld: alleen de foto's van de gekozen kleur in de carrousel.
+
+      Sinds de kleuren varianten van een product zijn, hangt er per kleur maar een foto
+      aan de variant; de losse extra foto's hangen nergens aan. Die toonde Shopify onder
+      elke kleur, dus wie op Goud stond en op het pijltje drukte kreeg Mat Wit te zien.
+
+      De ingebouwde optie hide_variants lost dat maar half op: die verbergt alleen de
+      hoofdfoto's van andere varianten, niet hun losse extra foto's.
+
+      We gaan daarom op de volgorde af, net als de thumbnailstrook in
+      sections/product-information.liquid. Bij het samenvoegen zijn de foto's per kleur
+      achter elkaar gezet met de hoofdfoto van die kleur voorop, dus alles vanaf de
+      hoofdfoto van een kleur tot aan de volgende hoort bij die kleur. Op bestandsnamen
+      kun je niet varen: bij Faro heten de foto's van Zwart-Goud ook kanlux-wit-goud.
+
+      Foto's voor de eerste hoofdfoto horen bij niemand en blijven staan. Heeft het
+      product maar een variant met een eigen foto, dan verandert er niets.
+    endcomment
+    assign sw_variant_photo_count = selected_product.images | where: 'attached_to_variant?', true | size
+    assign sw_selected_variant_id = selected_product.selected_or_first_available_variant.id
+    assign sw_owner = ''
+
     for media in selected_product.media
+      for sw_variant in selected_product.variants
+        if sw_variant.featured_media.id == media.id
+          assign sw_owner = sw_variant.id
+        endif
+      endfor
+
+      if sw_variant_photo_count > 1 and sw_owner != '' and sw_owner != sw_selected_variant_id
+        continue
+      endif
+
       if block_settings.hide_variants and variant_images contains media.src and sorted_media.size > 0
         continue
       endif
