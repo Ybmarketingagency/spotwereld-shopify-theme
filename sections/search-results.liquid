@@ -43,15 +43,23 @@
             # Zelfde regel als op de collectiepagina: heeft een product meerdere kleuren, dan
             # krijgt elke kleur zijn eigen tegel. Zonder dit gaf een zoekopdracht op "movo"
             # maar één tegel terwijl de spot in wit en zwart bestaat.
+            # Eén tegel per kleur, niet per variant. Sinds een kleur meerdere lichtkleuren
+            # kan hebben, gaf één tegel per variant tien tegels voor dezelfde spot.
             assign sw_kleuren = 0
+            assign sw_kleur_idx = -1
+            assign sw_gezien = ''
             for sw_opt in product.options_with_values
               if sw_opt.name == 'Kleur'
                 assign sw_kleuren = sw_opt.values.size
+                assign sw_kleur_idx = forloop.index0
               endif
             endfor
           -%}
           {%- if sw_kleuren > 1 -%}
             {%- for variant in product.variants -%}
+              {%- assign sw_mark = '|' | append: variant.options[sw_kleur_idx] | append: '|' -%}
+              {%- if sw_gezien contains sw_mark -%}{%- continue -%}{%- endif -%}
+              {%- assign sw_gezien = sw_gezien | append: sw_mark -%}
               {%- assign sw_tegel = sw_tegel | plus: 1 -%}
               <li
                 id="{{ section.id }}-{{ product.id }}-{{ variant.id }}"

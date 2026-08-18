@@ -228,16 +228,30 @@
         opnieuw, dus deze Liquid draait maar één keer. Filterde ik hier, dan hield je de
         foto's van de kleur waarmee je binnenkwam en klopte het pas na een refresh.
       {%- endcomment -%}
+      {%- liquid
+        # Eigenaar is de kleur, niet de variant: een kleur kan meerdere lichtkleuren
+        # hebben en die delen dezelfde hoofdfoto.
+        assign sw_kleur_idx = -1
+        for sw_opt in product.options
+          if sw_opt == 'Kleur'
+            assign sw_kleur_idx = forloop.index0
+          endif
+        endfor
+      -%}
       {%- assign sw_eigenaar = '' -%}
       {%- for sw_media in product.media limit: 60 -%}
         {%- for sw_v in product.variants -%}
           {%- if sw_v.featured_media.id == sw_media.id -%}
-            {%- assign sw_eigenaar = sw_v.id -%}
+            {%- if sw_kleur_idx >= 0 -%}
+              {%- assign sw_eigenaar = sw_v.options[sw_kleur_idx] -%}
+            {%- else -%}
+              {%- assign sw_eigenaar = sw_v.id -%}
+            {%- endif -%}
           {%- endif -%}
         {%- endfor -%}
         <img src="{{ sw_media | image_url: width: 150 }}" alt="{{ product.title | escape }}" loading="lazy"
              data-full-src="{{ sw_media | image_url: width: 1200 }}"
-             data-owner="{{ sw_eigenaar }}"
+             data-owner="{{ sw_eigenaar | escape }}"
              style="width:76px;height:76px;flex-shrink:0;object-fit:cover;border-radius:6px;border:1.5px solid #e2e8f0;cursor:pointer;transition:all .15s;background:#fff"
              onclick="swSwitchMain(this)">
       {%- endfor -%}
@@ -624,6 +638,16 @@
 
   // Welke variant staat er op dit moment in het bestelformulier? Dat veld is de enige
   // bron die Horizon bij een kleurwissel meteen bijwerkt; de URL loopt soms achter.
+  // Zonder deze kaart vergelijkt het filter een variant-id met een kleurnaam.
+  window.SW_VARIANT_KLEUR = window.SW_VARIANT_KLEUR || {};
+  {%- assign sw_ki = -1 -%}
+  {%- for sw_opt in product.options -%}{%- if sw_opt == 'Kleur' -%}{%- assign sw_ki = forloop.index0 -%}{%- endif -%}{%- endfor -%}
+  {%- if sw_ki >= 0 -%}
+    {%- for sw_v in product.variants -%}
+  window.SW_VARIANT_KLEUR['{{ sw_v.id }}'] = {{ sw_v.options[sw_ki] | json }};
+    {%- endfor -%}
+  {%- endif %}
+
   function swHuidigeVariant(){
     var inp = document.querySelector('form.shopify-product-form input[name="id"], product-form-component input[name="id"]');
     if (inp && inp.value) return String(inp.value);
@@ -651,9 +675,10 @@
     try { swPasFilterToe(strip, alle, vid); } finally { setTimeout(function(){ swBezig = false; }, 0); }
   }
   function swPasFilterToe(strip, alle, vid){
+    var sleutel = (window.SW_VARIANT_KLEUR || {})[vid] || vid;
     var tonen = alle.filter(function(el){
       var o = el.getAttribute('data-owner');
-      return !o || o === vid;
+      return !o || o === sleutel;
     });
     if (!tonen.length) tonen = alle;
     tonen = tonen.slice(0, 8);

@@ -126,17 +126,38 @@
       product maar een variant met een eigen foto, dan verandert er niets.
     endcomment
     assign sw_variant_photo_count = selected_product.images | where: 'attached_to_variant?', true | size
-    assign sw_selected_variant_id = selected_product.selected_or_first_available_variant.id
+    comment
+      Eigenaar is de kleur, niet de variant. Sinds een kleur meerdere lichtkleuren kan
+      hebben, delen twee of drie varianten dezelfde hoofdfoto. Vergeleek je op
+      variant-id, dan viel de hele carrousel leeg zodra je een lichtkleur koos die niet
+      toevallig de laatste in de rij was.
+    endcomment
+    assign sw_kleur_idx = -1
+    for sw_opt in selected_product.options
+      if sw_opt == 'Kleur'
+        assign sw_kleur_idx = forloop.index0
+      endif
+    endfor
+    assign sw_sel_variant = selected_product.selected_or_first_available_variant
+    if sw_kleur_idx >= 0
+      assign sw_selected_key = sw_sel_variant.options[sw_kleur_idx]
+    else
+      assign sw_selected_key = sw_sel_variant.id
+    endif
     assign sw_owner = ''
 
     for media in selected_product.media
       for sw_variant in selected_product.variants
         if sw_variant.featured_media.id == media.id
-          assign sw_owner = sw_variant.id
+          if sw_kleur_idx >= 0
+            assign sw_owner = sw_variant.options[sw_kleur_idx]
+          else
+            assign sw_owner = sw_variant.id
+          endif
         endif
       endfor
 
-      if sw_variant_photo_count > 1 and sw_owner != '' and sw_owner != sw_selected_variant_id
+      if sw_variant_photo_count > 1 and sw_owner != '' and sw_owner != sw_selected_key
         continue
       endif
 
