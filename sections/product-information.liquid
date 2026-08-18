@@ -410,7 +410,19 @@
     // Bij een product met meerdere varianten verandert de prijs zonder herladen. De staffel
     // moet dan mee. We lezen daarom de prijs die op het scherm staat in plaats van de
     // Liquid-waarde, en herberekenen zodra die tekst verandert.
-    var swPriceEl = document.querySelector('.price__regular .price, .price-item--sale');
+    // Niet zomaar de eerste prijs op de pagina pakken. Het uitklapmenu, de zoeksuggesties,
+    // de aanbevolen producten en de winkelwagen-la bevatten allemaal productkaartjes met
+    // een prijs, en die staan eerder in de DOM dan het product zelf. Daardoor stond bij
+    // Movo (23,95) een staffel van 11,95 - de prijs van een kaartje in het menu.
+    var swNietDeProductprijs = '[id*="cart"], .cart-drawer, .cart-items, .sticky-add-to-cart,' +
+      ' .resource-card, menu-drawer, .menu-drawer, header, .header, .predictive-search,' +
+      ' product-recommendations, .sw-fbt, .sw-pp-card, dialog';
+    function swZoekProductprijs(sel) {
+      return Array.prototype.slice.call(document.querySelectorAll(sel)).find(function(el) {
+        return !el.closest(swNietDeProductprijs);
+      }) || null;
+    }
+    var swPriceEl = swZoekProductprijs('.price__regular .price, .price-item--sale');
     function swLeesPrijs(val) {
       if (!swPriceEl) return val;
       var m = (swPriceEl.textContent || '').replace(/\s/g, '').match(/([\d.]+),(\d{2})/);
@@ -477,9 +489,7 @@
     }
 
     // Stars + Op voorraad after price (universal)
-    var priceWrap = Array.from(document.querySelectorAll('.price__regular')).find(function(el) {
-      return !el.closest('[id*="cart"], .cart-drawer, .cart-items, .sticky-add-to-cart');
-    });
+    var priceWrap = swZoekProductprijs('.price__regular');
     if (priceWrap && !document.querySelector('.sw-extras')) {
       priceWrap.insertAdjacentHTML('afterend',
         '<div class="sw-extras" style="display:flex;align-items:center;gap:1rem;margin:.5rem 0 .75rem;flex-wrap:wrap">' +
