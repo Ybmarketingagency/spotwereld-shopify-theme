@@ -334,6 +334,21 @@
     {%- assign sw_cri = product.metafields.custom.cri -%}
     {%- assign sw_lichthoek = product.metafields.custom.lichthoek -%}
     {%- assign sw_voltage = product.metafields.custom.voltage -%}
+    {%- comment -%}
+      Lichtkleur staat normaal als productoptie in de tabel. Heeft een product die optie niet
+      (Cavo Dim2Warm bijvoorbeeld: één lichtkleur, dus geen keuze), dan viel de rij helemaal weg.
+      Dan pakken we het metaveld.
+    {%- endcomment -%}
+    {%- assign sw_heeft_lk_optie = false -%}
+    {%- for sw_o in product.options -%}{%- if sw_o == 'Lichtkleur' -%}{%- assign sw_heeft_lk_optie = true -%}{%- endif -%}{%- endfor -%}
+    {%- assign sw_lichtkleur = '' -%}
+    {%- unless sw_heeft_lk_optie -%}
+      {%- assign sw_lk_val = product.metafields.custom.lichtkleur.value -%}
+      {%- if sw_lk_val != blank -%}
+        {%- if sw_lk_val.first -%}{%- assign sw_lichtkleur = sw_lk_val | join: ' · ' -%}
+        {%- else -%}{%- assign sw_lichtkleur = sw_lk_val -%}{%- endif -%}
+      {%- endif -%}
+    {%- endunless -%}
     {%- assign sw_maxwatt = product.metafields.custom.max_wattage -%}
 
     {%- comment -%} Terugval: uitsluitend waardes die letterlijk in de titel staan {%- endcomment -%}
@@ -381,6 +396,7 @@
         {%- if sw_diepte != blank -%}<tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.6rem .75rem .6rem 0;color:#061f40;font-weight:800">Inbouwdiepte</td><td style="padding:.6rem 0;color:#061f40;font-weight:800">{{ sw_diepte }}</td></tr>{%- endif -%}
         {%- if sw_afmetingen != blank -%}<tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Afmetingen</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_afmetingen }}</td></tr>{%- endif -%}
         {%- if sw_voltage != blank -%}<tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Voltage</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_voltage }}</td></tr>{%- endif -%}
+        {%- if sw_lichtkleur != blank -%}<tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Lichtkleur</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_lichtkleur }}</td></tr>{%- endif -%}
         {%- for opt in product.options_with_values -%}
           {%- assign opt_name = opt.name | downcase -%}
           {%- unless opt_name == 'title' or opt_name == 'ip-waarde' -%}
