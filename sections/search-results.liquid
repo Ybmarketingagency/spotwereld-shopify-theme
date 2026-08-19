@@ -51,11 +51,29 @@
             for sw_opt in product.options_with_values
               if sw_opt.name == 'Kleur'
                 assign sw_kleuren = sw_opt.values.size
+                assign sw_kleur_eerste = sw_opt.values | join: "," | downcase
                 assign sw_kleur_idx = forloop.index0
               endif
             endfor
           -%}
-          {%- if sw_kleuren > 1 -%}
+          {%- liquid
+            # Eén tegel per kleur, ook bij een product met maar één kleur, zolang die kleur nog
+            # niet in de modelnaam staat. Nodig sinds uitvoeringen die op specs verschillen eigen
+            # producten met dezelfde naam kregen: Cavo Chroom en Cavo Zilver stonden anders als
+            # "LED Inbouwspot Cavo" naast elkaar, zonder kleur in de titel en met een diavoorstelling
+            # die ook de maatschets liet zien.
+            assign sw_per_kleur = false
+            if sw_kleuren > 1
+              assign sw_per_kleur = true
+            elsif sw_kleuren == 1
+              assign sw_model = product.title | split: "|" | first | downcase
+              assign sw_kleur_kort = sw_kleur_eerste | split: " " | last
+              unless sw_model contains sw_kleur_kort
+                assign sw_per_kleur = true
+              endunless
+            endif
+          -%}
+          {%- if sw_per_kleur -%}
             {%- for variant in product.variants -%}
               {%- assign sw_mark = '|' | append: variant.options[sw_kleur_idx] | append: '|' -%}
               {%- if sw_gezien contains sw_mark -%}{%- continue -%}{%- endif -%}
