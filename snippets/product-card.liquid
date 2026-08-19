@@ -125,11 +125,23 @@
         if ip_filter contains 'IP65'
           assign sw_badges = sw_badges | append: 'IP65|'
         endif
+        # Dimbaar achteraan: minst zeldzaam. Niet naast Dim2Warm, want die zegt het al.
+        assign sw_dimbaar = product.metafields.custom.dimbaar.value
+        assign sw_heeft_d2w = false
+        if sw_badges contains 'Dim2Warm'
+          assign sw_heeft_d2w = true
+        endif
+        unless sw_heeft_d2w
+          assign sw_dimbaar_start = sw_dimbaar | slice: 0, 2
+          if sw_dimbaar_start == 'Ja'
+            assign sw_badges = sw_badges | append: 'Dimbaar|'
+          endif
+        endunless
         assign sw_badge_list = sw_badges | split: '|'
       -%}
       {%- if sw_badge_list.size > 0 -%}
         <div class="sw-card-badges">
-          {%- for badge in sw_badge_list limit: 2 -%}
+          {%- for badge in sw_badge_list limit: 3 -%}
             <span class="sw-card-badge{% if badge == 'Dim2Warm' %} sw-card-badge--fill{% endif %}">{{ badge }}</span>
           {%- endfor -%}
         </div>

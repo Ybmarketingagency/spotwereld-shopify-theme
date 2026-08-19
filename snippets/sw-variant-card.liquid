@@ -49,6 +49,7 @@
     assign lichtkleur = variant.options[sw_lk_idx]
   endif
   assign ip_filter = product.metafields.custom.ip_waarde_filter.value
+  assign sw_dimbaar = product.metafields.custom.dimbaar.value
   assign sw_badges = ''
   if lichtkleur contains 'Dim2Warm'
     assign sw_badges = sw_badges | append: 'Dim2Warm|'
@@ -59,6 +60,18 @@
   if ip_filter contains 'IP65'
     assign sw_badges = sw_badges | append: 'IP65|'
   endif
+  # Dimbaar staat achteraan omdat het de minst zeldzame eigenschap is. Bij een
+  # Dim2Warm-spot blijft hij weg: die badge zegt al dat er gedimd kan worden.
+  assign sw_heeft_d2w = false
+  if sw_badges contains 'Dim2Warm'
+    assign sw_heeft_d2w = true
+  endif
+  unless sw_heeft_d2w
+    assign sw_dimbaar_start = sw_dimbaar | slice: 0, 2
+    if sw_dimbaar_start == 'Ja'
+      assign sw_badges = sw_badges | append: 'Dimbaar|'
+    endif
+  endunless
   assign sw_badge_list = sw_badges | split: '|'
 -%}
 
@@ -83,7 +96,7 @@
 
     {%- if sw_badge_list.size > 0 -%}
       <div class="sw-card-badges">
-        {%- for badge in sw_badge_list limit: 2 -%}
+        {%- for badge in sw_badge_list limit: 3 -%}
           <span class="sw-card-badge{% if badge == 'Dim2Warm' %} sw-card-badge--fill{% endif %}">{{ badge }}</span>
         {%- endfor -%}
       </div>
