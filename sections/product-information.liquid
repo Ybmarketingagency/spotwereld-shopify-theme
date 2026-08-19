@@ -504,19 +504,32 @@
 
     // Wisselt de klant van variant, dan verandert de prijs zonder herladen. Deze observer
     // rekent de staffelbedragen opnieuw uit zodra de getoonde prijs verandert.
-    if (swPriceEl) {
-      new MutationObserver(function() {
-        var nieuw = swLeesPrijs(price);
-        if (!nieuw || nieuw === price) return;
-        price = nieuw;
-        document.querySelectorAll('.sw-vol-tier').forEach(function(t) {
-          var idx = parseInt(t.dataset.index, 10);
-          var bedrag = price * (1 - tiers[idx].discount);
-          var regel = t.children[1];
-          if (regel) regel.textContent = '€' + bedrag.toFixed(2).replace('.', ',') + '/stuk';
-        });
-      }).observe(swPriceEl, { childList: true, characterData: true, subtree: true });
+    // Let op: Horizon VERVANGT het prijselement bij een variantwissel, het past de tekst
+    // niet aan. Een observer op swPriceEl zelf kijkt daarna naar een losgekoppelde node en
+    // zwijgt. Bij Lesto bleef de staffel daardoor op 24,95 staan terwijl de prijs bovenin
+    // al 14,95 was. We kijken nu naar de hele productkolom en zoeken het prijselement
+    // elke keer opnieuw op.
+    function swHerberekenStaffel() {
+      swPriceEl = swZoekProductprijs('.price__regular .price, .price-item--sale');
+      var nieuw = swLeesPrijs(price);
+      if (!nieuw || nieuw === price) return;
+      price = nieuw;
+      document.querySelectorAll('.sw-vol-tier').forEach(function(t) {
+        var idx = parseInt(t.dataset.index, 10);
+        var bedrag = price * (1 - tiers[idx].discount);
+        var regel = t.children[1];
+        if (regel) regel.textContent = '€' + bedrag.toFixed(2).replace('.', ',') + '/stuk';
+      });
     }
+    var swPrijsRoot = (swPriceEl && swPriceEl.closest('product-information, .product-information, main')) || document.body;
+    new MutationObserver(function() {
+      clearTimeout(window.swStaffelTimer);
+      window.swStaffelTimer = setTimeout(swHerberekenStaffel, 60);
+    }).observe(swPrijsRoot, { childList: true, characterData: true, subtree: true });
+    // Een variantwissel loopt ook via het verborgen id-veld; dat is het snelste signaal.
+    document.addEventListener('change', function(e) {
+      if (e.target && (e.target.name === 'id' || (e.target.type === 'radio'))) setTimeout(swHerberekenStaffel, 120);
+    }, true);
 
     // Stars + Op voorraad after price (universal)
     var priceWrap = swZoekProductprijs('.price__regular');
