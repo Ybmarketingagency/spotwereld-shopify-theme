@@ -36,6 +36,18 @@
   assign foto = variant.featured_media | default: product.featured_media
 
   assign lichtkleur = product.metafields.custom.lichtkleur.value
+  # Heeft het product een optie Lichtkleur, dan telt de waarde van deze variant en niet
+  # het metaveld van het hele product. Zonder dit kreeg de zilveren Quaro de
+  # CCT-switch-badge van zijn witte broertjes, terwijl die vast op 2700K brandt.
+  assign sw_lk_idx = -1
+  for sw_opt in product.options
+    if sw_opt == 'Lichtkleur'
+      assign sw_lk_idx = forloop.index0
+    endif
+  endfor
+  if sw_lk_idx >= 0
+    assign lichtkleur = variant.options[sw_lk_idx]
+  endif
   assign ip_filter = product.metafields.custom.ip_waarde_filter.value
   assign sw_badges = ''
   if lichtkleur contains 'Dim2Warm'
