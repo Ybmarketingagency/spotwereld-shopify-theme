@@ -407,7 +407,58 @@
       </tbody>
     </table>
   </div>
+
+  {%- comment -%}
+    Doorverwijzing naar de gidsen. Die stonden tot 23-08-2026 alleen op de homepage
+    gelinkt, dus de klant die bij de spectabel twijfelt over een zaagmaat of een dimmer
+    kreeg daar geen antwoord, en de gidsen kregen geen interne linkwaarde.
+    Welke gids getoond wordt hangt af van het producttype en de metavelden.
+  {%- endcomment -%}
+  {%- liquid
+    assign sw_gidsen = ''
+    if product.type == 'Inbouwspots'
+      assign sw_gidsen = sw_gidsen | append: 'inbouwspots-plaatsen|Inbouwspots plaatsen in een gipsplafond|Zaagmaat, onderlinge afstand en de fouten die het vaakst worden gemaakt.;'
+    endif
+    assign sw_dim = product.metafields.custom.dimbaar.value | default: ''
+    assign sw_dim_start = sw_dim | slice: 0, 2
+    if sw_dim_start == 'Ja'
+      assign sw_gidsen = sw_gidsen | append: 'led-dimmer-kiezen|Welke dimmer werkt hierop?|Waarom een oude dimmer laat flikkeren, en hoeveel spots op één dimmer kunnen.;'
+    endif
+    if sw_gidsen == blank
+      assign sw_gidsen = 'verlichtingsgids|Verlichtingsgids|Praktische uitleg bij het aanleggen van verlichting.;'
+    endif
+    assign sw_gidslijst = sw_gidsen | split: ';'
+  -%}
+  <div class="sw-gidsen">
+    <p class="sw-gidsen__kop">Handig bij dit product</p>
+    <div class="sw-gidsen__lijst">
+      {%- for sw_g in sw_gidslijst -%}
+        {%- assign sw_d = sw_g | split: '|' -%}
+        <a class="sw-gidsen__kaart" href="/pages/{{ sw_d[0] }}">
+          <span class="sw-gidsen__titel">{{ sw_d[1] }}</span>
+          <span class="sw-gidsen__tekst">{{ sw_d[2] }}</span>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
 </div>
+
+<style>
+  .sw-gidsen { margin: 1rem 0 0; }
+  .sw-gidsen__kop {
+    font-size: .8rem; font-weight: 700; color: #374151; margin: 0 0 .5rem;
+  }
+  .sw-gidsen__lijst { display: grid; gap: .5rem; }
+  .sw-gidsen__kaart {
+    display: block; background: #fff; border: 1px solid #e8edf4; border-radius: 10px;
+    padding: .75rem .9rem; text-decoration: none; transition: border-color .15s, background .15s;
+  }
+  .sw-gidsen__kaart:hover { border-color: #b9cbe4; background: #f8fafc; }
+  .sw-gidsen__titel {
+    display: block; font-size: .9rem; font-weight: 700; color: #083d7d; margin-bottom: .1rem;
+  }
+  .sw-gidsen__tekst { display: block; font-size: .8rem; color: #64748b; line-height: 1.45; }
+</style>
 
 <!-- Reviewcarrousel verwijderd: er zijn nog geen echte klantreviews, dus geen sterren of citaten. -->
 

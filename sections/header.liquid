@@ -329,8 +329,14 @@
   <div
     class="header__underlay header__underlay-open"
   ></div>
+  {%- comment -%}
+    Was een verborgen h1 met de winkelnaam, waardoor de homepage er twee had: deze en de
+    zichtbare "Premium LED Verlichting" in de hero. Eén h1 per pagina; de zichtbare wint,
+    want die zegt waar de pagina over gaat. De winkelnaam blijft leesbaar voor
+    schermlezers, alleen niet meer als kop.
+  {%- endcomment -%}
   {%- if request.page_type == 'index' -%}
-    <h1 class="visually-hidden">{{ shop.name }}</h1>
+    <span class="visually-hidden">{{ shop.name }}</span>
   {%- endif -%}
   {% for row in rows %}
     {% liquid

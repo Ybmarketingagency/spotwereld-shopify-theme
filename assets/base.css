@@ -4221,7 +4221,7 @@ product-recommendations:has([data-has-recommendations='false']) {
   display: block !important;
   width: 200px;
   height: 44px;
-  background-image: url("https://i.imgur.com/a0coyIm.png");
+  background-image: url("https://cdn.shopify.com/s/files/1/0988/8720/5208/files/a0coyIm.png?width=900");
   background-size: contain;
   background-repeat: no-repeat;
   background-position: left center;
@@ -4320,7 +4320,7 @@ product-recommendations:has([data-has-recommendations='false']) {
     display: block;
     flex: 0 0 auto;
     height: 70px;
-    background: #142957 url("https://i.imgur.com/a0coyIm.png") no-repeat 22px center;
+    background: #142957 url("https://cdn.shopify.com/s/files/1/0988/8720/5208/files/a0coyIm.png?width=900") no-repeat 22px center;
     background-size: auto 26px;
     border-radius: 0 20px 0 0;
   }
@@ -4496,3 +4496,4 @@ product-recommendations:has([data-has-recommendations='false']) {
 /* sync-trigger: 2026-08-23-v105-categorieteksten */
 /* sync-trigger: 2026-08-23-v106-meta-uit-categorietekst */
 /* sync-trigger: 2026-08-23-v107-product-id-en-image */
+/* sync-trigger: 2026-08-23-v108-imgur-weg-en-gidslinks */

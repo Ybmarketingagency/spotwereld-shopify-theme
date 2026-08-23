@@ -203,16 +203,16 @@
 <meta name="format-detection" content="telephone=no">
 
 {%- comment -%} Favicon - hardcoded blauwe O-spotlight, overschrijft Shopify settings favicon {%- endcomment -%}
-<link rel="icon" type="image/png" href="https://i.imgur.com/wwoqIM6.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://i.imgur.com/wwoqIM6.png">
-<link rel="icon" type="image/png" sizes="16x16" href="https://i.imgur.com/wwoqIM6.png">
-<link rel="apple-touch-icon" sizes="180x180" href="https://i.imgur.com/wwoqIM6.png">
-<link rel="shortcut icon" type="image/png" href="https://i.imgur.com/wwoqIM6.png">
+<link rel="icon" type="image/png" href="https://cdn.shopify.com/s/files/1/0988/8720/5208/files/wwoqIM6.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://cdn.shopify.com/s/files/1/0988/8720/5208/files/wwoqIM6.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://cdn.shopify.com/s/files/1/0988/8720/5208/files/wwoqIM6.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://cdn.shopify.com/s/files/1/0988/8720/5208/files/wwoqIM6.png">
+<link rel="shortcut icon" type="image/png" href="https://cdn.shopify.com/s/files/1/0988/8720/5208/files/wwoqIM6.png">
 <script>
 (function(){
   function removeOldFavicons(){
     document.querySelectorAll('link[rel*="icon"]').forEach(function(el){
-      if(el.href.indexOf('imgur.com/wwoqIM6') === -1){
+      if(el.href.indexOf('wwoqIM6') === -1){
         el.parentNode.removeChild(el);
       }
     });
@@ -220,7 +220,7 @@
     var fresh = document.createElement('link');
     fresh.rel = 'icon';
     fresh.type = 'image/png';
-    fresh.href = 'https://i.imgur.com/wwoqIM6.png?v=' + Date.now();
+    fresh.href = 'https://cdn.shopify.com/s/files/1/0988/8720/5208/files/wwoqIM6.png?v=' + Date.now();
     document.head.appendChild(fresh);
   }
   removeOldFavicons();
@@ -240,11 +240,11 @@
   "url": "{{ request.origin }}",
   "logo": {
     "@type": "ImageObject",
-    "url": "https://i.imgur.com/wwoqIM6.png",
+    "url": "https://cdn.shopify.com/s/files/1/0988/8720/5208/files/wwoqIM6.png",
     "width": 1254,
     "height": 1254
   },
-  "image": "https://i.imgur.com/wwoqIM6.png",
+  "image": "https://cdn.shopify.com/s/files/1/0988/8720/5208/files/wwoqIM6.png",
   "description": "{{ sw_tagline }} voor elk interieur. Premium LED inbouwspots, opbouwspots, hanglampen en meer.",
   "email": "info@spotwereld.nl",
   "telephone": "+31853332672",
@@ -472,7 +472,7 @@
 
 {%- comment -%} Open Graph image fallback — vierkant logo, echte afmetingen 1254x1254 {%- endcomment -%}
 {%- unless page_image -%}
-<meta property="og:image" content="https://i.imgur.com/wwoqIM6.png">
+<meta property="og:image" content="https://cdn.shopify.com/s/files/1/0988/8720/5208/files/wwoqIM6.png">
 <meta property="og:image:width" content="1254">
 <meta property="og:image:height" content="1254">
 <meta property="og:image:alt" content="Spotwereld — {{ sw_tagline }}">
