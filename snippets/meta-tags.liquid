@@ -107,40 +107,73 @@
   content="{{ og_description | escape }}"
 >
 
-{%- comment -%} Spotwereld SEO: betere titles met keywords per page type {%- endcomment -%}
+{%- comment -%}
+  Spotwereld SEO: de SEO-velden uit Shopify gaan voor.
+  Stond er niets ingevuld, dan bouwt het thema zelf een titel en omschrijving op.
+  Voor 19-08-2026 werden die velden genegeerd, waardoor elke omschrijving een
+  midden in een woord afgekapte productbeschrijving was.
+{%- endcomment -%}
 {%- liquid
   assign sw_brand = 'Spotwereld'
   assign sw_tagline = 'Premium LED Verlichting'
+
+  # wat de winkelier zelf heeft ingevuld onder Vermelding in zoekmachines
+  assign sw_seo_title = ''
+  assign sw_seo_desc = ''
+  if request.page_type == 'product'
+    assign sw_seo_title = product.metafields.global.title_tag
+    assign sw_seo_desc = product.metafields.global.description_tag
+  elsif request.page_type == 'collection'
+    assign sw_seo_title = collection.metafields.global.title_tag
+    assign sw_seo_desc = collection.metafields.global.description_tag
+  elsif request.page_type == 'page'
+    assign sw_seo_title = page.metafields.global.title_tag
+    assign sw_seo_desc = page.metafields.global.description_tag
+  elsif request.page_type == 'article'
+    assign sw_seo_title = article.metafields.global.title_tag
+    assign sw_seo_desc = article.metafields.global.description_tag
+  endif
+
+  # terugval: zelf opbouwen. truncatewords in plaats van truncate, anders kapt hij
+  # midden in een woord af.
   if request.page_type == 'index'
     assign sw_title = 'LED Inbouwspots, Opbouwspots & Hanglampen | ' | append: sw_brand
     assign sw_desc = 'Premium LED verlichting voor elk interieur. CCT switch dimbaar, IP65, 25.000 uur levensduur. Vandaag besteld, morgen verzonden.'
   elsif request.page_type == 'product'
     assign sw_title = product.title | append: ' kopen | ' | append: sw_brand
     if product.description != blank
-      assign sw_desc = product.description | replace: '2 jaar garantie', '5 jaar garantie' | replace: '2 Jaar garantie', '5 Jaar garantie' | replace: '<td>2 jaar</td>', '<td>5 jaar</td>' | replace: '<td>2 Jaar</td>', '<td>5 Jaar</td>' | strip_html | truncate: 155
+      assign sw_desc = product.description | replace: '2 jaar garantie', '5 jaar garantie' | replace: '2 Jaar garantie', '5 Jaar garantie' | replace: '<td>2 jaar</td>', '<td>5 jaar</td>' | replace: '<td>2 Jaar</td>', '<td>5 Jaar</td>' | strip_html | truncatewords: 24
     else
       assign sw_desc = product.title | append: ' - Premium LED kwaliteit, snelle levering en 5 jaar garantie bij Spotwereld.'
     endif
   elsif request.page_type == 'collection'
     assign sw_title = collection.title | append: ' kopen - LED ' | append: collection.title | append: ' | ' | append: sw_brand
     if collection.description != blank
-      assign sw_desc = collection.description | strip_html | truncate: 155
+      assign sw_desc = collection.description | strip_html | truncatewords: 24
     else
       assign sw_desc = 'Bekijk onze ' | append: collection.title | append: ' collectie. Premium LED kwaliteit met 5 jaar garantie. Vandaag besteld, morgen verzonden.'
     endif
   elsif request.page_type == 'article'
     assign sw_title = article.title | append: ' | ' | append: sw_brand | append: ' Blog'
-    assign sw_desc = article.excerpt_or_content | strip_html | truncate: 155
+    assign sw_desc = article.excerpt_or_content | strip_html | truncatewords: 24
   elsif request.page_type == 'page'
     assign sw_title = page.title | append: ' | ' | append: sw_brand
     if page.content != blank
-      assign sw_desc = page.content | strip_html | truncate: 155
+      assign sw_desc = page.content | strip_html | truncatewords: 24
     else
       assign sw_desc = sw_tagline | append: ' bij ' | append: sw_brand
     endif
   else
     assign sw_title = page_title | append: ' | ' | append: sw_brand
     assign sw_desc = page_description | default: shop.description | default: sw_tagline
+  endif
+
+  # het ingevulde veld wint van de terugval
+  if sw_seo_title != blank
+    assign sw_title = sw_seo_title
+  endif
+  if sw_seo_desc != blank
+    assign sw_desc = sw_seo_desc
   endif
 -%}
 
