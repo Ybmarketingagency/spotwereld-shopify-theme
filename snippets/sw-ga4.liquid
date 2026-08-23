@@ -1,9 +1,16 @@
 {%- comment -%}
   Google Analytics 4 - Spotwereld
-  Property 522626795, measurement ID G-51H8EG3E88 (bestond al, kreeg alleen nooit data
-  omdat de tag nergens op de site stond).
 
-  Wat hier gebeurt:
+  STAAT UIT. Vul hieronder het measurement ID (G-XXXXXXXXXX) in van de GA4-property
+  van Spotwereld, dan gaat alles hieronder meteen draaien.
+
+  Waarom leeg: er is nog GEEN GA4-property voor Spotwereld. In de Google-accounts die
+  in deze browser zijn ingelogd staan alleen TechAzura-properties (techazura.nl,
+  G-51H8EG3E88). Daar mag het verkeer van Spotwereld niet in terechtkomen. De
+  Google-koppeling van de winkel loopt via spotwereldbv@gmail.com; daar hoort de
+  property te komen.
+
+  Wat hier gebeurt zodra het ID is ingevuld:
   - Consent Mode v2 staat standaard op denied en wordt bijgewerkt via Shopify's
     Customer Privacy API, zodat een cookiebanner later gewoon werkt zonder deze code
     aan te raken.
@@ -16,9 +23,9 @@
 {%- endcomment -%}
 
 {%- liquid
-  assign sw_ga4_id = 'G-51H8EG3E88'
+  assign sw_ga4_id = ''
 -%}
-{%- unless request.design_mode -%}
+{%- if sw_ga4_id != blank and request.design_mode == false -%}
   <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
   <script async src="https://www.googletagmanager.com/gtag/js?id={{ sw_ga4_id }}"></script>
   <script>
@@ -96,4 +103,4 @@
       });
     {%- endif -%}
   </script>
-{%- endunless -%}
+{%- endif -%}
