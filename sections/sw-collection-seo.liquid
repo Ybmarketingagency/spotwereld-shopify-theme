@@ -19,9 +19,20 @@
   structured data er vanzelf uit, zonder een apart veld.
 {%- endcomment -%}
 
+{%- comment -%}
+  De beschrijving uit de admin wint. Staat die leeg, dan pakt hij de ingebouwde tekst
+  uit snippets/sw-collectietekst.liquid, zodat de categoriepagina's niet leeg blijven
+  terwijl er nog niets in Shopify is ingevuld.
+{%- endcomment -%}
+{%- capture sw_ingebouwd -%}{%- render 'sw-collectietekst', collection: collection -%}{%- endcapture -%}
 {%- liquid
+  assign sw_tekst = collection.description
+  if sw_tekst == blank
+    assign sw_tekst = sw_ingebouwd | strip
+  endif
+
   assign sw_faq_json = ''
-  assign sw_faq_delen = collection.description | split: 'Veelgestelde vragen</h2>'
+  assign sw_faq_delen = sw_tekst | split: 'Veelgestelde vragen</h2>'
   if sw_faq_delen.size > 1
     assign sw_faq_items = sw_faq_delen[1] | split: '<h3>'
   endif
@@ -47,7 +58,7 @@
   {%- endif -%}
 {%- endif -%}
 
-{%- if collection.description != blank -%}
+{%- if sw_tekst != blank -%}
   <div class="sw-coll-seo">
     <div class="sw-coll-seo__inner">
       {%- if section.settings.heading != blank -%}
@@ -56,7 +67,7 @@
         </h2>
       {%- endif -%}
       <div class="sw-coll-seo__body rte">
-        {{ collection.description }}
+        {{ sw_tekst }}
       </div>
     </div>
   </div>
