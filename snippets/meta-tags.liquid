@@ -588,8 +588,12 @@ details.facets__item[open] .facets__icon:empty::after{transform:rotate(-135deg);
 <script src="{{ 'sw-storefront.js' | asset_url }}" defer></script>
 
 {%- comment -%} Preconnect voor performance {%- endcomment -%}
+{%- comment -%}
+  De preconnect naar imgur is weg: sinds 23-08-2026 staan alle afbeeldingen in Shopify Files.
+  PageSpeed waarschuwde bovendien voor te veel preconnect-verbindingen; die moeten alleen
+  naar de oorsprongen die er echt toe doen.
+{%- endcomment -%}
 <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
-<link rel="preconnect" href="https://i.imgur.com" crossorigin>
 <link rel="dns-prefetch" href="https://cdn.shopify.com">
 
 {% if page_description %}
