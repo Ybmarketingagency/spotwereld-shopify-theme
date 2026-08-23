@@ -408,9 +408,12 @@
 {
   "@context": "https://schema.org",
   "@type": "Product",
-  "@id": "{{ request.origin }}{{ product.url }}#product",
+  "@id": "{{ product.url }}#product",
   "name": "{{ product.title | escape }}",
   "url": "{{ request.origin }}{{ product.url }}",
+  {%- if product.featured_media -%}
+  "image": "https:{{ product.featured_media | image_url: width: 1200 }}",
+  {%- endif -%}
   "brand": {
     "@type": "Brand",
     "name": "{{ product.vendor | default: 'Spotwereld' | escape }}"
