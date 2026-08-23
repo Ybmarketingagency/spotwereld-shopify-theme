@@ -12,7 +12,40 @@
 
   Rendert niets als er geen beschrijving is, dus collecties zonder tekst houden
   gewoon hun huidige weergave.
+
+  FAQPage-markup (23-08-2026): staat er in de beschrijving een kop "Veelgestelde vragen",
+  dan wordt alles daarna gelezen als vraag-en-antwoord. Elke `<h3>` is een vraag, de eerste
+  `<p>` erna het antwoord. Zo kan de tekst gewoon in de admin bewerkt worden en komt de
+  structured data er vanzelf uit, zonder een apart veld.
 {%- endcomment -%}
+
+{%- liquid
+  assign sw_faq_json = ''
+  assign sw_faq_delen = collection.description | split: 'Veelgestelde vragen</h2>'
+  if sw_faq_delen.size > 1
+    assign sw_faq_items = sw_faq_delen[1] | split: '<h3>'
+  endif
+-%}
+{%- if sw_faq_items.size > 1 -%}
+  {%- capture sw_faq_json -%}
+    {%- for sw_item in sw_faq_items offset: 1 -%}
+      {%- assign sw_stuk = sw_item | split: '</h3>' -%}
+      {%- assign sw_vraag = sw_stuk[0] | strip_html | strip -%}
+      {%- assign sw_na = sw_stuk[1] | default: '' -%}
+      {%- assign sw_antwoord = sw_na | split: '</p>' | first | strip_html | strip -%}
+      {%- if sw_vraag != blank and sw_antwoord != blank -%}
+        {%- unless forloop.first %},{% endunless -%}
+        {"@type":"Question","name":{{ sw_vraag | json }},"acceptedAnswer":{"@type":"Answer","text":{{ sw_antwoord | json }}}}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+  {%- assign sw_faq_json = sw_faq_json | strip -%}
+  {%- if sw_faq_json != blank -%}
+    <script type="application/ld+json">
+      {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{{ sw_faq_json }}]}
+    </script>
+  {%- endif -%}
+{%- endif -%}
 
 {%- if collection.description != blank -%}
   <div class="sw-coll-seo">
