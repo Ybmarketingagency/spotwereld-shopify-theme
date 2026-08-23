@@ -1,0 +1,27 @@
+{%- comment -%}
+  Korte alt-tekst voor productfoto's.
+
+  Shopify valt bij een lege alt terug op de volledige producttitel. Die is bij ons
+  een reeks specificaties met pijpjes ertussen ("LED Inbouwspot Lesto | 4W/6W CCT
+  dimbaar | IP65 | Ø68 mm"). Dat staat dan als alt onder elke foto van het product:
+  onleesbaar voor een schermlezer en het leest voor Google als keyword stuffing.
+
+  Deze snippet knipt daar het modelgedeelte uit. Een alt die iemand echt heeft
+  ingevuld in de admin blijft staan.
+
+  Gebruik: {%- render 'sw-media-alt', media: media, product: product -%}
+  Geeft een string terug, dus aanroepen binnen een capture of direct in alt:.
+{%- endcomment -%}
+{%- liquid
+  assign sw_titel = product.title | default: ''
+  assign sw_kort = sw_titel | split: '|' | first | strip
+  assign sw_uit = media.alt | strip
+
+  if sw_uit == blank or sw_uit == sw_titel
+    assign sw_uit = sw_kort
+  endif
+  if sw_uit == blank
+    assign sw_uit = shop.name
+  endif
+-%}
+{{- sw_uit -}}

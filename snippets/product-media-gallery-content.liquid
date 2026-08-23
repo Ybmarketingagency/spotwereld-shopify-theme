@@ -597,14 +597,14 @@
                         assign focal_point_style = 'object-position: ' | append: media.presentation.focal_point | append: ';'
                       endif
                     %}
-                    {{
-                      media.preview_image
+                    {%- capture sw_media_alt -%}{%- render 'sw-media-alt', media: media, product: product -%}{%- endcapture -%}
+                    {{ media.preview_image
                       | image_url: width: 1024
                       | image_tag:
                         loading: 'lazy',
                         sizes: 'auto, 110, (min-width: 750px) 160',
                         widths: '240, 352, 832, 1200',
-                        alt: media.alt,
+                        alt: sw_media_alt,
                         style: focal_point_style
                       | escape
                     }}

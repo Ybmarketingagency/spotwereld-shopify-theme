@@ -37,12 +37,12 @@
     endif
     assign focal_point_style = '--focal-point: ' | append: media.presentation.focal_point | append: ';'
   %}
-  {{
-    media.preview_image
+  {%- capture sw_media_alt -%}{%- render 'sw-media-alt', media: media, product: product -%}{%- endcapture -%}
+  {{ media.preview_image
     | image_url: width: 3840
     | image_tag:
       widths: widths,
-      alt: media.alt,
+      alt: sw_media_alt,
       sizes: sizes,
       loading: loading,
       class: 'product-media__image',
@@ -64,12 +64,12 @@
             ref="deferredMediaPlayButton"
             on:click="/showDeferredMedia"
           >
-            {{
-              media.preview_image
+            {%- capture sw_media_alt -%}{%- render 'sw-media-alt', media: media, product: product -%}{%- endcapture -%}
+            {{ media.preview_image
               | image_url: width: 3840
               | image_tag:
                 widths: widths,
-                alt: media.alt,
+                alt: sw_media_alt,
                 sizes: sizes,
                 loading: loading,
                 class: 'deferred-media__poster-image'
