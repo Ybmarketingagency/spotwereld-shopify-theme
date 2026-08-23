@@ -113,6 +113,14 @@
   Voor 19-08-2026 werden die velden genegeerd, waardoor elke omschrijving een
   midden in een woord afgekapte productbeschrijving was.
 {%- endcomment -%}
+{%- comment -%}
+  Bij een collectie zonder beschrijving pakken we dezelfde ingebouwde categorietekst die
+  sw-collection-seo.liquid onder de grid zet, zodat de vijf collecties niet allemaal
+  dezelfde sjabloonomschrijving krijgen.
+{%- endcomment -%}
+{%- capture sw_coll_terugval -%}
+  {%- if request.page_type == 'collection' -%}{%- render 'sw-collectietekst', collection: collection -%}{%- endif -%}
+{%- endcapture -%}
 {%- liquid
   assign sw_brand = 'Spotwereld'
   assign sw_tagline = 'Premium LED Verlichting'
@@ -150,6 +158,8 @@
     assign sw_title = collection.title | append: ' kopen - LED ' | append: collection.title | append: ' | ' | append: sw_brand
     if collection.description != blank
       assign sw_desc = collection.description | strip_html | truncatewords: 24
+    elsif sw_coll_terugval != blank
+      assign sw_desc = sw_coll_terugval | strip_html | strip | truncatewords: 24
     else
       assign sw_desc = 'Bekijk onze ' | append: collection.title | append: ' collectie. Premium LED kwaliteit met 5 jaar garantie. Vandaag besteld, morgen verzonden.'
     endif
