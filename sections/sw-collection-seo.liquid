@@ -31,10 +31,22 @@
     assign sw_tekst = sw_ingebouwd | strip
   endif
 
+  # De FAQ begint na de kop 'Veelgestelde vragen'. In een vertaalde taal heet die kop
+  # anders, dus valt hij terug op de laatste </h2> in de tekst - dat is dezelfde plek,
+  # ongeacht de taal.
   assign sw_faq_json = ''
+  assign sw_faq_rest = ''
   assign sw_faq_delen = sw_tekst | split: 'Veelgestelde vragen</h2>'
   if sw_faq_delen.size > 1
-    assign sw_faq_items = sw_faq_delen[1] | split: '<h3>'
+    assign sw_faq_rest = sw_faq_delen[1]
+  else
+    assign sw_h2_delen = sw_tekst | split: '</h2>'
+    if sw_h2_delen.size > 1
+      assign sw_faq_rest = sw_h2_delen | last
+    endif
+  endif
+  if sw_faq_rest != blank
+    assign sw_faq_items = sw_faq_rest | split: '<h3>'
   endif
 -%}
 {%- if sw_faq_items.size > 1 -%}
