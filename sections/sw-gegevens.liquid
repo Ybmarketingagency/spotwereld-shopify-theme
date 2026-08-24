@@ -531,27 +531,7 @@
         var checkoutUrl = res.data && res.data.cartCreate && res.data.cartCreate.cart && res.data.cartCreate.cart.checkoutUrl;
         if (!checkoutUrl) throw new Error('Geen checkout URL ontvangen.');
 
-        // 4. GA4: begin_checkout, vlak voor we de bezoeker naar Shopify sturen
-        try {
-          if (window.swGA4) {
-            window.swGA4.beginCheckout(
-              {{ cart.total_price | divided_by: 100.0 }},
-              [
-                {%- for item in cart.items -%}
-                  {
-                    item_id: {{ item.sku | default: item.variant_id | json }},
-                    item_name: {{ item.product.title | json }},
-                    item_category: {{ item.product.type | json }},
-                    price: {{ item.final_price | divided_by: 100.0 }},
-                    quantity: {{ item.quantity }}
-                  }{% unless forloop.last %},{% endunless %}
-                {%- endfor -%}
-              ]
-            );
-          }
-        } catch (e) { /* analytics mag de checkout nooit blokkeren */ }
-
-        // 5. Redirect naar pre-filled Shopify checkout
+        // 4. Redirect naar pre-filled Shopify checkout
         window.location.href = checkoutUrl;
       })
       .catch(function(err){
