@@ -358,6 +358,126 @@
     },
     "product": {
       "beschikbaarheid": "Beschikbaarheid"
+    },
+    "home": {
+      "hero": {
+        "alt": "Premium LED Verlichting",
+        "titel": "Premium<br>LED Verlichting",
+        "sub": "Verlichting voor elk interieur &mdash; stijlvol, energiezuinig en duurzaam.",
+        "cta": "Bekijk Aanbiedingen"
+      },
+      "usp": {
+        "verzending": "Gratis Verzending",
+        "verzending_sub": "Bij bestellingen boven &euro;50",
+        "levering": "Snelle Levering",
+        "levering_sub": "Vandaag besteld, morgen verzonden",
+        "garantie": "5 Jaar Garantie",
+        "garantie_sub": "Kwaliteit gegarandeerd",
+        "retour": "14 Dagen Retour",
+        "retour_sub": "Ongebruikt terug, geld terug"
+      },
+      "cats": {
+        "kop": "Populaire categorie&euml;n",
+        "link": "Bekijk assortiment"
+      },
+      "pop": {
+        "kop": "Populaire Producten",
+        "sub": "Onze best verkochte LED spots en lampen",
+        "vorige": "Vorige",
+        "volgende": "Volgende",
+        "korting": "-{{ pct }}% Korting"
+      },
+      "banner": {
+        "inbouw_sub": "Strak en modern ingebouwd in je plafond",
+        "shop": "Shop Nu",
+        "trap_sub": "Veilig en sfeervol verlichte trappen",
+        "hang_sub": "Sfeervolle hanglampen voor elke ruimte"
+      },
+      "waarom": {
+        "kop": "Waarom Kiezen Voor Spotwereld?",
+        "sub": "Kwaliteit, Service en Betrouwbaarheid",
+        "kwaliteit": "Topkwaliteit Producten",
+        "kwaliteit_1": "Hoogste kwaliteitsnormen",
+        "kwaliteit_2": "Duurzaam &amp; Energiezuinig",
+        "advies": "Deskundige Adviezen",
+        "advies_1": "Persoonlijk Contact",
+        "advies_2": "Hulp bij je Keuze",
+        "advies_3": "Professioneel Team",
+        "retour": "14 Dagen Retourrecht",
+        "retour_1": "Retour aanmelden per e-mail",
+        "retour_2": "Retourzending voor eigen rekening",
+        "retour_3": "Geld terug binnen 5 werkdagen",
+        "betalen": "Veilig Betalen",
+        "betalen_1": "iDEAL, PayPal, Creditcard",
+        "betalen_2": "Veilige Transacties",
+        "betalen_3": "Betrouwbare Afhandeling"
+      },
+      "kennis": {
+        "kop": "Slim verlichten begint hier",
+        "sub": "Praktische gidsen om zelf aan de slag te gaan &mdash; van het uitzagen van een gat tot het kiezen van de juiste dimmer.",
+        "a1_label": "Installatie &middot; 10 min",
+        "a1_titel": "Inbouwspots plaatsen &mdash; stappenplan voor een strak resultaat",
+        "a1_tekst": "Gat zagen, draadjes aansluiten en spot vastklikken. We laten zien hoe je het in &eacute;&eacute;n middag professioneel doet, zonder verrassingen achteraf.",
+        "a2_label": "Tips &middot; 5 min",
+        "a2_titel": "De juiste LED-dimmer kiezen (en aansluiten)",
+        "a2_tekst": "Niet elke dimmer werkt met LED. We helpen je kiezen tussen fase-aansnijding en -afsnijding, en leggen uit hoe je geflikker voorkomt.",
+        "a3_label": "Besparen &middot; 4 min",
+        "a3_titel": "Bespaar tot 60% door je TL te vervangen door LED-TL",
+        "a3_tekst": "TL-buizen verbruiken veel stroom en gaan korter mee dan je denkt. Lees waarom LED-TL veel gunstiger is en hoe je de wissel in 5 minuten doet.",
+        "alle": "Alle gidsen"
+      },
+      "nieuwsbrief": {
+        "label": "NIEUWSBRIEF",
+        "tekst": "Schrijf je in voor onze nieuwsbrief en ontvang direct een kortingscode.",
+        "gelukt": "&#10003; Gelukt! Je kortingscode is onderweg.",
+        "plaats": "jouw@email.nl",
+        "knop": "Claim &euro;10 korting",
+        "kop": "Ontvang <span style=\"color:#0F6FE3\">&euro;10 korting</span> op je eerste bestelling"
+      },
+      "hulp": {
+        "kop": "Niet zeker welke spot je nodig hebt?",
+        "tekst": "Onze verlichtingsspecialisten kennen elke spot van binnen en buiten. Mail of bel ons gerust &mdash; we denken mee over lichtkleur, zaagmaat en installatie.",
+        "account": "Zelf regelen via je account",
+        "traceren": "Bestelling traceren",
+        "adres": "Adres of e-mail aanpassen",
+        "retour": "Iets retourneren of ruilen",
+        "contact": "Persoonlijk contact",
+        "antwoord": "Antwoord binnen 24 uur",
+        "uren": "Ma&nbsp;-&nbsp;vr&nbsp;08:30&nbsp;-&nbsp;17:00",
+        "betalen": "Veilig betalen met:"
+      }
+    },
+    "balk": {
+      "aria": "Aankondigingen",
+      "levering": "&#9889;&nbsp;Vandaag besteld, morgen verzonden&nbsp;",
+      "verzending": "&nbsp;Gratis verzending bij &euro;50+&nbsp;",
+      "retour": "&nbsp;&#8635;&nbsp;14 dagen retourbeleid&nbsp;"
+    },
+    "popup": {
+      "label": "Exclusieve aanbieding!",
+      "tekst": "Vul je e-mailadres in en ontvang je kortingscode direct",
+      "knop": "Ontvang 10% korting &#8594;",
+      "klein": "Geen spam. Uitschrijven kan altijd. &#128274; Veilig &amp; vertrouwd",
+      "plaats": "jouw@emailadres.nl",
+      "kop": "Ontvang <strong style=\"color:#0F6FE3\">10% korting</strong> op je eerste bestelling"
+    },
+    "voet": {
+      "over": "Spotwereld is je specialist in LED verlichting. Wij bieden kwalitatieve producten voor elk interieur.",
+      "categorieen": "Categorieën",
+      "klantenservice": "Klantenservice",
+      "contact": "Contact",
+      "whatsapp": "WhatsApp ons",
+      "whatsapp_aria": "Stuur ons een WhatsApp-bericht",
+      "openingstijden": "Openingstijden",
+      "mavr": "Ma - Vr:",
+      "zaterdag": "Zaterdag:",
+      "zondag": "Zondag:",
+      "gesloten": "Gesloten",
+      "betaalopties": "Betaalopties:",
+      "rechten": "Spotwereld. Alle rechten voorbehouden.",
+      "voorwaarden": "Algemene voorwaarden",
+      "privacy": "Privacyverklaring",
+      "techazura": "Gemaakt door TechAzura"
     }
   }
 }

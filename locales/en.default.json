@@ -33,7 +33,6 @@
     "inventory_status": "Inventory status",
     "localization_region_and_language": "Region and language selector",
     "menu": "Menu",
-    // This is the label for the header navigation menu when using screen readers, it will read "Primary navigation"
     "header_navigation_label": "Primary",
     "nested_product": "{{ product_title }} for {{ parent_title }}",
     "new_window": "Opens in a new window.",
@@ -66,52 +65,40 @@
     "price_filter_high": "Highest price"
   },
   "actions": {
-    // Quick add button on product cards, shortened version of add to cart
     "add": "Add",
     "add_to_cart": "Add to cart",
-    // Success message shown after adding item to cart
     "added": "Added",
-    // Button to apply discount code to cart
     "apply": "Apply",
     "back": "Back",
     "back_to": "Back to {{ title }}",
     "choose": "Choose",
-    // Button to reset current selection or input
     "clear": "Clear",
-    // Button to remove all applied product filters
     "clear_all": "Clear all",
     "close": "Close",
     "open": "Open",
-    // Continue shopping link on the cart page which takes the user back to a collection page
     "continue_shopping": "Verder winkelen",
     "enter_password": "Enter password",
     "log_in_html": "Have an account? <a href=\"{{ link }}\">Log in</a> to check out faster.",
     "log_in": "Sign in",
     "log_out": "Log out",
     "open_image_in_full_screen": "Afbeelding op volledig scherm openen",
-    // Button to remove applied filters from search/collection results
     "remove": "Remove",
     "remove_discount": "Remove discount code {{ code }}",
-    // Button to expand hidden product variant options
     "show_all_options": "Show all options",
     "see_items": {
       "one": "See {{ count }} item",
-      // Button to view filtered product results and close filter dialog
       "other": "See {{ count }} items"
     },
     "show_filters": "Filteren",
     "show_less": "Show less",
     "show_more": "Show more",
     "sign_in_options": "Other sign in options",
-    // AR button to view 3D product model in physical space
     "view_in_your_space": "View in your space",
-    // Button to view complete collection/product list
     "view_all": "View all",
     "more": "More",
     "zoom": "Zoom",
     "zoom_media": "Zoom media {{ index }}",
     "close_dialog": "Dialoog sluiten",
-    // Button to clear search filter and restore default view
     "reset": "Herstellen",
     "enter_using_password": "Enter using password",
     "sign_up": "Sign up",
@@ -257,7 +244,6 @@
     "search_results_no_results_check_spelling": "No results found for \"{{ terms }}\". Check the spelling or use a different word or phrase.",
     "search_results_resource_articles": "Blog posts",
     "search_results_resource_collections": "Collections",
-    // Section heading for Shopify store pages in search results
     "search_results_resource_pages": "Pages",
     "search_results_resource_products": "Products",
     "search_results_resource_products_count": {
@@ -274,10 +260,8 @@
       "one": "1 product toegevoegd aan je winkelwagen",
       "other": "{{ count }} producten toegevoegd aan je winkelwagen"
     },
-    // Button to go from search preview to full search results page
     "search_results_view_all": "View all",
     "search_results_view_all_button": "View all",
-    // Label for customer's note to seller during checkout
     "seller_note": "Opmerkingen",
     "shipping_policy": "Shipping is calculated at checkout.",
     "shipping_policy_html": "<a href=\"{{ link }}\">Shipping</a> is calculated at checkout.",
@@ -293,7 +277,6 @@
     "taxes_included_shipping_at_checkout_without_policy_without_discounts": "Incl. BTW. Verzendkosten worden berekend bij de checkout.",
     "unavailable": "Unavailable",
     "use_fewer_filters_html": "Try using fewer filters, or <a class=\"{{ class }}\" href=\"{{ link }}\">clear all filters</a>.",
-    // Link or button to expand additional information
     "view_more_details": "View more details",
     "volume_pricing_available": "Volume pricing available",
     "volume_pricing": "Volume pricing",
@@ -306,7 +289,6 @@
     "product_count": "Product count",
     "errors": "Errors",
     "wrong_password": "Wrong password",
-    // Legend text for gift card delivery options
     "recipient_form_send_to": "Send to",
     "recipient_form_email_label": "Recipient’s email",
     "recipient_form_email_label_my_email": "My email",
@@ -322,7 +304,6 @@
     "product_custom_property_character_count": "{{ used_chars }}/{{ max_chars }} characters used"
   },
   "fields": {
-    // Separates min and max values in price range filter
     "separator": "tot"
   },
   "gift_cards": {
@@ -386,6 +367,126 @@
     },
     "product": {
       "beschikbaarheid": "Availability"
+    },
+    "home": {
+      "hero": {
+        "alt": "Premium LED Lighting",
+        "titel": "Premium<br>LED Lighting",
+        "sub": "Lighting for every interior &mdash; stylish, energy-efficient and built to last.",
+        "cta": "View offers"
+      },
+      "usp": {
+        "verzending": "Free shipping",
+        "verzending_sub": "On orders over &euro;50",
+        "levering": "Fast delivery",
+        "levering_sub": "Order today, shipped tomorrow",
+        "garantie": "5-year warranty",
+        "garantie_sub": "Quality guaranteed",
+        "retour": "14-day returns",
+        "retour_sub": "Return unused, money back"
+      },
+      "cats": {
+        "kop": "Popular categories",
+        "link": "View range"
+      },
+      "pop": {
+        "kop": "Popular products",
+        "sub": "Our best-selling LED spots and lamps",
+        "vorige": "Previous",
+        "volgende": "Next",
+        "korting": "-{{ pct }}% off"
+      },
+      "banner": {
+        "inbouw_sub": "Sleek and modern, recessed into your ceiling",
+        "shop": "Shop now",
+        "trap_sub": "Safely and beautifully lit stairs",
+        "hang_sub": "Atmospheric pendant lamps for every room"
+      },
+      "waarom": {
+        "kop": "Why choose Spotwereld?",
+        "sub": "Quality, service and reliability",
+        "kwaliteit": "Top-quality products",
+        "kwaliteit_1": "Highest quality standards",
+        "kwaliteit_2": "Durable &amp; energy-efficient",
+        "advies": "Expert advice",
+        "advies_1": "Personal contact",
+        "advies_2": "Help choosing",
+        "advies_3": "Professional team",
+        "retour": "14-day right of return",
+        "retour_1": "Register your return by email",
+        "retour_2": "Return shipping at your own expense",
+        "retour_3": "Money back within 5 working days",
+        "betalen": "Secure payment",
+        "betalen_1": "iDEAL, PayPal, credit card",
+        "betalen_2": "Secure transactions",
+        "betalen_3": "Reliable handling"
+      },
+      "kennis": {
+        "kop": "Smart lighting starts here",
+        "sub": "Practical guides to get started yourself &mdash; from cutting the hole to choosing the right dimmer.",
+        "a1_label": "Installation &middot; 10 min",
+        "a1_titel": "Fitting recessed spotlights &mdash; a step-by-step plan for a clean result",
+        "a1_tekst": "Cutting the hole, connecting the wires and clicking the spotlight into place. We show you how to do it professionally in one afternoon, with no surprises afterwards.",
+        "a2_label": "Tips &middot; 5 min",
+        "a2_titel": "Choosing (and wiring) the right LED dimmer",
+        "a2_tekst": "Not every dimmer works with LED. We help you choose between leading-edge and trailing-edge, and explain how to avoid flicker.",
+        "a3_label": "Saving &middot; 4 min",
+        "a3_titel": "Save up to 60% by replacing fluorescent tubes with LED tubes",
+        "a3_tekst": "Fluorescent tubes use a lot of power and last less long than you think. Read why LED tubes are far better value and how to make the switch in 5 minutes.",
+        "alle": "All guides"
+      },
+      "nieuwsbrief": {
+        "label": "NEWSLETTER",
+        "tekst": "Sign up for our newsletter and get a discount code straight away.",
+        "gelukt": "&#10003; Done! Your discount code is on its way.",
+        "plaats": "your@email.com",
+        "knop": "Claim &euro;10 off",
+        "kop": "Get <span style=\"color:#0F6FE3\">&euro;10 off</span> your first order"
+      },
+      "hulp": {
+        "kop": "Not sure which spotlight you need?",
+        "tekst": "Our lighting specialists know every spotlight inside out. Email or call us &mdash; we are happy to advise on light colour, cut-out size and installation.",
+        "account": "Handle it yourself in your account",
+        "traceren": "Track your order",
+        "adres": "Change your address or email",
+        "retour": "Return or exchange an item",
+        "contact": "Personal contact",
+        "antwoord": "Reply within 24 hours",
+        "uren": "Mon&nbsp;-&nbsp;Fri&nbsp;08:30&nbsp;-&nbsp;17:00",
+        "betalen": "Secure payment with:"
+      }
+    },
+    "balk": {
+      "aria": "Announcements",
+      "levering": "&#9889;&nbsp;Order today, shipped tomorrow&nbsp;",
+      "verzending": "&nbsp;Free shipping over &euro;50&nbsp;",
+      "retour": "&nbsp;&#8635;&nbsp;14-day return policy&nbsp;"
+    },
+    "popup": {
+      "label": "Exclusive offer",
+      "tekst": "Enter your email address and get your discount code straight away",
+      "knop": "Get 10% off &#8594;",
+      "klein": "No spam. Unsubscribe any time. &#128274; Safe &amp; trusted",
+      "plaats": "your@email.com",
+      "kop": "Get <strong style=\"color:#0F6FE3\">10% off</strong> your first order"
+    },
+    "voet": {
+      "over": "Spotwereld is your specialist in LED lighting. We supply quality products for every interior.",
+      "categorieen": "Categories",
+      "klantenservice": "Customer service",
+      "contact": "Contact",
+      "whatsapp": "WhatsApp us",
+      "whatsapp_aria": "Send us a WhatsApp message",
+      "openingstijden": "Opening hours",
+      "mavr": "Mon - Fri:",
+      "zaterdag": "Saturday:",
+      "zondag": "Sunday:",
+      "gesloten": "Closed",
+      "betaalopties": "Payment options:",
+      "rechten": "Spotwereld. All rights reserved.",
+      "voorwaarden": "Terms and conditions",
+      "privacy": "Privacy statement",
+      "techazura": "Made by TechAzura"
     }
   }
 }
