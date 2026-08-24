@@ -49,8 +49,16 @@
       {%- comment -%}
         Spotwereld: niet naar /collections/all (alfabetisch, accessoires bovenaan) maar naar
         de collectie 'alle-producten' met de handmatige volgorde: inbouwspots eerst.
+        De themasetting empty_cart_button_link staat live nog op /collections/all, dus die
+        wordt hier bewust overschreven; alleen een afwijkende eigen keuze telt nog mee.
       {%- endcomment -%}
-      href="{{ settings.empty_cart_button_link | default: '/collections/alle-producten' }}"
+      {%- assign empty_cart_link = settings.empty_cart_button_link | default: '/collections/alle-producten' -%}
+      {%- unless empty_cart_link contains 'alle-producten' -%}
+        {%- if empty_cart_link contains '/collections/all' -%}
+          {%- assign empty_cart_link = '/collections/alle-producten' -%}
+        {%- endif -%}
+      {%- endunless -%}
+      href="{{ empty_cart_link }}"
     >
       <span class="button-text">
         {{ 'actions.continue_shopping' | t }}
