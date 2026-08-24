@@ -6,6 +6,18 @@
   lang="{{ request.locale.iso_code }}"
 >
   <head>
+    {%- comment -%}
+      Spotwereld: /collections/all is Shopify's automatische lijst en kent geen handmatige
+      volgorde (altijd alfabetisch, dus accessoires bovenaan). De gecureerde volgorde
+      - inbouwspots eerst - leeft op de collectie 'alle-producten'. Stuur bezoekers daarheen.
+      Zo vroeg mogelijk in de head zodat er niets van de verkeerde pagina in beeld komt.
+    {%- endcomment -%}
+    {%- if collection.handle == 'all' and request.design_mode == false -%}
+      <script>
+        window.location.replace('/collections/alle-producten' + window.location.search + window.location.hash);
+      </script>
+    {%- endif -%}
+
     {%- comment -%} Spotwereld favicon: blauwe O-spotlight uit logo - overrules Shopify Brand setting {%- endcomment -%}
     <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.shopify.com/s/files/1/0988/8720/5208/files/wwoqIM6.png">
     <link rel="icon" type="image/png" sizes="16x16" href="https://cdn.shopify.com/s/files/1/0988/8720/5208/files/wwoqIM6.png">

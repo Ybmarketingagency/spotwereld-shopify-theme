@@ -46,7 +46,11 @@
 
     <a
       class="button cart-items__empty-button"
-      href="{{ settings.empty_cart_button_link | default: routes.all_products_collection_url }}"
+      {%- comment -%}
+        Spotwereld: niet naar /collections/all (alfabetisch, accessoires bovenaan) maar naar
+        de collectie 'alle-producten' met de handmatige volgorde: inbouwspots eerst.
+      {%- endcomment -%}
+      href="{{ settings.empty_cart_button_link | default: '/collections/alle-producten' }}"
     >
       <span class="button-text">
         {{ 'actions.continue_shopping' | t }}
