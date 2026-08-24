@@ -162,9 +162,9 @@
       when 'accessoires'
         assign sw_title = 'LED accessoires: dimmers, drivers en lampen | ' | append: sw_brand
       when 'alle-producten'
-        assign sw_title = 'Alle LED-verlichting van Spotwereld | ' | append: sw_brand
+        assign sw_title = 'Alle LED-verlichting | ' | append: sw_brand
       when 'all'
-        assign sw_title = 'Alle LED-verlichting van Spotwereld | ' | append: sw_brand
+        assign sw_title = 'Alle LED-verlichting | ' | append: sw_brand
       else
         assign sw_title = collection.title | append: ' kopen - LED ' | append: collection.title | append: ' | ' | append: sw_brand
     endcase
