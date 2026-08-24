@@ -163,11 +163,12 @@
       when 'accessoires'
         assign sw_title = 'LED accessoires: dimmers, drivers en lampen | ' | append: sw_brand
       when 'alle-producten'
-        assign sw_title = 'Alle LED-verlichting | ' | append: sw_brand
+        assign sw_title = 'sw.collectie.titel_alles' | t | append: ' | ' | append: sw_brand
       when 'all'
-        assign sw_title = 'Alle LED-verlichting | ' | append: sw_brand
+        assign sw_title = 'sw.collectie.titel_alles' | t | append: ' | ' | append: sw_brand
       else
-        assign sw_title = collection.title | append: ' ' | append: sw_kopen | append: ' - LED ' | append: collection.title | append: ' | ' | append: sw_brand
+        assign sw_coll_kop = 'sw.collectie.titel_patroon' | t: titel: collection.title
+        assign sw_title = sw_coll_kop | append: ' | ' | append: sw_brand
     endcase
     if collection.description != blank
       assign sw_desc = collection.description | strip_html | truncatewords: 24

@@ -378,6 +378,8 @@
       "modellen_een": "1 model",
       "modellen_meer": "{{ count }} models",
       "uitvoeringen": "versions",
+      "titel_patroon": "Buy {{ titel }} - LED {{ titel }}",
+      "titel_alles": "All LED lighting",
       "titel_kopen": "buy",
       "meer_lezen": "Read more",
       "faq": "Frequently asked questions"
