@@ -33,7 +33,6 @@
     "inventory_status": "Inventory status",
     "localization_region_and_language": "Region and language selector",
     "menu": "Menu",
-    // This is the label for the header navigation menu when using screen readers, it will read "Primary navigation"
     "header_navigation_label": "Primary",
     "nested_product": "{{ product_title }} for {{ parent_title }}",
     "new_window": "Opens in a new window.",
@@ -66,52 +65,40 @@
     "price_filter_high": "Hoogste prijs"
   },
   "actions": {
-    // Quick add button on product cards, shortened version of add to cart
     "add": "Add",
     "add_to_cart": "In winkelmandje",
-    // Success message shown after adding item to cart
     "added": "Toegevoegd",
-    // Button to apply discount code to cart
     "apply": "Toepassen",
     "back": "Terug",
     "back_to": "Terug naar {{ title }}",
     "choose": "Kies",
-    // Button to reset current selection or input
     "clear": "Wissen",
-    // Button to remove all applied product filters
     "clear_all": "Alles wissen",
     "close": "Sluiten",
     "open": "Openen",
-    // Continue shopping link on the cart page which takes the user back to a collection page
     "continue_shopping": "Verder winkelen",
     "enter_password": "Enter password",
     "log_in_html": "Have an account? <a href=\"{{ link }}\">Log in</a> to check out faster.",
     "log_in": "Sign in",
     "log_out": "Log out",
     "open_image_in_full_screen": "Afbeelding op volledig scherm openen",
-    // Button to remove applied filters from search/collection results
     "remove": "Verwijderen",
     "remove_discount": "Kortingscode {{ code }} verwijderen",
-    // Button to expand hidden product variant options
     "show_all_options": "Show all options",
     "see_items": {
       "one": "See {{ count }} item",
-      // Button to view filtered product results and close filter dialog
       "other": "See {{ count }} items"
     },
     "show_filters": "Filteren",
     "show_less": "Minder tonen",
     "show_more": "Meer tonen",
     "sign_in_options": "Other sign in options",
-    // AR button to view 3D product model in physical space
     "view_in_your_space": "Bekijk in je ruimte",
-    // Button to view complete collection/product list
     "view_all": "Alles bekijken",
     "more": "Meer",
     "zoom": "Zoom",
     "zoom_media": "Zoom media {{ index }}",
     "close_dialog": "Dialoog sluiten",
-    // Button to clear search filter and restore default view
     "reset": "Herstellen",
     "enter_using_password": "Enter using password",
     "sign_up": "Aanmelden",
@@ -257,7 +244,6 @@
     "search_results_no_results_check_spelling": "No results found for \"{{ terms }}\". Check the spelling or use a different word or phrase.",
     "search_results_resource_articles": "Blog posts",
     "search_results_resource_collections": "Collections",
-    // Section heading for Shopify store pages in search results
     "search_results_resource_pages": "Pages",
     "search_results_resource_products": "Products",
     "search_results_resource_products_count": {
@@ -274,10 +260,8 @@
       "one": "1 product toegevoegd aan je winkelwagen",
       "other": "{{ count }} producten toegevoegd aan je winkelwagen"
     },
-    // Button to go from search preview to full search results page
     "search_results_view_all": "View all",
     "search_results_view_all_button": "View all",
-    // Label for customer's note to seller during checkout
     "seller_note": "Opmerkingen",
     "shipping_policy": "Verzendkosten worden berekend bij de checkout.",
     "shipping_policy_html": "<a href=\"{{ link }}\">Verzendkosten</a> worden berekend bij de checkout.",
@@ -293,7 +277,6 @@
     "taxes_included_shipping_at_checkout_without_policy_without_discounts": "Incl. BTW. Verzendkosten worden berekend bij de checkout.",
     "unavailable": "Niet beschikbaar",
     "use_fewer_filters_html": "Try using fewer filters, or <a class=\"{{ class }}\" href=\"{{ link }}\">clear all filters</a>.",
-    // Link or button to expand additional information
     "view_more_details": "View more details",
     "volume_pricing_available": "Volume pricing available",
     "volume_pricing": "Volume pricing",
@@ -306,7 +289,6 @@
     "product_count": "Product count",
     "errors": "Errors",
     "wrong_password": "Wrong password",
-    // Legend text for gift card delivery options
     "recipient_form_send_to": "Send to",
     "recipient_form_email_label": "Recipient’s email",
     "recipient_form_email_label_my_email": "My email",
@@ -322,7 +304,6 @@
     "product_custom_property_character_count": "{{ used_chars }}/{{ max_chars }} characters used"
   },
   "fields": {
-    // Separates min and max values in price range filter
     "separator": "tot"
   },
   "gift_cards": {
@@ -366,6 +347,14 @@
       "in_cart": "in winkelwagen",
       "default_title": "Standaard",
       "sticky_add_to_cart": "Balk voor snel toevoegen"
+    }
+  },
+  "shopify": {
+    "checkout": {
+      "shipping": {
+        "split_shipping_merchandise_quantity_label_inline_primary": "Quantity: %{quantity}",
+        "split_shipping_merchandise_quantity_label_inline": "%{merchandise_title} × %{quantity}"
+      }
     }
   }
 }
