@@ -155,7 +155,19 @@
       assign sw_desc = product.title | append: ' - Premium LED kwaliteit, snelle levering en 5 jaar garantie bij Spotwereld.'
     endif
   elsif request.page_type == 'collection'
-    assign sw_title = collection.title | append: ' kopen - LED ' | append: collection.title | append: ' | ' | append: sw_brand
+    # De formule "X kopen - LED X" werkt voor Inbouwspots en Wandlampen, maar levert bij
+    # de restcategorieen onzin op ("Accessoires kopen - LED Accessoires"). Daar dus een
+    # eigen titel. Een SEO-titel die in de admin is ingevuld wint hier nog steeds van.
+    case collection.handle
+      when 'accessoires'
+        assign sw_title = 'LED accessoires: dimmers, drivers en lampen | ' | append: sw_brand
+      when 'alle-producten'
+        assign sw_title = 'Alle LED-verlichting van Spotwereld | ' | append: sw_brand
+      when 'all'
+        assign sw_title = 'Alle LED-verlichting van Spotwereld | ' | append: sw_brand
+      else
+        assign sw_title = collection.title | append: ' kopen - LED ' | append: collection.title | append: ' | ' | append: sw_brand
+    endcase
     if collection.description != blank
       assign sw_desc = collection.description | strip_html | truncatewords: 24
     elsif sw_coll_terugval != blank
@@ -195,10 +207,44 @@
 
 <meta name="description" content="{{ sw_desc | strip_html | escape }}">
 
-<link rel="canonical" href="{{ canonical_url }}">
+{%- comment -%}
+  Spotwereld: canonical.
+  /collections/alle-producten en /collections/all tonen exact dezelfde producten. Google
+  ziet dat als dubbele inhoud en moet zelf raden welke van de twee de echte is. De
+  handmatige collectie "Alle producten" stuurt de volgorde en is dus de baas; /all wijst
+  naar haar. Zie ook [[project_spotwereld_alle_producten_volgorde]].
+{%- endcomment -%}
+{%- liquid
+  assign sw_canonical = canonical_url
+  if request.page_type == 'collection' and collection.handle == 'all'
+    assign sw_canonical = request.origin | append: '/collections/alle-producten'
+  endif
+-%}
+<link rel="canonical" href="{{ sw_canonical }}">
 
-{%- comment -%} Spotwereld: extra SEO meta tags {%- endcomment -%}
-<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+{%- comment -%}
+  Spotwereld: extra SEO meta tags.
+
+  Twee pagina's horen niet in Google:
+  - /pages/gegevens is stap 2 van onze eigen checkout, een leeg formulier zonder H1.
+  - /collections/frontpage is de automatische Shopify-startcollectie, met als titel
+    "Home page kopen - LED Home page" en H1 "Home page". Die staat wel in de sitemap
+    maar nergens in de navigatie.
+{%- endcomment -%}
+{%- liquid
+  assign sw_noindex = false
+  if request.page_type == 'page' and page.handle == 'gegevens'
+    assign sw_noindex = true
+  endif
+  if request.page_type == 'collection' and collection.handle == 'frontpage'
+    assign sw_noindex = true
+  endif
+-%}
+{%- if sw_noindex -%}
+  <meta name="robots" content="noindex, follow">
+{%- else -%}
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+{%- endif -%}
 <meta name="author" content="Spotwereld">
 <meta name="format-detection" content="telephone=no">
 
