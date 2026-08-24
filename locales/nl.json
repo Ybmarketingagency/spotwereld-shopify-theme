@@ -339,5 +339,23 @@
       "default_title": "Standaardtitel",
       "sticky_add_to_cart": "Balk voor snel toevoegen aan winkelwagen"
     }
+  },
+  "sw": {
+    "kaart": {
+      "voorraad": "Op voorraad",
+      "uitverkocht": "Uitverkocht",
+      "bekijk": "Bekijk Product"
+    },
+    "collectie": {
+      "modellen_een": "1 model",
+      "modellen_meer": "{{ count }} modellen",
+      "uitvoeringen": "uitvoeringen",
+      "titel_kopen": "kopen",
+      "meer_lezen": "Meer lezen",
+      "faq": "Veelgestelde vragen"
+    },
+    "product": {
+      "beschikbaarheid": "Beschikbaarheid"
+    }
   }
 }

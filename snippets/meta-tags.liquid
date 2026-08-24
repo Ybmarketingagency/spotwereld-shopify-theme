@@ -23,6 +23,7 @@
 >
 
 {%- liquid
+  assign sw_kopen = 'sw.collectie.titel_kopen' | t
   assign og_title = page_title | default: shop.name
   assign og_url = canonical_url | default: request.origin
   assign og_type = 'website'
@@ -148,7 +149,7 @@
     assign sw_title = 'LED Inbouwspots, Opbouwspots & Hanglampen | ' | append: sw_brand
     assign sw_desc = 'Premium LED verlichting voor elk interieur. CCT switch dimbaar, IP65, 25.000 uur levensduur. Vandaag besteld, morgen verzonden.'
   elsif request.page_type == 'product'
-    assign sw_title = product.title | append: ' kopen | ' | append: sw_brand
+    assign sw_title = product.title | append: ' ' | append: sw_kopen | append: ' | ' | append: sw_brand
     if product.description != blank
       assign sw_desc = product.description | replace: '2 jaar garantie', '5 jaar garantie' | replace: '2 Jaar garantie', '5 Jaar garantie' | replace: '<td>2 jaar</td>', '<td>5 jaar</td>' | replace: '<td>2 Jaar</td>', '<td>5 Jaar</td>' | strip_html | truncatewords: 24
     else
@@ -166,7 +167,7 @@
       when 'all'
         assign sw_title = 'Alle LED-verlichting | ' | append: sw_brand
       else
-        assign sw_title = collection.title | append: ' kopen - LED ' | append: collection.title | append: ' | ' | append: sw_brand
+        assign sw_title = collection.title | append: ' ' | append: sw_kopen | append: ' - LED ' | append: collection.title | append: ' | ' | append: sw_brand
     endcase
     if collection.description != blank
       assign sw_desc = collection.description | strip_html | truncatewords: 24

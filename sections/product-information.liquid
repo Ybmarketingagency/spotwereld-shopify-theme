@@ -403,7 +403,7 @@
           <tr style="border-bottom:1px solid #f0f3f8{% cycle 'specrow': '', ';background:#f8fafc' %}"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">{%- if opt_name == 'kleur' -%}Kleur behuizing{%- else -%}{{ opt.name }}{%- endif -%}</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ product.selected_or_first_available_variant.options[forloop.index0] }}</td></tr>
           {%- endunless -%}
         {%- endfor -%}
-        <tr><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Beschikbaarheid</td><td style="padding:.6rem 0;font-weight:600;color:{%- if product.available -%}#16a34a{%- else -%}#dc2626{%- endif -%}">{%- if product.available -%}Op voorraad{%- else -%}Uitverkocht{%- endif -%}</td></tr>
+        <tr><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">{{ 'sw.product.beschikbaarheid' | t }}</td><td style="padding:.6rem 0;font-weight:600;color:{%- if product.available -%}#16a34a{%- else -%}#dc2626{%- endif -%}">{%- if product.available -%}{{ 'sw.kaart.voorraad' | t }}{%- else -%}{{ 'sw.kaart.uitverkocht' | t }}{%- endif -%}</td></tr>
       </tbody>
     </table>
   </div>
