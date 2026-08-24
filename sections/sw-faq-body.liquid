@@ -89,78 +89,78 @@
 <div style="background:#f9fafb">
   <div class="sw-ks-wrap">
     <aside class="sw-ks-sidebar">
-      <h3>Klantenservice</h3>
+      <h3>{{ 'sw.nav.klantenservice' | t }}</h3>
       <nav>
         <a href="/pages/contact">Contact</a>
-        <a href="/pages/over-ons">Over ons</a>
-        <a href="/pages/veelgestelde-vragen">Veelgestelde vragen</a>
-        <a href="/pages/verzending-retouren">Verzending &amp; Retouren</a>
-        <a href="/pages/garantie">Garantie</a>
-        <a href="/pages/algemene-voorwaarden">Algemene voorwaarden</a>
-        <a href="/pages/privacyverklaring">Privacyverklaring</a>
+        <a href="/pages/over-ons">{{ 'sw.nav.overons' | t }}</a>
+        <a href="/pages/veelgestelde-vragen">{{ 'sw.nav.faq' | t }}</a>
+        <a href="/pages/verzending-retouren">{{ 'sw.nav.verzending' | t }}</a>
+        <a href="/pages/garantie">{{ 'sw.nav.garantie' | t }}</a>
+        <a href="/pages/algemene-voorwaarden">{{ 'sw.nav.voorwaarden' | t }}</a>
+        <a href="/pages/privacyverklaring">{{ 'sw.nav.privacy' | t }}</a>
       </nav>
     </aside>
 
     <div>
       <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:2.5rem" id="swFaqCats">
-        <button onclick="swFaqFilter('all')" style="padding:.375rem 1rem;border-radius:9999px;font-size:.875rem;font-weight:600;cursor:pointer;border:2px solid #083D7D;background:#083D7D;color:#fff">Alle vragen</button>
-        <button onclick="swFaqFilter('bestelling')" style="padding:.375rem 1rem;border-radius:9999px;font-size:.875rem;font-weight:600;cursor:pointer;border:2px solid #e5e7eb;background:#fff;color:#374151">Bestelling</button>
-        <button onclick="swFaqFilter('levering')" style="padding:.375rem 1rem;border-radius:9999px;font-size:.875rem;font-weight:600;cursor:pointer;border:2px solid #e5e7eb;background:#fff;color:#374151">Levering</button>
-        <button onclick="swFaqFilter('product')" style="padding:.375rem 1rem;border-radius:9999px;font-size:.875rem;font-weight:600;cursor:pointer;border:2px solid #e5e7eb;background:#fff;color:#374151">Producten</button>
-        <button onclick="swFaqFilter('retour')" style="padding:.375rem 1rem;border-radius:9999px;font-size:.875rem;font-weight:600;cursor:pointer;border:2px solid #e5e7eb;background:#fff;color:#374151">Retour</button>
+        <button onclick="swFaqFilter('all')" style="padding:.375rem 1rem;border-radius:9999px;font-size:.875rem;font-weight:600;cursor:pointer;border:2px solid #083D7D;background:#083D7D;color:#fff">{{ 'sw.faq.alle' | t }}</button>
+        <button onclick="swFaqFilter('bestelling')" style="padding:.375rem 1rem;border-radius:9999px;font-size:.875rem;font-weight:600;cursor:pointer;border:2px solid #e5e7eb;background:#fff;color:#374151">{{ 'sw.faq.f_bestelling' | t }}</button>
+        <button onclick="swFaqFilter('levering')" style="padding:.375rem 1rem;border-radius:9999px;font-size:.875rem;font-weight:600;cursor:pointer;border:2px solid #e5e7eb;background:#fff;color:#374151">{{ 'sw.faq.f_levering' | t }}</button>
+        <button onclick="swFaqFilter('product')" style="padding:.375rem 1rem;border-radius:9999px;font-size:.875rem;font-weight:600;cursor:pointer;border:2px solid #e5e7eb;background:#fff;color:#374151">{{ 'sw.faq.f_producten' | t }}</button>
+        <button onclick="swFaqFilter('retour')" style="padding:.375rem 1rem;border-radius:9999px;font-size:.875rem;font-weight:600;cursor:pointer;border:2px solid #e5e7eb;background:#fff;color:#374151">{{ 'sw.faq.f_retour' | t }}</button>
       </div>
 
       <div style="background:#fff;border-radius:1rem;box-shadow:0 1px 4px rgba(0,0,0,0.07);overflow:hidden">
         <div class="sw-faq-item" data-cat="bestelling">
-          <button class="sw-faq-btn" onclick="swFaqToggle(this)"><span class="sw-faq-q">Hoe kan ik een bestelling plaatsen?</span><span class="sw-faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#083D7D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></button>
-          <div class="sw-faq-answer"><div class="sw-faq-answer-inner">Kies je product, voeg het toe aan je winkelwagen en ga naar de kassa. Je kunt betalen met iDEAL, creditcard, Klarna of andere methoden. Je ontvangt na betaling een bevestigingsmail.</div></div>
+          <button class="sw-faq-btn" onclick="swFaqToggle(this)"><span class="sw-faq-q">{{ 'sw.faq.v1' | t }}</span><span class="sw-faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#083D7D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></button>
+          <div class="sw-faq-answer"><div class="sw-faq-answer-inner">{{ 'sw.faq.a1' | t }}</div></div>
         </div>
         <div class="sw-faq-item" data-cat="bestelling">
-          <button class="sw-faq-btn" onclick="swFaqToggle(this)"><span class="sw-faq-q">Kan ik mijn bestelling annuleren of wijzigen?</span><span class="sw-faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#083D7D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></button>
-          <div class="sw-faq-answer"><div class="sw-faq-answer-inner">Neem zo snel mogelijk contact op via info@spotwereld.nl of (0)85 333 26 72. Bestellingen die al in verwerking zijn kunnen niet meer worden aangepast.</div></div>
+          <button class="sw-faq-btn" onclick="swFaqToggle(this)"><span class="sw-faq-q">{{ 'sw.faq.v2' | t }}</span><span class="sw-faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#083D7D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></button>
+          <div class="sw-faq-answer"><div class="sw-faq-answer-inner">{{ 'sw.faq.a2' | t }}</div></div>
         </div>
         <div class="sw-faq-item" data-cat="bestelling">
-          <button class="sw-faq-btn" onclick="swFaqToggle(this)"><span class="sw-faq-q">Welke betaalmethoden accepteren jullie?</span><span class="sw-faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#083D7D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></button>
-          <div class="sw-faq-answer"><div class="sw-faq-answer-inner">Wij accepteren iDEAL, Visa, Mastercard, Klarna (achteraf betalen), PayPal en Bancontact. Alle betalingen worden beveiligd verwerkt.</div></div>
+          <button class="sw-faq-btn" onclick="swFaqToggle(this)"><span class="sw-faq-q">{{ 'sw.faq.v3' | t }}</span><span class="sw-faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#083D7D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></button>
+          <div class="sw-faq-answer"><div class="sw-faq-answer-inner">{{ 'sw.faq.a3' | t }}</div></div>
         </div>
         <div class="sw-faq-item" data-cat="levering">
-          <button class="sw-faq-btn" onclick="swFaqToggle(this)"><span class="sw-faq-q">Hoe lang duurt de bezorging?</span><span class="sw-faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#083D7D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></button>
-          <div class="sw-faq-answer"><div class="sw-faq-answer-inner">Vandaag besteld, morgen verzonden. We werken samen met PostNL en DHL voor snelle en betrouwbare bezorging door heel Nederland.</div></div>
+          <button class="sw-faq-btn" onclick="swFaqToggle(this)"><span class="sw-faq-q">{{ 'sw.faq.v4' | t }}</span><span class="sw-faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#083D7D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></button>
+          <div class="sw-faq-answer"><div class="sw-faq-answer-inner">{{ 'sw.faq.a4' | t }}</div></div>
         </div>
         <div class="sw-faq-item" data-cat="levering">
-          <button class="sw-faq-btn" onclick="swFaqToggle(this)"><span class="sw-faq-q">Zijn de verzendkosten gratis?</span><span class="sw-faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#083D7D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></button>
-          <div class="sw-faq-answer"><div class="sw-faq-answer-inner">Gratis verzending bij bestellingen van &euro;50 of meer. Onder de &euro;25 rekenen we &euro;4,95, tussen &euro;25 en &euro;50 is het &euro;7,95 voor standaard bezorging.</div></div>
+          <button class="sw-faq-btn" onclick="swFaqToggle(this)"><span class="sw-faq-q">{{ 'sw.faq.v5' | t }}</span><span class="sw-faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#083D7D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></button>
+          <div class="sw-faq-answer"><div class="sw-faq-answer-inner">{{ 'sw.faq.a5' | t }}</div></div>
         </div>
         <div class="sw-faq-item" data-cat="levering">
-          <button class="sw-faq-btn" onclick="swFaqToggle(this)"><span class="sw-faq-q">Kan ik mijn bestelling volgen?</span><span class="sw-faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#083D7D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></button>
-          <div class="sw-faq-answer"><div class="sw-faq-answer-inner">Ja. Zodra je bestelling is verzonden ontvang je een track &amp; trace link per e-mail. Je kunt hiermee de status van je pakket realtime volgen.</div></div>
+          <button class="sw-faq-btn" onclick="swFaqToggle(this)"><span class="sw-faq-q">{{ 'sw.faq.v6' | t }}</span><span class="sw-faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#083D7D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></button>
+          <div class="sw-faq-answer"><div class="sw-faq-answer-inner">{{ 'sw.faq.a6' | t }}</div></div>
         </div>
         <div class="sw-faq-item" data-cat="product">
-          <button class="sw-faq-btn" onclick="swFaqToggle(this)"><span class="sw-faq-q">Hoeveel garantie krijg ik op mijn product?</span><span class="sw-faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#083D7D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></button>
-          <div class="sw-faq-answer"><div class="sw-faq-answer-inner">Alle Spotwereld producten hebben standaard 5 jaar garantie. Dit dekt fabricagefouten en materiaaldefecten. Schade door verkeerd gebruik valt niet onder de garantie.</div></div>
+          <button class="sw-faq-btn" onclick="swFaqToggle(this)"><span class="sw-faq-q">{{ 'sw.faq.v7' | t }}</span><span class="sw-faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#083D7D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></button>
+          <div class="sw-faq-answer"><div class="sw-faq-answer-inner">{{ 'sw.faq.a7' | t }}</div></div>
         </div>
         <div class="sw-faq-item" data-cat="product">
-          <button class="sw-faq-btn" onclick="swFaqToggle(this)"><span class="sw-faq-q">Zijn de LED spots dimbaar?</span><span class="sw-faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#083D7D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></button>
-          <div class="sw-faq-answer"><div class="sw-faq-answer-inner">Dit verschilt per product. In de productbeschrijving staat duidelijk vermeld of een spot dimbaar is. Let bij dimbare spots op compatibiliteit met je dimmer.</div></div>
+          <button class="sw-faq-btn" onclick="swFaqToggle(this)"><span class="sw-faq-q">{{ 'sw.faq.v8' | t }}</span><span class="sw-faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#083D7D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></button>
+          <div class="sw-faq-answer"><div class="sw-faq-answer-inner">{{ 'sw.faq.a8' | t }}</div></div>
         </div>
         <div class="sw-faq-item" data-cat="product">
-          <button class="sw-faq-btn" onclick="swFaqToggle(this)"><span class="sw-faq-q">Wat is het verschil tussen warm wit en koud wit?</span><span class="sw-faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#083D7D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></button>
-          <div class="sw-faq-answer"><div class="sw-faq-answer-inner">Warm wit (2700&ndash;3000K) geeft een gezellig, sfeervol licht &mdash; ideaal voor woonkamers. Koud wit (4000&ndash;6500K) geeft helder, fris licht &mdash; perfect voor keukens en badkamers. Neutraal wit (3500K) zit er tussenin.</div></div>
+          <button class="sw-faq-btn" onclick="swFaqToggle(this)"><span class="sw-faq-q">{{ 'sw.faq.v9' | t }}</span><span class="sw-faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#083D7D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></button>
+          <div class="sw-faq-answer"><div class="sw-faq-answer-inner">{{ 'sw.faq.a9' | t }}</div></div>
         </div>
         <div class="sw-faq-item" data-cat="retour">
-          <button class="sw-faq-btn" onclick="swFaqToggle(this)"><span class="sw-faq-q">Hoe retourneer ik een product?</span><span class="sw-faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#083D7D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></button>
+          <button class="sw-faq-btn" onclick="swFaqToggle(this)"><span class="sw-faq-q">{{ 'sw.faq.v10' | t }}</span><span class="sw-faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#083D7D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></button>
           <div class="sw-faq-answer"><div class="sw-faq-answer-inner">Stuur een e-mail naar info@spotwereld.nl met je ordernummer en reden van retour. Je ontvangt binnen 1 werkdag een bevestiging. De retourzending is voor rekening van de koper — lever het pakket op eigen kosten in bij een PostNL Servicepunt.</div></div>
         </div>
         <div class="sw-faq-item" data-cat="retour">
-          <button class="sw-faq-btn" onclick="swFaqToggle(this)"><span class="sw-faq-q">Wanneer ontvang ik mijn geld terug?</span><span class="sw-faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#083D7D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></button>
-          <div class="sw-faq-answer"><div class="sw-faq-answer-inner">Na ontvangst en controle van je retour storten we het bedrag binnen 5 werkdagen terug op je rekening of creditcard.</div></div>
+          <button class="sw-faq-btn" onclick="swFaqToggle(this)"><span class="sw-faq-q">{{ 'sw.faq.v11' | t }}</span><span class="sw-faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#083D7D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></button>
+          <div class="sw-faq-answer"><div class="sw-faq-answer-inner">{{ 'sw.faq.a11' | t }}</div></div>
         </div>
       </div>
 
       <div style="margin-top:3rem;background:#061f40;border-radius:1rem;padding:2rem;text-align:center">
-        <h3 style="color:#fff;font-weight:700;font-size:1.125rem;margin:0 0 .5rem">Staat je vraag er niet bij?</h3>
-        <p style="color:#93c5fd;font-size:.9375rem;margin:0 0 1.5rem">Ons team helpt je graag persoonlijk verder.</p>
-        <a href="/pages/contact" style="display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1.75rem;background:linear-gradient(135deg,#083D7D,#0F6FE3);color:#fff;font-weight:700;border-radius:.625rem;text-decoration:none">Neem contact op</a>
+        <h3 style="color:#fff;font-weight:700;font-size:1.125rem;margin:0 0 .5rem">{{ 'sw.faq.slot_kop' | t }}</h3>
+        <p style="color:#93c5fd;font-size:.9375rem;margin:0 0 1.5rem">{{ 'sw.faq.slot_tekst' | t }}</p>
+        <a href="/pages/contact" style="display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1.75rem;background:linear-gradient(135deg,#083D7D,#0F6FE3);color:#fff;font-weight:700;border-radius:.625rem;text-decoration:none">{{ 'sw.faq.slot_knop' | t }}</a>
       </div>
     </div>
   </div>

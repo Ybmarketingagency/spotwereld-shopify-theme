@@ -236,7 +236,7 @@
               "type": "text",
               "name": "Vertrouwen",
               "settings": {
-                "text": "<ul><li>&#10003; Gratis verzenden vanaf &euro;50</li><li>&#10003;&#32;14 dagen retourrecht</li><li>&#10003; 5 jaar garantie</li><li>&#10003; Vandaag besteld, morgen verzonden</li></ul>",
+                "text": "<ul><li>{{ 'sw.prod.verzenden' | t }}</li><li>{{ 'sw.prod.retour' | t }}</li><li>{{ 'sw.prod.garantie' | t }}</li><li>{{ 'sw.prod.levering' | t }}</li></ul>",
                 "width": "100%",
                 "max_width": "normal",
                 "alignment": "left",
@@ -262,7 +262,7 @@
               "type": "text",
               "name": "Productbeschrijving",
               "settings": {
-                "text": "<p><strong>Productbeschrijving</strong></p>{{ closest.product.description }}",
+                "text": "<p><strong>{{ 'sw.prod.beschrijving' | t }}</strong></p>{{ closest.product.description }}",
                 "width": "100%",
                 "max_width": "normal",
                 "alignment": "left",
@@ -314,7 +314,7 @@
           "type": "text",
           "name": "Titel",
           "settings": {
-            "text": "<h3>Vaak samen gekocht met</h3>",
+            "text": "<h3>{{ 'sw.prod.samen' | t }}</h3>",
             "width": "fit-content",
             "max_width": "normal",
             "alignment": "left",
@@ -455,7 +455,7 @@
           "type": "text",
           "name": "Titel",
           "settings": {
-            "text": "<h3>Misschien ook interessant</h3>",
+            "text": "<h3>{{ 'sw.prod.interessant' | t }}</h3>",
             "width": "fit-content",
             "max_width": "normal",
             "alignment": "left",
