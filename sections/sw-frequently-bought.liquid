@@ -1,6 +1,6 @@
 {%- comment -%}
   Spotwereld — "Vaak samen gekocht met"
-  Kaart-grid (2 koloms) met afbeelding, titel, prijs (Incl. BTW) en cart-knop.
+  Kaart-grid (2 koloms) met afbeelding, titel, prijs ({{ 'sw.mand.btw' | t }}) en cart-knop.
   Toont de vaste accessoires (lasklem, stekker, LED-trafo) op elke productpagina.
   AJAX add-to-cart → ververst winkelwagen-bubbel + drawer via thema-event 'cart:update'.
   Sluit het huidige product uit van de lijst.
@@ -50,9 +50,9 @@
               <div class="sw-fbt__row">
                 <div class="sw-fbt__pricewrap">
                   <span class="sw-fbt__price">{{ v.price | money }}</span>
-                  <span class="sw-fbt__tax">Incl. BTW</span>
+                  <span class="sw-fbt__tax">{{ 'sw.mand.btw' | t }}</span>
                 </div>
-                <button type="button" class="sw-fbt__add" data-variant-id="{{ v.id }}" aria-label="Toevoegen aan winkelwagen" {% unless v.available %}disabled{% endunless %}>
+                <button type="button" class="sw-fbt__add" data-variant-id="{{ v.id }}" aria-label="{{ 'sw.mand.toevoegen' | t }}" {% unless v.available %}disabled{% endunless %}>
                   <svg class="sw-fbt__ico-cart" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
                   <svg class="sw-fbt__ico-done" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" hidden><polyline points="20 6 9 17 4 12"/></svg>
                 </button>

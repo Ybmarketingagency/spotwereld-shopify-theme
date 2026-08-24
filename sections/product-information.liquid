@@ -280,7 +280,7 @@
 (function(){
   function hideBodySpecs() {
     document.querySelectorAll('rte-formatter h3, .rte h3, .text-block h3').forEach(function(h3) {
-      if (h3.textContent.trim() === 'Specificaties') {
+      if (h3.textContent.trim() === '{{ "sw.spec.kop" | t }}') {
         h3.style.display = 'none';
         var next = h3.nextElementSibling;
         while (next && next.tagName !== 'H3' && next.tagName !== 'H2') {
@@ -300,7 +300,7 @@
 </script>
 <div class="sw-specs-direct" style="max-width:1280px;margin:1.5rem auto 0;padding:0 1.5rem">
   <div class="sw-specs-table" style="margin:1.5rem 0 0;background:#fff;border:1px solid #e8edf4;border-radius:12px;padding:1.5rem 1.75rem 1rem">
-    <h3 style="font-size:1rem;font-weight:800;color:#061f40;margin:0 0 .75rem;padding-bottom:.5rem;border-bottom:2px solid #e8edf4">Specificaties</h3>
+    <h3 style="font-size:1rem;font-weight:800;color:#061f40;margin:0 0 .75rem;padding-bottom:.5rem;border-bottom:2px solid #e8edf4">{{ 'sw.spec.kop' | t }}</h3>
     {%- comment -%}
       Specificaties komen uit de metafields (Shopify: product > Specificaties).
       Is een metafield leeg, dan wordt alleen gekeken naar wat er letterlijk in de
@@ -379,24 +379,24 @@
         {%- if product.selected_or_first_available_variant.sku != blank -%}
         <tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500;width:45%">SKU</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ product.selected_or_first_available_variant.sku }}</td></tr>
         {%- endif -%}
-        {%- if sw_merk != blank -%}<tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Merk</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_merk }}</td></tr>{%- endif -%}
-        {%- if sw_levensduur != blank -%}<tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Verwachte levensduur</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_levensduur }}</td></tr>{%- endif -%}
-        {%- if sw_garantie != blank -%}<tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Garantie</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_garantie }}</td></tr>{%- endif -%}
-        {%- if sw_materiaal != blank -%}<tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Materiaal</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_materiaal }}</td></tr>{%- endif -%}
-        {%- if sw_wattage != blank -%}<tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Wattage</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_wattage }}</td></tr>{%- endif -%}
-        {%- if sw_maxwatt != blank -%}<tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Max. wattage lichtbron</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_maxwatt }}</td></tr>{%- endif -%}
-        {%- if sw_lumen != blank -%}<tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Lichtopbrengst</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_lumen }}</td></tr>{%- endif -%}
-        {%- if sw_lichthoek != blank -%}<tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Lichthoek</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_lichthoek }}</td></tr>{%- endif -%}
-        {%- if sw_cri != blank -%}<tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Kleurweergave (CRI)</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_cri }}</td></tr>{%- endif -%}
-        {%- if sw_dimbaar != blank -%}<tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Dimbaar</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_dimbaar }}</td></tr>{%- endif -%}
-        {%- if sw_driver != blank -%}<tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Inclusief driver</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_driver }}</td></tr>{%- endif -%}
-        {%- if sw_fitting != blank -%}<tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Fitting</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_fitting }}</td></tr>{%- endif -%}
-        {%- if sw_ip != blank -%}<tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">IP-waarde</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_ip }}</td></tr>{%- endif -%}
-        {%- if sw_zaagmaat != blank -%}<tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#061f40;font-weight:800">Zaagmaat</td><td style="padding:.6rem 0;color:#061f40;font-weight:800">{{ sw_zaagmaat }}</td></tr>{%- endif -%}
-        {%- if sw_diepte != blank -%}<tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.6rem .75rem .6rem 0;color:#061f40;font-weight:800">Inbouwdiepte</td><td style="padding:.6rem 0;color:#061f40;font-weight:800">{{ sw_diepte }}</td></tr>{%- endif -%}
-        {%- if sw_afmetingen != blank -%}<tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Afmetingen</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_afmetingen }}</td></tr>{%- endif -%}
-        {%- if sw_voltage != blank -%}<tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Voltage</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_voltage }}</td></tr>{%- endif -%}
-        {%- if sw_lichtkleur != blank -%}<tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Lichtkleur</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_lichtkleur }}</td></tr>{%- endif -%}
+        {%- if sw_merk != blank -%}<tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">{{ 'sw.spec.merk' | t }}</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_merk }}</td></tr>{%- endif -%}
+        {%- if sw_levensduur != blank -%}<tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">{{ 'sw.spec.levensduur' | t }}</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_levensduur }}</td></tr>{%- endif -%}
+        {%- if sw_garantie != blank -%}<tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">{{ 'sw.spec.garantie' | t }}</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_garantie }}</td></tr>{%- endif -%}
+        {%- if sw_materiaal != blank -%}<tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">{{ 'sw.spec.materiaal' | t }}</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_materiaal }}</td></tr>{%- endif -%}
+        {%- if sw_wattage != blank -%}<tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">{{ 'sw.spec.wattage' | t }}</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_wattage }}</td></tr>{%- endif -%}
+        {%- if sw_maxwatt != blank -%}<tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">{{ 'sw.spec.maxwatt' | t }}</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_maxwatt }}</td></tr>{%- endif -%}
+        {%- if sw_lumen != blank -%}<tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">{{ 'sw.spec.lumen' | t }}</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_lumen }}</td></tr>{%- endif -%}
+        {%- if sw_lichthoek != blank -%}<tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">{{ 'sw.spec.hoek' | t }}</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_lichthoek }}</td></tr>{%- endif -%}
+        {%- if sw_cri != blank -%}<tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">{{ 'sw.spec.cri' | t }}</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_cri }}</td></tr>{%- endif -%}
+        {%- if sw_dimbaar != blank -%}<tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">{{ 'sw.spec.dimbaar' | t }}</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_dimbaar }}</td></tr>{%- endif -%}
+        {%- if sw_driver != blank -%}<tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">{{ 'sw.spec.driver' | t }}</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_driver }}</td></tr>{%- endif -%}
+        {%- if sw_fitting != blank -%}<tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">{{ 'sw.spec.fitting' | t }}</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_fitting }}</td></tr>{%- endif -%}
+        {%- if sw_ip != blank -%}<tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">{{ 'sw.spec.ip' | t }}</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_ip }}</td></tr>{%- endif -%}
+        {%- if sw_zaagmaat != blank -%}<tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#061f40;font-weight:800">{{ 'sw.spec.zaagmaat' | t }}</td><td style="padding:.6rem 0;color:#061f40;font-weight:800">{{ sw_zaagmaat }}</td></tr>{%- endif -%}
+        {%- if sw_diepte != blank -%}<tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.6rem .75rem .6rem 0;color:#061f40;font-weight:800">{{ 'sw.spec.diepte' | t }}</td><td style="padding:.6rem 0;color:#061f40;font-weight:800">{{ sw_diepte }}</td></tr>{%- endif -%}
+        {%- if sw_afmetingen != blank -%}<tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">{{ 'sw.spec.afmeting' | t }}</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_afmetingen }}</td></tr>{%- endif -%}
+        {%- if sw_voltage != blank -%}<tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">{{ 'sw.spec.voltage' | t }}</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_voltage }}</td></tr>{%- endif -%}
+        {%- if sw_lichtkleur != blank -%}<tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">{{ 'sw.spec.lichtkleur' | t }}</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_lichtkleur }}</td></tr>{%- endif -%}
         {%- for opt in product.options_with_values -%}
           {%- assign opt_name = opt.name | downcase -%}
           {%- unless opt_name == 'title' or opt_name == 'ip-waarde' -%}
@@ -430,7 +430,7 @@
     assign sw_gidslijst = sw_gidsen | split: ';'
   -%}
   <div class="sw-gidsen">
-    <p class="sw-gidsen__kop">Handig bij dit product</p>
+    <p class="sw-gidsen__kop">{{ 'sw.spec.gidsen' | t }}</p>
     <div class="sw-gidsen__lijst">
       {%- for sw_g in sw_gidslijst -%}
         {%- assign sw_d = sw_g | split: '|' -%}
@@ -465,7 +465,7 @@
 <!-- Spotwereld: Payment icons from Shopify (same as footer) -->
 <div id="sw-pay-icons-source" style="display:none">
   <div class="sw-payment-icons" style="margin:1.25rem 0 .5rem">
-    <p style="font-size:.8rem;font-weight:700;color:#374151;margin:0 0 .5rem">Veilig shoppen met</p>
+    <p style="font-size:.8rem;font-weight:700;color:#374151;margin:0 0 .5rem">{{ 'sw.spec.veilig' | t }}</p>
     <div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center">
       {%- assign sw_pay_types = 'ideal,visa,mastercard,paypal,klarna,bancontact' | split: ',' -%}
       {%- for type in sw_pay_types -%}
@@ -524,9 +524,9 @@
       var bg = isFirst ? 'background:#f8faff;' : '';
       volHtml += '<div class="sw-vol-tier" data-qty="' + tier.qty + '" data-index="' + i + '" style="flex:1;min-width:90px;border:' + border + ';border-radius:6px;padding:.5rem .625rem;cursor:pointer;' + bg + 'transition:border-color .15s,background .15s">' +
         '<div style="font-size:.75rem;font-weight:700;color:#061f40">' + tier.label + '</div>' +
-        '<div style="font-size:.9rem;font-weight:800;color:#061f40">&euro;' + tp.toFixed(2).replace('.',',') + '/stuk</div>';
+        '<div style="font-size:.9rem;font-weight:800;color:#061f40">&euro;' + tp.toFixed(2).replace('.',',') + '/{{ "sw.spec.stuk" | t }}</div>';
       if (tier.discount > 0) {
-        volHtml += '<div style="font-size:.7rem;color:#0F6FE3;font-weight:600">▼ ' + Math.round(tier.discount * 100) + '% korting</div>';
+        volHtml += '<div style="font-size:.7rem;color:#0F6FE3;font-weight:600">▼ ' + Math.round(tier.discount * 100) + '% {{ "sw.spec.korting" | t }}</div>';
       }
       volHtml += '</div>';
     });
@@ -569,7 +569,7 @@
         var idx = parseInt(t.dataset.index, 10);
         var bedrag = price * (1 - tiers[idx].discount);
         var regel = t.children[1];
-        if (regel) regel.textContent = '€' + bedrag.toFixed(2).replace('.', ',') + '/stuk';
+        if (regel) regel.textContent = '€' + bedrag.toFixed(2).replace('.', ',') + '/{{ "sw.spec.stuk" | t }}';
       });
     }
     var swPrijsRoot = (swPriceEl && swPriceEl.closest('product-information, .product-information, main')) || document.body;
@@ -590,8 +590,8 @@
         
         '<div style="display:flex;align-items:center;gap:.3rem">' +
         '<span style="color:#16a34a;font-size:.9rem">&#9679;</span>' +
-        '<span style="color:#16a34a;font-size:.82rem;font-weight:600">Op voorraad</span>' +
-        '<span style="color:#94a3b8;font-size:.78rem">&mdash; direct leverbaar</span></div>' +
+        '<span style="color:#16a34a;font-size:.82rem;font-weight:600">{{ "sw.kaart.voorraad" | t }}</span>' +
+        '<span style="color:#94a3b8;font-size:.78rem">&mdash; {{ "sw.spec.leverbaar" | t }}</span></div>' +
         '</div>');
     }
 
@@ -624,7 +624,7 @@
       var deliveryHtml =
         '<div class="sw-delivery" style="display:flex;align-items:center;gap:.5rem;margin:.75rem 0 .25rem;padding:.6rem .875rem;background:#f0fdf4;border-radius:8px;border:1px solid #bbf7d0">' +
         '<span style="color:#16a34a;font-size:1.1rem">&#9679;</span>' +
-        '<span style="font-size:.875rem;color:#15803d;font-weight:600">Vandaag besteld, morgen verzonden</span>' +
+        '<span style="font-size:.875rem;color:#15803d;font-weight:600">{{ "sw.home.usp.levering_sub" | t }}</span>' +
         '</div>';
 
       // Payment icons &mdash; grab from the hidden Liquid-rendered div

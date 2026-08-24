@@ -93,28 +93,28 @@
 <div class="swg-wrap">
   {%- if cart.item_count == 0 -%}
     <div class="swg-empty">
-      <h2>Je winkelmand is leeg</h2>
-      <p>Bekijk onze inbouwspots, opbouwspots en hanglampen.</p>
-      <a href="/collections/all">Verder winkelen &rarr;</a>
+      <h2>{{ 'sw.kassa.leeg' | t }}</h2>
+      <p>{{ 'sw.kassa.leeg_sub' | t }}</p>
+      <a href="/collections/all">{{ 'sw.kassa.verder' | t }}</a>
     </div>
   {%- else -%}
 
-  <div class="swg-progress" aria-label="Checkout voortgang">
-    <div class="swg-step done"><span class="dot">&#10003;</span><span>Winkelmand</span></div>
+  <div class="swg-progress" aria-label="{{ 'sw.kassa.voortgang' | t }}">
+    <div class="swg-step done"><span class="dot">&#10003;</span><span>{{ 'sw.kassa.stap_mand' | t }}</span></div>
     <div class="swg-bar done"></div>
-    <div class="swg-step active"><span class="dot"></span><span>Bestellen</span></div>
+    <div class="swg-step active"><span class="dot"></span><span>{{ 'sw.kassa.stap_bestellen' | t }}</span></div>
     <div class="swg-bar"></div>
-    <div class="swg-step"><span class="dot">3</span><span>Bezorging</span></div>
+    <div class="swg-step"><span class="dot">3</span><span>{{ 'sw.kassa.stap_bezorging' | t }}</span></div>
     <div class="swg-bar"></div>
-    <div class="swg-step"><span class="dot">4</span><span>Betalen</span></div>
+    <div class="swg-step"><span class="dot">4</span><span>{{ 'sw.kassa.stap_betalen' | t }}</span></div>
   </div>
 
   <div class="swg-grid">
     <div class="swg-main">
       <div class="swg-account-row">
-        <strong>Heb je al een account?</strong>
+        <strong>{{ 'sw.kassa.account' | t }}</strong>
         <a href="/account/login?return_url=/pages/gegevens" class="swg-btn-outline">
-          Inloggen
+          {{ 'sw.acct.inloggen' | t }}
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         </a>
       </div>
@@ -122,35 +122,35 @@
       <div class="swg-errors" id="swg-errors" style="display:none"></div>
 
       <form id="swg-form" novalidate>
-        <h2 class="swg-section-title">Gegevens</h2>
+        <h2 class="swg-section-title">{{ 'sw.kassa.gegevens' | t }}</h2>
 
         <div class="swg-field swg-floating">
           <input type="email" id="swg-email" class="swg-input" required autocomplete="email" placeholder=" ">
-          <label for="swg-email">E-mailadres *</label>
+          <label for="swg-email">{{ 'sw.kassa.email' | t }}</label>
         </div>
 
-        <div class="swg-label">Laat ons weten wie je bent *</div>
+        <div class="swg-label">{{ 'sw.kassa.wie' | t }}</div>
         <div class="swg-type-toggle" role="radiogroup">
-          <button type="button" class="swg-type-btn active" data-type="particulier" role="radio" aria-checked="true">Particulier</button>
-          <button type="button" class="swg-type-btn" data-type="bedrijf" role="radio" aria-checked="false">Bedrijf</button>
+          <button type="button" class="swg-type-btn active" data-type="particulier" role="radio" aria-checked="true">{{ 'sw.kassa.particulier' | t }}</button>
+          <button type="button" class="swg-type-btn" data-type="bedrijf" role="radio" aria-checked="false">{{ 'sw.kassa.bedrijf' | t }}</button>
         </div>
         <input type="hidden" id="swg-type" value="particulier">
 
         <div class="swg-field" id="swg-bedrijf-veld" style="display:none">
           <div class="swg-floating">
             <input type="text" id="swg-company" class="swg-input" autocomplete="organization" placeholder=" ">
-            <label for="swg-company">Bedrijfsnaam</label>
+            <label for="swg-company">{{ 'sw.kassa.bedrijfsnaam' | t }}</label>
           </div>
         </div>
 
         <div class="swg-field-row">
           <div class="swg-floating">
             <input type="text" id="swg-firstname" class="swg-input" required autocomplete="given-name" placeholder=" ">
-            <label for="swg-firstname">Voornaam *</label>
+            <label for="swg-firstname">{{ 'sw.kassa.voornaam' | t }}</label>
           </div>
           <div class="swg-floating">
             <input type="text" id="swg-lastname" class="swg-input" required autocomplete="family-name" placeholder=" ">
-            <label for="swg-lastname">Achternaam *</label>
+            <label for="swg-lastname">{{ 'sw.kassa.achternaam' | t }}</label>
           </div>
         </div>
 
@@ -158,7 +158,7 @@
           <div style="grid-column:1 / -1;position:relative;" id="swg-address-wrap">
             <div class="swg-floating">
               <input type="text" id="swg-address1" class="swg-input" required autocomplete="off" placeholder=" ">
-              <label for="swg-address1">Straat en huisnummer *</label>
+              <label for="swg-address1">{{ 'sw.kassa.straat' | t }}</label>
             </div>
             <ul id="swg-address-suggestions" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1.5px solid #0F6FE3;border-top:0;border-radius:0 0 8px 8px;list-style:none;margin:0;padding:0;z-index:9999;box-shadow:0 8px 24px rgba(6,31,64,.1);max-height:220px;overflow-y:auto;"></ul>
           </div>
@@ -167,17 +167,17 @@
         <div class="swg-field-row">
           <div class="swg-floating">
             <input type="text" id="swg-zip" class="swg-input" required autocomplete="postal-code" placeholder=" " maxlength="7">
-            <label for="swg-zip">Postcode *</label>
+            <label for="swg-zip">{{ 'sw.kassa.postcode' | t }}</label>
           </div>
           <div class="swg-floating">
             <input type="text" id="swg-city" class="swg-input" required autocomplete="address-level2" placeholder=" ">
-            <label for="swg-city">Stad *</label>
+            <label for="swg-city">{{ 'sw.kassa.stad' | t }}</label>
           </div>
         </div>
 
         <div class="swg-field swg-floating">
           <input type="tel" id="swg-phone" class="swg-input" autocomplete="tel" placeholder=" ">
-          <label for="swg-phone">Telefoonnummer</label>
+          <label for="swg-phone">{{ 'sw.kassa.telefoon' | t }}</label>
         </div>
 
 
@@ -185,30 +185,30 @@
         <input type="hidden" id="swg-country" value="NL">
 
         <button type="submit" class="swg-submit" id="swg-submit">
-          Door naar bezorging
+          {{ 'sw.kassa.door' | t }}
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
         </button>
-        <p style="text-align:center;font-size:.78rem;color:#94a3b8;margin:.85rem 0 0;line-height:1.5">In de volgende stap vul je je bezorgadres en kies je betaalmethode &mdash; alles veilig versleuteld via Shopify.</p>
+        <p style="text-align:center;font-size:.78rem;color:#94a3b8;margin:.85rem 0 0;line-height:1.5">{{ 'sw.kassa.volgende' | t }}</p>
       </form>
     </div>
 
     <aside class="swg-side">
       <div class="swg-card">
-        <h3>Je besteloverzicht</h3>
-        <div class="swg-sum-row"><span>Totaal van alle producten</span><span id="swg-subtotal">{{ cart.items_subtotal_price | money }}</span></div>
+        <h3>{{ 'sw.kassa.overzicht' | t }}</h3>
+        <div class="swg-sum-row"><span>{{ 'sw.kassa.subtotaal' | t }}</span><span id="swg-subtotal">{{ cart.items_subtotal_price | money }}</span></div>
         <div id="swg-discount-rows">
           {%- for d in cart.cart_level_discount_applications -%}
             <div class="swg-sum-row" style="color:#16a34a"><span>{{ d.title }}</span><span>&minus;{{ d.total_allocated_amount | money }}</span></div>
           {%- endfor -%}
         </div>
-        <div class="swg-sum-row"><span>Bezorging</span><span style="color:#94a3b8">Berekend bij volgende stap</span></div>
-        <div class="swg-sum-row total"><span>Totaalprijs (incl. BTW)<small>Excl. verzending</small></span><span id="swg-total">{{ cart.total_price | money }}</span></div>
+        <div class="swg-sum-row"><span>{{ 'sw.kassa.stap_bezorging' | t }}</span><span style="color:#94a3b8">{{ 'sw.kassa.berekend' | t }}</span></div>
+        <div class="swg-sum-row total"><span>{{ 'sw.kassa.totaal' | t }}<small>{{ 'sw.kassa.excl' | t }}</small></span><span id="swg-total">{{ cart.total_price | money }}</span></div>
 
         <div class="swg-discount">
-          <label for="swg-discount-input">Kortingscode</label>
+          <label for="swg-discount-input">{{ 'sw.kassa.korting' | t }}</label>
           <div class="swg-discount-row">
             <input type="text" id="swg-discount-input" placeholder="Bijv. WELKOM10" autocomplete="off" spellcheck="false">
-            <button type="button" id="swg-discount-apply">Toepassen</button>
+            <button type="button" id="swg-discount-apply">{{ 'sw.kassa.toepassen' | t }}</button>
           </div>
           <p class="swg-discount-msg" id="swg-discount-msg" hidden></p>
         </div>
@@ -231,11 +231,11 @@
             <div class="price">{{ item.final_line_price | money }}</div>
           </div>
         {%- endfor -%}
-        <a href="/cart" class="swg-edit-cart">Wijzig winkelmand &rarr;</a>
+        <a href="/cart" class="swg-edit-cart">{{ 'sw.kassa.wijzig' | t }}</a>
       </div>
 
       <div class="swg-card">
-        <h3>Veilig shoppen met</h3>
+        <h3>{{ 'sw.spec.veilig' | t }}</h3>
         <div class="swg-pay-icons">
           <img src="https://cdn.shopify.com/shopifycloud/checkout-web/assets/c1.en/assets/ideal.CFA3qcEx.svg" alt="iDEAL" onerror="this.style.display='none'">
           <img src="https://cdn.shopify.com/shopifycloud/checkout-web/assets/c1.en/assets/visa.sxIq5Dot.svg" alt="Visa" onerror="this.style.display='none'">
@@ -245,9 +245,9 @@
           <img src="https://cdn.shopify.com/shopifycloud/checkout-web/assets/c1.en/assets/apple_pay.7tcXHF7H.svg" alt="Apple Pay" onerror="this.style.display='none'">
         </div>
         <div class="swg-trust" style="margin-top:1rem">
-          <div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Vandaag besteld, morgen verzonden</div>
-          <div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> 5 jaar garantie</div>
-          <div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Veilige en versleutelde betaling</div>
+          <div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> {{ 'sw.home.usp.levering_sub' | t }}</div>
+          <div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> {{ 'sw.kassa.garantie' | t }}</div>
+          <div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> {{ 'sw.kassa.versleuteld' | t }}</div>
         </div>
       </div>
     </aside>
@@ -413,7 +413,7 @@
     if (!messages || messages.length === 0){ el.style.display='none'; el.innerHTML=''; return; }
     el.className = 'swg-error-list';
     el.style.display = 'block';
-    el.innerHTML = '<strong>Controleer je gegevens:</strong><ul>' + messages.map(function(m){ return '<li>'+m+'</li>'; }).join('') + '</ul>';
+    el.innerHTML = '<strong>{{ 'sw.kassa.controleer' | t }}</strong><ul>' + messages.map(function(m){ return '<li>'+m+'</li>'; }).join('') + '</ul>';
     el.scrollIntoView({ behavior:'smooth', block:'center' });
   }
 
@@ -536,7 +536,7 @@
       })
       .catch(function(err){
         console.error('Checkout error:', err);
-        showErrors(['Er ging iets mis: ' + (err.message || err) + '. Probeer opnieuw of <a href="/cart" style="color:#0F6FE3">terug naar winkelmand</a>.']);
+        showErrors(['Er ging iets mis: ' + (err.message || err) + '. Probeer opnieuw of <a href="/cart" style="color:#0F6FE3">{{ 'sw.kassa.terug' | t }}</a>.']);
         btn.disabled = false;
         btn.innerHTML = origText;
       });
