@@ -75,7 +75,14 @@
     <div class="sw-coll-seo__inner">
       {%- if section.settings.heading != blank -%}
         <h2 class="sw-coll-seo__heading">
-          {{- section.settings.heading | replace: '[collectie]', collection.title -}}
+          {%- comment -%}
+            Twee plaatshouders, want de vertaler heeft [collectie] in het Engels ook vertaald
+            naar [collection]. Dan matchte de replace niet meer en stond er op /en/ letterlijk
+            "More about [collection]" boven elke categorietekst. Beide varianten vervangen is
+            robuuster dan de vertaling terugdraaien: bij een volgende vertaalronde gaat het
+            anders zo weer mis.
+          {%- endcomment -%}
+          {{- section.settings.heading | replace: '[collectie]', collection.title | replace: '[collection]', collection.title -}}
         </h2>
       {%- endif -%}
       <div class="sw-coll-seo__body rte">
