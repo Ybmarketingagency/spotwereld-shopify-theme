@@ -17,7 +17,7 @@
 @media(min-width:640px){.sw-vals{grid-template-columns:repeat(2,1fr)}}
 .sw-val-card{background:#fff;border-radius:.875rem;padding:1.5rem;box-shadow:0 1px 3px rgba(0,0,0,0.07);border:1px solid #f0f0f0}
 .sw-val-icon{width:2.75rem;height:2.75rem;border-radius:50%;background:linear-gradient(135deg,#083D7D,#0F6FE3);display:flex;align-items:center;justify-content:center;margin-bottom:.875rem}
-</style>
+.sw-over-verhaal h2{font-size:clamp(1.5rem,2.5vw,1.875rem);font-weight:800;color:#111827;margin:0 0 1rem;line-height:1.25}.sw-over-verhaal p{color:#4b5563;line-height:1.8;margin:0 0 .875rem;font-size:1rem}.sw-over-verhaal p:last-of-type{margin-bottom:1.5rem}</style>
 
 <div style="background:#f9fafb">
   <div class="sw-ks-wrap">
@@ -40,9 +40,12 @@
       <div class="sw-story-grid">
         <div>
           <div style="display:inline-flex;align-items:center;gap:.4rem;background:#EBF2FF;color:#083D7D;font-size:.75rem;font-weight:700;padding:.25rem .75rem;border-radius:9999px;margin-bottom:1rem">{{ 'sw.over.verhaal_label' | t }}</div>
-          <h2 style="font-size:clamp(1.5rem,2.5vw,1.875rem);font-weight:800;color:#111827;margin:0 0 1rem;line-height:1.25">{{ 'sw.over.verhaal_kop1' | t }}<br>{{ 'sw.over.verhaal_kop2' | t }}</h2>
-          <p style="color:#4b5563;line-height:1.8;margin:0 0 .875rem;font-size:1rem">{{ 'sw.over.verhaal_1' | t }}</p>
-          <p style="color:#4b5563;line-height:1.8;margin:0 0 1.5rem;font-size:1rem">{{ 'sw.over.verhaal_2' | t }}</p>
+          {%- comment -%}
+            Het verhaal komt uit Content > Pagina's > Over Ons, zodat het zonder code
+            te wijzigen is en Translate & Adapt het meeneemt. De opmaak eromheen
+            (label, knop, foto en de waardekaarten) blijft in het thema.
+          {%- endcomment -%}
+          <div class="sw-over-verhaal">{{ page.content }}</div>
           <a href="/collections/all" style="display:inline-flex;align-items:center;gap:.5rem;padding:.8rem 1.75rem;background:linear-gradient(135deg,#083D7D,#0F6FE3);color:#fff;font-weight:700;border-radius:.625rem;text-decoration:none;font-size:.9375rem">
             {{ 'sw.home.cats.link' | t }}
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
