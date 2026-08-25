@@ -371,9 +371,9 @@
     "home": {
       "hero": {
         "alt": "Premium LED Lighting",
-        "titel": "Premium<br>LED Lighting",
         "sub": "Lighting for every interior &mdash; stylish, energy-efficient and built to last.",
-        "cta": "View offers"
+        "cta": "View offers",
+        "titel_html": "Premium<br>LED Lighting"
       },
       "usp": {
         "verzending": "Free shipping",
@@ -441,7 +441,7 @@
         "gelukt": "&#10003; Done! Your discount code is on its way.",
         "plaats": "your@email.com",
         "knop": "Claim &euro;10 off",
-        "kop": "Get <span style=\"color:#0F6FE3\">&euro;10 off</span> your first order"
+        "kop_html": "Get <span style=\"color:#0F6FE3\">&euro;10 off</span> your first order"
       },
       "hulp": {
         "kop": "Not sure which spotlight you need?",
@@ -468,7 +468,7 @@
       "knop": "Get 10% off &#8594;",
       "klein": "No spam. Unsubscribe any time. &#128274; Safe &amp; trusted",
       "plaats": "your@email.com",
-      "kop": "Get <strong style=\"color:#0F6FE3\">10% off</strong> your first order"
+      "kop_html": "Get <strong style=\"color:#0F6FE3\">10% off</strong> your first order"
     },
     "voet": {
       "over": "Spotwereld is your specialist in LED lighting. We supply quality products for every interior.",

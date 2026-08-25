@@ -362,9 +362,9 @@
     "home": {
       "hero": {
         "alt": "Premium LED Verlichting",
-        "titel": "Premium<br>LED Verlichting",
         "sub": "Verlichting voor elk interieur &mdash; stijlvol, energiezuinig en duurzaam.",
-        "cta": "Bekijk Aanbiedingen"
+        "cta": "Bekijk Aanbiedingen",
+        "titel_html": "Premium<br>LED Verlichting"
       },
       "usp": {
         "verzending": "Gratis Verzending",
@@ -432,7 +432,7 @@
         "gelukt": "&#10003; Gelukt! Je kortingscode is onderweg.",
         "plaats": "jouw@email.nl",
         "knop": "Claim &euro;10 korting",
-        "kop": "Ontvang <span style=\"color:#0F6FE3\">&euro;10 korting</span> op je eerste bestelling"
+        "kop_html": "Ontvang <span style=\"color:#0F6FE3\">&euro;10 korting</span> op je eerste bestelling"
       },
       "hulp": {
         "kop": "Niet zeker welke spot je nodig hebt?",
@@ -459,7 +459,7 @@
       "knop": "Ontvang 10% korting &#8594;",
       "klein": "Geen spam. Uitschrijven kan altijd. &#128274; Veilig &amp; vertrouwd",
       "plaats": "jouw@emailadres.nl",
-      "kop": "Ontvang <strong style=\"color:#0F6FE3\">10% korting</strong> op je eerste bestelling"
+      "kop_html": "Ontvang <strong style=\"color:#0F6FE3\">10% korting</strong> op je eerste bestelling"
     },
     "voet": {
       "over": "Spotwereld is je specialist in LED verlichting. Wij bieden kwalitatieve producten voor elk interieur.",
