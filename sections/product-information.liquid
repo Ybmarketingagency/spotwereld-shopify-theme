@@ -233,7 +233,7 @@
         # hebben en die delen dezelfde hoofdfoto.
         assign sw_kleur_idx = -1
         for sw_opt in product.options
-          if sw_opt == 'Kleur'
+          if sw_opt == 'Kleur' or sw_opt == 'Color' or sw_opt == 'Colour'
             assign sw_kleur_idx = forloop.index0
           endif
         endfor
@@ -340,7 +340,7 @@
       Dan pakken we het metaveld.
     {%- endcomment -%}
     {%- assign sw_heeft_lk_optie = false -%}
-    {%- for sw_o in product.options -%}{%- if sw_o == 'Lichtkleur' -%}{%- assign sw_heeft_lk_optie = true -%}{%- endif -%}{%- endfor -%}
+    {%- for sw_o in product.options -%}{%- if sw_o == 'Lichtkleur' or sw_o == 'Light color' or sw_o == 'Light colour' -%}{%- assign sw_heeft_lk_optie = true -%}{%- endif -%}{%- endfor -%}
     {%- assign sw_lichtkleur = '' -%}
     {%- unless sw_heeft_lk_optie -%}
       {%- assign sw_lk_val = product.metafields.custom.lichtkleur.value -%}
@@ -731,7 +731,7 @@
   // Zonder deze kaart vergelijkt het filter een variant-id met een kleurnaam.
   window.SW_VARIANT_KLEUR = window.SW_VARIANT_KLEUR || {};
   {%- assign sw_ki = -1 -%}
-  {%- for sw_opt in product.options -%}{%- if sw_opt == 'Kleur' -%}{%- assign sw_ki = forloop.index0 -%}{%- endif -%}{%- endfor -%}
+  {%- for sw_opt in product.options -%}{%- if sw_opt == 'Kleur' or sw_opt == 'Color' or sw_opt == 'Colour' -%}{%- assign sw_ki = forloop.index0 -%}{%- endif -%}{%- endfor -%}
   {%- if sw_ki >= 0 -%}
     {%- for sw_v in product.variants -%}
   window.SW_VARIANT_KLEUR['{{ sw_v.id }}'] = {{ sw_v.options[sw_ki] | json }};

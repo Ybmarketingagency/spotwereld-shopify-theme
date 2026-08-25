@@ -134,7 +134,7 @@
     endcomment
     assign sw_kleur_idx = -1
     for sw_opt in selected_product.options
-      if sw_opt == 'Kleur'
+      if sw_opt == 'Kleur' or sw_opt == 'Color' or sw_opt == 'Colour'
         assign sw_kleur_idx = forloop.index0
       endif
     endfor

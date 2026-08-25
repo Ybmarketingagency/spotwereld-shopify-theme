@@ -16,7 +16,7 @@
 {%- liquid
   assign kleur = variant.option1
   for opt in product.options_with_values
-    if opt.name == 'Kleur'
+    if opt.name == 'Kleur' or opt.name == 'Color' or opt.name == 'Colour'
       assign kleur = variant.options[forloop.index0]
     endif
   endfor
@@ -41,7 +41,7 @@
   # CCT-switch-badge van zijn witte broertjes, terwijl die vast op 2700K brandt.
   assign sw_lk_idx = -1
   for sw_opt in product.options
-    if sw_opt == 'Lichtkleur'
+    if sw_opt == 'Lichtkleur' or sw_opt == 'Light color' or sw_opt == 'Light colour'
       assign sw_lk_idx = forloop.index0
     endif
   endfor

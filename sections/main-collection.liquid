@@ -48,7 +48,7 @@
         assign sw_geteld = sw_geteld | plus: 1
         assign sw_k = 0
         for sw_o in sw_p.options_with_values
-          if sw_o.name == 'Kleur'
+          if sw_o.name == 'Kleur' or sw_o.name == 'Color' or sw_o.name == 'Colour'
             assign sw_k = sw_o.values.size
           endif
         endfor
@@ -95,7 +95,7 @@
             assign sw_kleur_idx = -1
             assign sw_gezien = ''
             for sw_opt in product.options_with_values
-              if sw_opt.name == 'Kleur'
+              if sw_opt.name == 'Kleur' or sw_opt.name == 'Color' or sw_opt.name == 'Colour'
                 assign sw_kleuren = sw_opt.values.size
                 assign sw_kleur_eerste = sw_opt.values | join: "," | downcase
                 assign sw_kleur_idx = forloop.index0

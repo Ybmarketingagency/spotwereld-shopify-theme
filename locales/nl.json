@@ -728,6 +728,13 @@
     },
     "badge": {
       "dimbaar": "Dimbaar"
+    },
+    "subtitel": {
+      "inbouwspots": "Strak en modern ingebouwd in je plafond — eenvoudig zelf te installeren.",
+      "opbouwspots": "Veelzijdig en eenvoudig te monteren, ook op betonnen plafonds.",
+      "hanglampen": "Sfeervolle verlichting die elke ruimte compleet maakt.",
+      "trapverlichting": "Veilig en sfeervol je trap verlichten met LED.",
+      "wandlampen": "Accentverlichting voor de mooiste muren."
     }
   }
 }

@@ -737,6 +737,13 @@
     },
     "badge": {
       "dimbaar": "Dimmable"
+    },
+    "subtitel": {
+      "inbouwspots": "Sleek and modern, recessed into your ceiling — easy to fit yourself.",
+      "opbouwspots": "Versatile and easy to mount, even on concrete ceilings.",
+      "hanglampen": "Atmospheric lighting that completes any room.",
+      "trapverlichting": "Light your stairs safely and beautifully with LED.",
+      "wandlampen": "Accent lighting for your best walls."
     }
   }
 }

@@ -103,7 +103,7 @@
         {%- liquid
           assign sw_kleuren = 0
           for sw_opt in product.options_with_values
-            if sw_opt.name == 'Kleur'
+            if sw_opt.name == 'Kleur' or sw_opt.name == 'Color' or sw_opt.name == 'Colour'
               assign sw_kleuren = sw_opt.values.size
             endif
           endfor

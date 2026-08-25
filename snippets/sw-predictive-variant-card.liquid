@@ -13,7 +13,7 @@
 {%- liquid
   assign kleur = ''
   for opt in product.options_with_values
-    if opt.name == 'Kleur'
+    if opt.name == 'Kleur' or opt.name == 'Color' or opt.name == 'Colour'
       assign kleur = variant.options[forloop.index0]
     endif
   endfor
