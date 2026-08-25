@@ -2,23 +2,17 @@
 {%- comment -%}
   Partneraanvraag voor zakelijke klanten.
 
-  Waar de aanvraag heen gaat, in twee stappen:
+  Het formulier is Shopify's eigen contactformulier. Alle contact[...]-velden komen mee in
+  de mail naar het winkeladres, dus bedrijfsnaam, KvK-nummer en btw-nummer staan compleet
+  in de inbox. Het onderwerp staat vast op sw.partner.onderwerp, zodat partneraanvragen
+  daar te scheiden zijn van gewone contactvragen.
 
-  1. Het zichtbare formulier is Shopify's eigen contactformulier. Alle contact[...]-velden
-     komen mee in de mail naar het winkeladres, dus bedrijfsnaam, KvK en btw-nummer staan
-     compleet in de inbox. Daar beoordeel je de aanvraag op.
+  Shopify bewaart contactformulieren niet in de admin; de mailbox is dus de enige
+  registratie. Wil je een doorzoekbare lijst met alle velden, installeer dan de gratis app
+  Shopify Forms - die bewaart inzendingen wel en kan de klant meteen taggen.
 
-  2. Bij het versturen gaat er via sendBeacon nog een tweede, onzichtbare aanvraag naar
-     hetzelfde /contact-eindpunt met form_type=customer. Die legt de aanvrager vast als
-     klant met de tag partner-aanvraag. Daarmee staat elke aanvraag ook in Klanten en kun
-     je er op filteren; zonder die stap zou de mail de enige registratie zijn.
-
-  Na goedkeuring vervang je de tag door 'partner'. Op dat segment kun je een automatische
-  korting of een kortingscode zetten - dat is dezelfde route als bij TeleSource.
-
-  Let op: iedereen kan dit formulier invullen, dus de tag partner-aanvraag zegt alleen dat
-  iemand zich heeft gemeld. Hang er nooit rechtstreeks korting aan; die hoort aan 'partner'
-  te hangen, en die tag zet jij pas na controle van het KvK-nummer.
+  Na goedkeuring geef je de klant de tag 'partner'. Op dat klantsegment kun je een
+  automatische korting of een kortingscode hangen, net als bij TeleSource.
 {%- endcomment -%}
 
 <style>
@@ -207,47 +201,17 @@
   </div>
 </div>
 
-<script>
-(function(){
-  var form = document.getElementById('swPartnerForm');
-  if (!form) return;
+{%- comment -%}
+  Hier stond een poging om de aanvrager tegelijk als klant vast te leggen met de tag
+  partner-aanvraag, via een achtergrondaanvraag naar /contact met form_type=customer.
+  Dat werkt niet: Shopify beantwoordt dat eindpunt alleen op een echte formulierverzending
+  en geeft op fetch of sendBeacon steevast 400, ook met exact dezelfde velden als het
+  nieuwsbriefformulier. Getest op 25-08-2026 met multipart en urlencoded.
 
-  // Naast de mail leggen we de aanvrager ook vast als klant met de tag
-  // partner-aanvraag, zodat elke aanvraag in Klanten terug te vinden is en niet
-  // alleen in de inbox. Dit gaat naar hetzelfde openbare /contact-eindpunt dat het
-  // nieuwsbriefformulier gebruikt, dus er komt geen API-sleutel aan te pas.
-  //
-  // sendBeacon en niet fetch: de pagina navigeert direct daarna weg en een gewone
-  // fetch wordt dan afgebroken.
-  form.addEventListener('submit', function(){
-    try {
-      var mail = form.querySelector('[name="contact[email]"]');
-      var naam = form.querySelector('[name="contact[name]"]');
-      var bedrijf = form.querySelector('[name="contact[Bedrijfsnaam]"]');
-      if (!mail || !mail.value) return;
-
-      var root = (window.Shopify && window.Shopify.routes && window.Shopify.routes.root) || '/';
-      var delen = (naam && naam.value ? naam.value : '').trim().split(/\s+/);
-
-      var fd = new FormData();
-      fd.append('form_type', 'customer');
-      fd.append('utf8', '✓');
-      fd.append('contact[email]', mail.value);
-      fd.append('contact[tags]', 'partner-aanvraag');
-      if (delen[0]) fd.append('contact[first_name]', delen[0]);
-      if (delen.length > 1) fd.append('contact[last_name]', delen.slice(1).join(' '));
-      // De bedrijfsnaam past niet in het klantformulier; die staat wel compleet in de
-      // mail. Hij gaat hier mee als achternaam-aanvulling zodat de klantenlijst
-      // herkenbaar blijft wanneer alleen een voornaam is ingevuld.
-      if (delen.length === 1 && bedrijf && bedrijf.value) fd.append('contact[last_name]', bedrijf.value);
-
-      navigator.sendBeacon(root + 'contact', fd);
-    } catch (e) {
-      // Mislukt het vastleggen, dan gaat de aanvraag zelf gewoon door.
-    }
-  });
-})();
-</script>
+  De aanvraag komt dus in de mailbox binnen en niet in Klanten. Wil je wel een
+  doorzoekbare lijst in de admin, dan is de gratis app Shopify Forms de aangewezen weg:
+  die bewaart de inzendingen met alle velden en kan de klant meteen taggen.
+{%- endcomment -%}
 
 {% schema %}
 {
