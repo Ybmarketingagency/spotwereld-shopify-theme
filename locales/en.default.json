@@ -715,7 +715,13 @@
       "wandlampen": "Accent lighting for your best walls."
     },
     "seo": {
-      "pagina": "Page {{ nummer }}"
+      "pagina": "Page {{ nummer }}",
+      "home_titel": "LED Recessed Spotlights, Surface Spotlights & Pendant Lights",
+      "home_desc": "Premium LED lighting for every interior. CCT switchable, dimmable, IP65, 25,000 hour lifespan. Order today, shipped tomorrow.",
+      "accessoires_titel": "LED accessories: dimmers, drivers and lamps",
+      "product_desc": "{{ titel }} - premium LED quality, fast delivery and a 5 year warranty at Spotwereld.",
+      "collectie_desc": "Browse our {{ titel }} collection. Premium LED quality with a 5 year warranty. Order today, shipped tomorrow.",
+      "pagina_desc": "Premium LED lighting at Spotwereld"
     }
   }
 }

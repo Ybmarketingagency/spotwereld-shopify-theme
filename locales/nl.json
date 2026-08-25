@@ -706,7 +706,13 @@
       "wandlampen": "Accentverlichting voor de mooiste muren."
     },
     "seo": {
-      "pagina": "Pagina {{ nummer }}"
+      "pagina": "Pagina {{ nummer }}",
+      "home_titel": "LED Inbouwspots, Opbouwspots & Hanglampen",
+      "home_desc": "Premium LED verlichting voor elk interieur. CCT switch dimbaar, IP65, 25.000 uur levensduur. Vandaag besteld, morgen verzonden.",
+      "accessoires_titel": "LED accessoires: dimmers, drivers en lampen",
+      "product_desc": "{{ titel }} - Premium LED kwaliteit, snelle levering en 5 jaar garantie bij Spotwereld.",
+      "collectie_desc": "Bekijk onze {{ titel }} collectie. Premium LED kwaliteit met 5 jaar garantie. Vandaag besteld, morgen verzonden.",
+      "pagina_desc": "Premium LED verlichting bij Spotwereld"
     }
   }
 }

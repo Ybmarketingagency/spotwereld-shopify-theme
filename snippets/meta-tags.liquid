@@ -152,14 +152,14 @@
   # terugval: zelf opbouwen. truncatewords in plaats van truncate, anders kapt hij
   # midden in een woord af.
   if request.page_type == 'index'
-    assign sw_title = 'LED Inbouwspots, Opbouwspots & Hanglampen | ' | append: sw_brand
-    assign sw_desc = 'Premium LED verlichting voor elk interieur. CCT switch dimbaar, IP65, 25.000 uur levensduur. Vandaag besteld, morgen verzonden.'
+    assign sw_title = 'sw.seo.home_titel' | t | append: ' | ' | append: sw_brand
+    assign sw_desc = 'sw.seo.home_desc' | t
   elsif request.page_type == 'product'
     assign sw_title = product.title | append: ' ' | append: sw_kopen | append: ' | ' | append: sw_brand
     if product.description != blank
-      assign sw_desc = product.description | replace: '2 jaar garantie', '5 jaar garantie' | replace: '2 Jaar garantie', '5 Jaar garantie' | replace: '<td>2 jaar</td>', '<td>5 jaar</td>' | replace: '<td>2 Jaar</td>', '<td>5 Jaar</td>' | strip_html | truncatewords: 24
+      assign sw_desc = product.description | replace: '2 jaar garantie', '5 jaar garantie' | replace: '2 Jaar garantie', '5 Jaar garantie' | replace: '2 year warranty', '5 year warranty' | replace: '2 Year warranty', '5 Year warranty' | replace: '2 years warranty', '5 years warranty' | replace: '<td>2 jaar</td>', '<td>5 jaar</td>' | replace: '<td>2 Jaar</td>', '<td>5 Jaar</td>' | strip_html | truncatewords: 24
     else
-      assign sw_desc = product.title | append: ' - Premium LED kwaliteit, snelle levering en 5 jaar garantie bij Spotwereld.'
+      assign sw_desc = 'sw.seo.product_desc' | t: titel: product.title
     endif
   elsif request.page_type == 'collection'
     # De formule "X kopen - LED X" werkt voor Inbouwspots en Wandlampen, maar levert bij
@@ -167,7 +167,7 @@
     # eigen titel. Een SEO-titel die in de admin is ingevuld wint hier nog steeds van.
     case collection.handle
       when 'accessoires'
-        assign sw_title = 'LED accessoires: dimmers, drivers en lampen | ' | append: sw_brand
+        assign sw_title = 'sw.seo.accessoires_titel' | t | append: ' | ' | append: sw_brand
       when 'alle-producten'
         assign sw_title = 'sw.collectie.titel_alles' | t | append: ' | ' | append: sw_brand
       when 'all'
@@ -181,7 +181,7 @@
     elsif sw_coll_terugval != blank
       assign sw_desc = sw_coll_terugval | strip_html | strip | truncatewords: 24
     else
-      assign sw_desc = 'Bekijk onze ' | append: collection.title | append: ' collectie. Premium LED kwaliteit met 5 jaar garantie. Vandaag besteld, morgen verzonden.'
+      assign sw_desc = 'sw.seo.collectie_desc' | t: titel: collection.title
     endif
   elsif request.page_type == 'article'
     assign sw_title = article.title | append: ' | ' | append: sw_brand | append: ' Blog'
@@ -191,7 +191,7 @@
     if page.content != blank
       assign sw_desc = page.content | strip_html | truncatewords: 24
     else
-      assign sw_desc = sw_tagline | append: ' bij ' | append: sw_brand
+      assign sw_desc = 'sw.seo.pagina_desc' | t
     endif
   else
     assign sw_title = page_title | append: ' | ' | append: sw_brand
