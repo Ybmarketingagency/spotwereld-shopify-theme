@@ -198,19 +198,21 @@
     assign sw_desc = page_description | default: shop.description | default: sw_tagline
   endif
 
-  # het ingevulde veld wint van de terugval
+  # Het ingevulde veld wint van de terugval. De metavelden hierboven zeggen alleen OF de
+  # winkelier iets heeft ingevuld; de waarde halen we uit page_title en page_description,
+  # want die geven op /en/ de vertaalde tekst terug en het metaveld niet.
   if sw_seo_title != blank
-    assign sw_title = sw_seo_title
+    assign sw_title = page_title
   endif
   if sw_seo_desc != blank
-    assign sw_desc = sw_seo_desc
+    assign sw_desc = page_description | replace: '&amp;amp;', '&amp;'
   endif
 -%}
 
 <title>
   {{ sw_title }}
   {%- if current_tags %} &ndash; {{ current_tags | join: ', ' }}{% endif -%}
-  {%- if current_page != 1 %} &ndash; Pagina {{ current_page }}{% endif -%}
+  {%- if current_page != 1 %} &ndash; {{ 'sw.seo.pagina' | t: nummer: current_page }}{% endif -%}
 </title>
 
 <meta name="description" content="{{ sw_desc | strip_html | escape_once }}">

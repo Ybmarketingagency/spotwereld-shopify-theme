@@ -704,6 +704,9 @@
       "hanglampen": "Sfeervolle verlichting die elke ruimte compleet maakt.",
       "trapverlichting": "Veilig en sfeervol je trap verlichten met LED.",
       "wandlampen": "Accentverlichting voor de mooiste muren."
+    },
+    "seo": {
+      "pagina": "Pagina {{ nummer }}"
     }
   }
 }

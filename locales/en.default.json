@@ -713,6 +713,9 @@
       "hanglampen": "Atmospheric lighting that completes any room.",
       "trapverlichting": "Light your stairs safely and beautifully with LED.",
       "wandlampen": "Accent lighting for your best walls."
+    },
+    "seo": {
+      "pagina": "Page {{ nummer }}"
     }
   }
 }
