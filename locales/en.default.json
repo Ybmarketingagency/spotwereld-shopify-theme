@@ -361,9 +361,7 @@
       "uitvoeringen": "versions",
       "titel_patroon": "Buy {{ titel }} - LED {{ titel }}",
       "titel_alles": "All LED lighting",
-      "titel_kopen": "buy",
-      "meer_lezen": "Read more",
-      "faq": "Frequently asked questions"
+      "titel_kopen": "buy"
     },
     "product": {
       "beschikbaarheid": "Availability"
@@ -585,35 +583,10 @@
     },
     "faq": {
       "alle": "All questions",
-      "f_bestelling": "Ordering",
-      "f_levering": "Delivery",
-      "f_producten": "Products",
-      "f_retour": "Returns",
-      "v1": "How do I place an order?",
-      "a1": "Choose your product, add it to your cart and go to checkout. You can pay by iDEAL, credit card, Klarna or another method. You will receive a confirmation email after payment.",
-      "v2": "Can I cancel or change my order?",
-      "a2": "Contact us as soon as possible at info@spotwereld.nl or (0)85 333 26 72. Orders that are already being processed can no longer be changed.",
       "v3": "Which payment methods do you accept?",
-      "a3": "We accept iDEAL, Visa, Mastercard, Klarna (pay later), PayPal and Bancontact. All payments are processed securely.",
-      "v4": "How long does delivery take?",
-      "a4": "Order today, shipped tomorrow. We work with PostNL and DHL for fast, reliable delivery throughout the Netherlands.",
-      "v5": "Is shipping free?",
-      "a5": "Free shipping on orders of &euro;50 or more. Below &euro;25 we charge &euro;4.95; between &euro;25 and &euro;50 it is &euro;7.95 for standard delivery.",
-      "v6": "Can I track my order?",
-      "a6": "Yes. As soon as your order ships you receive a track &amp; trace link by email, so you can follow your parcel in real time.",
-      "v7": "How much warranty do I get on my product?",
-      "a7": "All Spotwereld products come with a 5-year warranty as standard. It covers manufacturing faults and material defects. Damage caused by incorrect use is not covered.",
-      "v8": "Are the LED spotlights dimmable?",
-      "a8": "It differs per product. The product description states clearly whether a spotlight is dimmable. For dimmable spotlights, check compatibility with your dimmer.",
-      "v9": "What is the difference between warm white and cool white?",
-      "a9": "Warm white (2700&ndash;3000K) gives a cosy, atmospheric light &mdash; ideal for living rooms. Cool white (4000&ndash;6500K) gives bright, fresh light &mdash; perfect for kitchens and bathrooms. Neutral white (3500K) sits in between.",
-      "v10": "How do I return a product?",
       "slot_kop": "Question not answered here?",
       "slot_tekst": "Our team is happy to help you personally.",
-      "slot_knop": "Get in touch",
-      "v11": "When do I get my money back?",
-      "a11": "Once we have received and checked your return, we refund the amount to your account or credit card within 5 working days.",
-      "a10": "Email info@spotwereld.nl with your order number and the reason for the return. You will receive confirmation within 1 working day. Return shipping is at the buyer’s expense — hand the parcel in at a PostNL service point at your own cost."
+      "slot_knop": "Get in touch"
     },
     "over": {
       "kop1": "Your specialist in",
@@ -622,10 +595,6 @@
       "knop_contact": "Get in touch",
       "gratis": "Free from &euro;50",
       "verhaal_label": "OUR STORY",
-      "verhaal_kop1": "A passion for lighting,",
-      "verhaal_kop2": "service for people",
-      "verhaal_1": "Spotwereld started from a simple conviction: good lighting does not have to be expensive. We carefully select the best LED products and supply them to you directly &mdash; with personal advice and fair prices.",
-      "verhaal_2": "Whether you want to upgrade your living room, are looking for atmospheric stair lighting or need professional recessed spotlights &mdash; we help you make the right choice.",
       "waarom": "Why Spotwereld?",
       "kwaliteit": "Top quality",
       "kwaliteit_tekst": "All products meet strict quality standards. A 5-year warranty is included as standard.",

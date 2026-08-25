@@ -352,9 +352,7 @@
       "uitvoeringen": "uitvoeringen",
       "titel_patroon": "{{ titel }} kopen - LED {{ titel }}",
       "titel_alles": "Alle LED-verlichting",
-      "titel_kopen": "kopen",
-      "meer_lezen": "Meer lezen",
-      "faq": "Veelgestelde vragen"
+      "titel_kopen": "kopen"
     },
     "product": {
       "beschikbaarheid": "Beschikbaarheid"
@@ -576,35 +574,10 @@
     },
     "faq": {
       "alle": "Alle vragen",
-      "f_bestelling": "Bestelling",
-      "f_levering": "Levering",
-      "f_producten": "Producten",
-      "f_retour": "Retour",
-      "v1": "Hoe kan ik een bestelling plaatsen?",
-      "a1": "Kies je product, voeg het toe aan je winkelwagen en ga naar de kassa. Je kunt betalen met iDEAL, creditcard, Klarna of andere methoden. Je ontvangt na betaling een bevestigingsmail.",
-      "v2": "Kan ik mijn bestelling annuleren of wijzigen?",
-      "a2": "Neem zo snel mogelijk contact op via info@spotwereld.nl of (0)85 333 26 72. Bestellingen die al in verwerking zijn kunnen niet meer worden aangepast.",
       "v3": "Welke betaalmethoden accepteren jullie?",
-      "a3": "Wij accepteren iDEAL, Visa, Mastercard, Klarna (achteraf betalen), PayPal en Bancontact. Alle betalingen worden beveiligd verwerkt.",
-      "v4": "Hoe lang duurt de bezorging?",
-      "a4": "Vandaag besteld, morgen verzonden. We werken samen met PostNL en DHL voor snelle en betrouwbare bezorging door heel Nederland.",
-      "v5": "Zijn de verzendkosten gratis?",
-      "a5": "Gratis verzending bij bestellingen van &euro;50 of meer. Onder de &euro;25 rekenen we &euro;4,95, tussen &euro;25 en &euro;50 is het &euro;7,95 voor standaard bezorging.",
-      "v6": "Kan ik mijn bestelling volgen?",
-      "a6": "Ja. Zodra je bestelling is verzonden ontvang je een track &amp; trace link per e-mail. Je kunt hiermee de status van je pakket realtime volgen.",
-      "v7": "Hoeveel garantie krijg ik op mijn product?",
-      "a7": "Alle Spotwereld producten hebben standaard 5 jaar garantie. Dit dekt fabricagefouten en materiaaldefecten. Schade door verkeerd gebruik valt niet onder de garantie.",
-      "v8": "Zijn de LED spots dimbaar?",
-      "a8": "Dit verschilt per product. In de productbeschrijving staat duidelijk vermeld of een spot dimbaar is. Let bij dimbare spots op compatibiliteit met je dimmer.",
-      "v9": "Wat is het verschil tussen warm wit en koud wit?",
-      "a9": "Warm wit (2700&ndash;3000K) geeft een gezellig, sfeervol licht &mdash; ideaal voor woonkamers. Koud wit (4000&ndash;6500K) geeft helder, fris licht &mdash; perfect voor keukens en badkamers. Neutraal wit (3500K) zit er tussenin.",
-      "v10": "Hoe retourneer ik een product?",
       "slot_kop": "Staat je vraag er niet bij?",
       "slot_tekst": "Ons team helpt je graag persoonlijk verder.",
-      "slot_knop": "Neem contact op",
-      "v11": "Wanneer ontvang ik mijn geld terug?",
-      "a11": "Na ontvangst en controle van je retour storten we het bedrag binnen 5 werkdagen terug op je rekening of creditcard.",
-      "a10": "Stuur een e-mail naar info@spotwereld.nl met je ordernummer en reden van retour. Je ontvangt binnen 1 werkdag een bevestiging. De retourzending is voor rekening van de koper — lever het pakket op eigen kosten in bij een PostNL Servicepunt."
+      "slot_knop": "Neem contact op"
     },
     "over": {
       "kop1": "Jouw specialist in",
@@ -613,10 +586,6 @@
       "knop_contact": "Contact opnemen",
       "gratis": "Gratis v.a. &euro;50",
       "verhaal_label": "ONS VERHAAL",
-      "verhaal_kop1": "Passie voor verlichting,",
-      "verhaal_kop2": "service voor mensen",
-      "verhaal_1": "Spotwereld ontstond vanuit een simpele overtuiging: goede verlichting hoeft niet duur te zijn. Wij selecteren zorgvuldig de beste LED producten en leveren ze direct aan jou &mdash; met persoonlijk advies en eerlijke prijzen.",
-      "verhaal_2": "Of je nu je woonkamer wil upgraden, sfeervolle trapverlichting zoekt of professionele inbouwspots nodig hebt &mdash; wij helpen je de perfecte keuze te maken.",
       "waarom": "Waarom Spotwereld?",
       "kwaliteit": "Topkwaliteit",
       "kwaliteit_tekst": "Alle producten voldoen aan strenge kwaliteitsnormen. 5 jaar garantie standaard inbegrepen.",
