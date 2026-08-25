@@ -1,71 +1,36 @@
 {%- comment -%}
-  FAQPage JSON-LD. LET OP: deze vragen/antwoorden moeten woordelijk overeenkomen met de
-  zichtbare accordeon hieronder — Google vereist dat schema en pagina-inhoud identiek zijn.
-  Wijzig je een antwoord in de HTML, pas het hier dan ook aan.
+  De vragen komen uit Content > Pagina's > Veelgestelde Vragen. Structuur:
+  <h2> is een categorie, <h3> een vraag, de HTML daaronder het antwoord.
+  Voeg je in de admin een <h2> of <h3> toe, dan verschijnt hij hier vanzelf.
 {%- endcomment -%}
+{%- assign sw_cats = page.content | split: '<h2>' -%}
+
+{%- comment -%}
+  FAQPage-markup uit dezelfde bron als de accordeon, zodat schema en pagina niet meer
+  uit elkaar kunnen lopen. Google eist dat ze woordelijk overeenkomen.
+{%- endcomment -%}
+{%- capture sw_faq_json -%}
+  {%- assign sw_eerste = true -%}
+  {%- for sw_c in sw_cats offset: 1 -%}
+    {%- assign sw_na_h2 = sw_c | split: '</h2>' | last -%}
+    {%- assign sw_qs = sw_na_h2 | split: '<h3>' -%}
+    {%- for sw_v in sw_qs offset: 1 -%}
+      {%- assign sw_q = sw_v | split: '</h3>' | first | strip_html | strip -%}
+      {%- assign sw_a = sw_v | split: '</h3>' | last | strip_html | strip -%}
+      {%- if sw_q != blank and sw_a != blank -%}
+        {%- unless sw_eerste %},{% endunless -%}
+        {%- assign sw_eerste = false -%}
+        {"@type":"Question","name":{{ sw_q | json }},"acceptedAnswer":{"@type":"Answer","text":{{ sw_a | json }}}}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endfor -%}
+{%- endcapture -%}
+{%- assign sw_faq_json = sw_faq_json | strip -%}
+{%- if sw_faq_json != blank -%}
 <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Hoe kan ik een bestelling plaatsen?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Kies je product, voeg het toe aan je winkelwagen en ga naar de kassa. Je kunt betalen met iDEAL, creditcard, Klarna of andere methoden. Je ontvangt na betaling een bevestigingsmail." }
-    },
-    {
-      "@type": "Question",
-      "name": "Kan ik mijn bestelling annuleren of wijzigen?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Neem zo snel mogelijk contact op via info@spotwereld.nl of (0)85 333 26 72. Bestellingen die al in verwerking zijn kunnen niet meer worden aangepast." }
-    },
-    {
-      "@type": "Question",
-      "name": "Welke betaalmethoden accepteren jullie?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Wij accepteren iDEAL, Visa, Mastercard, Klarna (achteraf betalen), PayPal en Bancontact. Alle betalingen worden beveiligd verwerkt." }
-    },
-    {
-      "@type": "Question",
-      "name": "Hoe lang duurt de bezorging?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Vandaag besteld, morgen verzonden. We werken samen met PostNL en DHL voor snelle en betrouwbare bezorging door heel Nederland." }
-    },
-    {
-      "@type": "Question",
-      "name": "Zijn de verzendkosten gratis?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Gratis verzending bij bestellingen van €50 of meer. Onder de €25 rekenen we €4,95, tussen €25 en €50 is het €7,95 voor standaard bezorging." }
-    },
-    {
-      "@type": "Question",
-      "name": "Kan ik mijn bestelling volgen?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Ja. Zodra je bestelling is verzonden ontvang je een track & trace link per e-mail. Je kunt hiermee de status van je pakket realtime volgen." }
-    },
-    {
-      "@type": "Question",
-      "name": "Hoeveel garantie krijg ik op mijn product?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Alle Spotwereld producten hebben standaard 5 jaar garantie. Dit dekt fabricagefouten en materiaaldefecten. Schade door verkeerd gebruik valt niet onder de garantie." }
-    },
-    {
-      "@type": "Question",
-      "name": "Zijn de LED spots dimbaar?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Dit verschilt per product. In de productbeschrijving staat duidelijk vermeld of een spot dimbaar is. Let bij dimbare spots op compatibiliteit met je dimmer." }
-    },
-    {
-      "@type": "Question",
-      "name": "Wat is het verschil tussen warm wit en koud wit?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Warm wit (2700–3000K) geeft een gezellig, sfeervol licht — ideaal voor woonkamers. Koud wit (4000–6500K) geeft helder, fris licht — perfect voor keukens en badkamers. Neutraal wit (3500K) zit er tussenin." }
-    },
-    {
-      "@type": "Question",
-      "name": "Hoe retourneer ik een product?",
-      "acceptedAnswer": { "@type": "Answer", "text": "{{ 'sw.faq.a10' | t }}" }
-    },
-    {
-      "@type": "Question",
-      "name": "Wanneer ontvang ik mijn geld terug?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Na ontvangst en controle van je retour storten we het bedrag binnen 5 werkdagen terug op je rekening of creditcard." }
-    }
-  ]
-}
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{{ sw_faq_json }}]}
 </script>
+{%- endif -%}
 
 <style>
 .sw-ks-wrap{max-width:1280px;margin:0 auto;padding:3rem 1.5rem 5rem;display:grid;grid-template-columns:1fr;gap:2.5rem}
@@ -102,62 +67,31 @@
     </aside>
 
     <div>
-      <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:2.5rem" id="swFaqCats">
+            <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:2.5rem" id="swFaqCats">
         <button onclick="swFaqFilter('all')" style="padding:.375rem 1rem;border-radius:9999px;font-size:.875rem;font-weight:600;cursor:pointer;border:2px solid #083D7D;background:#083D7D;color:#fff">{{ 'sw.faq.alle' | t }}</button>
-        <button onclick="swFaqFilter('bestelling')" style="padding:.375rem 1rem;border-radius:9999px;font-size:.875rem;font-weight:600;cursor:pointer;border:2px solid #e5e7eb;background:#fff;color:#374151">{{ 'sw.faq.f_bestelling' | t }}</button>
-        <button onclick="swFaqFilter('levering')" style="padding:.375rem 1rem;border-radius:9999px;font-size:.875rem;font-weight:600;cursor:pointer;border:2px solid #e5e7eb;background:#fff;color:#374151">{{ 'sw.faq.f_levering' | t }}</button>
-        <button onclick="swFaqFilter('product')" style="padding:.375rem 1rem;border-radius:9999px;font-size:.875rem;font-weight:600;cursor:pointer;border:2px solid #e5e7eb;background:#fff;color:#374151">{{ 'sw.faq.f_producten' | t }}</button>
-        <button onclick="swFaqFilter('retour')" style="padding:.375rem 1rem;border-radius:9999px;font-size:.875rem;font-weight:600;cursor:pointer;border:2px solid #e5e7eb;background:#fff;color:#374151">{{ 'sw.faq.f_retour' | t }}</button>
+        {%- for sw_c in sw_cats offset: 1 -%}
+          {%- assign sw_naam = sw_c | split: '</h2>' | first | strip_html | strip -%}
+          <button onclick="swFaqFilter('cat{{ forloop.index }}')" style="padding:.375rem 1rem;border-radius:9999px;font-size:.875rem;font-weight:600;cursor:pointer;border:2px solid #e5e7eb;background:#fff;color:#374151">{{ sw_naam }}</button>
+        {%- endfor -%}
       </div>
 
       <div style="background:#fff;border-radius:1rem;box-shadow:0 1px 4px rgba(0,0,0,0.07);overflow:hidden">
-        <div class="sw-faq-item" data-cat="bestelling">
-          <button class="sw-faq-btn" onclick="swFaqToggle(this)"><span class="sw-faq-q">{{ 'sw.faq.v1' | t }}</span><span class="sw-faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#083D7D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></button>
-          <div class="sw-faq-answer"><div class="sw-faq-answer-inner">{{ 'sw.faq.a1' | t }}</div></div>
-        </div>
-        <div class="sw-faq-item" data-cat="bestelling">
-          <button class="sw-faq-btn" onclick="swFaqToggle(this)"><span class="sw-faq-q">{{ 'sw.faq.v2' | t }}</span><span class="sw-faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#083D7D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></button>
-          <div class="sw-faq-answer"><div class="sw-faq-answer-inner">{{ 'sw.faq.a2' | t }}</div></div>
-        </div>
-        <div class="sw-faq-item" data-cat="bestelling">
-          <button class="sw-faq-btn" onclick="swFaqToggle(this)"><span class="sw-faq-q">{{ 'sw.faq.v3' | t }}</span><span class="sw-faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#083D7D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></button>
-          <div class="sw-faq-answer"><div class="sw-faq-answer-inner">{{ 'sw.faq.a3' | t }}</div></div>
-        </div>
-        <div class="sw-faq-item" data-cat="levering">
-          <button class="sw-faq-btn" onclick="swFaqToggle(this)"><span class="sw-faq-q">{{ 'sw.faq.v4' | t }}</span><span class="sw-faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#083D7D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></button>
-          <div class="sw-faq-answer"><div class="sw-faq-answer-inner">{{ 'sw.faq.a4' | t }}</div></div>
-        </div>
-        <div class="sw-faq-item" data-cat="levering">
-          <button class="sw-faq-btn" onclick="swFaqToggle(this)"><span class="sw-faq-q">{{ 'sw.faq.v5' | t }}</span><span class="sw-faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#083D7D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></button>
-          <div class="sw-faq-answer"><div class="sw-faq-answer-inner">{{ 'sw.faq.a5' | t }}</div></div>
-        </div>
-        <div class="sw-faq-item" data-cat="levering">
-          <button class="sw-faq-btn" onclick="swFaqToggle(this)"><span class="sw-faq-q">{{ 'sw.faq.v6' | t }}</span><span class="sw-faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#083D7D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></button>
-          <div class="sw-faq-answer"><div class="sw-faq-answer-inner">{{ 'sw.faq.a6' | t }}</div></div>
-        </div>
-        <div class="sw-faq-item" data-cat="product">
-          <button class="sw-faq-btn" onclick="swFaqToggle(this)"><span class="sw-faq-q">{{ 'sw.faq.v7' | t }}</span><span class="sw-faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#083D7D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></button>
-          <div class="sw-faq-answer"><div class="sw-faq-answer-inner">{{ 'sw.faq.a7' | t }}</div></div>
-        </div>
-        <div class="sw-faq-item" data-cat="product">
-          <button class="sw-faq-btn" onclick="swFaqToggle(this)"><span class="sw-faq-q">{{ 'sw.faq.v8' | t }}</span><span class="sw-faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#083D7D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></button>
-          <div class="sw-faq-answer"><div class="sw-faq-answer-inner">{{ 'sw.faq.a8' | t }}</div></div>
-        </div>
-        <div class="sw-faq-item" data-cat="product">
-          <button class="sw-faq-btn" onclick="swFaqToggle(this)"><span class="sw-faq-q">{{ 'sw.faq.v9' | t }}</span><span class="sw-faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#083D7D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></button>
-          <div class="sw-faq-answer"><div class="sw-faq-answer-inner">{{ 'sw.faq.a9' | t }}</div></div>
-        </div>
-        <div class="sw-faq-item" data-cat="retour">
-          <button class="sw-faq-btn" onclick="swFaqToggle(this)"><span class="sw-faq-q">{{ 'sw.faq.v10' | t }}</span><span class="sw-faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#083D7D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></button>
-          <div class="sw-faq-answer"><div class="sw-faq-answer-inner">{{ 'sw.faq.a10' | t }}</div></div>
-        </div>
-        <div class="sw-faq-item" data-cat="retour">
-          <button class="sw-faq-btn" onclick="swFaqToggle(this)"><span class="sw-faq-q">{{ 'sw.faq.v11' | t }}</span><span class="sw-faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#083D7D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></button>
-          <div class="sw-faq-answer"><div class="sw-faq-answer-inner">{{ 'sw.faq.a11' | t }}</div></div>
-        </div>
+        {%- for sw_c in sw_cats offset: 1 -%}
+          {%- assign sw_catnr = forloop.index -%}
+          {%- assign sw_na_h2 = sw_c | split: '</h2>' | last -%}
+          {%- assign sw_vragen = sw_na_h2 | split: '<h3>' -%}
+          {%- for sw_v in sw_vragen offset: 1 -%}
+            {%- assign sw_vraag = sw_v | split: '</h3>' | first | strip_html | strip -%}
+            {%- assign sw_antwoord = sw_v | split: '</h3>' | last | strip -%}
+            <div class="sw-faq-item" data-cat="cat{{ sw_catnr }}">
+              <button class="sw-faq-btn" onclick="swFaqToggle(this)"><span class="sw-faq-q">{{ sw_vraag }}</span><span class="sw-faq-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#083D7D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></button>
+              <div class="sw-faq-answer"><div class="sw-faq-answer-inner">{{ sw_antwoord }}</div></div>
+            </div>
+          {%- endfor -%}
+        {%- endfor -%}
       </div>
 
-      <div style="margin-top:3rem;background:#061f40;border-radius:1rem;padding:2rem;text-align:center">
+<div style="margin-top:3rem;background:#061f40;border-radius:1rem;padding:2rem;text-align:center">
         <h3 style="color:#fff;font-weight:700;font-size:1.125rem;margin:0 0 .5rem">{{ 'sw.faq.slot_kop' | t }}</h3>
         <p style="color:#93c5fd;font-size:.9375rem;margin:0 0 1.5rem">{{ 'sw.faq.slot_tekst' | t }}</p>
         <a href="/pages/contact" style="display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1.75rem;background:linear-gradient(135deg,#083D7D,#0F6FE3);color:#fff;font-weight:700;border-radius:.625rem;text-decoration:none">{{ 'sw.faq.slot_knop' | t }}</a>
