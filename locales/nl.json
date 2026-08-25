@@ -443,6 +443,12 @@
         "antwoord": "Antwoord binnen 24 uur",
         "uren": "Ma&nbsp;-&nbsp;vr&nbsp;08:30&nbsp;-&nbsp;17:00",
         "betalen": "Veilig betalen met:"
+      },
+      "partner": {
+        "label": "Zakelijk",
+        "kop": "Koop je vaker verlichting in?",
+        "tekst": "Installateurs, elektriciens en aannemers kunnen partner worden. Na goedkeuring bestel je in dezelfde webshop met je eigen kortingscode.",
+        "knop": "Bekijk het partnerschap"
       }
     },
     "balk": {

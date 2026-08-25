@@ -452,6 +452,12 @@
         "antwoord": "Reply within 24 hours",
         "uren": "Mon&nbsp;-&nbsp;Fri&nbsp;08:30&nbsp;-&nbsp;17:00",
         "betalen": "Secure payment with:"
+      },
+      "partner": {
+        "label": "For business",
+        "kop": "Do you buy lighting regularly?",
+        "tekst": "Installers, electricians and contractors can become partners. Once approved you order in the same webshop with your own discount code.",
+        "knop": "About the partnership"
       }
     },
     "balk": {
