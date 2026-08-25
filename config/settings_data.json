@@ -373,7 +373,8 @@
           "selected_variant_hover_border_color": "#0f6fe3"
         }
       }
-    }
+    },
+    "currency_code_enabled_cart_total": false
   },
   "presets": {
     "Horizon": {
