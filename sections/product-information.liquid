@@ -419,12 +419,19 @@
     assign sw_gids_dimmer = 'sw.gidsblok.dimmer' | t
     assign sw_gids_algemeen = 'sw.gidsblok.algemeen' | t
     assign sw_gidsen = ''
-    if product.type == 'Inbouwspots'
+    # product.type wordt vertaald, de handle van de collectie niet
+    assign sw_is_inbouw = false
+    for sw_c in product.collections
+      if sw_c.handle == 'inbouwspots'
+        assign sw_is_inbouw = true
+      endif
+    endfor
+    if sw_is_inbouw
       assign sw_gidsen = sw_gidsen | append: 'inbouwspots-plaatsen|' | append: sw_gids_inbouw | append: ';'
     endif
     assign sw_dim = product.metafields.custom.dimbaar.value | default: ''
     assign sw_dim_start = sw_dim | slice: 0, 2
-    if sw_dim_start == 'Ja'
+    if sw_dim_start == 'Ja' or sw_dim_start == 'Ye'
       assign sw_gidsen = sw_gidsen | append: 'led-dimmer-kiezen|' | append: sw_gids_dimmer | append: ';'
     endif
     if sw_gidsen == blank

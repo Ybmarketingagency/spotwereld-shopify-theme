@@ -50,11 +50,12 @@
   endif
   assign ip_filter = product.metafields.custom.ip_waarde_filter.value
   assign sw_dimbaar = product.metafields.custom.dimbaar.value
+  assign sw_label_dimbaar = 'sw.badge.dimbaar' | t
   assign sw_badges = ''
   if lichtkleur contains 'Dim2Warm'
     assign sw_badges = sw_badges | append: 'Dim2Warm|'
   endif
-  if lichtkleur contains 'Instelbaar'
+  if lichtkleur contains 'Instelbaar' or lichtkleur contains 'Adjustable'
     assign sw_badges = sw_badges | append: 'CCT-switch|'
   endif
   if ip_filter contains 'IP65'
@@ -68,8 +69,8 @@
   endif
   unless sw_heeft_d2w
     assign sw_dimbaar_start = sw_dimbaar | slice: 0, 2
-    if sw_dimbaar_start == 'Ja'
-      assign sw_badges = sw_badges | append: 'Dimbaar|'
+    if sw_dimbaar_start == 'Ja' or sw_dimbaar_start == 'Ye'
+      assign sw_badges = sw_badges | append: sw_label_dimbaar | append: '|'
     endif
   endunless
   assign sw_badge_list = sw_badges | split: '|'
