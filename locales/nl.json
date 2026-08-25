@@ -570,7 +570,9 @@
       "overons": "Over ons",
       "voorwaarden": "Algemene voorwaarden",
       "privacy": "Privacyverklaring",
-      "home": "Home"
+      "home": "Home",
+      "faq_kop": "Veelgestelde Vragen",
+      "faq_sub": "Antwoorden op de meest gestelde vragen"
     },
     "faq": {
       "alle": "Alle vragen",
@@ -718,6 +720,11 @@
     "filter": {
       "kleur": "Kleur behuizing",
       "nee": "Nee"
+    },
+    "gidsblok": {
+      "inbouw": "Inbouwspots plaatsen in een gipsplafond|Zaagmaat, onderlinge afstand en de fouten die het vaakst worden gemaakt.",
+      "dimmer": "Welke dimmer werkt hierop?|Waarom een oude dimmer laat flikkeren, en hoeveel spots op één dimmer kunnen.",
+      "algemeen": "Verlichtingsgids|Praktische uitleg bij het aanleggen van verlichting."
     }
   }
 }

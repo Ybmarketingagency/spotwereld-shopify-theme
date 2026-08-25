@@ -579,7 +579,9 @@
       "overons": "About us",
       "voorwaarden": "Terms and conditions",
       "privacy": "Privacy statement",
-      "home": "Home"
+      "home": "Home",
+      "faq_kop": "Frequently Asked Questions",
+      "faq_sub": "Answers to the questions we get most"
     },
     "faq": {
       "alle": "All questions",
@@ -727,6 +729,11 @@
     "filter": {
       "kleur": "Housing colour",
       "nee": "No"
+    },
+    "gidsblok": {
+      "inbouw": "Fitting recessed spotlights in a plasterboard ceiling|Cut-out size, spacing and the mistakes people make most often.",
+      "dimmer": "Which dimmer works with this?|Why an old dimmer causes flicker, and how many spotlights fit on one dimmer.",
+      "algemeen": "Lighting guide|Practical help with installing lighting."
     }
   }
 }

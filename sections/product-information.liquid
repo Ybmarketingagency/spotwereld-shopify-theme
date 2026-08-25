@@ -415,17 +415,20 @@
     Welke gids getoond wordt hangt af van het producttype en de metavelden.
   {%- endcomment -%}
   {%- liquid
+    assign sw_gids_inbouw = 'sw.gidsblok.inbouw' | t
+    assign sw_gids_dimmer = 'sw.gidsblok.dimmer' | t
+    assign sw_gids_algemeen = 'sw.gidsblok.algemeen' | t
     assign sw_gidsen = ''
     if product.type == 'Inbouwspots'
-      assign sw_gidsen = sw_gidsen | append: 'inbouwspots-plaatsen|Inbouwspots plaatsen in een gipsplafond|Zaagmaat, onderlinge afstand en de fouten die het vaakst worden gemaakt.;'
+      assign sw_gidsen = sw_gidsen | append: 'inbouwspots-plaatsen|' | append: sw_gids_inbouw | append: ';'
     endif
     assign sw_dim = product.metafields.custom.dimbaar.value | default: ''
     assign sw_dim_start = sw_dim | slice: 0, 2
     if sw_dim_start == 'Ja'
-      assign sw_gidsen = sw_gidsen | append: 'led-dimmer-kiezen|Welke dimmer werkt hierop?|Waarom een oude dimmer laat flikkeren, en hoeveel spots op één dimmer kunnen.;'
+      assign sw_gidsen = sw_gidsen | append: 'led-dimmer-kiezen|' | append: sw_gids_dimmer | append: ';'
     endif
     if sw_gidsen == blank
-      assign sw_gidsen = 'verlichtingsgids|Verlichtingsgids|Praktische uitleg bij het aanleggen van verlichting.;'
+      assign sw_gidsen = 'verlichtingsgids|' | append: sw_gids_algemeen | append: ';'
     endif
     assign sw_gidslijst = sw_gidsen | split: ';'
   -%}

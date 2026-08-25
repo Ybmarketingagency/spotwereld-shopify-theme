@@ -3,7 +3,7 @@
     "faq_hero": {
       "type": "custom-liquid",
       "settings": {
-        "custom_liquid": "<div style=\"background:#061f40;padding:3.5rem 0 2.5rem;text-align:center\"><div style=\"max-width:800px;margin:0 auto;padding:0 1.5rem\"><h1 style=\"color:#fff;font-weight:800;font-size:clamp(1.75rem,4vw,2.5rem);margin:0 0 .5rem\">Veelgestelde Vragen</h1><p style=\"color:#93c5fd;font-size:1.0625rem;margin:0\">Antwoorden op de meest gestelde vragen</p></div></div>",
+        "custom_liquid": "<div style=\"background:#061f40;padding:3.5rem 0 2.5rem;text-align:center\"><div style=\"max-width:800px;margin:0 auto;padding:0 1.5rem\"><h1 style=\"color:#fff;font-weight:800;font-size:clamp(1.75rem,4vw,2.5rem);margin:0 0 .5rem\">{{ 'sw.nav.faq_kop' | t }}</h1><p style=\"color:#93c5fd;font-size:1.0625rem;margin:0\">{{ 'sw.nav.faq_sub' | t }}</p></div></div>",
         "color_scheme": "",
         "section_width": "full-width",
         "padding-block-start": 0,
