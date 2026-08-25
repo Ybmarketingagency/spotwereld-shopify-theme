@@ -186,7 +186,16 @@
       assign sw_desc = 'sw.seo.collectie_desc' | t: titel: collection.title
     endif
   elsif request.page_type == 'article'
-    assign sw_title = article.title | append: ' | ' | append: sw_brand | append: ' Blog'
+    # Het woord Blog erachter kostte 5 tekens en zei niets; dat is eruit. Past de titel
+    # met merknaam nog steeds niet binnen de 60 tekens die Google toont, dan valt hij
+    # terug op de kale artikeltitel. Beter de hele vraag laten zien dan de merknaam
+    # halverwege afgekapt zien staan; Google zet er zelf al vaak de sitenaam bij.
+    assign sw_kop = article.title | append: ' | ' | append: sw_brand
+    if sw_kop.size > 60
+      assign sw_title = article.title
+    else
+      assign sw_title = sw_kop
+    endif
     assign sw_desc = article.excerpt_or_content | strip_html | truncate: 155
   elsif request.page_type == 'page'
     # Paginatitels als "Contact | Spotwereld" zijn met 20 tekens te mager voor de ruimte
