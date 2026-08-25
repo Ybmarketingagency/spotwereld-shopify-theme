@@ -1,3 +1,4 @@
+{%- assign sw_root = routes.root_url | append: '/' | replace: '//', '/' | remove_last: '/' -%}
 {% assign read_min = article.content | strip_html | split: ' ' | size | divided_by: 200 | plus: 1 %}
 {% assign pub_date = article.published_at | date: '%d %B %Y' %}
 {% assign category_tag = '' %}
@@ -37,7 +38,7 @@
     <nav class="sw-art-breadcrumb" aria-label="Breadcrumb">
       <a href="/">Home</a>
       <span class="sw-art-sep">›</span>
-      <a href="/blogs/{{ article.blog.handle }}">{{ article.blog.title }}</a>
+      <a href="{{ sw_root }}/blogs/{{ article.blog.handle }}">{{ article.blog.title }}</a>
       <span class="sw-art-sep">›</span>
       <span class="sw-art-current">{{ article.title | truncate: 55 }}</span>
     </nav>

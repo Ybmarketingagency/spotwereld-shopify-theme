@@ -1,3 +1,4 @@
+{%- assign sw_root = routes.root_url | append: '/' | replace: '//', '/' | remove_last: '/' -%}
 {%- comment -%}
   Spotwereld custom checkout — stap 2 "Bestellen"
   Gebruikers vullen hier hun gegevens in.
@@ -95,7 +96,7 @@
     <div class="swg-empty">
       <h2>{{ 'sw.kassa.leeg' | t }}</h2>
       <p>{{ 'sw.kassa.leeg_sub' | t }}</p>
-      <a href="/collections/all">{{ 'sw.kassa.verder' | t }}</a>
+      <a href="{{ sw_root }}/collections/all">{{ 'sw.kassa.verder' | t }}</a>
     </div>
   {%- else -%}
 
@@ -113,7 +114,7 @@
     <div class="swg-main">
       <div class="swg-account-row">
         <strong>{{ 'sw.kassa.account' | t }}</strong>
-        <a href="/account/login?return_url=/pages/gegevens" class="swg-btn-outline">
+        <a href="{{ sw_root }}/account/login?return_url={{ sw_root }}/pages/gegevens" class="swg-btn-outline">
           {{ 'sw.acct.inloggen' | t }}
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         </a>
@@ -231,7 +232,7 @@
             <div class="price">{{ item.final_line_price | money }}</div>
           </div>
         {%- endfor -%}
-        <a href="/cart" class="swg-edit-cart">{{ 'sw.kassa.wijzig' | t }}</a>
+        <a href="{{ sw_root }}/cart" class="swg-edit-cart">{{ 'sw.kassa.wijzig' | t }}</a>
       </div>
 
       <div class="swg-card">
@@ -456,7 +457,7 @@
     try { localStorage.setItem('sw_checkout_data', JSON.stringify(data)); } catch(e){}
 
     // 1. Get cart lines (variant IDs + quantities)
-    fetch('/cart.js', { credentials:'same-origin' })
+    fetch(((window.Theme && Theme.routes && Theme.routes.cart_url) || '/cart') + '.js', { credentials:'same-origin' })
       .then(function(r){ return r.json(); })
       .then(function(cart){
         var lines = cart.items.map(function(it){
@@ -536,7 +537,7 @@
       })
       .catch(function(err){
         console.error('Checkout error:', err);
-        showErrors(['Er ging iets mis: ' + (err.message || err) + '. Probeer opnieuw of <a href="/cart" style="color:#0F6FE3">{{ 'sw.kassa.terug' | t }}</a>.']);
+        showErrors(['Er ging iets mis: ' + (err.message || err) + '. Probeer opnieuw of <a href="{{ sw_root }}/cart" style="color:#0F6FE3">{{ 'sw.kassa.terug' | t }}</a>.']);
         btn.disabled = false;
         btn.innerHTML = origText;
       });
@@ -610,13 +611,13 @@
     btn.textContent = '{{ "sw.kassa.bezig" | t }}';
     if (msg) msg.hidden = true;
 
-    fetch('/cart.js', { credentials: 'same-origin' })
+    fetch(((window.Theme && Theme.routes && Theme.routes.cart_url) || '/cart') + '.js', { credentials: 'same-origin' })
       .then(function(r){ return r.json(); })
       .then(function(cart){
         var codes = applicableCodes(cart);
         var already = codes.some(function(c){ return c.toLowerCase() === code.toLowerCase(); });
         if (!already) codes.push(code);
-        return fetch('/cart/update.js', {
+        return fetch(((window.Theme && Theme.routes && Theme.routes.cart_update_url) || '/cart/update') + '.js', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
           credentials: 'same-origin',

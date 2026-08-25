@@ -1,3 +1,4 @@
+{%- assign sw_root = routes.root_url | append: '/' | replace: '//', '/' | remove_last: '/' -%}
 {%- comment -%}
   Spotwereld — "Vaak samen gekocht met"
   Kaart-grid (2 koloms) met afbeelding, titel, prijs ({{ 'sw.mand.btw' | t }}) en cart-knop.
@@ -131,7 +132,7 @@
     .then(function(res){
       if(!res.ok){ throw res.data; }
       var sections = res.data.sections;
-      return fetch('/cart.js').then(function(r){ return r.json(); }).then(function(cart){
+      return fetch(((window.Theme && Theme.routes && Theme.routes.cart_url) || '/cart') + '.js').then(function(r){ return r.json(); }).then(function(cart){
         document.dispatchEvent(new CustomEvent('cart:update', {
           bubbles: true,
           detail: { resource: cart, sourceId: 'sw-fbt', data: { source: 'sw-fbt', itemCount: cart.item_count, sections: sections } }
@@ -151,7 +152,7 @@
     })
     .catch(function(){
       btn.disabled = false;
-      window.location.href = '/cart';
+      window.location.href = '{{ sw_root }}/cart';
     });
   });
 })();

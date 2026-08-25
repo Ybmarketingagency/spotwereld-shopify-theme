@@ -1,3 +1,4 @@
+{%- assign sw_root = routes.root_url | append: '/' | replace: '//', '/' | remove_last: '/' -%}
 {% layout 'theme' %}
 
 <style>
@@ -151,7 +152,7 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
         </button>
 
-        <p class="sw-auth-tiny">Door je aan te melden ga je akkoord met onze <a href="/policies/terms-of-service" style="color:#0F6FE3">algemene voorwaarden</a> &amp; <a href="/policies/privacy-policy" style="color:#0F6FE3">privacybeleid</a>.</p>
+        <p class="sw-auth-tiny">Door je aan te melden ga je akkoord met onze <a href="{{ sw_root }}/policies/terms-of-service" style="color:#0F6FE3">algemene voorwaarden</a> &amp; <a href="{{ sw_root }}/policies/privacy-policy" style="color:#0F6FE3">privacybeleid</a>.</p>
       {%- endform -%}
 
       <div class="sw-auth-divider">Al een account?</div>

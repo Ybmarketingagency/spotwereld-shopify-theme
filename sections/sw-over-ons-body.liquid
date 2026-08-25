@@ -1,3 +1,4 @@
+{%- assign sw_root = routes.root_url | append: '/' | replace: '//', '/' | remove_last: '/' -%}
 <style>
 .sw-ks-wrap{max-width:1280px;margin:0 auto;padding:3rem 1.5rem 5rem;display:grid;grid-template-columns:1fr;gap:2.5rem}
 @media(min-width:768px){.sw-ks-wrap{grid-template-columns:220px 1fr}}
@@ -24,13 +25,13 @@
     <aside class="sw-ks-sidebar">
       <h3>{{ 'sw.nav.klantenservice' | t }}</h3>
       <nav>
-        <a href="/pages/contact">Contact</a>
-        <a href="/pages/over-ons">{{ 'sw.nav.overons' | t }}</a>
-        <a href="/pages/veelgestelde-vragen">{{ 'sw.nav.faq' | t }}</a>
-        <a href="/pages/verzending-retouren">{{ 'sw.nav.verzending' | t }}</a>
-        <a href="/pages/garantie">{{ 'sw.nav.garantie' | t }}</a>
-        <a href="/pages/algemene-voorwaarden">{{ 'sw.nav.voorwaarden' | t }}</a>
-        <a href="/pages/privacyverklaring">{{ 'sw.nav.privacy' | t }}</a>
+        <a href="{{ sw_root }}/pages/contact">Contact</a>
+        <a href="{{ sw_root }}/pages/over-ons">{{ 'sw.nav.overons' | t }}</a>
+        <a href="{{ sw_root }}/pages/veelgestelde-vragen">{{ 'sw.nav.faq' | t }}</a>
+        <a href="{{ sw_root }}/pages/verzending-retouren">{{ 'sw.nav.verzending' | t }}</a>
+        <a href="{{ sw_root }}/pages/garantie">{{ 'sw.nav.garantie' | t }}</a>
+        <a href="{{ sw_root }}/pages/algemene-voorwaarden">{{ 'sw.nav.voorwaarden' | t }}</a>
+        <a href="{{ sw_root }}/pages/privacyverklaring">{{ 'sw.nav.privacy' | t }}</a>
       </nav>
     </aside>
 
@@ -46,7 +47,7 @@
             (label, knop, foto en de waardekaarten) blijft in het thema.
           {%- endcomment -%}
           <div class="sw-over-verhaal">{{ page.content }}</div>
-          <a href="/collections/all" style="display:inline-flex;align-items:center;gap:.5rem;padding:.8rem 1.75rem;background:linear-gradient(135deg,#083D7D,#0F6FE3);color:#fff;font-weight:700;border-radius:.625rem;text-decoration:none;font-size:.9375rem">
+          <a href="{{ sw_root }}/collections/all" style="display:inline-flex;align-items:center;gap:.5rem;padding:.8rem 1.75rem;background:linear-gradient(135deg,#083D7D,#0F6FE3);color:#fff;font-weight:700;border-radius:.625rem;text-decoration:none;font-size:.9375rem">
             {{ 'sw.home.cats.link' | t }}
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
           </a>
@@ -86,8 +87,8 @@
         <h3 style="color:#fff;font-weight:800;font-size:1.25rem;margin:0 0 .5rem">{{ 'sw.over.slot_kop' | t }}</h3>
         <p style="color:#93c5fd;font-size:.9375rem;margin:0 0 1.5rem">{{ 'sw.over.slot_tekst' | t }}</p>
         <div style="display:flex;flex-wrap:wrap;gap:.875rem;justify-content:center">
-          <a href="/collections/all" style="display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1.75rem;background:linear-gradient(135deg,#083D7D,#0F6FE3);color:#fff;font-weight:700;border-radius:.625rem;text-decoration:none;font-size:.9375rem">{{ 'sw.over.knop_producten' | t }}</a>
-          <a href="/pages/contact" style="display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1.75rem;background:transparent;color:#fff;font-weight:700;border-radius:.625rem;text-decoration:none;font-size:.9375rem;border:2px solid rgba(255,255,255,0.35)">{{ 'sw.over.knop_contact' | t }}</a>
+          <a href="{{ sw_root }}/collections/all" style="display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1.75rem;background:linear-gradient(135deg,#083D7D,#0F6FE3);color:#fff;font-weight:700;border-radius:.625rem;text-decoration:none;font-size:.9375rem">{{ 'sw.over.knop_producten' | t }}</a>
+          <a href="{{ sw_root }}/pages/contact" style="display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1.75rem;background:transparent;color:#fff;font-weight:700;border-radius:.625rem;text-decoration:none;font-size:.9375rem;border:2px solid rgba(255,255,255,0.35)">{{ 'sw.over.knop_contact' | t }}</a>
         </div>
       </div>
 

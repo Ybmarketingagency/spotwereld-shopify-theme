@@ -59,7 +59,10 @@
     e.preventDefault();
     e.stopPropagation();
     e.stopImmediatePropagation();
-    window.location.href = '/pages/gegevens';
+    // Shopify.routes.root is '/' op de hoofdtaal en '/en/' op de Engelse site. Zonder dit
+    // voorvoegsel belandde een Engelse bezoeker bij het afrekenen op de Nederlandse pagina.
+    var swRoot = (window.Shopify && window.Shopify.routes && window.Shopify.routes.root) || '/';
+    window.location.href = swRoot + 'pages/gegevens';
   }, true);
 
   // Hier stond een keten van <html>-classes: checkProductPage() zette sw-product-page,
@@ -226,7 +229,7 @@
       fd.append('contact[tags]','newsletter,welkom-5');
       fd.append('contact[accepts_marketing]','true');
       fd.append('contact[email]', email);
-      fetch('/contact', { method:'POST', body: fd, credentials:'same-origin' })
+      fetch(((window.Shopify && window.Shopify.routes && window.Shopify.routes.root) || '/') + 'contact', { method:'POST', body: fd, credentials:'same-origin' })
         .catch(function(){})
         .finally(function(){
           setCode(DISCOUNT_CODE);

@@ -1,3 +1,4 @@
+{%- assign sw_root = routes.root_url | append: '/' | replace: '//', '/' | remove_last: '/' -%}
 <style>
 .sw-ks-wrap{max-width:1280px;margin:0 auto;padding:3rem 1.5rem 5rem;display:grid;grid-template-columns:1fr;gap:2.5rem}
 @media(min-width:768px){.sw-ks-wrap{grid-template-columns:220px 1fr}}
@@ -22,13 +23,13 @@
     <aside class="sw-ks-sidebar">
       <h3>{{ 'sw.nav.klantenservice' | t }}</h3>
       <nav>
-        <a href="/pages/contact">Contact</a>
-        <a href="/pages/over-ons">{{ 'sw.nav.overons' | t }}</a>
-        <a href="/pages/veelgestelde-vragen">{{ 'sw.nav.faq' | t }}</a>
-        <a href="/pages/verzending-retouren">{{ 'sw.nav.verzending' | t }}</a>
-        <a href="/pages/garantie">{{ 'sw.nav.garantie' | t }}</a>
-        <a href="/pages/algemene-voorwaarden">{{ 'sw.nav.voorwaarden' | t }}</a>
-        <a href="/pages/privacyverklaring">{{ 'sw.nav.privacy' | t }}</a>
+        <a href="{{ sw_root }}/pages/contact">Contact</a>
+        <a href="{{ sw_root }}/pages/over-ons">{{ 'sw.nav.overons' | t }}</a>
+        <a href="{{ sw_root }}/pages/veelgestelde-vragen">{{ 'sw.nav.faq' | t }}</a>
+        <a href="{{ sw_root }}/pages/verzending-retouren">{{ 'sw.nav.verzending' | t }}</a>
+        <a href="{{ sw_root }}/pages/garantie">{{ 'sw.nav.garantie' | t }}</a>
+        <a href="{{ sw_root }}/pages/algemene-voorwaarden">{{ 'sw.nav.voorwaarden' | t }}</a>
+        <a href="{{ sw_root }}/pages/privacyverklaring">{{ 'sw.nav.privacy' | t }}</a>
       </nav>
     </aside>
 
@@ -113,7 +114,7 @@
               <p style="color:#6b7280;font-size:.875rem;margin:0">{{ 'sw.contact.a4' | t }}</p>
             </div>
             <div style="background:#EBF2FF;border-radius:.75rem;padding:1.25rem;border:1px solid #bfdbfe">
-              <p style="color:#083D7D;font-size:.875rem;margin:0"><strong>{{ 'sw.contact.meer' | t }}</strong> Bekijk onze <a href="/pages/veelgestelde-vragen" style="color:#0F6FE3;font-weight:600">{{ 'sw.contact.volledige_faq' | t }}</a> of neem direct contact op.</p>
+              <p style="color:#083D7D;font-size:.875rem;margin:0"><strong>{{ 'sw.contact.meer' | t }}</strong> Bekijk onze <a href="{{ sw_root }}/pages/veelgestelde-vragen" style="color:#0F6FE3;font-weight:600">{{ 'sw.contact.volledige_faq' | t }}</a> of neem direct contact op.</p>
             </div>
           </div>
         </div>

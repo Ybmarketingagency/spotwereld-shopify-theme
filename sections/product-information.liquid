@@ -1,3 +1,4 @@
+{%- assign sw_root = routes.root_url | append: '/' | replace: '//', '/' | remove_last: '/' -%}
 
 
 <script type="application/ld+json">
@@ -444,7 +445,7 @@
     <div class="sw-gidsen__lijst">
       {%- for sw_g in sw_gidslijst -%}
         {%- assign sw_d = sw_g | split: '|' -%}
-        <a class="sw-gidsen__kaart" href="/pages/{{ sw_d[0] }}">
+        <a class="sw-gidsen__kaart" href="{{ sw_root }}/pages/{{ sw_d[0] }}">
           <span class="sw-gidsen__titel">{{ sw_d[1] }}</span>
           <span class="sw-gidsen__tekst">{{ sw_d[2] }}</span>
         </a>

@@ -1,3 +1,4 @@
+{%- assign sw_root = routes.root_url | append: '/' | replace: '//', '/' | remove_last: '/' -%}
 <!doctype html>
 <html
   {% if request.design_mode %}
@@ -270,14 +271,14 @@
               <p class="sw-vg-sidebar-head">Verlichtingsgids</p>
               <nav class="sw-vg-nav">
                 <span class="sw-vg-nav-cat sw-first">Installatie</span>
-                <a href="/pages/inbouwspots-plaatsen">Inbouwspots plaatsen</a>
-                <a href="/pages/tl-naar-led">TL vervangen door LED-TL</a>
+                <a href="{{ sw_root }}/pages/inbouwspots-plaatsen">Inbouwspots plaatsen</a>
+                <a href="{{ sw_root }}/pages/tl-naar-led">TL vervangen door LED-TL</a>
                 <span class="sw-vg-nav-cat">Advies</span>
-                <a href="/pages/led-dimmer-kiezen">De juiste dimmer kiezen</a>
+                <a href="{{ sw_root }}/pages/led-dimmer-kiezen">De juiste dimmer kiezen</a>
               </nav>
               <div class="sw-vg-sidebar-cta">
-                <a href="/pages/verlichtingsgids">Alle gidsen</a>
-                <a href="/collections/inbouwspots">Naar de inbouwspots</a>
+                <a href="{{ sw_root }}/pages/verlichtingsgids">Alle gidsen</a>
+                <a href="{{ sw_root }}/collections/inbouwspots">Naar de inbouwspots</a>
               </div>
             </aside>
             <div class="sw-vg-content">

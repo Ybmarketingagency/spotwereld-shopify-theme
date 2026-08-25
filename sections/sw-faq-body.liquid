@@ -1,3 +1,4 @@
+{%- assign sw_root = routes.root_url | append: '/' | replace: '//', '/' | remove_last: '/' -%}
 {%- comment -%}
   De vragen komen uit Content > Pagina's > Veelgestelde Vragen. Structuur:
   <h2> is een categorie, <h3> een vraag, de HTML daaronder het antwoord.
@@ -56,13 +57,13 @@
     <aside class="sw-ks-sidebar">
       <h3>{{ 'sw.nav.klantenservice' | t }}</h3>
       <nav>
-        <a href="/pages/contact">Contact</a>
-        <a href="/pages/over-ons">{{ 'sw.nav.overons' | t }}</a>
-        <a href="/pages/veelgestelde-vragen">{{ 'sw.nav.faq' | t }}</a>
-        <a href="/pages/verzending-retouren">{{ 'sw.nav.verzending' | t }}</a>
-        <a href="/pages/garantie">{{ 'sw.nav.garantie' | t }}</a>
-        <a href="/pages/algemene-voorwaarden">{{ 'sw.nav.voorwaarden' | t }}</a>
-        <a href="/pages/privacyverklaring">{{ 'sw.nav.privacy' | t }}</a>
+        <a href="{{ sw_root }}/pages/contact">Contact</a>
+        <a href="{{ sw_root }}/pages/over-ons">{{ 'sw.nav.overons' | t }}</a>
+        <a href="{{ sw_root }}/pages/veelgestelde-vragen">{{ 'sw.nav.faq' | t }}</a>
+        <a href="{{ sw_root }}/pages/verzending-retouren">{{ 'sw.nav.verzending' | t }}</a>
+        <a href="{{ sw_root }}/pages/garantie">{{ 'sw.nav.garantie' | t }}</a>
+        <a href="{{ sw_root }}/pages/algemene-voorwaarden">{{ 'sw.nav.voorwaarden' | t }}</a>
+        <a href="{{ sw_root }}/pages/privacyverklaring">{{ 'sw.nav.privacy' | t }}</a>
       </nav>
     </aside>
 
@@ -94,7 +95,7 @@
 <div style="margin-top:3rem;background:#061f40;border-radius:1rem;padding:2rem;text-align:center">
         <h3 style="color:#fff;font-weight:700;font-size:1.125rem;margin:0 0 .5rem">{{ 'sw.faq.slot_kop' | t }}</h3>
         <p style="color:#93c5fd;font-size:.9375rem;margin:0 0 1.5rem">{{ 'sw.faq.slot_tekst' | t }}</p>
-        <a href="/pages/contact" style="display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1.75rem;background:linear-gradient(135deg,#083D7D,#0F6FE3);color:#fff;font-weight:700;border-radius:.625rem;text-decoration:none">{{ 'sw.faq.slot_knop' | t }}</a>
+        <a href="{{ sw_root }}/pages/contact" style="display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1.75rem;background:linear-gradient(135deg,#083D7D,#0F6FE3);color:#fff;font-weight:700;border-radius:.625rem;text-decoration:none">{{ 'sw.faq.slot_knop' | t }}</a>
       </div>
     </div>
   </div>
