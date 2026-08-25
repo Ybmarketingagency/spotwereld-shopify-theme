@@ -55,7 +55,7 @@
   if lichtkleur contains 'Dim2Warm'
     assign sw_badges = sw_badges | append: 'Dim2Warm|'
   endif
-  if lichtkleur contains 'Instelbaar' or lichtkleur contains 'Adjustable'
+  if lichtkleur contains 'Instelbaar' or lichtkleur contains 'Adjustable' or lichtkleur contains 'Tunable' or lichtkleur contains 'Selectable' or lichtkleur contains 'Adaptable'
     assign sw_badges = sw_badges | append: 'CCT-switch|'
   endif
   if ip_filter contains 'IP65'
