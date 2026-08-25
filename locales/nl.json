@@ -718,7 +718,14 @@
       "accessoires_titel": "LED accessoires: dimmers, drivers en lampen",
       "product_desc": "{{ titel }} - Premium LED kwaliteit, snelle levering en 5 jaar garantie bij Spotwereld.",
       "collectie_desc": "Bekijk onze {{ titel }} collectie. Premium LED kwaliteit met 5 jaar garantie. Vandaag besteld, morgen verzonden.",
-      "pagina_desc": "Premium LED verlichting bij Spotwereld"
+      "pagina_desc": "Premium LED verlichting bij Spotwereld",
+      "contact_titel": "Contact opnemen &mdash; advies over LED verlichting",
+      "contact_desc": "Vragen over zaagmaat, lichtkleur of dimmen? Bel (0)85 333 26 72 of mail info@spotwereld.nl. We antwoorden binnen 24 uur op werkdagen.",
+      "verzending_titel": "Verzending, levertijd en retourneren",
+      "verzending_desc": "Vandaag besteld, morgen verzonden. Gratis verzending vanaf &euro; 50, veertien dagen bedenktijd en retour via een PostNL-servicepunt.",
+      "partner_titel": "Partner worden voor installateurs en bedrijven",
+      "partner_desc": "Installateurs, elektriciens en aannemers kunnen partner worden bij Spotwereld. Na controle van je KvK-nummer ontvang je een eigen kortingscode.",
+      "gegevens_titel": "Afrekenen"
     },
     "partner": {
       "hero_kop": "Word partner van Spotwereld",

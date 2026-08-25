@@ -168,6 +168,8 @@
     case collection.handle
       when 'accessoires'
         assign sw_title = 'sw.seo.accessoires_titel' | t | append: ' | ' | append: sw_brand
+      when 'frontpage'
+        assign sw_title = 'sw.collectie.titel_alles' | t | append: ' | ' | append: sw_brand
       when 'alle-producten'
         assign sw_title = 'sw.collectie.titel_alles' | t | append: ' | ' | append: sw_brand
       when 'all'
@@ -187,8 +189,32 @@
     assign sw_title = article.title | append: ' | ' | append: sw_brand | append: ' Blog'
     assign sw_desc = article.excerpt_or_content | strip_html | truncatewords: 24
   elsif request.page_type == 'page'
-    assign sw_title = page.title | append: ' | ' | append: sw_brand
-    if page.content != blank
+    # Paginatitels als "Contact | Spotwereld" zijn met 20 tekens te mager voor de ruimte
+    # die Google geeft, en vier paginas deelden dezelfde terugval-omschrijving. Deze
+    # handles krijgen daarom een eigen titel en omschrijving uit de taalbestanden, zodat
+    # ze meteen in beide talen kloppen. Een in de admin ingevulde SEO-titel wint hier
+    # nog steeds van, want die wordt hieronder pas toegepast.
+    case page.handle
+      when 'contact'
+        assign sw_paginakop = 'sw.seo.contact_titel' | t
+        assign sw_paginadesc = 'sw.seo.contact_desc' | t
+      when 'verzending-retouren'
+        assign sw_paginakop = 'sw.seo.verzending_titel' | t
+        assign sw_paginadesc = 'sw.seo.verzending_desc' | t
+      when 'partner-worden'
+        assign sw_paginakop = 'sw.seo.partner_titel' | t
+        assign sw_paginadesc = 'sw.seo.partner_desc' | t
+      when 'gegevens'
+        assign sw_paginakop = 'sw.seo.gegevens_titel' | t
+    endcase
+    if sw_paginakop != blank
+      assign sw_title = sw_paginakop | append: ' | ' | append: sw_brand
+    else
+      assign sw_title = page.title | append: ' | ' | append: sw_brand
+    endif
+    if sw_paginadesc != blank
+      assign sw_desc = sw_paginadesc
+    elsif page.content != blank
       assign sw_desc = page.content | strip_html | truncatewords: 24
     else
       assign sw_desc = 'sw.seo.pagina_desc' | t

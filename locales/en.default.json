@@ -359,7 +359,7 @@
       "modellen_een": "1 model",
       "modellen_meer": "{{ count }} models",
       "uitvoeringen": "versions",
-      "titel_patroon": "Buy {{ titel }} - LED {{ titel }}",
+      "titel_patroon": "Buy LED {{ titel }}",
       "titel_alles": "All LED lighting",
       "titel_kopen": "buy"
     },
@@ -722,12 +722,19 @@
     },
     "seo": {
       "pagina": "Page {{ nummer }}",
-      "home_titel": "LED Recessed Spotlights, Surface Spotlights & Pendant Lights",
+      "home_titel": "LED Recessed & Surface Spotlights, Pendants",
       "home_desc": "Premium LED lighting for every interior. CCT switchable, dimmable, IP65, 25,000 hour lifespan. Order today, shipped tomorrow.",
       "accessoires_titel": "LED accessories: dimmers, drivers and lamps",
       "product_desc": "{{ titel }} - premium LED quality, fast delivery and a 5 year warranty at Spotwereld.",
       "collectie_desc": "Browse our {{ titel }} collection. Premium LED quality with a 5 year warranty. Order today, shipped tomorrow.",
-      "pagina_desc": "Premium LED lighting at Spotwereld"
+      "pagina_desc": "Premium LED lighting at Spotwereld",
+      "contact_titel": "Contact us &mdash; advice on LED lighting",
+      "contact_desc": "Questions about cut-out size, light colour or dimming? Call (0)85 333 26 72 or email info@spotwereld.nl. We reply within one working day.",
+      "verzending_titel": "Shipping, delivery times and returns",
+      "verzending_desc": "Order today, shipped tomorrow. Free delivery from &euro; 50, fourteen days to change your mind and returns via a PostNL service point.",
+      "partner_titel": "Become a partner &mdash; for installers and trade",
+      "partner_desc": "Installers, electricians and contractors can become a Spotwereld partner. Once we have checked your registration number you receive your own discount code.",
+      "gegevens_titel": "Checkout"
     },
     "partner": {
       "hero_kop": "Become a Spotwereld partner",

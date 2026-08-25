@@ -18,6 +18,11 @@
     assign ratio = image_aspect_ratio
   endif
   assign image_width = image_width | default: 1200
+  # De gidskaarten onderaan elke productpagina hadden een lege alt: image_tag neemt die
+  # over van de afbeelding zelf, en in Shopify staat er bij die bestanden niets ingevuld.
+  # Vier lege alts per pagina maal honderd paginas is bijna vijfhonderd afbeeldingen die
+  # Google niet kan plaatsen. Valt nu terug op de titel van het artikel of de pagina.
+  assign sw_alt = resource.featured_image.alt | default: resource.title
   assign widths = '240, 352, 832, 1200'
   assign image_sizes = image_sizes | default: 'auto'
   assign single_thumbnail_collection = false
@@ -88,6 +93,7 @@
           | image_tag:
             loading: 'lazy',
             class: 'resource-card__image',
+            alt: sw_alt,
             widths: widths,
             sizes: image_sizes,
             ref: ref_image_to_transition,
@@ -107,6 +113,7 @@
             | image_tag:
               loading: 'lazy',
               class: 'resource-card__image resource-card__image--secondary',
+              alt: sw_alt,
               widths: widths,
               sizes: image_sizes,
               ref: ref_image_to_transition,
