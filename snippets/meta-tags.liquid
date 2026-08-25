@@ -48,7 +48,7 @@
 >
 <meta
   property="og:title"
-  content="{{ og_title | escape }}"
+  content="{{ og_title | escape_once }}"
 >
 <meta
   property="og:type"
@@ -56,7 +56,7 @@
 >
 <meta
   property="og:description"
-  content="{{ og_description | escape }}"
+  content="{{ og_description | escape_once }}"
 >
 
 {%- if page_image -%}
@@ -101,11 +101,11 @@
 >
 <meta
   name="twitter:title"
-  content="{{ og_title | escape }}"
+  content="{{ og_title | escape_once }}"
 >
 <meta
   name="twitter:description"
-  content="{{ og_description | escape }}"
+  content="{{ og_description | escape_once }}"
 >
 
 {%- comment -%}
@@ -207,7 +207,7 @@
   {%- if current_page != 1 %} &ndash; Pagina {{ current_page }}{% endif -%}
 </title>
 
-<meta name="description" content="{{ sw_desc | strip_html | escape }}">
+<meta name="description" content="{{ sw_desc | strip_html | escape_once }}">
 
 {%- comment -%}
   Spotwereld: canonical.
@@ -366,7 +366,7 @@
   "@type": "BreadcrumbList",
   "itemListElement": [
     {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ request.origin }}"},
-    {"@type": "ListItem", "position": 2, "name": "{{ collection.title | escape }}", "item": "{{ request.origin }}{{ collection.url }}"}
+    {"@type": "ListItem", "position": 2, "name": "{{ collection.title | escape_once }}", "item": "{{ request.origin }}{{ collection.url }}"}
   ]
 }
 </script>
@@ -380,10 +380,10 @@
   "itemListElement": [
     {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ request.origin }}"},
     {%- if collection -%}
-    {"@type": "ListItem", "position": 2, "name": "{{ collection.title | escape }}", "item": "{{ request.origin }}{{ collection.url }}"},
-    {"@type": "ListItem", "position": 3, "name": "{{ product.title | escape }}", "item": "{{ request.origin }}{{ product.url }}"}
+    {"@type": "ListItem", "position": 2, "name": "{{ collection.title | escape_once }}", "item": "{{ request.origin }}{{ collection.url }}"},
+    {"@type": "ListItem", "position": 3, "name": "{{ product.title | escape_once }}", "item": "{{ request.origin }}{{ product.url }}"}
     {%- else -%}
-    {"@type": "ListItem", "position": 2, "name": "{{ product.title | escape }}", "item": "{{ request.origin }}{{ product.url }}"}
+    {"@type": "ListItem", "position": 2, "name": "{{ product.title | escape_once }}", "item": "{{ request.origin }}{{ product.url }}"}
     {%- endif -%}
   ]
 }
@@ -398,8 +398,8 @@
   "@type": "BreadcrumbList",
   "itemListElement": [
     {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ request.origin }}"},
-    {"@type": "ListItem", "position": 2, "name": "{{ blog.title | escape }}", "item": "{{ request.origin }}{{ blog.url }}"},
-    {"@type": "ListItem", "position": 3, "name": "{{ article.title | escape }}", "item": "{{ request.origin }}{{ article.url }}"}
+    {"@type": "ListItem", "position": 2, "name": "{{ blog.title | escape_once }}", "item": "{{ request.origin }}{{ blog.url }}"},
+    {"@type": "ListItem", "position": 3, "name": "{{ article.title | escape_once }}", "item": "{{ request.origin }}{{ article.url }}"}
   ]
 }
 </script>
@@ -413,7 +413,7 @@
   "@type": "BreadcrumbList",
   "itemListElement": [
     {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ request.origin }}"},
-    {"@type": "ListItem", "position": 2, "name": "{{ page.title | escape }}", "item": "{{ request.origin }}{{ page.url }}"}
+    {"@type": "ListItem", "position": 2, "name": "{{ page.title | escape_once }}", "item": "{{ request.origin }}{{ page.url }}"}
   ]
 }
 </script>
@@ -427,7 +427,7 @@
 {
   "@context": "https://schema.org",
   "@type": "ItemList",
-  "name": "{{ collection.title | escape }}",
+  "name": "{{ collection.title | escape_once }}",
   "url": "{{ request.origin }}{{ collection.url }}",
   "numberOfItems": {{ collection.products_count }},
   "itemListElement": [
@@ -436,7 +436,7 @@
       "@type": "ListItem",
       "position": {{ forloop.index }},
       "url": "{{ request.origin }}{{ item.url }}",
-      "name": "{{ item.title | escape }}"
+      "name": "{{ item.title | escape_once }}"
     }{%- unless forloop.last -%},{%- endunless -%}
     {%- endfor -%}
   ]
@@ -457,14 +457,14 @@
   "@context": "https://schema.org",
   "@type": "Product",
   "@id": "{{ product.url }}#product",
-  "name": "{{ product.title | escape }}",
+  "name": "{{ product.title | escape_once }}",
   "url": "{{ request.origin }}{{ product.url }}",
   {%- if product.featured_media -%}
   "image": "https:{{ product.featured_media | image_url: width: 1200 }}",
   {%- endif -%}
   "brand": {
     "@type": "Brand",
-    "name": "{{ product.vendor | default: 'Spotwereld' | escape }}"
+    "name": "{{ product.vendor | default: 'Spotwereld' | escape_once }}"
   },
   "offers": {
     "@type": "Offer",
@@ -527,10 +527,10 @@
 {%- endunless -%}
 
 {%- comment -%} Override Open Graph title/description met onze SEO versie {%- endcomment -%}
-<meta property="og:title" content="{{ sw_title | escape }}" data-sw-override>
-<meta property="og:description" content="{{ sw_desc | strip_html | escape }}" data-sw-override>
-<meta name="twitter:title" content="{{ sw_title | escape }}" data-sw-override>
-<meta name="twitter:description" content="{{ sw_desc | strip_html | escape }}" data-sw-override>
+<meta property="og:title" content="{{ sw_title | escape_once }}" data-sw-override>
+<meta property="og:description" content="{{ sw_desc | strip_html | escape_once }}" data-sw-override>
+<meta name="twitter:title" content="{{ sw_title | escape_once }}" data-sw-override>
+<meta name="twitter:description" content="{{ sw_desc | strip_html | escape_once }}" data-sw-override>
 
 {%- comment -%} Card image override mechanisme (uitgeschakeld; images serverside correct) {%- endcomment -%}
 <style>
@@ -647,7 +647,7 @@ details.facets__item[open] .facets__icon:empty::after{transform:rotate(-135deg);
 {% if page_description %}
   <meta
     name="description"
-    content="{{ page_description | escape }}"
+    content="{{ page_description | escape_once }}"
     data-sw-fallback
   >
 {% endif %}

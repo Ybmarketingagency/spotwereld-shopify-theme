@@ -468,7 +468,10 @@
       "knop": "Get 10% off &#8594;",
       "klein": "No spam. Unsubscribe any time. &#128274; Safe &amp; trusted",
       "plaats": "your@email.com",
-      "kop_html": "Get <strong style=\"color:#0F6FE3\">10% off</strong> your first order"
+      "kop_html": "Get <strong style=\"color:#0F6FE3\">10% off</strong> your first order",
+      "dank_kop": "Thank you",
+      "dank_code": "Your discount code is:",
+      "dank_mail": "We are also sending a confirmation to"
     },
     "voet": {
       "over": "Spotwereld is your specialist in LED lighting. We supply quality products for every interior.",
@@ -564,7 +567,9 @@
       "controleer": "Check your details:",
       "terug": "back to cart",
       "garantie": "5-year warranty",
-      "versleuteld": "Secure, encrypted payment"
+      "versleuteld": "Secure, encrypted payment",
+      "verder_kort": "Continue shopping",
+      "bezig": "Working..."
     },
     "nav": {
       "klantenservice": "Customer service",
@@ -718,6 +723,10 @@
       "keuze": "Choosing &amp; advice",
       "dimmer": "Choosing the right LED dimmer",
       "alle": "View all products"
+    },
+    "filter": {
+      "kleur": "Housing colour",
+      "nee": "No"
     }
   }
 }

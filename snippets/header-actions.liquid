@@ -157,7 +157,7 @@
 
           {%- comment -%} Voordelen lijst {%- endcomment -%}
           <ul style="margin:0;padding:.9rem 1.1rem .75rem;list-style:none;border-bottom:1px solid #eef1f7;">
-            {% assign sw_voordelen = "{{ 'sw.acct.voordelen' | t }}" | split: "," %}
+            {% assign sw_voordelen = 'sw.acct.voordelen' | t | split: "," %}
             {% for v in sw_voordelen %}
               <li style="display:flex;align-items:flex-start;gap:.55rem;margin-bottom:{% if forloop.last %}0{% else %}.55rem{% endif %};font-size:.84rem;color:#1e3a5f;line-height:1.35;">
                 <svg style="flex-shrink:0;margin-top:1px;" width="15" height="15" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10" fill="#0F6FE3"/><polyline points="5,10 8.5,13.5 15,7" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>

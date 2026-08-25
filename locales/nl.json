@@ -459,7 +459,10 @@
       "knop": "Ontvang 10% korting &#8594;",
       "klein": "Geen spam. Uitschrijven kan altijd. &#128274; Veilig &amp; vertrouwd",
       "plaats": "jouw@emailadres.nl",
-      "kop_html": "Ontvang <strong style=\"color:#0F6FE3\">10% korting</strong> op je eerste bestelling"
+      "kop_html": "Ontvang <strong style=\"color:#0F6FE3\">10% korting</strong> op je eerste bestelling",
+      "dank_kop": "Bedankt!",
+      "dank_code": "Je kortingscode is:",
+      "dank_mail": "We sturen ook een bevestiging naar"
     },
     "voet": {
       "over": "Spotwereld is je specialist in LED verlichting. Wij bieden kwalitatieve producten voor elk interieur.",
@@ -555,7 +558,9 @@
       "controleer": "Controleer je gegevens:",
       "terug": "terug naar winkelmand",
       "garantie": "5 jaar garantie",
-      "versleuteld": "Veilige en versleutelde betaling"
+      "versleuteld": "Veilige en versleutelde betaling",
+      "verder_kort": "Verder winkelen",
+      "bezig": "Bezig..."
     },
     "nav": {
       "klantenservice": "Klantenservice",
@@ -709,6 +714,10 @@
       "keuze": "Keuze &amp; advies",
       "dimmer": "De juiste LED-dimmer kiezen",
       "alle": "Bekijk alle producten"
+    },
+    "filter": {
+      "kleur": "Kleur behuizing",
+      "nee": "Nee"
     }
   }
 }

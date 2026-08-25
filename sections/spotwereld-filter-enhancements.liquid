@@ -36,7 +36,7 @@ li.facets__inputs-list-item:has(input[data-label="4000K (neutraal-wit)"]) ~ li.f
           mediaContainer.style.position = 'relative';
           var stock = document.createElement('span');
           stock.className = 'sw-coll-stock';
-          stock.textContent = 'Op voorraad';
+          stock.textContent = '{{ "sw.kaart.voorraad" | t }}';
           mediaContainer.appendChild(stock);
         }
       }
@@ -49,7 +49,7 @@ li.facets__inputs-list-item:has(input[data-label="4000K (neutraal-wit)"]) ~ li.f
         var bekijkBtn = document.createElement('a');
         bekijkBtn.href = prodHref;
         bekijkBtn.className = 'sw-coll-bekijk';
-        bekijkBtn.innerHTML = 'Bekijk Product <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
+        bekijkBtn.innerHTML = '{{ "sw.kaart.bekijk" | t }} <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
         qaContainer.style.display = 'none';
         qaContainer.parentNode.insertBefore(bekijkBtn, qaContainer.nextSibling);
       }
@@ -58,7 +58,7 @@ li.facets__inputs-list-item:has(input[data-label="4000K (neutraal-wit)"]) ~ li.f
   function rnK(){
     document.querySelectorAll('.facets__label,.facets__summary .facets__label').forEach(function(el){
       var t=el.textContent.trim();
-      if(t==='Kleur'||t==='Color')el.textContent='Kleur behuizing';
+      if(t==='Kleur'||t==='Color')el.textContent='{{ "sw.filter.kleur" | t }}';
     });
   }
   function findFacetByName(name){
@@ -82,7 +82,7 @@ li.facets__inputs-list-item:has(input[data-label="4000K (neutraal-wit)"]) ~ li.f
     var clone=existingItem.cloneNode(true);
     clone.classList.add('sw-fake-nee');
     var lblTxt=clone.querySelector('.checkbox__label-text,label span,label');
-    if(lblTxt)lblTxt.textContent='Nee';
+    if(lblTxt)lblTxt.textContent='{{ "sw.filter.nee" | t }}';
     var input=clone.querySelector('input');
     if(input){input.disabled=true;input.checked=false;input.value='Nee';}
     var countEl=clone.querySelector('.facets__count,.facets__item-count');

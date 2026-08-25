@@ -450,7 +450,7 @@
     var btn = document.getElementById('swg-submit');
     btn.disabled = true;
     var origText = btn.innerHTML;
-    btn.innerHTML = 'Bezig...';
+    btn.innerHTML = '{{ "sw.kassa.bezig" | t }}';
 
     // Sla op in localStorage voor terugkeer naar de bestelpagina
     try { localStorage.setItem('sw_checkout_data', JSON.stringify(data)); } catch(e){}
@@ -607,7 +607,7 @@
     if (!code) return;
     var label = btn.textContent;
     btn.disabled = true;
-    btn.textContent = 'Bezig...';
+    btn.textContent = '{{ "sw.kassa.bezig" | t }}';
     if (msg) msg.hidden = true;
 
     fetch('/cart.js', { credentials: 'same-origin' })
