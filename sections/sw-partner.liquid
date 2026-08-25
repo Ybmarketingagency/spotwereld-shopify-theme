@@ -1,0 +1,257 @@
+{%- assign sw_root = routes.root_url | append: '/' | replace: '//', '/' | remove_last: '/' -%}
+{%- comment -%}
+  Partneraanvraag voor zakelijke klanten.
+
+  Waar de aanvraag heen gaat, in twee stappen:
+
+  1. Het zichtbare formulier is Shopify's eigen contactformulier. Alle contact[...]-velden
+     komen mee in de mail naar het winkeladres, dus bedrijfsnaam, KvK en btw-nummer staan
+     compleet in de inbox. Daar beoordeel je de aanvraag op.
+
+  2. Bij het versturen gaat er via sendBeacon nog een tweede, onzichtbare aanvraag naar
+     hetzelfde /contact-eindpunt met form_type=customer. Die legt de aanvrager vast als
+     klant met de tag partner-aanvraag. Daarmee staat elke aanvraag ook in Klanten en kun
+     je er op filteren; zonder die stap zou de mail de enige registratie zijn.
+
+  Na goedkeuring vervang je de tag door 'partner'. Op dat segment kun je een automatische
+  korting of een kortingscode zetten - dat is dezelfde route als bij TeleSource.
+
+  Let op: iedereen kan dit formulier invullen, dus de tag partner-aanvraag zegt alleen dat
+  iemand zich heeft gemeld. Hang er nooit rechtstreeks korting aan; die hoort aan 'partner'
+  te hangen, en die tag zet jij pas na controle van het KvK-nummer.
+{%- endcomment -%}
+
+<style>
+  .sw-pt-wrap{max-width:1280px;margin:0 auto;padding:0 1.5rem}
+  .sw-pt-hero{background:#061f40;padding:3.5rem 0 2.5rem}
+  .sw-pt-hero h1{color:#fff;font-weight:800;font-size:clamp(1.75rem,4vw,2.5rem);margin:0 0 .5rem}
+  .sw-pt-hero p{color:#93c5fd;font-size:1.0625rem;margin:0;max-width:44rem}
+  .sw-pt-body{background:#f9fafb;border-top:1px solid #e5e7eb;padding:3rem 0 4rem}
+  .sw-pt-layout{display:grid;grid-template-columns:1fr;gap:2.5rem}
+  @media(min-width:900px){.sw-pt-layout{grid-template-columns:1fr 1fr;gap:3.5rem}}
+  .sw-pt-card{background:#fff;border:1px solid #e5e7eb;border-radius:1rem;padding:2rem;box-shadow:0 1px 6px rgba(0,0,0,.06)}
+  .sw-pt-card h2{font-size:1.5rem;font-weight:800;color:#111827;margin:0 0 .375rem}
+  .sw-pt-lead{color:#6b7280;font-size:.9375rem;line-height:1.7;margin:0 0 1.75rem}
+  .sw-pt-input{width:100%;padding:.7rem .875rem;border:1px solid #d1d5db;border-radius:.5rem;font-size:.9375rem;font-family:inherit;color:#111827;background:#fff;box-sizing:border-box}
+  .sw-pt-input:focus{outline:none;border-color:#0F6FE3;box-shadow:0 0 0 3px rgba(15,111,227,.15)}
+  .sw-pt-label{display:block;font-size:.875rem;font-weight:600;color:#374151;margin-bottom:.3rem}
+  .sw-pt-req{color:#dc2626}
+  .sw-pt-fields{display:flex;flex-direction:column;gap:.875rem}
+  .sw-pt-duo{display:grid;grid-template-columns:1fr;gap:.875rem}
+  @media(min-width:560px){.sw-pt-duo{grid-template-columns:1fr 1fr}}
+  .sw-pt-knop{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.875rem 2rem;background:linear-gradient(135deg,#083D7D,#0F6FE3);color:#fff;font-weight:700;font-size:1rem;border:none;border-radius:.625rem;cursor:pointer;font-family:inherit}
+  .sw-pt-klein{color:#9ca3af;font-size:.8125rem;line-height:1.6;margin:.25rem 0 0}
+  .sw-pt-ok{background:#f0fdf4;border:1px solid #86efac;border-radius:.75rem;padding:1.5rem;color:#166534}
+  .sw-pt-ok strong{display:block;font-size:1.0625rem;margin-bottom:.375rem}
+  .sw-pt-fout{background:#fef2f2;border:1px solid #fca5a5;border-radius:.75rem;padding:1rem;color:#dc2626;font-size:.875rem;margin-bottom:1rem}
+  .sw-pt-stappen{list-style:none;padding:0;margin:0;counter-reset:swpt}
+  .sw-pt-stappen li{counter-increment:swpt;position:relative;padding-left:2.75rem;margin-bottom:1.5rem}
+  .sw-pt-stappen li:last-child{margin-bottom:0}
+  .sw-pt-stappen li::before{content:counter(swpt);position:absolute;left:0;top:0;width:1.875rem;height:1.875rem;border-radius:9999px;background:#EBF2FF;color:#083D7D;font-weight:800;font-size:.875rem;display:flex;align-items:center;justify-content:center}
+  .sw-pt-stappen h3{font-size:1rem;font-weight:700;color:#111827;margin:.25rem 0 .25rem}
+  .sw-pt-stappen p{color:#6b7280;font-size:.9375rem;line-height:1.65;margin:0}
+  .sw-pt-punten{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:1rem}
+  .sw-pt-punten li{display:flex;gap:.75rem;align-items:flex-start}
+  .sw-pt-punten svg{flex-shrink:0;margin-top:.15rem}
+  .sw-pt-punten strong{display:block;color:#111827;font-size:.9375rem;font-weight:700;margin-bottom:.15rem}
+  .sw-pt-punten span{color:#6b7280;font-size:.875rem;line-height:1.6}
+</style>
+
+<div class="sw-pt-hero">
+  <div class="sw-pt-wrap">
+    <h1>{{ 'sw.partner.hero_kop' | t }}</h1>
+    <p>{{ 'sw.partner.hero_sub' | t }}</p>
+  </div>
+</div>
+
+<div class="sw-pt-body">
+  <div class="sw-pt-wrap">
+    <div class="sw-pt-layout">
+
+      <div>
+        <div class="sw-pt-card">
+          <h2>{{ 'sw.partner.form_kop' | t }}</h2>
+          <p class="sw-pt-lead">{{ 'sw.partner.form_tekst' | t }}</p>
+
+          {% form 'contact', id: 'swPartnerForm' %}
+            {% if form.posted_successfully? %}
+              <div class="sw-pt-ok">
+                <strong>{{ 'sw.partner.bedankt_kop' | t }}</strong>
+                {{ 'sw.partner.bedankt_tekst' | t }}
+              </div>
+            {% else %}
+              {% if form.errors %}
+                <div class="sw-pt-fout">{{ form.errors | default_errors }}</div>
+              {% endif %}
+
+              {%- comment -%}
+                Het onderwerp staat vast, zodat partneraanvragen in de inbox te
+                onderscheiden zijn van gewone contactvragen.
+              {%- endcomment -%}
+              <input type="hidden" name="contact[subject]" value="{{ 'sw.partner.onderwerp' | t }}">
+
+              <div class="sw-pt-fields">
+                <div>
+                  <label class="sw-pt-label" for="swPtBedrijf">{{ 'sw.partner.bedrijf' | t }} <span class="sw-pt-req">*</span></label>
+                  <input class="sw-pt-input" id="swPtBedrijf" type="text" name="contact[Bedrijfsnaam]" required autocomplete="organization">
+                </div>
+
+                <div class="sw-pt-duo">
+                  <div>
+                    <label class="sw-pt-label" for="swPtKvk">{{ 'sw.partner.kvk' | t }} <span class="sw-pt-req">*</span></label>
+                    <input class="sw-pt-input" id="swPtKvk" type="text" name="contact[KvK-nummer]" required inputmode="numeric">
+                  </div>
+                  <div>
+                    <label class="sw-pt-label" for="swPtBtw">{{ 'sw.partner.btw' | t }}</label>
+                    <input class="sw-pt-input" id="swPtBtw" type="text" name="contact[Btw-nummer]">
+                  </div>
+                </div>
+
+                <div>
+                  <label class="sw-pt-label" for="swPtType">{{ 'sw.partner.soort' | t }} <span class="sw-pt-req">*</span></label>
+                  <select class="sw-pt-input" id="swPtType" name="contact[Soort bedrijf]" required>
+                    <option value="">{{ 'sw.partner.kies' | t }}</option>
+                    <option value="{{ 'sw.partner.soort_installateur' | t }}">{{ 'sw.partner.soort_installateur' | t }}</option>
+                    <option value="{{ 'sw.partner.soort_elektricien' | t }}">{{ 'sw.partner.soort_elektricien' | t }}</option>
+                    <option value="{{ 'sw.partner.soort_aannemer' | t }}">{{ 'sw.partner.soort_aannemer' | t }}</option>
+                    <option value="{{ 'sw.partner.soort_interieur' | t }}">{{ 'sw.partner.soort_interieur' | t }}</option>
+                    <option value="{{ 'sw.partner.soort_wederverkoper' | t }}">{{ 'sw.partner.soort_wederverkoper' | t }}</option>
+                    <option value="{{ 'sw.partner.soort_anders' | t }}">{{ 'sw.partner.soort_anders' | t }}</option>
+                  </select>
+                </div>
+
+                <div class="sw-pt-duo">
+                  <div>
+                    <label class="sw-pt-label" for="swPtNaam">{{ 'sw.partner.naam' | t }} <span class="sw-pt-req">*</span></label>
+                    <input class="sw-pt-input" id="swPtNaam" type="text" name="contact[name]" required autocomplete="name">
+                  </div>
+                  <div>
+                    <label class="sw-pt-label" for="swPtTel">{{ 'sw.partner.telefoon' | t }}</label>
+                    <input class="sw-pt-input" id="swPtTel" type="tel" name="contact[phone]" autocomplete="tel">
+                  </div>
+                </div>
+
+                <div class="sw-pt-duo">
+                  <div>
+                    <label class="sw-pt-label" for="swPtMail">{{ 'sw.partner.email' | t }} <span class="sw-pt-req">*</span></label>
+                    <input class="sw-pt-input" id="swPtMail" type="email" name="contact[email]" required autocomplete="email">
+                  </div>
+                  <div>
+                    <label class="sw-pt-label" for="swPtWeb">{{ 'sw.partner.website' | t }}</label>
+                    <input class="sw-pt-input" id="swPtWeb" type="text" name="contact[Website]" autocomplete="url">
+                  </div>
+                </div>
+
+                <div>
+                  <label class="sw-pt-label" for="swPtBericht">{{ 'sw.partner.toelichting' | t }}</label>
+                  <textarea class="sw-pt-input" id="swPtBericht" name="contact[body]" rows="4" style="resize:vertical" placeholder="{{ 'sw.partner.p_toelichting' | t }}"></textarea>
+                </div>
+
+                <button type="submit" class="sw-pt-knop">
+                  {{ 'sw.partner.verstuur' | t }}
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                </button>
+
+                <p class="sw-pt-klein">{{ 'sw.partner.privacy' | t }} <a href="{{ sw_root }}/pages/privacyverklaring" style="color:#0F6FE3">{{ 'sw.nav.privacy' | t }}</a>.</p>
+              </div>
+            {% endif %}
+          {% endform %}
+        </div>
+      </div>
+
+      <div>
+        <div class="sw-pt-card" style="margin-bottom:1.5rem">
+          <h2>{{ 'sw.partner.waarom_kop' | t }}</h2>
+          <p class="sw-pt-lead" style="margin-bottom:1.5rem">{{ 'sw.partner.waarom_tekst' | t }}</p>
+          <ul class="sw-pt-punten">
+            <li>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F6FE3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <span><strong>{{ 'sw.partner.punt1_kop' | t }}</strong>{{ 'sw.partner.punt1' | t }}</span>
+            </li>
+            <li>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F6FE3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <span><strong>{{ 'sw.partner.punt2_kop' | t }}</strong>{{ 'sw.partner.punt2' | t }}</span>
+            </li>
+            <li>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F6FE3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <span><strong>{{ 'sw.partner.punt3_kop' | t }}</strong>{{ 'sw.partner.punt3' | t }}</span>
+            </li>
+            <li>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F6FE3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <span><strong>{{ 'sw.partner.punt4_kop' | t }}</strong>{{ 'sw.partner.punt4' | t }}</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="sw-pt-card">
+          <h2>{{ 'sw.partner.hoe_kop' | t }}</h2>
+          <p class="sw-pt-lead" style="margin-bottom:1.75rem">{{ 'sw.partner.hoe_tekst' | t }}</p>
+          <ol class="sw-pt-stappen">
+            <li>
+              <h3>{{ 'sw.partner.stap1_kop' | t }}</h3>
+              <p>{{ 'sw.partner.stap1' | t }}</p>
+            </li>
+            <li>
+              <h3>{{ 'sw.partner.stap2_kop' | t }}</h3>
+              <p>{{ 'sw.partner.stap2' | t }}</p>
+            </li>
+            <li>
+              <h3>{{ 'sw.partner.stap3_kop' | t }}</h3>
+              <p>{{ 'sw.partner.stap3' | t }}</p>
+            </li>
+          </ol>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var form = document.getElementById('swPartnerForm');
+  if (!form) return;
+
+  // Naast de mail leggen we de aanvrager ook vast als klant met de tag
+  // partner-aanvraag, zodat elke aanvraag in Klanten terug te vinden is en niet
+  // alleen in de inbox. Dit gaat naar hetzelfde openbare /contact-eindpunt dat het
+  // nieuwsbriefformulier gebruikt, dus er komt geen API-sleutel aan te pas.
+  //
+  // sendBeacon en niet fetch: de pagina navigeert direct daarna weg en een gewone
+  // fetch wordt dan afgebroken.
+  form.addEventListener('submit', function(){
+    try {
+      var mail = form.querySelector('[name="contact[email]"]');
+      var naam = form.querySelector('[name="contact[name]"]');
+      var bedrijf = form.querySelector('[name="contact[Bedrijfsnaam]"]');
+      if (!mail || !mail.value) return;
+
+      var root = (window.Shopify && window.Shopify.routes && window.Shopify.routes.root) || '/';
+      var delen = (naam && naam.value ? naam.value : '').trim().split(/\s+/);
+
+      var fd = new FormData();
+      fd.append('form_type', 'customer');
+      fd.append('utf8', '✓');
+      fd.append('contact[email]', mail.value);
+      fd.append('contact[tags]', 'partner-aanvraag');
+      if (delen[0]) fd.append('contact[first_name]', delen[0]);
+      if (delen.length > 1) fd.append('contact[last_name]', delen.slice(1).join(' '));
+      // De bedrijfsnaam past niet in het klantformulier; die staat wel compleet in de
+      // mail. Hij gaat hier mee als achternaam-aanvulling zodat de klantenlijst
+      // herkenbaar blijft wanneer alleen een voornaam is ingevuld.
+      if (delen.length === 1 && bedrijf && bedrijf.value) fd.append('contact[last_name]', bedrijf.value);
+
+      navigator.sendBeacon(root + 'contact', fd);
+    } catch (e) {
+      // Mislukt het vastleggen, dan gaat de aanvraag zelf gewoon door.
+    }
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Partner worden",
+  "settings": []
+}
+{% endschema %}

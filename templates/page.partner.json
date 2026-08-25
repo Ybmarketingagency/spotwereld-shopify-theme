@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "partner": {
+      "type": "sw-partner",
+      "settings": {}
+    }
+  },
+  "order": ["partner"]
+}
