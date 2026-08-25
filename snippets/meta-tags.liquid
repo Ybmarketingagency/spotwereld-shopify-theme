@@ -29,6 +29,12 @@
   assign og_type = 'website'
   assign og_description = page_description | default: shop.description | default: shop.name
 
+  # Shopify leidt page_description zelf af uit de collectie- of productbeschrijving en
+  # escapet daarbij een & die daar al als &amp; staat, zodat er &amp;amp; uitkomt. In de
+  # meta description van de wandlampen las Google daardoor "Up &amp; down". Escape_once
+  # helpt hier niet, want de invoer is al dubbel geescaped; die draaien we hier terug.
+  assign og_description = og_description | replace: '&amp;amp;', '&amp;'
+
   if request.page_type == 'product'
     assign og_type = 'product'
   elsif request.page_type == 'article'
@@ -647,7 +653,7 @@ details.facets__item[open] .facets__icon:empty::after{transform:rotate(-135deg);
 {% if page_description %}
   <meta
     name="description"
-    content="{{ page_description | escape_once }}"
+    content="{{ page_description | replace: '&amp;amp;', '&amp;' | escape_once }}"
     data-sw-fallback
   >
 {% endif %}
