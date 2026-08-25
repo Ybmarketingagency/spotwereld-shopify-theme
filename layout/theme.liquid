@@ -36,6 +36,13 @@
       >
     {% endif %}
 
+    {%- comment -%}
+      Domeinverificatie van Meta. Moet als gewone tag in de statische head staan: Meta's
+      scraper voert geen JavaScript uit, dus een via script ingevoegde tag telt niet.
+      Hoort bij het bedrijfsportfolio Voltkracht, domein-ID 2115576176499556.
+    {%- endcomment -%}
+    <meta name="facebook-domain-verification" content="gzudje94pkqy44bop47qha0lbkz06l">
+
     {%- render 'meta-tags' -%}
     {%- render 'stylesheets' -%}
     {%- render 'fonts' -%}
