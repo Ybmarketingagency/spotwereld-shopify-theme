@@ -52,7 +52,9 @@
         De themasetting empty_cart_button_link staat live nog op /collections/all, dus die
         wordt hier bewust overschreven; alleen een afwijkende eigen keuze telt nog mee.
       {%- endcomment -%}
-      {%- assign empty_cart_link = settings.empty_cart_button_link | default: '/collections/alle-producten' -%}
+      {%- comment -%} append: '' dwingt de url-instelling naar tekst; anders faalt contains {%- endcomment -%}
+      {%- assign empty_cart_link = settings.empty_cart_button_link | append: '' -%}
+      {%- if empty_cart_link == blank -%}{%- assign empty_cart_link = '/collections/alle-producten' -%}{%- endif -%}
       {%- unless empty_cart_link contains 'alle-producten' -%}
         {%- if empty_cart_link contains '/collections/all' -%}
           {%- assign empty_cart_link = '/collections/alle-producten' -%}
