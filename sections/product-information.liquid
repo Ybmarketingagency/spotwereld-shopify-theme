@@ -412,9 +412,9 @@
   {%- comment -%}
     Handleiding. Staat er een bestand in het metaveld custom.handleiding, dan komt hier een
     knop naar de PDF. Zo hangt de winkelier bij elk product zelf een handleiding zonder dat
-    er code bij hoeft. Opent in een nieuw tabblad: het bestand staat op de Shopify-CDN en
-    dat is een ander domein, dus het download-attribuut wordt door de browser genegeerd.
-    In het tabblad zit de downloadknop van de pdf-lezer zelf.
+    er code bij hoeft. Shopify serveert het bestand vanaf spotwereld.nl/cdn/, dus vanaf
+    hetzelfde domein als de winkel; daardoor werkt het download-attribuut en doet de knop
+    wat het label belooft. Bij een bestand op een ander domein negeert de browser dat.
   {%- endcomment -%}
   {%- assign sw_handleiding = product.metafields.custom.handleiding -%}
   {%- if sw_handleiding.value != blank -%}
