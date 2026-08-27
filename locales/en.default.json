@@ -364,7 +364,8 @@
       "titel_kopen": "buy"
     },
     "product": {
-      "beschikbaarheid": "Availability"
+      "beschikbaarheid": "Availability",
+      "handleiding": "Download the manual (PDF)"
     },
     "home": {
       "hero": {

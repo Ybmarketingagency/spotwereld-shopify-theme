@@ -410,6 +410,29 @@
   </div>
 
   {%- comment -%}
+    Handleiding. Staat er een bestand in het metaveld custom.handleiding, dan komt hier een
+    knop naar de PDF. Zo hangt de winkelier bij elk product zelf een handleiding zonder dat
+    er code bij hoeft. Opent in een nieuw tabblad: het bestand staat op de Shopify-CDN en
+    dat is een ander domein, dus het download-attribuut wordt door de browser genegeerd.
+    In het tabblad zit de downloadknop van de pdf-lezer zelf.
+  {%- endcomment -%}
+  {%- assign sw_handleiding = product.metafields.custom.handleiding -%}
+  {%- if sw_handleiding.value != blank -%}
+    <a
+      href="{{ sw_handleiding.value.url }}"
+      target="_blank"
+      rel="noopener"
+      class="sw-handleiding"
+      style="display:inline-flex;align-items:center;gap:.6rem;margin:1rem 0 0;padding:.85rem 1.25rem;background:#fff;border:1.5px solid #061f40;border-radius:12px;color:#061f40;font-weight:700;font-size:.9375rem;text-decoration:none;transition:background .15s,color .15s"
+    >
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+      </svg>
+      {{ 'sw.product.handleiding' | t }}
+    </a>
+  {%- endif -%}
+
+  {%- comment -%}
     Doorverwijzing naar de gidsen. Die stonden tot 23-08-2026 alleen op de homepage
     gelinkt, dus de klant die bij de spectabel twijfelt over een zaagmaat of een dimmer
     kreeg daar geen antwoord, en de gidsen kregen geen interne linkwaarde.
@@ -839,6 +862,7 @@ body.sw-product-ready .product-information__details product-form-component{opaci
 .product-information__details:not(.sw-product-ready) .product-form{min-height:280px}
 /* Smooth fade voor sw-injected elementen */
 .sw-vol,.sw-extras,.sw-delivery,.sw-payment-icons,.sw-specs-table,.sw-thumbs{animation:swFadeIn .2s ease-out}
+.sw-handleiding:hover{background:#061f40;color:#fff}
 @keyframes swFadeIn{from{opacity:0}to{opacity:1}}
 /* Fix: toon Lichtkleur picker voor 2-temp producten — Horizon zet fieldset op display:none tijdens init */
 variant-picker fieldset.variant-option{display:grid !important}

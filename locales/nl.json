@@ -355,7 +355,8 @@
       "titel_kopen": "kopen"
     },
     "product": {
-      "beschikbaarheid": "Beschikbaarheid"
+      "beschikbaarheid": "Beschikbaarheid",
+      "handleiding": "Handleiding downloaden (PDF)"
     },
     "home": {
       "hero": {
