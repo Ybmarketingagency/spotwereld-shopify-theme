@@ -59,6 +59,59 @@
   </div>
 </div>
 
+
+{%- comment -%}
+  Spotwereld blogmotor: kennisbank-artikelen werden alleen vanaf de verlichtingsgids
+  gelinkt, met een handmatige kaart per artikel. Bij dagelijkse publicatie is dat niet
+  vol te houden en worden het weespaginas. Dit blok linkt elk artikel automatisch aan
+  drie andere: eerst artikelen die een tag delen, daarna de nieuwste.
+{%- endcomment -%}
+{%- assign sw_getoond = 0 -%}
+{%- capture sw_kaarten -%}
+  {%- for sw_kandidaat in blog.articles -%}
+    {%- if sw_kandidaat.id == article.id -%}{%- continue -%}{%- endif -%}
+    {%- if sw_getoond >= 3 -%}{%- break -%}{%- endif -%}
+    {%- assign sw_deelt = false -%}
+    {%- for sw_tag in article.tags -%}
+      {%- if sw_kandidaat.tags contains sw_tag -%}{%- assign sw_deelt = true -%}{%- break -%}{%- endif -%}
+    {%- endfor -%}
+    {%- if sw_deelt -%}
+      {%- assign sw_getoond = sw_getoond | plus: 1 -%}
+      <a class="sw-verder-lezen__kaart" href="{{ sw_kandidaat.url }}">
+        {%- if sw_kandidaat.image -%}
+          <img src="{{ sw_kandidaat.image | image_url: width: 400 }}" alt="{{ sw_kandidaat.image.alt | escape }}" loading="lazy" width="400" height="{{ 400 | divided_by: sw_kandidaat.image.aspect_ratio | round }}">
+        {%- endif -%}
+        <span>{{ sw_kandidaat.title | escape }}</span>
+      </a>
+    {%- endif -%}
+  {%- endfor -%}
+  {%- for sw_kandidaat in blog.articles -%}
+    {%- if sw_kandidaat.id == article.id -%}{%- continue -%}{%- endif -%}
+    {%- if sw_getoond >= 3 -%}{%- break -%}{%- endif -%}
+    {%- assign sw_deelt = false -%}
+    {%- for sw_tag in article.tags -%}
+      {%- if sw_kandidaat.tags contains sw_tag -%}{%- assign sw_deelt = true -%}{%- break -%}{%- endif -%}
+    {%- endfor -%}
+    {%- unless sw_deelt -%}
+      {%- assign sw_getoond = sw_getoond | plus: 1 -%}
+      <a class="sw-verder-lezen__kaart" href="{{ sw_kandidaat.url }}">
+        {%- if sw_kandidaat.image -%}
+          <img src="{{ sw_kandidaat.image | image_url: width: 400 }}" alt="{{ sw_kandidaat.image.alt | escape }}" loading="lazy" width="400" height="{{ 400 | divided_by: sw_kandidaat.image.aspect_ratio | round }}">
+        {%- endif -%}
+        <span>{{ sw_kandidaat.title | escape }}</span>
+      </a>
+    {%- endunless -%}
+  {%- endfor -%}
+{%- endcapture -%}
+
+{%- if sw_getoond > 0 -%}
+  <aside class="sw-verder-lezen">
+    <h2>Meer uit de kennisbank</h2>
+    <div class="sw-verder-lezen__rij">{{ sw_kaarten }}</div>
+    <a class="sw-verder-lezen__alles" href="{{ blog.url }}">Alle artikelen in de kennisbank</a>
+  </aside>
+{%- endif -%}
+
 <script type="application/ld+json">
   {{ article | structured_data }}
 </script>
@@ -104,7 +157,107 @@
 }
 </script>
 
+
+{%- comment -%}
+  Spotwereld blogmotor: elk kennisbank-artikel eindigt met een blok
+  <div class="sw-artikel-faq"> met <h3>-vragen en <p>-antwoorden. Daar bouwen we
+  FAQPage-schema uit, uit exact dezelfde bron als wat de bezoeker leest.
+  Zonder zo'n blok in het artikel gebeurt er niets.
+{%- endcomment -%}
+{%- assign sw_faq_split = article.content | split: '<div class="sw-artikel-faq">' -%}
+{%- if sw_faq_split.size > 1 -%}
+  {%- assign sw_faq_blok = sw_faq_split[1] | split: '</div>' | first -%}
+  {%- assign sw_faq_items = sw_faq_blok | split: '<h3>' -%}
+  {%- capture sw_faq_json -%}
+    {%- for sw_item in sw_faq_items offset: 1 -%}
+      {%- assign sw_q = sw_item | split: '</h3>' | first | strip_html | strip -%}
+      {%- assign sw_na = sw_item | split: '</h3>' | last -%}
+      {%- assign sw_a = sw_na | split: '<p>' | last | split: '</p>' | first | strip_html | strip -%}
+      {%- if sw_q != blank and sw_a != blank -%}
+        {%- unless forloop.first -%},{%- endunless -%}
+        {"@type":"Question","name":{{ sw_q | json }},"acceptedAnswer":{"@type":"Answer","text":{{ sw_a | json }}}}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+  {%- assign sw_faq_json = sw_faq_json | strip -%}
+  {%- if sw_faq_json != blank -%}
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","@id":"{{ request.origin }}{{ article.url }}#faq","mainEntity":[{{ sw_faq_json }}]}
+</script>
+  {%- endif -%}
+{%- endif -%}
+
 {% stylesheet %}
+  /* Spotwereld blogmotor: verwante artikelen onder een kennisbank-artikel */
+  .sw-verder-lezen {
+    width: 100%;
+    max-width: var(--normal-content-width);
+    margin: 3.5rem auto 0;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+  }
+
+  .sw-verder-lezen h2 {
+    margin: 0 0 1.25rem;
+    font-size: 1.15rem;
+  }
+
+  .sw-verder-lezen__rij {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+
+  .sw-verder-lezen__kaart {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    text-decoration: none;
+    line-height: 1.35;
+  }
+
+  .sw-verder-lezen__kaart img {
+    width: 100%;
+    height: auto;
+    border-radius: 6px;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+  }
+
+  .sw-verder-lezen__alles {
+    display: inline-block;
+    margin-top: 1.5rem;
+  }
+
+  @media screen and (max-width: 749px) {
+    .sw-verder-lezen__rij {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+  }
+
+  /* Spotwereld blogmotor: FAQ-blok onder aan een kennisbank-artikel */
+  .sw-artikel-faq {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+  }
+
+  .sw-artikel-faq h3 {
+    margin: 1.75rem 0 0.5rem;
+    font-size: 1.05rem;
+    line-height: 1.4;
+  }
+
+  .sw-artikel-faq h3:first-child {
+    margin-top: 0;
+  }
+
+  .sw-artikel-faq p {
+    margin: 0;
+    opacity: 0.85;
+  }
+
   .blog-post-comments-container {
     width: 100%;
     max-width: var(--normal-content-width);

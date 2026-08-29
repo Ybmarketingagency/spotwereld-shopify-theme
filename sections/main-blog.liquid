@@ -51,6 +51,11 @@
   >
     {% content_for 'blocks' %}
 
+{%- comment -%}
+  Spotwereld: zonder paginate capt Liquid op 50 artikelen en worden oudere
+  kennisbank-artikelen onbereikbaar vanaf de winkel zelf.
+{%- endcomment -%}
+{%- paginate blog.articles by 12 -%}
     <div
       ref="grid"
       class="blog-posts-container"
@@ -136,10 +141,49 @@
         </div>
       {% endfor %}
     </div>
+
+    {%- if paginate.pages > 1 -%}
+      <nav class="sw-blog-paginering" aria-label="Paginering">
+        {%- if paginate.previous -%}<a href="{{ paginate.previous.url }}" rel="prev">Vorige</a>{%- endif -%}
+        {%- for deel in paginate.parts -%}
+          {%- if deel.is_link -%}<a href="{{ deel.url }}">{{ deel.title }}</a>
+          {%- elsif deel.title == paginate.current_page -%}<span aria-current="page">{{ deel.title }}</span>
+          {%- else -%}<span>{{ deel.title }}</span>{%- endif -%}
+        {%- endfor -%}
+        {%- if paginate.next -%}<a href="{{ paginate.next.url }}" rel="next">Volgende</a>{%- endif -%}
+      </nav>
+    {%- endif -%}
+  {%- endpaginate -%}
   </div>
 </blog-posts-list>
 
 {% stylesheet %}
+  .sw-blog-paginering {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2.5rem;
+    flex-wrap: wrap;
+  }
+
+  .sw-blog-paginering a,
+  .sw-blog-paginering span {
+    padding: 0.4rem 0.75rem;
+    border-radius: 4px;
+    text-decoration: none;
+    line-height: 1;
+  }
+
+  .sw-blog-paginering a {
+    border: 1px solid rgba(0, 0, 0, 0.16);
+  }
+
+  .sw-blog-paginering [aria-current="page"] {
+    border: 1px solid currentColor;
+    font-weight: 600;
+  }
+
   /**
    * Blog posts page layout
    */
