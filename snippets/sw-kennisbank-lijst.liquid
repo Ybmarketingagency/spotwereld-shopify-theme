@@ -295,5 +295,20 @@
         </section>
       {%- endif -%}
     {%- endfor -%}
+    {%- comment -%}
+      De afsluitende CTA hoort onder de lijst, niet erboven. Hij stond in de
+      paginatekst, maar page.content wordt boven dit blok gerenderd.
+    {%- endcomment -%}
+    <div class="sw-cta">
+      <h2>{% if sw_kb_en %}Couldn&rsquo;t find it?{% else %}Iets niet kunnen vinden?{% endif %}</h2>
+      <p>
+        {%- if sw_kb_en -%}
+          If your question is not covered here, just ask. We look the specification up with the manufacturer if we do not know the answer off the top of our head.
+        {%- else -%}
+          Staat je vraag hier niet tussen, stel hem gerust. We zoeken de specificatie voor je op bij de fabrikant als wij het antwoord ook niet uit ons hoofd weten.
+        {%- endif -%}
+      </p>
+      <p><a href="{{ sw_kb_root }}/pages/contact" class="sw-btn">{% if sw_kb_en %}Get in touch{% else %}Neem contact op{% endif %}</a></p>
+    </div>
   </div>
 {%- endif -%}
