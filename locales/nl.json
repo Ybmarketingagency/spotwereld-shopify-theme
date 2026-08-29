@@ -450,6 +450,11 @@
         "kop": "Koop je vaker verlichting in?",
         "tekst": "Installateurs, elektriciens en aannemers kunnen partner worden. Na goedkeuring bestel je in dezelfde webshop met je eigen kortingscode.",
         "knop": "Bekijk het partnerschap"
+      },
+      "zakelijk": {
+        "kop": "Voor kantoor en bedrijf",
+        "paneel_sub": "60x60 en 120x30 met CCT-switch, voor kantoor, praktijk en werkplaats.",
+        "tl_sub": "T8-buizen met G13-fitting. Het voorschakelapparaat van het oude armatuur moet eruit."
       }
     },
     "balk": {

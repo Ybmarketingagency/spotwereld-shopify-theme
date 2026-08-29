@@ -6,8 +6,7 @@
  * or related systems. Please exercise caution as any changes
  * made to this file may be overwritten.
  * ------------------------------------------------------------
- */
-{
+ */{
   "accessibility": {
     "account": "Account",
     "active_filters": "Active filters:",
@@ -459,6 +458,11 @@
         "kop": "Do you buy lighting regularly?",
         "tekst": "Installers, electricians and contractors can become partners. Once approved you order in the same webshop with your own discount code.",
         "knop": "About the partnership"
+      },
+      "zakelijk": {
+        "kop": "For offices and businesses",
+        "paneel_sub": "60x60 and 120x30 with a CCT switch, for offices, practices and workshops.",
+        "tl_sub": "T8 tubes with a G13 cap. The ballast of the old fixture has to come out."
       }
     },
     "balk": {
