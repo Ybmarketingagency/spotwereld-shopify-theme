@@ -126,6 +126,28 @@
       letter-spacing: 0.04em;
       text-transform: uppercase;
     }
+
+    /* De gidspagina zet globale linkstijlen binnen .sw-vg-content; die winnen
+       van de kaartstijlen hierboven. Daarom hier expliciet terugzetten. */
+    .sw-kb a.sw-kb-item,
+    .sw-kb a.sw-kb-item:hover,
+    .sw-kb a.sw-kb-item:visited {
+      text-decoration: none;
+      color: inherit;
+      border-bottom: 0;
+    }
+    .sw-kb a.sw-kb-item .sw-kb-titel,
+    .sw-kb a.sw-kb-item .sw-kb-sub,
+    .sw-kb a.sw-kb-item .sw-kb-merk {
+      text-decoration: none;
+    }
+    .sw-kb a.sw-kb-item:hover .sw-kb-titel {
+      color: #0f6fe3;
+    }
+    .sw-kb .sw-kb-groep h2 {
+      text-transform: none;
+      letter-spacing: normal;
+    }
     .sw-kb-leeg {
       color: #94a3b8;
       font-size: 0.875rem;
