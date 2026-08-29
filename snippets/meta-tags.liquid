@@ -291,6 +291,10 @@
   if request.page_type == 'page' and page.handle == 'gegevens'
     assign sw_noindex = true
   endif
+  # de bedankpagina is alleen zinvol na een verstuurd formulier
+  if request.page_type == 'page' and page.handle == 'bedankt'
+    assign sw_noindex = true
+  endif
   if request.page_type == 'collection' and collection.handle == 'frontpage'
     assign sw_noindex = true
   endif
@@ -390,6 +394,68 @@
     "areaServed": "NL",
     "availableLanguage": ["Dutch", "Nederlands"]
   }
+}
+</script>
+
+{%- comment -%}
+  JSON-LD LocalBusiness — de vestiging aan de Deltazijde, los van de webshop
+  hierboven. Adres, telefoonnummer en openingstijden komen letterlijk overeen met
+  wat in de footer en op /pages/contact staat. De coordinaten zijn de exacte
+  match op "Deltazijde 10T, 1261 ZM Blaricum" uit OpenStreetMap (Nominatim).
+{%- endcomment -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "@id": "{{ request.origin }}/#vestiging",
+  "name": "Spotwereld",
+  "url": "{{ request.origin }}",
+  "image": "https://cdn.shopify.com/s/files/1/0988/8720/5208/files/wwoqIM6.png",
+  "logo": "https://cdn.shopify.com/s/files/1/0988/8720/5208/files/wwoqIM6.png",
+  "email": "info@spotwereld.nl",
+  "telephone": "+31853332672",
+  "vatID": "NL863304941B01",
+  "parentOrganization": { "@id": "{{ request.origin }}/#organization" },
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Deltazijde 10T",
+    "postalCode": "1261 ZM",
+    "addressLocality": "Blaricum",
+    "addressRegion": "Noord-Holland",
+    "addressCountry": "NL"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 52.2924819,
+    "longitude": 5.2860977
+  },
+  "hasMap": "https://www.google.com/maps/search/?api=1&query=Deltazijde+10T%2C+1261+ZM+Blaricum",
+  "areaServed": {
+    "@type": "Country",
+    "name": "Nederland"
+  },
+  "currenciesAccepted": "EUR",
+  "paymentAccepted": "iDEAL, Visa, Mastercard, Klarna, PayPal, Bancontact",
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      "opens": "08:30",
+      "closes": "17:00"
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": "Saturday",
+      "opens": "09:00",
+      "closes": "17:00"
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": "Sunday",
+      "opens": "00:00",
+      "closes": "00:00"
+    }
+  ]
 }
 </script>
 

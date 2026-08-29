@@ -1,0 +1,131 @@
+{%- comment -%}
+  Zichtbaar kruimelpad.
+
+  Volgt exact dezelfde logica als de BreadcrumbList in snippets/meta-tags.liquid,
+  zodat wat de bezoeker ziet en wat Google leest niet uit elkaar kunnen lopen.
+  Op de startpagina, de winkelwagen, het account en de bedankpagina staat niets.
+
+  De teksten staan hier inline in plaats van in locales/*.json: Shopify synct
+  locale-bestanden niet vanuit GitHub, dus een `| t` met een nieuwe key zou
+  "Translation missing" opleveren.
+{%- endcomment -%}
+
+{%- liquid
+  assign sw_bc_toon = false
+  if request.page_type == 'collection' or request.page_type == 'product' or request.page_type == 'article'
+    assign sw_bc_toon = true
+  endif
+  if request.page_type == 'page' and page.handle != 'bedankt'
+    assign sw_bc_toon = true
+  endif
+  if request.page_type == 'blog'
+    assign sw_bc_toon = true
+  endif
+
+  assign sw_bc_root = routes.root_url | append: '/' | replace: '//', '/' | remove_last: '/'
+  assign sw_bc_label = 'Kruimelpad'
+  if request.locale.iso_code == 'en'
+    assign sw_bc_label = 'Breadcrumb'
+  endif
+-%}
+
+{%- if sw_bc_toon -%}
+  <style>
+    .sw-crumbs {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0.875rem 1rem 0;
+      font-size: 0.8125rem;
+      line-height: 1.4;
+    }
+    .sw-crumbs ol {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.375rem;
+      margin: 0;
+      padding: 0;
+    }
+    .sw-crumbs li {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      min-width: 0;
+    }
+    .sw-crumbs a {
+      color: #6b7280;
+      text-decoration: none;
+    }
+    .sw-crumbs a:hover {
+      color: #0f6fe3;
+      text-decoration: underline;
+    }
+    .sw-crumbs [aria-current='page'] {
+      color: #142957;
+      font-weight: 600;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 20rem;
+    }
+    .sw-crumbs svg {
+      flex: none;
+      color: #cbd5e1;
+    }
+    @media (max-width: 640px) {
+      .sw-crumbs {
+        padding-top: 0.625rem;
+      }
+      .sw-crumbs [aria-current='page'] {
+        max-width: 11rem;
+      }
+    }
+  </style>
+
+  {%- capture sw_bc_pijl -%}
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+  {%- endcapture -%}
+
+  <nav class="sw-crumbs" aria-label="{{ sw_bc_label }}">
+    <ol>
+      <li><a href="{{ sw_bc_root }}/">Home</a></li>
+
+      {%- if request.page_type == 'collection' -%}
+        <li>{{ sw_bc_pijl }}<span aria-current="page">{{ collection.title }}</span></li>
+
+      {%- elsif request.page_type == 'product' -%}
+        {%- comment -%}
+          `collection` is alleen gevuld als de bezoeker via /collections/x/products/y
+          binnenkomt. Valt daarom terug op de eerste echte categorie van het product;
+          "alle producten" en de startpagina-collectie zeggen niets over herkomst.
+        {%- endcomment -%}
+        {%- liquid
+          assign sw_kruim = collection
+          if sw_kruim == blank
+            for sw_c in product.collections
+              unless sw_c.handle == 'alle-producten' or sw_c.handle == 'frontpage'
+                assign sw_kruim = sw_c
+                break
+              endunless
+            endfor
+          endif
+        -%}
+        {%- if sw_kruim != blank -%}
+          <li>{{ sw_bc_pijl }}<a href="{{ sw_kruim.url }}">{{ sw_kruim.title }}</a></li>
+        {%- endif -%}
+        <li>{{ sw_bc_pijl }}<span aria-current="page">{{ product.title }}</span></li>
+
+      {%- elsif request.page_type == 'article' -%}
+        <li>{{ sw_bc_pijl }}<a href="{{ blog.url }}">{{ blog.title }}</a></li>
+        <li>{{ sw_bc_pijl }}<span aria-current="page">{{ article.title }}</span></li>
+
+      {%- elsif request.page_type == 'blog' -%}
+        <li>{{ sw_bc_pijl }}<span aria-current="page">{{ blog.title }}</span></li>
+
+      {%- else -%}
+        <li>{{ sw_bc_pijl }}<span aria-current="page">{{ page.title }}</span></li>
+      {%- endif -%}
+    </ol>
+  </nav>
+{%- endif -%}

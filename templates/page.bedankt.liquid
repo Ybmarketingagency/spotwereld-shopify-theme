@@ -1,0 +1,297 @@
+{%- comment -%}
+  Bedankpagina na een verstuurd contact- of partnerformulier.
+
+  De formulieren op /pages/contact en /pages/partner-worden sturen hierheen door
+  met ?van=contact of ?van=partner. Die parameter bepaalt de tekst en gaat mee
+  als GA4-event, zodat je in Analytics kunt zien welk formulier is ingevuld.
+
+  Teksten staan inline in NL/EN: Shopify synct locales/*.json niet vanuit GitHub.
+  De pagina staat op noindex (zie snippets/meta-tags.liquid).
+{%- endcomment -%}
+
+{%- assign sw_root = routes.root_url | append: '/' | replace: '//', '/' | remove_last: '/' -%}
+{%- assign sw_en = false -%}
+{%- if request.locale.iso_code == 'en' -%}
+  {%- assign sw_en = true -%}
+{%- endif -%}
+
+<style>
+  .sw-dank {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 3rem 1.25rem 4.5rem;
+  }
+  .sw-dank-kaart {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 1rem;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(8, 61, 125, 0.06);
+  }
+  .sw-dank-vink {
+    width: 3.5rem;
+    height: 3.5rem;
+    margin: 0 auto 1.25rem;
+    border-radius: 999px;
+    background: #ecfdf5;
+    color: #059669;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .sw-dank h1 {
+    font-size: clamp(1.5rem, 3.5vw, 2.125rem);
+    font-weight: 800;
+    color: #142957;
+    line-height: 1.2;
+    margin: 0 0 0.75rem;
+  }
+  .sw-dank-lead {
+    font-size: 1rem;
+    color: #4b5563;
+    line-height: 1.6;
+    margin: 0 auto;
+    max-width: 32rem;
+  }
+  .sw-dank-belofte {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    padding: 0.6rem 1rem;
+    background: #eff6ff;
+    color: #083d7d;
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 700;
+  }
+  .sw-dank-kop {
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #94a3b8;
+    margin: 2.75rem 0 1rem;
+  }
+  .sw-dank-stappen {
+    display: grid;
+    gap: 0.75rem;
+    margin: 0 0 2.75rem;
+    list-style: none;
+    padding: 0;
+  }
+  .sw-dank-stap {
+    display: flex;
+    gap: 0.875rem;
+    align-items: flex-start;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+    padding: 1rem 1.125rem;
+    text-align: left;
+  }
+  .sw-dank-nr {
+    flex: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 999px;
+    background: #0f6fe3;
+    color: #fff;
+    font-size: 0.8125rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .sw-dank-stap strong {
+    display: block;
+    color: #142957;
+    font-size: 0.9375rem;
+    margin-bottom: 0.15rem;
+  }
+  .sw-dank-stap span {
+    color: #4b5563;
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+  .sw-dank-cats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.625rem;
+    margin: 0 0 2rem;
+  }
+  @media (min-width: 640px) {
+    .sw-dank-cats {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  .sw-dank-cat {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #142957;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.625rem;
+    text-decoration: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .sw-dank-cat:hover {
+    border-color: #0f6fe3;
+    background: #fff;
+  }
+  .sw-dank-knoppen {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+  }
+  .sw-dank-primair,
+  .sw-dank-secundair {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.8rem 1.5rem;
+    border-radius: 0.625rem;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .sw-dank-primair {
+    background: linear-gradient(135deg, #083d7d, #0f6fe3);
+    color: #fff;
+  }
+  .sw-dank-secundair {
+    background: #fff;
+    color: #142957;
+    border: 1.5px solid #e2e8f0;
+  }
+  .sw-dank-secundair:hover {
+    border-color: #0f6fe3;
+  }
+</style>
+
+<div class="sw-dank">
+  <div class="sw-dank-kaart">
+    <div class="sw-dank-vink">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+
+    <h1 data-sw-dank-kop>
+      {%- if sw_en -%}Thanks, we have your message{%- else -%}Bedankt, we hebben je bericht binnen{%- endif -%}
+    </h1>
+
+    <p class="sw-dank-lead" data-sw-dank-lead>
+      {%- if sw_en -%}
+        We read every message ourselves &mdash; no ticket system, no standard reply. You will hear from us shortly.
+      {%- else -%}
+        We lezen elk bericht zelf &mdash; geen ticketsysteem, geen standaardantwoord. Je hoort snel van ons.
+      {%- endif -%}
+    </p>
+
+    <div class="sw-dank-belofte">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      {%- if sw_en -%}
+        Answer within 24 hours on working days
+      {%- else -%}
+        Antwoord binnen 24 uur op werkdagen
+      {%- endif -%}
+    </div>
+  </div>
+
+  <p class="sw-dank-kop">{% if sw_en %}What happens next{% else %}Hoe het verder gaat{% endif %}</p>
+
+  <ol class="sw-dank-stappen" data-sw-dank-stappen>
+    <li class="sw-dank-stap">
+      <span class="sw-dank-nr">1</span>
+      <span>
+        <strong>{% if sw_en %}We read your message{% else %}We lezen je bericht{% endif %}</strong>
+        <span>
+          {%- if sw_en -%}
+            Usually the same working day. Weekend messages get picked up on Monday morning.
+          {%- else -%}
+            Meestal nog dezelfde werkdag. Berichten uit het weekend pakken we maandagochtend op.
+          {%- endif -%}
+        </span>
+      </span>
+    </li>
+    <li class="sw-dank-stap">
+      <span class="sw-dank-nr">2</span>
+      <span>
+        <strong>{% if sw_en %}You get an answer by e-mail{% else %}Je krijgt antwoord per e-mail{% endif %}</strong>
+        <span>
+          {%- if sw_en -%}
+            On the address you filled in. Check your spam folder if nothing arrives within a day.
+          {%- else -%}
+            Op het adres dat je hebt ingevuld. Kijk ook even in je spamfolder als er binnen een dag niets is.
+          {%- endif -%}
+        </span>
+      </span>
+    </li>
+    <li class="sw-dank-stap">
+      <span class="sw-dank-nr">3</span>
+      <span>
+        <strong>{% if sw_en %}Urgent? Call us{% else %}Haast? Bel ons{% endif %}</strong>
+        <span>
+          {%- if sw_en -%}
+            <a href="tel:+31853332672" style="color:#0F6FE3;font-weight:600;text-decoration:none">(0)85 333 26 72</a> &mdash; Mon&ndash;Fri 08:30&ndash;17:00, Sat 09:00&ndash;17:00.
+          {%- else -%}
+            <a href="tel:+31853332672" style="color:#0F6FE3;font-weight:600;text-decoration:none">(0)85 333 26 72</a> &mdash; ma t/m vr 08:30&ndash;17:00, za 09:00&ndash;17:00.
+          {%- endif -%}
+        </span>
+      </span>
+    </li>
+  </ol>
+
+  <p class="sw-dank-kop">{% if sw_en %}Meanwhile{% else %}Ondertussen{% endif %}</p>
+
+  <div class="sw-dank-cats">
+    <a class="sw-dank-cat" href="{{ sw_root }}/collections/inbouwspots">{% if sw_en %}Recessed spots{% else %}Inbouwspots{% endif %}</a>
+    <a class="sw-dank-cat" href="{{ sw_root }}/collections/opbouwspots">{% if sw_en %}Surface spots{% else %}Opbouwspots{% endif %}</a>
+    <a class="sw-dank-cat" href="{{ sw_root }}/collections/wandlampen">{% if sw_en %}Wall lights{% else %}Wandlampen{% endif %}</a>
+    <a class="sw-dank-cat" href="{{ sw_root }}/collections/led-panelen">{% if sw_en %}LED panels{% else %}LED panelen{% endif %}</a>
+  </div>
+
+  <div class="sw-dank-knoppen">
+    <a class="sw-dank-primair" href="{{ sw_root }}/collections/alle-producten">
+      {%- if sw_en -%}View all lighting{%- else -%}Bekijk alle verlichting{%- endif -%}
+    </a>
+    <a class="sw-dank-secundair" href="{{ sw_root }}/pages/verlichtingsgids">
+      {%- if sw_en -%}Read the lighting guide{%- else -%}Lees de verlichtingsgids{%- endif -%}
+    </a>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var params = new URLSearchParams(window.location.search);
+    var van = params.get('van') || 'onbekend';
+    var engels = {{ sw_en | json }};
+
+    // Partneraanvragen krijgen een eigen kop; de rest houdt de standaardtekst.
+    if (van === 'partner') {
+      var kop = document.querySelector('[data-sw-dank-kop]');
+      var lead = document.querySelector('[data-sw-dank-lead]');
+      if (kop) {
+        kop.textContent = engels ? 'Thanks, your application is in' : 'Bedankt, je aanvraag staat genoteerd';
+      }
+      if (lead) {
+        lead.textContent = engels
+          ? 'We check your Chamber of Commerce number and let you know whether we can take you on as a partner. If approved you receive your personal discount code by e-mail.'
+          : 'We controleren je KvK-nummer en laten je weten of we je als partner kunnen aannemen. Bij goedkeuring ontvang je je persoonlijke kortingscode per e-mail.';
+      }
+    }
+
+    // GA4 draait via de Google & YouTube-app; alleen meten als gtag er echt is.
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', 'generate_lead', {
+        form_type: van,
+        page_location: window.location.href,
+      });
+    }
+  })();
+</script>

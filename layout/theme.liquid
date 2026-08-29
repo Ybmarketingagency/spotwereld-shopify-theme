@@ -271,6 +271,8 @@
       data-product-transition="{{ settings.transition_to_main_product }}"
       data-template="{{ template }}"
     >
+      {%- render 'sw-breadcrumbs' -%}
+
       {% if sw_vg %}
         <div class="sw-vg-outer">
           <div class="sw-vg-wrap">

@@ -69,10 +69,15 @@
 
           {% form 'contact', id: 'swPartnerForm' %}
             {% if form.posted_successfully? %}
+              {%- comment -%}
+                Zie sw-contact-body.liquid: de bevestiging blijft staan als
+                terugval, JavaScript stuurt door naar de bedankpagina.
+              {%- endcomment -%}
               <div class="sw-pt-ok">
                 <strong>{{ 'sw.partner.bedankt_kop' | t }}</strong>
                 {{ 'sw.partner.bedankt_tekst' | t }}
               </div>
+              <script>window.location.replace({{ sw_root | append: '/pages/bedankt?van=partner' | json }});</script>
             {% else %}
               {% if form.errors %}
                 <div class="sw-pt-fout">{{ form.errors | default_errors }}</div>
