@@ -276,18 +276,40 @@
       {% if sw_vg %}
         <div class="sw-vg-outer">
           <div class="sw-vg-wrap">
+            {%- comment -%}
+              De zijbalk noemde alleen de drie losse gidspagina's en liet de
+              blogartikelen weg. Sinds de kennisbank en de gids samen zijn
+              wijst hij naar de onderwerpgroepen op de gidspagina; dezelfde
+              indeling en volgorde als in snippets/sw-kennisbank-lijst.liquid.
+              Op de losse gidspagina's linken de ankers terug naar de gids.
+            {%- endcomment -%}
+            {%- liquid
+              assign sw_vg_en = false
+              if request.locale.iso_code == 'en'
+                assign sw_vg_en = true
+              endif
+              assign sw_vg_basis = ''
+              unless page.handle == 'verlichtingsgids'
+                assign sw_vg_basis = sw_root | append: '/pages/verlichtingsgids'
+              endunless
+            -%}
             <aside class="sw-vg-sidebar">
-              <p class="sw-vg-sidebar-head">Verlichtingsgids</p>
+              <p class="sw-vg-sidebar-head">{% if sw_vg_en %}Knowledge base{% else %}Kennisbank{% endif %}</p>
               <nav class="sw-vg-nav">
-                <span class="sw-vg-nav-cat sw-first">Installatie</span>
-                <a href="{{ sw_root }}/pages/inbouwspots-plaatsen">Inbouwspots plaatsen</a>
-                <a href="{{ sw_root }}/pages/tl-naar-led">TL vervangen door LED-TL</a>
-                <span class="sw-vg-nav-cat">Advies</span>
-                <a href="{{ sw_root }}/pages/led-dimmer-kiezen">De juiste dimmer kiezen</a>
+                <span class="sw-vg-nav-cat sw-first">{% if sw_vg_en %}Subjects{% else %}Onderwerpen{% endif %}</span>
+                <a href="{{ sw_vg_basis }}#kb-1">{% if sw_vg_en %}Recessed spots{% else %}Inbouwspots{% endif %}</a>
+                <a href="{{ sw_vg_basis }}#kb-2">{% if sw_vg_en %}Stair lighting{% else %}Trapverlichting{% endif %}</a>
+                <a href="{{ sw_vg_basis }}#kb-3">{% if sw_vg_en %}Dimming{% else %}Dimmen{% endif %}</a>
+                <a href="{{ sw_vg_basis }}#kb-4">{% if sw_vg_en %}Colour and output{% else %}Lichtkleur en opbrengst{% endif %}</a>
+                <a href="{{ sw_vg_basis }}#kb-5">{% if sw_vg_en %}Tubes and panels{% else %}TL-buizen en panelen{% endif %}</a>
+                <span class="sw-vg-nav-cat">{% if sw_vg_en %}Step by step{% else %}Stap voor stap{% endif %}</span>
+                <a href="{{ sw_root }}/pages/inbouwspots-plaatsen">{% if sw_vg_en %}Fitting recessed spots{% else %}Inbouwspots plaatsen{% endif %}</a>
+                <a href="{{ sw_root }}/pages/tl-naar-led">{% if sw_vg_en %}Replacing TL with LED{% else %}TL vervangen door LED-TL{% endif %}</a>
+                <a href="{{ sw_root }}/pages/led-dimmer-kiezen">{% if sw_vg_en %}Choosing a dimmer{% else %}De juiste dimmer kiezen{% endif %}</a>
               </nav>
               <div class="sw-vg-sidebar-cta">
-                <a href="{{ sw_root }}/pages/verlichtingsgids">Alle gidsen</a>
-                <a href="{{ sw_root }}/collections/inbouwspots">Naar de inbouwspots</a>
+                <a href="{{ sw_root }}/pages/verlichtingsgids">{% if sw_vg_en %}Whole knowledge base{% else %}Hele kennisbank{% endif %}</a>
+                <a href="{{ sw_root }}/collections/inbouwspots">{% if sw_vg_en %}To the recessed spots{% else %}Naar de inbouwspots{% endif %}</a>
               </div>
             </aside>
             <div class="sw-vg-content">
