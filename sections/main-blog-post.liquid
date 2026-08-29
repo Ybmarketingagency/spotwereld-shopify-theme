@@ -79,7 +79,7 @@
       {%- assign sw_getoond = sw_getoond | plus: 1 -%}
       <a class="sw-verder-lezen__kaart" href="{{ sw_kandidaat.url }}">
         {%- if sw_kandidaat.image -%}
-          <img src="{{ sw_kandidaat.image | image_url: width: 400 }}" alt="{{ sw_kandidaat.image.alt | escape }}" loading="lazy" width="400" height="{{ 400 | divided_by: sw_kandidaat.image.aspect_ratio | round }}">
+          <img src="{{ sw_kandidaat.image | image_url: width: 400 }}" alt="{{ sw_kandidaat.image.alt | default: sw_kandidaat.title | escape }}" loading="lazy" width="400" height="{{ 400 | divided_by: sw_kandidaat.image.aspect_ratio | round }}">
         {%- endif -%}
         <span>{{ sw_kandidaat.title | escape }}</span>
       </a>
@@ -96,7 +96,7 @@
       {%- assign sw_getoond = sw_getoond | plus: 1 -%}
       <a class="sw-verder-lezen__kaart" href="{{ sw_kandidaat.url }}">
         {%- if sw_kandidaat.image -%}
-          <img src="{{ sw_kandidaat.image | image_url: width: 400 }}" alt="{{ sw_kandidaat.image.alt | escape }}" loading="lazy" width="400" height="{{ 400 | divided_by: sw_kandidaat.image.aspect_ratio | round }}">
+          <img src="{{ sw_kandidaat.image | image_url: width: 400 }}" alt="{{ sw_kandidaat.image.alt | default: sw_kandidaat.title | escape }}" loading="lazy" width="400" height="{{ 400 | divided_by: sw_kandidaat.image.aspect_ratio | round }}">
         {%- endif -%}
         <span>{{ sw_kandidaat.title | escape }}</span>
       </a>

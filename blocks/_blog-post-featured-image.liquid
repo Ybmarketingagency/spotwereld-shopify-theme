@@ -39,7 +39,7 @@
       sizes: 'auto, (min-width: 750px) 100vw, 100vw',
       loading: 'eager',
       fetchpriority: 'high',
-      alt: image.alt
+      alt: image.alt | default: closest.article.title
   }}
 </div>
 
