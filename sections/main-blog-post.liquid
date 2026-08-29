@@ -106,9 +106,9 @@
 
 {%- if sw_getoond > 0 -%}
   <aside class="sw-verder-lezen">
-    <h2>Meer uit de kennisbank</h2>
+    <h2>{% if request.locale.iso_code == 'en' %}More from the knowledge base{% else %}Meer uit de kennisbank{% endif %}</h2>
     <div class="sw-verder-lezen__rij">{{ sw_kaarten }}</div>
-    <a class="sw-verder-lezen__alles" href="{{ blog.url }}">Alle artikelen in de kennisbank</a>
+    <a class="sw-verder-lezen__alles" href="{{ blog.url }}">{% if request.locale.iso_code == 'en' %}All articles in the knowledge base{% else %}Alle artikelen in de kennisbank{% endif %}</a>
   </aside>
 {%- endif -%}
 
