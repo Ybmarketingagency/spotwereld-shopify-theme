@@ -1,0 +1,277 @@
+{%- comment -%}
+  De kennisbank als één lijst, gegroepeerd op onderwerp.
+
+  Waarom hier en niet in de paginatekst: de blog groeit door, en een
+  handgeschreven lijst in de admin loopt dan meteen achter. Dit blok pakt alles
+  uit blogs.kennisbank en zet de drie losse gidspagina's op hun plek ertussen,
+  zodat een bezoeker niet hoeft te weten wat een "pagina" is en wat een
+  "artikel".
+
+  Indeling op trefwoord in de titel, niet op tag: de artikelen hebben geen tags
+  en de blogmotor zet ze er ook niet op. Wat nergens in past komt onder
+  "Overige onderwerpen" te staan — dan valt het meteen op.
+
+  Teksten inline in NL/EN: locales/*.json synct niet vanuit GitHub.
+{%- endcomment -%}
+
+{%- liquid
+  assign sw_kb_root = routes.root_url | append: '/' | replace: '//', '/' | remove_last: '/'
+  assign sw_kb_en = false
+  if request.locale.iso_code == 'en'
+    assign sw_kb_en = true
+  endif
+  assign sw_kb_blog = blogs.kennisbank
+-%}
+
+{%- if sw_kb_blog.articles_count > 0 -%}
+  <style>
+    .sw-kb {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 1rem 0 3rem;
+    }
+    .sw-kb-groep + .sw-kb-groep {
+      margin-top: 2.75rem;
+    }
+    .sw-kb-kop {
+      display: flex;
+      align-items: baseline;
+      gap: 0.75rem;
+      margin: 0 0 1rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 2px solid #e8edf4;
+    }
+    .sw-kb-kop h2 {
+      font-size: 1.125rem;
+      font-weight: 800;
+      color: #142957;
+      margin: 0;
+    }
+    .sw-kb-aantal {
+      font-size: 0.8125rem;
+      color: #94a3b8;
+      font-weight: 600;
+    }
+    .sw-kb-rij {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+    @media (min-width: 700px) {
+      .sw-kb-rij {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    .sw-kb-item {
+      display: flex;
+      gap: 0.875rem;
+      align-items: center;
+      padding: 0.75rem;
+      background: #fff;
+      border: 1px solid #e8edf4;
+      border-radius: 0.75rem;
+      text-decoration: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .sw-kb-item:hover {
+      border-color: #0f6fe3;
+      box-shadow: 0 4px 14px rgba(8, 61, 125, 0.08);
+    }
+    .sw-kb-thumb {
+      flex: none;
+      width: 4.5rem;
+      height: 4.5rem;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      background: #f1f5f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .sw-kb-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .sw-kb-tekst {
+      min-width: 0;
+    }
+    .sw-kb-titel {
+      display: block;
+      font-size: 0.9375rem;
+      font-weight: 700;
+      color: #142957;
+      line-height: 1.35;
+      margin-bottom: 0.2rem;
+    }
+    .sw-kb-sub {
+      display: block;
+      font-size: 0.8125rem;
+      color: #6b7280;
+      line-height: 1.45;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .sw-kb-merk {
+      display: inline-block;
+      margin-bottom: 0.3rem;
+      padding: 0.1rem 0.4rem;
+      border-radius: 0.25rem;
+      background: #eff6ff;
+      color: #0f6fe3;
+      font-size: 0.6875rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .sw-kb-leeg {
+      color: #94a3b8;
+      font-size: 0.875rem;
+      margin: 0;
+    }
+  </style>
+
+  {%- comment -%}
+    Elk onderwerp krijgt een lijst trefwoorden. sw_kb_gehad houdt bij wat al
+    ergens is getoond, zodat het laatste blok precies de rest kan pakken.
+  {%- endcomment -%}
+  {%- assign sw_kb_gehad = '' -%}
+
+  <div class="sw-kb">
+    {%- for sw_kb_i in (1..6) -%}
+      {%- liquid
+        case sw_kb_i
+          when 1
+            assign sw_kb_naam = 'Inbouwspots kiezen en plaatsen'
+            if sw_kb_en
+              assign sw_kb_naam = 'Choosing and fitting recessed spots'
+            endif
+            assign sw_kb_woorden = 'inbouwspot,zaagmaat,gu10,geintegreerde,geïntegreerde,gipsplafond,inbouwdiepte'
+            assign sw_kb_gids = 'inbouwspots-plaatsen'
+            assign sw_kb_gids_titel = 'Inbouwspots plaatsen in een gipsplafond'
+          when 2
+            assign sw_kb_naam = 'Trapverlichting'
+            if sw_kb_en
+              assign sw_kb_naam = 'Stair lighting'
+            endif
+            assign sw_kb_woorden = 'trap,steplight,tree'
+            assign sw_kb_gids = ''
+          when 3
+            assign sw_kb_naam = 'Dimmen'
+            if sw_kb_en
+              assign sw_kb_naam = 'Dimming'
+            endif
+            assign sw_kb_woorden = 'dimmer,dimbaar,dimmen,dim2warm,triac'
+            assign sw_kb_gids = 'led-dimmer-kiezen'
+            assign sw_kb_gids_titel = 'De juiste dimmer kiezen'
+          when 4
+            assign sw_kb_naam = 'Lichtkleur en lichtopbrengst'
+            if sw_kb_en
+              assign sw_kb_naam = 'Colour temperature and output'
+            endif
+            assign sw_kb_woorden = 'lichtkleur,kelvin,lumen,cct,2700,3000,4000,5700,6000,kleurweergave,cri'
+            assign sw_kb_gids = ''
+          when 5
+            assign sw_kb_naam = 'TL-buizen en panelen'
+            if sw_kb_en
+              assign sw_kb_naam = 'Tubes and panels'
+            endif
+            assign sw_kb_woorden = 'tl,paneel,panelen,armatuur,ugr'
+            assign sw_kb_gids = 'tl-naar-led'
+            assign sw_kb_gids_titel = 'TL vervangen door LED-TL'
+          when 6
+            assign sw_kb_naam = 'Overige onderwerpen'
+            if sw_kb_en
+              assign sw_kb_naam = 'Other subjects'
+            endif
+            assign sw_kb_woorden = ''
+            assign sw_kb_gids = ''
+        endcase
+        assign sw_kb_lijst = sw_kb_woorden | split: ','
+      -%}
+
+      {%- capture sw_kb_items -%}
+        {%- if sw_kb_gids != blank -%}
+          {%- assign sw_kb_p = pages[sw_kb_gids] -%}
+          {%- if sw_kb_p != blank -%}
+            <a class="sw-kb-item" href="{{ sw_kb_root }}/pages/{{ sw_kb_gids }}">
+              <span class="sw-kb-thumb">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+              </span>
+              <span class="sw-kb-tekst">
+                <span class="sw-kb-merk">{% if sw_kb_en %}Guide{% else %}Gids{% endif %}</span>
+                <span class="sw-kb-titel">{{ sw_kb_gids_titel }}</span>
+              </span>
+            </a>
+          {%- endif -%}
+        {%- endif -%}
+
+        {%- for sw_kb_a in sw_kb_blog.articles -%}
+          {%- liquid
+            assign sw_kb_zoek = sw_kb_a.title | downcase | append: ' ' | append: sw_kb_a.handle
+            assign sw_kb_raak = false
+            if sw_kb_i == 6
+              assign sw_kb_merk = sw_kb_a.handle | prepend: '|' | append: '|'
+              unless sw_kb_gehad contains sw_kb_merk
+                assign sw_kb_raak = true
+              endunless
+            else
+              for sw_kb_w in sw_kb_lijst
+                if sw_kb_zoek contains sw_kb_w
+                  assign sw_kb_raak = true
+                  break
+                endif
+              endfor
+            endif
+          -%}
+          {%- if sw_kb_raak -%}
+            <a class="sw-kb-item" href="{{ sw_kb_a.url }}">
+              <span class="sw-kb-thumb">
+                {%- if sw_kb_a.image -%}
+                  <img src="{{ sw_kb_a.image | image_url: width: 200 }}" alt="{{ sw_kb_a.image.alt | default: sw_kb_a.title | escape }}" loading="lazy" width="200" height="200">
+                {%- else -%}
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                {%- endif -%}
+              </span>
+              <span class="sw-kb-tekst">
+                <span class="sw-kb-titel">{{ sw_kb_a.title }}</span>
+                {%- if sw_kb_a.excerpt_or_content != blank -%}
+                  <span class="sw-kb-sub">{{ sw_kb_a.excerpt_or_content | strip_html | truncate: 110 }}</span>
+                {%- endif -%}
+              </span>
+            </a>
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endcapture -%}
+
+      {%- comment -%}
+        Pas na het renderen bijhouden wat er in dit blok stond, anders zou een
+        artikel in zijn eigen blok al als "gehad" gelden.
+      {%- endcomment -%}
+      {%- if sw_kb_i < 6 -%}
+        {%- for sw_kb_a in sw_kb_blog.articles -%}
+          {%- assign sw_kb_zoek = sw_kb_a.title | downcase | append: ' ' | append: sw_kb_a.handle -%}
+          {%- for sw_kb_w in sw_kb_lijst -%}
+            {%- if sw_kb_zoek contains sw_kb_w -%}
+              {%- assign sw_kb_gehad = sw_kb_gehad | append: '|' | append: sw_kb_a.handle | append: '|' -%}
+              {%- break -%}
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endfor -%}
+      {%- endif -%}
+
+      {%- if sw_kb_items contains 'sw-kb-item' -%}
+        {%- assign sw_kb_n = sw_kb_items | split: 'class="sw-kb-item"' | size | minus: 1 -%}
+        <section class="sw-kb-groep" id="kb-{{ sw_kb_i }}">
+          <div class="sw-kb-kop">
+            <h2>{{ sw_kb_naam }}</h2>
+            <span class="sw-kb-aantal">{{ sw_kb_n }}</span>
+          </div>
+          <div class="sw-kb-rij">{{ sw_kb_items }}</div>
+        </section>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+{%- endif -%}

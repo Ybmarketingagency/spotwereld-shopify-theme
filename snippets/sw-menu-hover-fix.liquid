@@ -1,0 +1,42 @@
+{%- comment -%}
+  Uitklapmenu opende alleen als je van bovenaf op het menu-item kwam, niet als
+  je met de muis van onderen omhoog ging.
+
+  Horizon hangt `on:pointerenter="/activate"` op de <li> (blocks/_header-menu.liquid).
+  Dat event is niet betrouwbaar als de pointer het item vanaf de onderrand
+  binnenkomt: hij komt dan binnen over de opvulling onder de link, en het
+  enter-event dat de activatie moet starten blijft uit.
+
+  `pointerover` bubbelt wel en vuurt uit elke richting. We gebruiken hem alleen
+  als seintje en sturen daarna exact hetzelfde synthetische pointerenter-event
+  dat het thema zelf ook gebruikt (zie assets/header-menu.js regel 111 voor de
+  Safari-variant van dezelfde truc). Dus geen eigen open-logica ernaast, alleen
+  het bestaande mechanisme op tijd wakker maken.
+{%- endcomment -%}
+
+<script>
+  (function () {
+    document.addEventListener(
+      'pointerover',
+      function (event) {
+        var doel = event.target;
+        if (!doel || typeof doel.closest !== 'function') return;
+
+        var link = doel.closest('.menu-list__link');
+        if (!link) return;
+
+        var item = link.closest('.menu-list__list-item');
+        if (!item || !link.closest('header-menu')) return;
+
+        // Alleen items die daadwerkelijk een uitklap hebben.
+        if (!item.querySelector('[ref="submenu[]"]')) return;
+
+        // Al open? Dan niets doen, anders knippert hij.
+        if (link.getAttribute('aria-expanded') === 'true') return;
+
+        item.dispatchEvent(new PointerEvent('pointerenter', { bubbles: false }));
+      },
+      { passive: true }
+    );
+  })();
+</script>

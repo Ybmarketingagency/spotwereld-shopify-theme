@@ -1,10 +1,16 @@
 {% layout 'theme' %}
 
 {%- comment -%}
-  De tekst van deze gids staat sinds 25-08-2026 in Shopify zelf, onder
+  De inleiding van deze gids staat sinds 25-08-2026 in Shopify zelf, onder
   Content > Pagina's > Verlichtingsgids. Daar is hij aanpasbaar zonder code en
   vertaalt Translate & Adapt hem mee naar het Engels; in dit bestand kon geen
   van beide. De opmaak (sw-hub, sw-cta, sw-btn) staat in layout/theme.liquid.
+
+  Sinds 29-08-2026 staat de kennisbank er automatisch onder: gidspagina's en
+  blogartikelen door elkaar, gegroepeerd op onderwerp. Zo is dit de enige
+  ingang en hoeft de lijst in de admin niet handmatig bijgehouden te worden.
 {%- endcomment -%}
 
 {{ page.content }}
+
+{% render 'sw-kennisbank-lijst' %}
