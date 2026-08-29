@@ -1,4 +1,6 @@
 {%- assign sw_root = routes.root_url | append: '/' | replace: '//', '/' | remove_last: '/' -%}
+{%- assign sw_ct_en = false -%}
+{%- if request.locale.iso_code == 'en' -%}{%- assign sw_ct_en = true -%}{%- endif -%}
 <style>
 .sw-ks-wrap{max-width:1280px;margin:0 auto;padding:3rem 1.5rem 5rem;display:grid;grid-template-columns:1fr;gap:2.5rem}
 @media(min-width:768px){.sw-ks-wrap{grid-template-columns:220px 1fr}}
@@ -9,7 +11,8 @@
 .sw-ks-sidebar a:hover{background:#EBF2FF;color:#0F6FE3}
 .sw-ks-sidebar a.sw-active{background:#EBF2FF;color:#083D7D;font-weight:700;border-left:3px solid #0F6FE3;padding-left:calc(.75rem - 3px)}
 .sw-ct-cards{display:grid;grid-template-columns:1fr;gap:1.5rem}
-@media(min-width:640px){.sw-ct-cards{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:640px){.sw-ct-cards{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1024px){.sw-ct-cards{grid-template-columns:repeat(4,1fr)}}
 .sw-ct-card{background:#fff;border-radius:1rem;padding:1.75rem;box-shadow:0 1px 4px rgba(0,0,0,0.07);border:1px solid #f0f0f0;text-align:center}
 .sw-ct-icon{width:3.25rem;height:3.25rem;border-radius:50%;background:#EBF2FF;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem}
 .sw-ct-layout{display:grid;grid-template-columns:1fr;gap:3rem;margin-top:3rem}
@@ -27,6 +30,10 @@
 .sw-ct-kaart-bron a:hover{color:#0F6FE3;text-decoration:underline}
 .sw-ct-input{width:100%;padding:.75rem 1rem;border:1.5px solid #e5e7eb;border-radius:.625rem;font-size:.9375rem;color:#111827;background:#fff;box-sizing:border-box;outline:none;font-family:inherit}
 .sw-ct-input:focus{border-color:#0F6FE3;box-shadow:0 0 0 3px rgba(15,111,227,0.1)}
+.sw-ct-card-wa{border-color:#c9f0d7}
+.sw-ct-icon-wa{background:#e7f9ee}
+.sw-ct-wa{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.625rem 1.125rem;background:#25D366;color:#fff;font-weight:700;font-size:.9375rem;border-radius:9999px;text-decoration:none;line-height:1.2}
+.sw-ct-wa:hover{background:#1eb955;color:#fff}
 </style>
 
 <div style="background:#f9fafb">
@@ -46,6 +53,19 @@
 
     <div>
       <div class="sw-ct-cards">
+        {%- comment -%}
+          WhatsApp staat vooraan: laagste drempel van de vier kanalen. Nummer gelijk
+          aan de footer (wa.me/31853332672), zodat er maar een nummer rondgaat.
+        {%- endcomment -%}
+        <div class="sw-ct-card sw-ct-card-wa">
+          <div class="sw-ct-icon sw-ct-icon-wa"><svg width="22" height="22" viewBox="0 0 24 24" fill="#128C4A" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.247-.694.247-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0 0 20.465 3.49"/></svg></div>
+          <h3 style="font-weight:700;color:#111827;font-size:1rem;margin:0 0 .25rem">WhatsApp</h3>
+          <p style="color:#6b7280;font-size:.8125rem;margin:0 0 .625rem">{% if sw_ct_en %}Fastest reply during opening hours{% else %}Snelste antwoord tijdens openingstijden{% endif %}</p>
+          <a class="sw-ct-wa" href="https://wa.me/31853332672" target="_blank" rel="noopener noreferrer" aria-label="{% if sw_ct_en %}Send us a WhatsApp message{% else %}Stuur ons een WhatsApp-bericht{% endif %}">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.247-.694.247-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0 0 20.465 3.49"/></svg>
+            {% if sw_ct_en %}Send a message{% else %}Stuur een bericht{% endif %}
+          </a>
+        </div>
         <div class="sw-ct-card">
           <div class="sw-ct-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#083D7D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
           <h3 style="font-weight:700;color:#111827;font-size:1rem;margin:0 0 .25rem">{{ 'sw.contact.email' | t }}</h3>
@@ -71,8 +91,6 @@
       {%- comment -%}
         Adres met kaart en routebeschrijving.
       {%- endcomment -%}
-      {%- assign sw_ct_en = false -%}
-      {%- if request.locale.iso_code == 'en' -%}{%- assign sw_ct_en = true -%}{%- endif -%}
       <div class="sw-ct-adres">
         <div class="sw-ct-adres-kop">
           <div>
