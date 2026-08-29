@@ -117,7 +117,16 @@
         <li>{{ sw_bc_pijl }}<span aria-current="page">{{ product.title }}</span></li>
 
       {%- elsif request.page_type == 'article' -%}
-        <li>{{ sw_bc_pijl }}<a href="{{ blog.url }}">{{ blog.title }}</a></li>
+        {%- comment -%}
+          Wijst naar de gids, niet naar de blogindex: die twee zijn sinds
+          29-08-2026 één kennisbank en de blogindex leidt door naar de gids.
+        {%- endcomment -%}
+        <li>
+          {{ sw_bc_pijl }}
+          <a href="{{ sw_bc_root }}/pages/verlichtingsgids">
+            {%- if request.locale.iso_code == 'en' -%}Lighting guide{%- else -%}Verlichtingsgids{%- endif -%}
+          </a>
+        </li>
         <li>{{ sw_bc_pijl }}<span aria-current="page">{{ article.title }}</span></li>
 
       {%- elsif request.page_type == 'blog' -%}

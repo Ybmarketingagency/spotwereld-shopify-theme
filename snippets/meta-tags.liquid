@@ -548,7 +548,9 @@
   "@type": "BreadcrumbList",
   "itemListElement": [
     {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ request.origin }}{{ routes.root_url }}"},
-    {"@type": "ListItem", "position": 2, "name": "{{ blog.title | escape_once }}", "item": "{{ request.origin }}{{ blog.url }}"},
+    {%- comment -%} De blogindex leidt door naar de gids; kruimelpad wijst daarom meteen daarheen. {%- endcomment -%}
+    {%- assign sw_bc_wortel = routes.root_url | append: '/' | replace: '//', '/' | remove_last: '/' -%}
+    {"@type": "ListItem", "position": 2, "name": "Verlichtingsgids", "item": "{{ request.origin }}{{ sw_bc_wortel }}/pages/verlichtingsgids"},
     {"@type": "ListItem", "position": 3, "name": "{{ article.title | escape_once }}", "item": "{{ request.origin }}{{ article.url }}"}
   ]
 }
