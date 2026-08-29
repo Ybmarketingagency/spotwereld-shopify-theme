@@ -382,18 +382,31 @@
   },
   "currenciesAccepted": "EUR",
   "paymentAccepted": "iDEAL, Visa, Mastercard, Klarna, PayPal, Bancontact",
-  "sameAs": [
-    "https://www.facebook.com/spotwereld",
-    "https://www.instagram.com/spotwereld"
-  ],
-  "contactPoint": {
-    "@type": "ContactPoint",
-    "contactType": "Customer Service",
-    "telephone": "+31853332672",
-    "email": "info@spotwereld.nl",
-    "areaServed": "NL",
-    "availableLanguage": ["Dutch", "Nederlands"]
-  }
+  {%- comment -%}
+    Geen sameAs: de Facebook- en Instagram-profielen die hier stonden bestaan
+    niet (facebook.com/spotwereld geeft een foutpagina). Zet ze pas terug als
+    de accounts er echt zijn; een verzonnen profiel in de schema-code is een
+    fout signaal naar Google.
+  {%- endcomment -%}
+  "contactPoint": [
+    {
+      "@type": "ContactPoint",
+      "contactType": "Customer Service",
+      "telephone": "+31853332672",
+      "email": "info@spotwereld.nl",
+      "areaServed": "NL",
+      "availableLanguage": ["Dutch", "Nederlands"]
+    },
+    {
+      "@type": "ContactPoint",
+      "contactType": "Customer Service",
+      "telephone": "+31853332672",
+      "url": "https://wa.me/31853332672",
+      "name": "WhatsApp",
+      "areaServed": "NL",
+      "availableLanguage": ["Dutch", "Nederlands"]
+    }
+  ]
 }
 </script>
 
