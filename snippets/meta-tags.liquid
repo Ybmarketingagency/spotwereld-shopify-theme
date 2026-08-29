@@ -274,6 +274,14 @@
   if request.page_type == 'collection' and collection.handle == 'all'
     assign sw_canonical = request.origin | append: '/collections/alle-producten'
   endif
+  # de blogindex en de verlichtingsgids zijn sinds 29-08-2026 een kennisbank.
+  # de gids toont alles en is de enige die we linken, dus die is de baas.
+  # een URL-omleiding kan hier niet: Shopify past die alleen toe op adressen
+  # die anders een 404 geven, en /blogs/kennisbank bestaat gewoon.
+  if request.page_type == 'blog' and blog.handle == 'kennisbank'
+    assign sw_wortel = routes.root_url | append: '/' | replace: '//', '/' | remove_last: '/'
+    assign sw_canonical = request.origin | append: sw_wortel | append: '/pages/verlichtingsgids'
+  endif
 -%}
 <link rel="canonical" href="{{ sw_canonical }}">
 
