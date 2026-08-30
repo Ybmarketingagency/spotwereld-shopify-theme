@@ -34,7 +34,18 @@
      de clamp voorkomt dat de links van het scherm af lopen op smallere vensters. */
   @media screen and (min-width: 750px) {
     #header-component .menu-list__submenu-inner {
-      padding-inline-start: clamp(0px, var(--sw-sub-left, 0px), calc(100% - 16rem));
+      padding-inline-start: clamp(0px, var(--sw-sub-left, 0px), calc(100% - 22rem));
+    }
+
+    /* Zonder deze twee regels breken de labels af tot "LED pane-len 60x60":
+       de kolommen van het mega-menu-raster krimpen mee met de ruimte die na
+       de inspringing overblijft. */
+    #header-component .menu-list__submenu-inner .mega-menu__grid {
+      grid-template-columns: max-content;
+    }
+
+    #header-component .menu-list__submenu-inner .mega-menu__grid a {
+      white-space: nowrap;
     }
   }
 </style>
