@@ -50,6 +50,10 @@
       /* De clip-path van het thema knipt op de meegegroeide headerhoogte; die
          is nu nul, dus zonder dit blijft er niets over. */
       clip-path: none;
+
+      /* Direct onder de knop, niet onder de hele headerrij: anders blijft er een
+         gat van zon 18 px waar de muis noch op de knop noch op de kaart is. */
+      top: var(--sw-sub-top, 100%);
       left: var(--sw-sub-left, 0px);
       width: max-content;
       max-width: min(24rem, calc(100vw - 2rem));
@@ -95,6 +99,9 @@
       var anker = paneel.offsetParent || header;
       var links = link.getBoundingClientRect().left - anker.getBoundingClientRect().left;
       header.style.setProperty('--sw-sub-left', Math.max(0, Math.round(links)) + 'px');
+
+      var boven = link.getBoundingClientRect().bottom - anker.getBoundingClientRect().top;
+      header.style.setProperty('--sw-sub-top', Math.round(boven) + 'px');
     }
 
     document.addEventListener(
