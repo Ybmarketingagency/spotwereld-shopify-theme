@@ -12,9 +12,12 @@
 
 {%- liquid
   assign sw_bc_toon = false
-  if request.page_type == 'collection' or request.page_type == 'product' or request.page_type == 'article'
+  if request.page_type == 'product' or request.page_type == 'article'
     assign sw_bc_toon = true
   endif
+  # Collecties niet: de hero van de collectiepagina heeft zelf al een
+  # kruimelpad. Twee paden onder elkaar gaf een witte balk tussen de header
+  # en de hero.
   if request.page_type == 'page' and page.handle != 'bedankt'
     assign sw_bc_toon = true
   endif
