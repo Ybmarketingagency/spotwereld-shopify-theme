@@ -33,13 +33,41 @@
   /* 2b. Paneelinhoud onder de knop. De waarde komt uit het script hieronder;
      de clamp voorkomt dat de links van het scherm af lopen op smallere vensters. */
   @media screen and (min-width: 750px) {
-    #header-component .menu-list__submenu-inner {
-      padding-inline-start: clamp(0px, var(--sw-sub-left, 0px), calc(100% - 22rem));
+    /* 3. Een echte dropdown in plaats van een balk over de volle breedte.
+
+       Horizon laat de header meegroeien met het paneel (--submenu-height) en
+       rekt het paneel over het hele scherm. Met drie korte links levert dat een
+       witte band van rand tot rand op met wat tekst in een hoek. Hieronder:
+       header niet laten groeien, paneel zo breed als zijn inhoud, en links
+       uitgelijnd op de knop waar hij bij hoort (--sw-sub-left komt uit het
+       script hieronder). */
+    #header-component:has(.menu-list__list-item [aria-expanded='true']) {
+      --submenu-height: 0px !important;
+      --full-open-header-height: 0px !important;
     }
 
-    /* Zonder deze twee regels breken de labels af tot "LED pane-len 60x60":
-       de kolommen van het mega-menu-raster krimpen mee met de ruimte die na
-       de inspringing overblijft. */
+    #header-component .menu-list__list-item:not([slot='overflow']) > .menu-list__submenu {
+      /* De clip-path van het thema knipt op de meegegroeide headerhoogte; die
+         is nu nul, dus zonder dit blijft er niets over. */
+      clip-path: none;
+      left: var(--sw-sub-left, 0px);
+      width: max-content;
+      max-width: min(24rem, calc(100vw - 2rem));
+      padding-inline: 0;
+    }
+
+    #header-component .menu-list__list-item:not([slot='overflow']) > .menu-list__submenu .menu-list__submenu-inner {
+      --submenu-padding-block-start: 0.5rem;
+      --submenu-padding-block-end: 0.5rem;
+
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-top: 0;
+      border-radius: 0 0 0.75rem 0.75rem;
+      box-shadow: 0 14px 30px rgb(8 61 125 / 14%);
+    }
+
+    /* Zonder deze twee regels breken de labels af tot "LED pane-len 60x60". */
     #header-component .menu-list__submenu-inner .mega-menu__grid {
       grid-template-columns: max-content;
     }
