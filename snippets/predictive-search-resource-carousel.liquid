@@ -19,12 +19,12 @@
 
 {% capture header %}
   <div class="predictive-search-results__resource-header">
-    <h4
+    <h3
       id="predictive-search-{{ resource_type }}"
       class="predictive-search-results__title"
     >
       {{ title }}
-    </h4>
+    </h3>
 
     {% if resources.size >= 4 %}
       {%- render 'slideshow-controls',
