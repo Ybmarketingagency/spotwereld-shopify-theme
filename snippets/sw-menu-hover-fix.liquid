@@ -88,7 +88,12 @@
       var header = link.closest('header-component');
       var paneel = link.parentElement && link.parentElement.querySelector('[ref="submenu[]"]');
       if (!header || !paneel) return;
-      var links = link.getBoundingClientRect().left - paneel.getBoundingClientRect().left;
+
+      // Meten tegen het blok waarbinnen het paneel gepositioneerd wordt, niet
+      // tegen het paneel zelf: dat verschuiven we hier juist, dus dan zou de
+      // volgende meting nul opleveren en zou hij terugspringen naar de rand.
+      var anker = paneel.offsetParent || header;
+      var links = link.getBoundingClientRect().left - anker.getBoundingClientRect().left;
       header.style.setProperty('--sw-sub-left', Math.max(0, Math.round(links)) + 'px');
     }
 
