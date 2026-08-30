@@ -10,19 +10,16 @@
 {% if category_tag == '' %}{% assign category_tag = 'VERLICHTINGSGIDS' %}{% endif %}
 
 <style>
-.sw-art-hero{position:relative;overflow:hidden;min-height:420px;display:flex;align-items:flex-end}
-{% if article.image %}
-.sw-art-hero-bg{position:absolute;inset:0;background-image:url('{{ article.image | image_url: width: 1600 }}');background-size:cover;background-position:center}
-{% else %}
+.sw-art-hero{position:relative;overflow:hidden;min-height:260px;display:flex;align-items:flex-end}
+{%- comment -%}
+  Geen artikelafbeelding als achtergrond. De uitgelichte afbeeldingen zijn
+  diagrammen op een lichte ondergrond; vol-bleed uitgerekt worden ze aangesneden
+  en onleesbaar. Het diagram staat netjes op ware grootte in het artikel zelf
+  (blocks/_blog-post-featured-image.liquid). Hier alleen de huisstijlkleur.
+{%- endcomment -%}
 .sw-art-hero-bg{position:absolute;inset:0;background:linear-gradient(135deg,#061f40 0%,#0a4fa0 60%,#083D7D 100%)}
-{% endif %}
 .sw-art-hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(6,31,64,0.97) 0%,rgba(6,31,64,0.72) 45%,rgba(6,31,64,0.25) 100%)}
-.sw-art-hero-content{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:3.5rem 1.5rem 3.5rem;width:100%}
-.sw-art-breadcrumb{display:flex;align-items:center;gap:.5rem;margin-bottom:1.5rem;flex-wrap:wrap}
-.sw-art-breadcrumb a{color:#93c5fd;font-size:.8125rem;text-decoration:none;font-weight:500;transition:color .15s}
-.sw-art-breadcrumb a:hover{color:#fff}
-.sw-art-breadcrumb .sw-art-sep{color:rgba(255,255,255,0.3);font-size:.8125rem}
-.sw-art-breadcrumb .sw-art-current{color:rgba(255,255,255,0.55);font-size:.8125rem}
+.sw-art-hero-content{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:2.5rem 1.5rem 2.5rem;width:100%}
 .sw-art-cat{display:inline-flex;align-items:center;gap:.35rem;background:rgba(15,111,227,0.25);color:#93c5fd;font-size:.75rem;font-weight:700;padding:.3rem .875rem;border-radius:9999px;border:1px solid rgba(15,111,227,0.5);margin-bottom:1.125rem;backdrop-filter:blur(4px);letter-spacing:.04em}
 .sw-art-h1{font-size:clamp(1.625rem,4vw,2.625rem);font-weight:800;color:#fff;line-height:1.2;margin:0 0 1.375rem}
 .sw-art-meta{display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap}
@@ -34,14 +31,7 @@
   <div class="sw-art-hero-bg"></div>
   <div class="sw-art-hero-overlay"></div>
   <div class="sw-art-hero-content">
-
-    <nav class="sw-art-breadcrumb" aria-label="Breadcrumb">
-      <a href="/">Home</a>
-      <span class="sw-art-sep">›</span>
-      <a href="{{ sw_root }}/blogs/{{ article.blog.handle }}">{{ article.blog.title }}</a>
-      <span class="sw-art-sep">›</span>
-      <span class="sw-art-current">{{ article.title | truncate: 55 }}</span>
-    </nav>
+    {%- comment -%}Kruimelpad staat boven de hero, zie snippets/sw-breadcrumbs.liquid.{%- endcomment -%}
 
     <div class="sw-art-cat">
       <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>

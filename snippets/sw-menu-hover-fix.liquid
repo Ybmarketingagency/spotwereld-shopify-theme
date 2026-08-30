@@ -1,21 +1,58 @@
 {%- comment -%}
-  Uitklapmenu opende alleen als je van bovenaf op het menu-item kwam, niet als
-  je met de muis van onderen omhoog ging.
+  Twee dingen aan het uitklapmenu van Horizon rechtgezet.
 
-  Horizon hangt `on:pointerenter="/activate"` op de <li> (blocks/_header-menu.liquid).
-  Dat event is niet betrouwbaar als de pointer het item vanaf de onderrand
-  binnenkomt: hij komt dan binnen over de opvulling onder de link, en het
-  enter-event dat de activatie moet starten blijft uit.
+  1. Openen vanaf onder.
+     Horizon hangt `on:pointerenter="/activate"` op de <li>
+     (blocks/_header-menu.liquid). Dat event is niet betrouwbaar als de pointer
+     het item vanaf de onderrand binnenkomt. `pointerover` bubbelt wel en vuurt
+     uit elke richting; die gebruiken we als seintje en sturen daarna exact
+     hetzelfde synthetische pointerenter dat het thema zelf ook gebruikt (zie
+     assets/header-menu.js regel 111 voor de Safari-variant van die truc).
 
-  `pointerover` bubbelt wel en vuurt uit elke richting. We gebruiken hem alleen
-  als seintje en sturen daarna exact hetzelfde synthetische pointerenter-event
-  dat het thema zelf ook gebruikt (zie assets/header-menu.js regel 111 voor de
-  Safari-variant van dezelfde truc). Dus geen eigen open-logica ernaast, alleen
-  het bestaande mechanisme op tijd wakker maken.
+  2. Openblijven op weg naar de submenu-items.
+     Tussen de onderkant van de menuknop en de bovenkant van het paneel zit een
+     gat van zo'n 20 px: daar ben je op de headerrij en niet meer op het item,
+     dus sluit het menu. Horizon dekt dat af met een onzichtbaar vlak
+     (`.menu-list__link::after`, `data-safety-box`), maar zet dat alleen aan
+     terwijl de muis beweegt — sta je even stil in het gat, dan valt het weg en
+     klapt het menu dicht. De CSS hieronder houdt dat vlak aan zolang het item
+     openstaat.
+
+     Daarnaast schuiven we de inhoud van het paneel onder de knop waar hij bij
+     hoort. Anders staan de links helemaal links terwijl je vanaf rechts komt,
+     en moet je een lange diagonaal afleggen om ze te bereiken.
 {%- endcomment -%}
+
+<style>
+  /* 2a. Veiligheidsvlak blijft staan zolang het menu open is, niet alleen
+     terwijl de muis beweegt. */
+  #header-component .menu-list__list-item:has([aria-expanded='true']) > .menu-list__link::after {
+    display: block;
+  }
+
+  /* 2b. Paneelinhoud onder de knop. De waarde komt uit het script hieronder;
+     de clamp voorkomt dat de links van het scherm af lopen op smallere vensters. */
+  @media screen and (min-width: 750px) {
+    #header-component .menu-list__submenu-inner {
+      padding-inline-start: clamp(0px, var(--sw-sub-left, 0px), calc(100% - 16rem));
+    }
+  }
+</style>
 
 <script>
   (function () {
+    /**
+     * Zet de horizontale positie van het paneel gelijk aan die van de knop.
+     * @param {Element} link
+     */
+    function plaatsPaneel(link) {
+      var header = link.closest('header-component');
+      var paneel = link.parentElement && link.parentElement.querySelector('[ref="submenu[]"]');
+      if (!header || !paneel) return;
+      var links = link.getBoundingClientRect().left - paneel.getBoundingClientRect().left;
+      header.style.setProperty('--sw-sub-left', Math.max(0, Math.round(links)) + 'px');
+    }
+
     document.addEventListener(
       'pointerover',
       function (event) {
@@ -30,6 +67,8 @@
 
         // Alleen items die daadwerkelijk een uitklap hebben.
         if (!item.querySelector('[ref="submenu[]"]')) return;
+
+        plaatsPaneel(link);
 
         // Al open? Dan niets doen, anders knippert hij.
         if (link.getAttribute('aria-expanded') === 'true') return;
