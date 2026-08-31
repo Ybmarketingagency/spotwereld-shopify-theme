@@ -252,6 +252,25 @@
   if sw_seo_desc != blank
     assign sw_desc = page_description | replace: '&amp;amp;', '&amp;'
   endif
+
+  # truncate knipt hierboven hard op 155 tekens en dus soms middenin een woord:
+  # "tot ruim 80 mm, me..." stond zo in Google. Hieronder gaat die halve staart
+  # eraf en komt er een net beletselteken voor terug. Alleen als de tekst echt is
+  # afgekapt, dus als hij op drie punten eindigt; een in de admin ingevulde
+  # SEO-omschrijving blijft ongemoeid.
+  assign sw_staart = sw_desc | slice: -3, 3
+  if sw_staart == '...'
+    assign sw_romp = sw_desc | slice: 0, 152 | strip
+    assign sw_stukken = sw_romp | split: ' '
+    assign sw_op_een_na = sw_stukken.size | minus: 1
+    assign sw_romp = sw_stukken | slice: 0, sw_op_een_na | join: ' '
+    assign sw_teken = sw_romp | slice: -1, 1
+    if sw_teken == ',' or sw_teken == ';' or sw_teken == ':' or sw_teken == '-'
+      assign sw_korter = sw_romp.size | minus: 1
+      assign sw_romp = sw_romp | slice: 0, sw_korter
+    endif
+    assign sw_desc = sw_romp | append: '…'
+  endif
 -%}
 
 <title>
