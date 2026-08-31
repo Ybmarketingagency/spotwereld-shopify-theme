@@ -1,0 +1,33 @@
+{%- comment -%}
+  Eén prijsstijl op alle productkaarten.
+
+  De winkel rendert kaarten op drie manieren en die hadden alle drie een eigen
+  prijs:
+
+    homepagina-carrousel  .sw-pp-price      1,05rem / 800 / #061F40
+    eigen kleurtegels     .sw-vcard-price   0,95rem / 700 / #083D7D
+    kaart van Horizon     .price            0,75rem / 500 / rgba(0,0,0,.81)
+
+  Op een collectiepagina staan de laatste twee door elkaar in dezelfde rij, dus
+  het verschil sprong eruit. De eigen kleurtegel is hier de maatstaf; die van
+  Horizon wordt daaraan gelijkgetrokken.
+
+  Alleen binnen <product-card>, zodat de prijs op de productpagina zelf niet
+  meeverandert. Horizon zet op <product-price> de klasse h6, vandaar dat de
+  regel op .price zelf staat: die is specifieker en wint zonder !important.
+{%- endcomment -%}
+
+<style>
+  product-card product-price .price {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #083d7d;
+    line-height: 1.2;
+  }
+
+  product-card product-price .compare-at-price {
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: #94a3b8;
+  }
+</style>
