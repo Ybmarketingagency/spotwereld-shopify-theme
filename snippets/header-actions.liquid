@@ -399,6 +399,18 @@
     background: transparent;
   }
 
+  /*
+   * Spotwereld: de kop heeft op mobiel een vast raster (44px 44px 200px 44px 44px). Daarin
+   * passen rechts maar twee knoppen; de accountknop werd tot 0 px samengedrukt. Hij was
+   * daardoor onzichtbaar maar lag wel over de zoekknop heen, wat PageSpeed terecht als
+   * overlappend aanraakdoel afkeurde. Op mobiel staat account nu in het menu (header-drawer).
+   */
+  @media screen and (max-width: 749px) {
+    .account-button {
+      display: none;
+    }
+  }
+
   .account-button__icon,
   .account-button__text {
     color: var(--color-account-icon);

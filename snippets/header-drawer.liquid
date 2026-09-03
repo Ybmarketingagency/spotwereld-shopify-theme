@@ -576,6 +576,19 @@
         class="menu-drawer__utility-links menu-drawer__animated-element"
         style="--menu-drawer-animation-index: {{ linklist.links.size }};"
       >
+        {%- comment -%}
+          Spotwereld: in de kop van de mobiele weergave is er naast het logo alleen plek
+          voor zoeken en de winkelwagen. De accountknop werd daar 0 px breed - onzichtbaar
+          maar wel aanklikbaar - dus die staat op mobiel hier in het menu.
+        {%- endcomment -%}
+        {%- if data_header_drawer_type == 'mobile-drawer' and shop.customer_accounts_enabled -%}
+          <a
+            href="{{ routes.account_url }}"
+            class="menu-drawer__menu-item menu-drawer__menu-item--mainlist focus-inset"
+          >
+            <span class="menu-drawer__menu-item-text wrap-text">{{ 'content.account_title' | t }}</span>
+          </a>
+        {%- endif -%}
         {% liquid
           assign show_language = section.settings.show_language
           if localization.available_languages.size <= 1

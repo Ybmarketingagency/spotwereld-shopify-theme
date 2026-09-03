@@ -43,6 +43,21 @@
     {%- endcomment -%}
     <meta name="facebook-domain-verification" content="gzudje94pkqy44bop47qha0lbkz06l">
 
+    {%- comment -%}
+      Spotwereld: de hero-afbeelding van de homepagina is het LCP-element. Zonder preload
+      ontdekt de browser hem pas nadat de stylesheets binnen zijn - dat kostte 570 ms.
+      De URL moet exact gelijk zijn aan de img-src in de sectie spotwereld_hero
+      (templates/index.json), anders haalt de browser het plaatje twee keer op.
+    {%- endcomment -%}
+    {%- if template.name == 'index' -%}
+      <link
+        rel="preload"
+        as="image"
+        href="https://cdn.shopify.com/s/files/1/0988/8720/5208/files/sw-hero-inbouwspots-2026.jpg?width=1024"
+        fetchpriority="high"
+      >
+    {%- endif -%}
+
     {%- render 'meta-tags' -%}
     {%- render 'stylesheets' -%}
     {%- render 'fonts' -%}
