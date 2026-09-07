@@ -239,7 +239,11 @@
       assign sw_desc = 'sw.seo.pagina_desc' | t
     endif
   else
-    assign sw_title = page_title | append: ' | ' | append: sw_brand
+    # Het sterretje van het prefix-zoeken hoort niet in de tabtitel: Shopify zet
+    # de zoekterm er letterlijk in, dus "resultaten voor 'rend*'". Zie
+    # snippets/sw-zoek-prefix.liquid.
+    assign sw_paginakop = page_title | remove: '*'
+    assign sw_title = sw_paginakop | append: ' | ' | append: sw_brand
     assign sw_desc = page_description | default: shop.description | default: sw_tagline
   endif
 
