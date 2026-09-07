@@ -220,8 +220,19 @@
                       {%- if item.product.has_only_default_variant == false and item.item_components.size == 0 -%}
                         <dl class="cart-items__variants">
                           {%- for option in item.options_with_values -%}
+                            {%- liquid
+                              # De optienaam erbij zetten, behalve bij Kleur: die staat al in de
+                              # producttitel. Zonder label las een regel als "Mat Wit, Ja, 2700K"
+                              # en moest je zelf raden waar dat Ja bij hoorde. Twee regels van
+                              # hetzelfde product met een andere lichtbron waren zo helemaal niet
+                              # uit elkaar te houden.
+                              assign sw_toon_naam = true
+                              if option.name == 'Kleur' or option.name == 'Color' or option.name == 'Colour' or option.name == 'Title'
+                                assign sw_toon_naam = false
+                              endif
+                            -%}
                             <div class="cart-items__variant">
-                              <dt class="visually-hidden">{{ option.name }}:</dt>
+                              <dt{% unless sw_toon_naam %} class="visually-hidden"{% endunless %}>{{ option.name }}:</dt>
                               <dd>
                                 {{- option.value -}}
                                 {%- if forloop.last != true %},&nbsp;{% endif -%}
@@ -582,6 +593,12 @@
   .cart-items__variant dd {
     display: inline;
     margin: 0;
+  }
+
+  /* Het label mag zachter dan de waarde: je leest "Lichtbron:" een keer en
+     daarna alleen nog welke lichtbron het is. */
+  .cart-items__variant dt:not(.visually-hidden) {
+    opacity: 0.65;
   }
 
   .cart-items__quantity {
