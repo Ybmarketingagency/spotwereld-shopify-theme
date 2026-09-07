@@ -1,0 +1,42 @@
+{%- comment -%}
+  Zoeken op een deel van een woord.
+
+  Shopify zoekt op de resultatenpagina op hele woorden: "rendo" vindt de Rendo,
+  "rend" niet. Het uitklapvak in de header doet wel prefix-zoeken, dus je kreeg
+  de spot wel te zien terwijl je typte en daarna niet meer als je op enter drukte.
+  Een sterretje achter de zoekterm zet Shopify's zoekopdracht om naar prefix:
+  "rend*" levert 14 artikelen op waar "rend" er 2 gaf.
+
+  Het sterretje wordt hier bij het versturen toegevoegd; op de pagina zelf haalt
+  blocks/_search-input.liquid hem weer uit het invoerveld en uit de melding, zodat
+  de bezoeker gewoon zijn eigen woord terugziet.
+
+  Overgeslagen als de bezoeker zelf al een sterretje typte, of een zin tussen
+  aanhalingstekens zocht: dat is een letterlijke zoekopdracht en die moet je niet
+  oprekken.
+{%- endcomment -%}
+
+<script>
+  (function () {
+    document.addEventListener(
+      'submit',
+      function (event) {
+        var form = event.target;
+        if (!form || typeof form.getAttribute !== 'function') return;
+
+        var actie = form.getAttribute('action') || '';
+        if (actie.indexOf('/search') === -1) return;
+
+        var veld = form.querySelector('input[name="q"]');
+        if (!veld) return;
+
+        var term = (veld.value || '').trim();
+        if (!term) return;
+        if (term.indexOf('*') !== -1 || term.indexOf('"') !== -1) return;
+
+        veld.value = term + '*';
+      },
+      true
+    );
+  })();
+</script>

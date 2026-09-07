@@ -43,7 +43,7 @@
       name="q"
       ref="searchPageInput"
       on:keydown="/handleKeyDown"
-      value="{{ search.terms | escape }}"
+      value="{{ search.terms | remove: '*' | escape }}"
       placeholder="{{ 'content.search_input_placeholder' | t }}"
     >
     <a
@@ -63,7 +63,7 @@
   {% if search.results.size == 0 and search.terms != blank %}
     <div class="search-results__no-results">
       <p>
-        {{ 'content.search_results_no_results_check_spelling' | t: terms: search.terms }}
+        {{ 'content.search_results_no_results_check_spelling' | t: terms: search.terms | remove: '*' }}
       </p>
     </div>
   {% endif %}
