@@ -40,6 +40,15 @@
           assign swatch_count = product_option.values | map: 'swatch' | compact | size
           assign variant_style = block_settings.variant_style
 
+          # Lichtbron altijd als uitklapmenu, ook als de rest van de opties knoppen is.
+          # Vijf keuzes met lange labels ("GU10 2700K dimbaar") vullen anders een halve
+          # kolom met knoppen naast de drie korte kleurknoppen erboven.
+          assign sw_stijl = block_settings.variant_style
+          if product_option.name == 'Lichtbron' or product_option.name == 'Light source'
+            assign sw_stijl = 'dropdowns'
+            assign variant_style = 'dropdowns'
+          endif
+
           if swatch_count > 0 and block_settings.show_swatches
             if block_settings.variant_style == 'dropdown'
               assign variant_style = 'swatch_dropdown'
@@ -68,7 +77,7 @@
               {{- product_option.selected_value -}}
             </span>
           </div>
-        {%- elsif variant_style == 'swatch' or block_settings.variant_style == 'buttons' -%}
+        {%- elsif variant_style == 'swatch' or sw_stijl == 'buttons' -%}
           {%- assign fieldset_index = forloop.index0 -%}
           <fieldset
             class="variant-option variant-option--buttons{% if variant_style == 'swatch' %} variant-option--swatches{% else %} variant-option--{{ settings.variant_button_width }}{% endif %}"
@@ -155,7 +164,7 @@
               {% endstyle %}
             {% endif %}
           </fieldset>
-        {%- elsif block_settings.variant_style == 'dropdowns' -%}
+        {%- elsif sw_stijl == 'dropdowns' -%}
           {%
             # There is an opportunity to build a custom select component that will allow us to style the select element further (animation for dropdown, swatches shown in the dropdown options, etc)
             # It's too bad as it mean rebuilding baked in behaviours but I think we've already done that for the locale selectors
