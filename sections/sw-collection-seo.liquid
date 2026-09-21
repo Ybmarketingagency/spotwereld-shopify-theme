@@ -92,6 +92,72 @@
   </div>
 {%- endif -%}
 
+{%- comment -%}
+  Lees ook (21-09-2026). De kennisbank-artikelen linken al in de tekst naar de collecties,
+  maar andersom stond er op geen enkele collectie (behalve trapverlichting) een link naar
+  een artikel. Daardoor kreeg de kennisbank nauwelijks interne linkwaarde en zag Google de
+  collectie los van de uitleg. Per collectie staan hier de drie of vier artikelen die de
+  koopvraag beantwoorden. Handles in het Nederlands en het Engels, omdat Translate & Adapt
+  de handle van een artikel meevertaalt en article.handle op /en/ de vertaalde geeft.
+  Staat het artikel (nog) niet live, dan valt het gewoon weg.
+{%- endcomment -%}
+{%- liquid
+  assign sw_lees_handles = ''
+  case collection.handle
+    when 'inbouwspots'
+      assign sw_lees_handles = 'welke-zaagmaat-heb-je-nodig-voor-inbouwspots,hoeveel-inbouwspots-heb-je-nodig-per-kamer,hoeveel-afstand-zit-er-tussen-plafondspots,how-far-apart-should-ceiling-spots-be,kun-je-inbouwspots-vervangen-zonder-plafond-open-te-breken,can-you-replace-recessed-spotlights-without-opening-the-ceiling'
+    when 'inbouwspots-badkamer'
+      assign sw_lees_handles = 'mag-een-gu10-spot-in-de-badkamer,can-a-gu10-spot-go-in-the-bathroom,wat-is-het-verschil-tussen-ip44-en-ip65,what-is-the-difference-between-ip44-and-ip65,hoe-waterdicht-is-ip65-precies,how-waterproof-is-ip65-exactly'
+    when 'dimbare-inbouwspots'
+      assign sw_lees_handles = 'welke-led-dimmer-heb-je-nodig-voor-je-spots,which-led-dimmer-do-you-need-for-your-spotlights,waarom-knippert-je-led-lamp,why-does-your-led-lamp-flicker,welke-led-driver-heb-je-nodig,which-led-driver-do-you-need'
+    when 'gu10-inbouwspots'
+      assign sw_lees_handles = 'wat-is-een-gu10-fitting,what-is-a-gu10-socket,gu10-of-geintegreerde-led-wat-kies-je,wat-is-het-verschil-tussen-gu10-en-gu5-3,what-is-the-difference-between-gu10-and-gu5-3,hoe-vervang-je-halogeenspots-door-led,how-do-you-replace-halogen-spots-with-led'
+    when 'inbouwspots-lage-inbouwdiepte'
+      assign sw_lees_handles = 'kun-je-inbouwspots-vervangen-zonder-plafond-open-te-breken,can-you-replace-recessed-spotlights-without-opening-the-ceiling,welke-zaagmaat-heb-je-nodig-voor-inbouwspots,hoe-vervang-je-halogeenspots-door-led,how-do-you-replace-halogen-spots-with-led'
+    when 'opbouwspots'
+      assign sw_lees_handles = 'wat-is-het-verschil-tussen-inbouwspots-en-opbouwspots,difference-between-recessed-and-surface-mounted-spotlights,hoe-sluit-je-een-3-fase-rail-aan,how-do-you-connect-a-three-circuit-track,wat-is-een-gu10-fitting,what-is-a-gu10-socket'
+    when 'hanglampen'
+      assign sw_lees_handles = 'wat-is-een-e27-fitting,what-is-an-e27-socket,hoe-sluit-je-een-3-fase-rail-aan,how-do-you-connect-a-three-circuit-track,welke-lichtkleur-is-2700k,what-light-color-is-2700k'
+    when 'wandlampen'
+      assign sw_lees_handles = 'wat-is-het-verschil-tussen-ip44-en-ip65,what-is-the-difference-between-ip44-and-ip65,welke-lichtkleur-is-2700k,what-light-color-is-2700k,hoeveel-lumen-heb-je-nodig-bij-warm-wit-licht,how-many-lumens-do-you-need-for-warm-white-light'
+    when 'trapverlichting'
+      assign sw_lees_handles = 'trapverlichting-bij-een-open-trap-drie-manieren-die-werken,hoeveel-trapverlichting-heb-je-nodig-en-waar-plaats-je-die,trapverlichting-met-sensor-slim-of-draadloos-wat-werkt-echt'
+    when 'accessoires'
+      assign sw_lees_handles = 'welke-led-dimmer-heb-je-nodig-voor-je-spots,which-led-dimmer-do-you-need-for-your-spotlights,welke-led-driver-heb-je-nodig,which-led-driver-do-you-need,waarom-knippert-je-led-lamp,why-does-your-led-lamp-flicker'
+    when 'led-panelen' or 'led-panelen-60x60' or 'led-panelen-30x120' or 'led-panelen-accessoires'
+      assign sw_lees_handles = 'hoeveel-lumen-heb-je-nodig-per-kamer,how-many-lumens-do-you-need-per-room,welke-lichtkleur-is-4000k,what-light-color-is-4000k,wat-is-het-verschil-tussen-lumen-en-lux,what-is-the-difference-between-lumens-and-lux'
+    when 'led-tl-buizen'
+      assign sw_lees_handles = 'welke-lichtkleur-is-4000k,what-light-color-is-4000k,wat-is-het-verschil-tussen-kelvin-en-lumen,what-is-the-difference-between-kelvin-and-lumens,hoeveel-lumen-heb-je-nodig-per-kamer,how-many-lumens-do-you-need-per-room'
+  endcase
+  assign sw_lees_zoek = ',' | append: sw_lees_handles | append: ','
+  assign sw_lees_aantal = 0
+-%}
+{%- if sw_lees_handles != blank -%}
+  {%- capture sw_lees_kaarten -%}
+    {%- for sw_art in blogs['kennisbank'].articles -%}
+      {%- assign sw_art_zoek = ',' | append: sw_art.handle | append: ',' -%}
+      {%- if sw_lees_zoek contains sw_art_zoek -%}
+        {%- assign sw_lees_aantal = sw_lees_aantal | plus: 1 -%}
+        <a class="sw-lees-ook__kaart" href="{{ sw_art.url }}">
+          {%- if sw_art.image -%}
+            <img src="{{ sw_art.image | image_url: width: 480 }}" alt="{{ sw_art.image.alt | default: sw_art.title | escape }}" loading="lazy" width="480" height="{{ 480 | divided_by: sw_art.image.aspect_ratio | round }}">
+          {%- endif -%}
+          <span class="sw-lees-ook__titel">{{ sw_art.title | escape }}</span>
+          <span class="sw-lees-ook__meer">{% if request.locale.iso_code == 'en' %}Read the answer{% else %}Lees het antwoord{% endif %} &rarr;</span>
+        </a>
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+  {%- if sw_lees_aantal > 0 -%}
+    <aside class="sw-lees-ook">
+      <div class="sw-lees-ook__inner">
+        <h2 class="sw-lees-ook__kop">{% if request.locale.iso_code == 'en' %}Before you choose: answers from the knowledge base{% else %}Voordat je kiest: antwoorden uit de kennisbank{% endif %}</h2>
+        <div class="sw-lees-ook__rij">{{ sw_lees_kaarten }}</div>
+      </div>
+    </aside>
+  {%- endif -%}
+{%- endif -%}
+
 {% stylesheet %}
   .sw-coll-seo {
     border-top: 1px solid #e8edf4;
@@ -168,6 +234,73 @@
 
   .sw-coll-seo__body strong {
     color: #061f40;
+  }
+
+  .sw-lees-ook {
+    border-top: 1px solid #e8edf4;
+    background: #fff;
+    padding: 2.5rem 1.5rem 2.75rem;
+  }
+
+  .sw-lees-ook__inner {
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+
+  .sw-lees-ook__kop {
+    font-size: 1.35rem;
+    font-weight: 900;
+    color: #061f40;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin: 0 0 1.1rem;
+  }
+
+  .sw-lees-ook__rij {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+  }
+
+  .sw-lees-ook__kaart {
+    display: flex;
+    flex-direction: column;
+    background: #f8fafc;
+    border: 1px solid #e8edf4;
+    border-radius: 12px;
+    overflow: hidden;
+    text-decoration: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+
+  .sw-lees-ook__kaart:hover {
+    border-color: #b9cbe4;
+    box-shadow: 0 6px 18px rgba(6, 31, 64, 0.08);
+  }
+
+  .sw-lees-ook__kaart img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+
+  .sw-lees-ook__titel {
+    display: block;
+    padding: 0.9rem 1rem 0.25rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #061f40;
+    line-height: 1.35;
+  }
+
+  .sw-lees-ook__meer {
+    display: block;
+    padding: 0 1rem 0.95rem;
+    margin-top: auto;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #0f6fe3;
   }
 {% endstylesheet %}
 

@@ -25,6 +25,68 @@
     {%- endif -%}
     {%- content_for 'block', id: 'blog-post-content', type: '_blog-post-content' %}
 
+    {%- comment -%}
+      Bijpassende producten (21-09-2026). Uit GA4 over 22 aug t/m 21 sep: de kennisbank
+      trekt bezoek maar leverde nul bestellingen. De artikelen linken wel naar producten,
+      maar alleen als tekstlink midden in een alinea. Dit blok haalt de producten die in het
+      artikel zelf gelinkt worden uit de tekst en zet ze als kaart met foto en prijs onder
+      het artikel, plus een knop naar de collectie die als eerste in het artikel voorkomt.
+      Er hoeft dus niets per artikel ingesteld te worden: schrijft de motor een link naar
+      /products/led-inbouwspot-lesto, dan staat Lesto hier als kaart.
+      Maximaal vier kaarten, alleen producten die nog bestaan en beschikbaar zijn.
+    {%- endcomment -%}
+    {%- liquid
+      assign sw_bp_delen = article.content | split: '/products/'
+      assign sw_bp_lijst = ','
+      assign sw_bp_coll = ''
+      for sw_bp_deel in sw_bp_delen offset: 1
+        assign sw_bp_h = sw_bp_deel | split: '"' | first | split: "'" | first | split: '?' | first | split: '#' | first | split: '/' | first | strip
+        assign sw_bp_zoek = ',' | append: sw_bp_h | append: ','
+        unless sw_bp_h == blank or sw_bp_lijst contains sw_bp_zoek
+          assign sw_bp_lijst = sw_bp_lijst | append: sw_bp_h | append: ','
+        endunless
+      endfor
+      assign sw_bp_handles = sw_bp_lijst | split: ','
+      assign sw_bp_cdelen = article.content | split: '/collections/'
+      if sw_bp_cdelen.size > 1
+        assign sw_bp_coll = sw_bp_cdelen[1] | split: '"' | first | split: "'" | first | split: '?' | first | split: '#' | first | split: '/' | first | strip
+      endif
+      assign sw_bp_aantal = 0
+    -%}
+    {%- capture sw_bp_kaarten -%}
+      {%- for sw_bp_h in sw_bp_handles -%}
+        {%- if sw_bp_h == blank -%}{%- continue -%}{%- endif -%}
+        {%- if sw_bp_aantal >= 4 -%}{%- break -%}{%- endif -%}
+        {%- assign sw_bp_p = all_products[sw_bp_h] -%}
+        {%- if sw_bp_p == blank or sw_bp_p.available == false -%}{%- continue -%}{%- endif -%}
+        {%- assign sw_bp_aantal = sw_bp_aantal | plus: 1 -%}
+        {%- assign sw_bp_naam = sw_bp_p.title | split: '|' | first | strip -%}
+        <a class="sw-bp__kaart" href="{{ sw_bp_p.url }}">
+          {%- if sw_bp_p.featured_image -%}
+            <img src="{{ sw_bp_p.featured_image | image_url: width: 400 }}" alt="{{ sw_bp_p.featured_image.alt | default: sw_bp_naam | escape }}" loading="lazy" width="400" height="400">
+          {%- endif -%}
+          <span class="sw-bp__naam">{{ sw_bp_naam | escape }}</span>
+          <span class="sw-bp__prijs">
+            {%- if sw_bp_p.price_varies -%}{% if request.locale.iso_code == 'en' %}from{% else %}vanaf{% endif %} {% endif -%}
+            {{ sw_bp_p.price_min | money }}
+          </span>
+        </a>
+      {%- endfor -%}
+    {%- endcapture -%}
+    {%- if sw_bp_aantal > 0 -%}
+      <aside class="sw-bp">
+        <h2 class="sw-bp__kop">{% if request.locale.iso_code == 'en' %}Products mentioned in this article{% else %}De producten uit dit artikel{% endif %}</h2>
+        <div class="sw-bp__rij">{{ sw_bp_kaarten }}</div>
+        {%- if sw_bp_coll != blank -%}
+          {%- assign sw_bp_c = collections[sw_bp_coll] -%}
+          {%- if sw_bp_c != blank and sw_bp_c.products_count > 0 -%}
+            <a class="sw-bp__alles" href="{{ sw_bp_c.url }}">{% if request.locale.iso_code == 'en' %}View all{% else %}Bekijk alle{% endif %} {{ sw_bp_c.title | escape }} ({{ sw_bp_c.products_count }})</a>
+          {%- endif -%}
+        {%- endif -%}
+      </aside>
+    {%- endif -%}
+
+
     {% comment %} Dynamic area for @app blocks only, at the bottom {% endcomment %}
     {% content_for 'blocks' %}
 
@@ -188,6 +250,97 @@
 {%- endif -%}
 
 {% stylesheet %}
+
+  /* Spotwereld: producten uit het artikel als kaart, onder de tekst */
+  .sw-bp {
+    width: 100%;
+    max-width: var(--normal-content-width);
+    margin: 0.5rem auto 0;
+    padding: 1.5rem 1.5rem 1.6rem;
+    background: #f8fafc;
+    border: 1px solid #e8edf4;
+    border-radius: 14px;
+  }
+
+  .sw-bp__kop {
+    margin: 0 0 1rem;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #061f40;
+    letter-spacing: -0.01em;
+  }
+
+  .sw-bp__rij {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .sw-bp__kaart {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    background: #fff;
+    border: 1px solid #e8edf4;
+    border-radius: 10px;
+    padding: 0.75rem;
+    text-decoration: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+
+  .sw-bp__kaart:hover {
+    border-color: #b9cbe4;
+    box-shadow: 0 6px 18px rgba(6, 31, 64, 0.08);
+  }
+
+  .sw-bp__kaart img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+    border-radius: 6px;
+    background: #fff;
+  }
+
+  .sw-bp__naam {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #061f40;
+    line-height: 1.3;
+  }
+
+  .sw-bp__prijs {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #0f6fe3;
+  }
+
+  .sw-bp__alles {
+    display: inline-block;
+    margin-top: 1.1rem;
+    padding: 0.7rem 1.1rem;
+    background: #083d7d;
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 700;
+    border-radius: 8px;
+    text-decoration: none;
+  }
+
+  .sw-bp__alles:hover {
+    background: #061f40;
+  }
+
+  @media screen and (max-width: 749px) {
+    .sw-bp {
+      padding: 1.1rem 1rem 1.2rem;
+    }
+
+    .sw-bp__rij {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.75rem;
+    }
+  }
   /* Spotwereld blogmotor: verwante artikelen onder een kennisbank-artikel */
   .sw-verder-lezen {
     width: 100%;

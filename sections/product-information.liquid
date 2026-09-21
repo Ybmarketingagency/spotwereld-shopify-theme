@@ -475,9 +475,190 @@
       {%- endfor -%}
     </div>
   </div>
+
+  {%- comment -%}
+    Vragen over dit product (21-09-2026). De spectabel hierboven geeft de kale waarden,
+    maar de vragen die klanten (en ChatGPT, dat via de Bing-index naar deze pagina's
+    verwijst) stellen zijn zinnen: mag hij in de badkamer, is hij dimbaar, welk gat moet
+    ik zagen, heb ik een driver nodig. Dit blok beantwoordt die vragen in gewone taal,
+    uitsluitend op basis van de metavelden die hierboven ook de tabel vullen. Ontbreekt
+    een waarde, dan verdwijnt de vraag; er wordt nooit iets aangenomen. De antwoorden gaan
+    ook als FAQPage-schema mee, uit exact dezelfde bron als wat de bezoeker leest.
+    Accessoires (dimmers, drivers, stekkers) krijgen dit blok niet: daar slaan de vragen
+    nergens op.
+  {%- endcomment -%}
+  {%- liquid
+    assign sw_en = false
+    if request.locale.iso_code == 'en'
+      assign sw_en = true
+    endif
+    assign sw_faq_skip = false
+    for sw_c in product.collections
+      if sw_c.handle == 'accessoires' or sw_c.handle == 'led-panelen-accessoires'
+        assign sw_faq_skip = true
+      endif
+    endfor
+    assign sw_naam = product.title | split: '|' | first | strip
+    assign sw_faq_n = 0
+    assign sw_faq_json = ''
+  -%}
+  {%- unless sw_faq_skip -%}
+  {%- capture sw_faq_html -%}
+    {%- comment -%} 1. Badkamer {%- endcomment -%}
+    {%- if sw_ip != blank -%}
+      {%- comment -%} "IP65 (voorzijde) / IP20 (achterzijde)" telt als 65: het eerste getal is de armatuurzijde {%- endcomment -%}
+      {%- assign sw_ip_delen = sw_ip | split: 'IP' -%}
+      {%- assign sw_ip_num = 0 -%}
+      {%- if sw_ip_delen.size > 1 -%}{%- assign sw_ip_num = sw_ip_delen[1] | slice: 0, 2 | plus: 0 -%}{%- endif -%}
+      {%- if sw_ip_num > 0 -%}
+        {%- assign sw_faq_n = sw_faq_n | plus: 1 -%}
+        {%- capture sw_q -%}{% if sw_en %}Can the {{ sw_naam }} be used in the bathroom?{% else %}Mag de {{ sw_naam }} in de badkamer?{% endif %}{%- endcapture -%}
+        {%- capture sw_a -%}
+          {%- if sw_ip_num >= 65 -%}
+            {% if sw_en %}Yes. With {{ sw_ip }} it is protected against water jets, so it is suitable for bathroom zones 1 and 2, including directly above the shower or bath. Only zone 0 (inside the bath or shower tray) is excluded.{% else %}Ja. Met {{ sw_ip }} is hij bestand tegen straalwater en daarmee geschikt voor badkamerzone 1 en 2, dus ook recht boven de douche of het bad. Alleen zone 0 (in het bad of de douchebak zelf) is uitgesloten.{% endif %}
+          {%- elsif sw_ip_num >= 44 -%}
+            {% if sw_en %}Yes, in zone 2 and the rest of the bathroom, for example above the washbasin or next to the shower. {{ sw_ip }} is splash-proof. Directly above the shower or bath (zone 1) we recommend IP65.{% else %}Ja, in zone 2 en de rest van de badkamer, bijvoorbeeld boven de wastafel of naast de douche. {{ sw_ip }} is spatwaterdicht. Recht boven de douche of het bad (zone 1) adviseren we IP65.{% endif %}
+          {%- else -%}
+            {% if sw_en %}No. The {{ sw_naam }} has {{ sw_ip }} and is not protected against moisture. Use it in dry rooms only, such as the living room, hallway or bedroom.{% else %}Nee. De {{ sw_naam }} heeft {{ sw_ip }} en is niet beschermd tegen vocht. Gebruik hem alleen in droge ruimtes, zoals de woonkamer, gang of slaapkamer.{% endif %}
+          {%- endif -%}
+        {%- endcapture -%}
+        {%- assign sw_a = sw_a | strip -%}
+        <details class="sw-pfaq__item"><summary>{{ sw_q }}</summary><p>{{ sw_a }}</p></details>
+        {%- capture sw_faq_json_item -%}{"@type":"Question","name":{{ sw_q | json }},"acceptedAnswer":{"@type":"Answer","text":{{ sw_a | json }}}}{%- endcapture -%}
+        {%- assign sw_faq_json = sw_faq_json | append: sw_faq_json_item | append: ',' -%}
+      {%- endif -%}
+    {%- endif -%}
+
+    {%- comment -%} 2. Dimbaar {%- endcomment -%}
+    {%- if sw_dimbaar != blank -%}
+      {%- assign sw_dim_begin = sw_dimbaar | strip | slice: 0, 2 | downcase -%}
+      {%- assign sw_faq_n = sw_faq_n | plus: 1 -%}
+      {%- capture sw_q -%}{% if sw_en %}Is the {{ sw_naam }} dimmable?{% else %}Is de {{ sw_naam }} dimbaar?{% endif %}{%- endcapture -%}
+      {%- capture sw_a -%}
+        {%- if sw_dim_begin == 'ja' or sw_dim_begin == 'ye' -%}
+          {% if sw_en %}Yes ({{ sw_dimbaar }}). Use a LED dimmer with leading-edge phase control; our dimmer guide explains which one fits.{% else %}Ja ({{ sw_dimbaar }}). Gebruik een LED-dimmer met fase-aansnijding; welke dat is lees je in de dimmergids.{% endif %}
+        {%- elsif sw_dim_begin == 'ne' or sw_dim_begin == 'no' -%}
+          {% if sw_en %}No, the {{ sw_naam }} is not dimmable. If you want to dim, look at the dimmable recessed spotlights.{% else %}Nee, de {{ sw_naam }} is niet dimbaar. Wil je kunnen dimmen, kijk dan bij de dimbare inbouwspots.{% endif %}
+        {%- else -%}
+          {{ sw_dimbaar }}
+        {%- endif -%}
+      {%- endcapture -%}
+      {%- assign sw_a = sw_a | strip -%}
+      <details class="sw-pfaq__item"><summary>{{ sw_q }}</summary><p>{{ sw_a }}
+        {%- if sw_dim_begin == 'ja' or sw_dim_begin == 'ye' %} <a href="{{ sw_root }}/pages/led-dimmer-kiezen">{% if sw_en %}To the dimmer guide{% else %}Naar de dimmergids{% endif %} &rarr;</a>
+        {%- elsif sw_dim_begin == 'ne' or sw_dim_begin == 'no' %} <a href="{{ sw_root }}/collections/dimbare-inbouwspots">{% if sw_en %}Dimmable recessed spotlights{% else %}Dimbare inbouwspots{% endif %} &rarr;</a>{% endif -%}
+      </p></details>
+      {%- capture sw_faq_json_item -%}{"@type":"Question","name":{{ sw_q | json }},"acceptedAnswer":{"@type":"Answer","text":{{ sw_a | json }}}}{%- endcapture -%}
+      {%- assign sw_faq_json = sw_faq_json | append: sw_faq_json_item | append: ',' -%}
+    {%- endif -%}
+
+    {%- comment -%} 3. Zaagmaat en inbouwdiepte {%- endcomment -%}
+    {%- if sw_zaagmaat != blank -%}
+      {%- assign sw_faq_n = sw_faq_n | plus: 1 -%}
+      {%- capture sw_q -%}{% if sw_en %}What hole size and recess depth does the {{ sw_naam }} need?{% else %}Welke zaagmaat en inbouwdiepte heeft de {{ sw_naam }}?{% endif %}{%- endcapture -%}
+      {%- capture sw_a -%}
+        {%- if sw_en -%}Cut a hole of {{ sw_zaagmaat }}.{% if sw_diepte != blank %} Above the ceiling you need at least {{ sw_diepte }} of free space (the recess depth).{% endif %}
+        {%- else -%}Zaag een gat van {{ sw_zaagmaat }}.{% if sw_diepte != blank %} Boven het plafond heb je minimaal {{ sw_diepte }} vrije ruimte nodig (de inbouwdiepte).{% endif %}{%- endif -%}
+      {%- endcapture -%}
+      {%- assign sw_a = sw_a | strip -%}
+      <details class="sw-pfaq__item"><summary>{{ sw_q }}</summary><p>{{ sw_a }} <a href="{{ sw_root }}/pages/inbouwspots-plaatsen">{% if sw_en %}Installation guide{% else %}Plaatsingsgids{% endif %} &rarr;</a></p></details>
+      {%- capture sw_faq_json_item -%}{"@type":"Question","name":{{ sw_q | json }},"acceptedAnswer":{"@type":"Answer","text":{{ sw_a | json }}}}{%- endcapture -%}
+      {%- assign sw_faq_json = sw_faq_json | append: sw_faq_json_item | append: ',' -%}
+    {%- endif -%}
+
+    {%- comment -%} 4. Driver of rechtstreeks op 230V {%- endcomment -%}
+    {%- if sw_voltage != blank -%}
+      {%- assign sw_v = sw_voltage | downcase | remove: ' ' -%}
+      {%- assign sw_v_laag = false -%}
+      {%- assign sw_v_net = false -%}
+      {%- if sw_v contains '12v' or sw_v contains '24v' -%}{%- assign sw_v_laag = true -%}
+      {%- elsif sw_v contains '230' or sw_v contains '220' or sw_v contains '265' -%}{%- assign sw_v_net = true -%}{%- endif -%}
+      {%- if sw_v_laag or sw_v_net -%}
+        {%- assign sw_faq_n = sw_faq_n | plus: 1 -%}
+        {%- capture sw_q -%}{% if sw_en %}Do you need a separate LED driver?{% else %}Heb je een aparte LED-driver nodig?{% endif %}{%- endcapture -%}
+        {%- capture sw_a -%}
+          {%- if sw_v_laag -%}
+            {% if sw_en %}Yes. The {{ sw_naam }} runs on {{ sw_voltage }} and needs a LED driver (transformer) between the mains and the spotlight. You will find matching drivers under accessories.{% else %}Ja. De {{ sw_naam }} werkt op {{ sw_voltage }} en heeft een LED-driver (transformator) nodig tussen het lichtnet en de spot. Passende drivers vind je bij de accessoires.{% endif %}
+          {%- else -%}
+            {% if sw_en %}No. The {{ sw_naam }} connects directly to {{ sw_voltage }} mains voltage{% if sw_driver != blank %}; the driver is included ({{ sw_driver }}){% endif %}.{% else %}Nee. De {{ sw_naam }} sluit je rechtstreeks aan op {{ sw_voltage }} netspanning{% if sw_driver != blank %}; de driver is inbegrepen ({{ sw_driver }}){% endif %}.{% endif %}
+          {%- endif -%}
+        {%- endcapture -%}
+        {%- assign sw_a = sw_a | strip -%}
+        <details class="sw-pfaq__item"><summary>{{ sw_q }}</summary><p>{{ sw_a }}{% if sw_v_laag %} <a href="{{ sw_root }}/collections/accessoires">{% if sw_en %}LED drivers{% else %}LED-drivers{% endif %} &rarr;</a>{% endif %}</p></details>
+        {%- capture sw_faq_json_item -%}{"@type":"Question","name":{{ sw_q | json }},"acceptedAnswer":{"@type":"Answer","text":{{ sw_a | json }}}}{%- endcapture -%}
+        {%- assign sw_faq_json = sw_faq_json | append: sw_faq_json_item | append: ',' -%}
+      {%- endif -%}
+    {%- endif -%}
+
+    {%- comment -%} 5. Lichtkleur {%- endcomment -%}
+    {%- assign sw_lk_tekst = '' -%}
+    {%- if sw_heeft_lk_optie -%}
+      {%- for sw_o in product.options_with_values -%}
+        {%- if sw_o.name == 'Lichtkleur' or sw_o.name == 'Light color' or sw_o.name == 'Light colour' -%}
+          {%- assign sw_lk_tekst = sw_o.values | join: ', ' -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- elsif sw_lichtkleur != blank -%}
+      {%- assign sw_lk_tekst = sw_lichtkleur | replace: ' · ', ', ' -%}
+    {%- endif -%}
+    {%- assign sw_lk_check = sw_lk_tekst | downcase -%}
+    {%- if sw_lk_tekst != blank and sw_lk_check contains 'k' -%}
+      {%- unless sw_lk_check contains 'fhankelijk' or sw_lk_check contains 'epend' -%}
+        {%- assign sw_faq_n = sw_faq_n | plus: 1 -%}
+        {%- capture sw_q -%}{% if sw_en %}Which light colour does the {{ sw_naam }} give?{% else %}Welke lichtkleur geeft de {{ sw_naam }}?{% endif %}{%- endcapture -%}
+        {%- capture sw_a -%}
+          {%- if sw_en -%}{{ sw_lk_tekst }}. As a rule of thumb: 2700K is warm white for atmosphere, 3000K is warm white for living room and kitchen, 4000K is neutral white for workspaces, 6000K is daylight.{%- else -%}{{ sw_lk_tekst }}. Als vuistregel: 2700K is warm wit voor sfeer, 3000K is warm wit voor woonkamer en keuken, 4000K is neutraal wit voor werkplekken, 6000K is daglicht.{%- endif -%}
+        {%- endcapture -%}
+        {%- assign sw_a = sw_a | strip -%}
+        <details class="sw-pfaq__item"><summary>{{ sw_q }}</summary><p>{{ sw_a }} <a href="{{ sw_root }}/blogs/kennisbank">{% if sw_en %}More about light colour in the knowledge base{% else %}Meer over lichtkleur in de kennisbank{% endif %} &rarr;</a></p></details>
+        {%- capture sw_faq_json_item -%}{"@type":"Question","name":{{ sw_q | json }},"acceptedAnswer":{"@type":"Answer","text":{{ sw_a | json }}}}{%- endcapture -%}
+        {%- assign sw_faq_json = sw_faq_json | append: sw_faq_json_item | append: ',' -%}
+      {%- endunless -%}
+    {%- endif -%}
+
+    {%- comment -%} 6. Levensduur {%- endcomment -%}
+    {%- if sw_levensduur != blank -%}
+      {%- assign sw_uren = sw_levensduur | remove: '.' | remove: ',' | split: ' ' | first | plus: 0 -%}
+      {%- if sw_uren > 1000 -%}
+        {%- assign sw_jaren = sw_uren | divided_by: 1095 -%}
+        {%- assign sw_faq_n = sw_faq_n | plus: 1 -%}
+        {%- capture sw_q -%}{% if sw_en %}How long does the {{ sw_naam }} last?{% else %}Hoe lang gaat de {{ sw_naam }} mee?{% endif %}{%- endcapture -%}
+        {%- capture sw_a -%}
+          {%- if sw_en -%}The expected lifespan is {{ sw_levensduur }}. At three hours a day that is about {{ sw_jaren }} years. Spotwereld gives 5 years warranty on every product.{%- else -%}De verwachte levensduur is {{ sw_levensduur }}. Bij drie uur per dag is dat ongeveer {{ sw_jaren }} jaar. Spotwereld geeft op elk product 5 jaar garantie.{%- endif -%}
+        {%- endcapture -%}
+        {%- assign sw_a = sw_a | strip -%}
+        <details class="sw-pfaq__item"><summary>{{ sw_q }}</summary><p>{{ sw_a }}</p></details>
+        {%- capture sw_faq_json_item -%}{"@type":"Question","name":{{ sw_q | json }},"acceptedAnswer":{"@type":"Answer","text":{{ sw_a | json }}}}{%- endcapture -%}
+        {%- assign sw_faq_json = sw_faq_json | append: sw_faq_json_item | append: ',' -%}
+      {%- endif -%}
+    {%- endif -%}
+  {%- endcapture -%}
+
+  {%- if sw_faq_n > 0 -%}
+    <div class="sw-pfaq">
+      <h3 class="sw-pfaq__kop">{% if sw_en %}Questions about the {{ sw_naam }}{% else %}Vragen over de {{ sw_naam }}{% endif %}</h3>
+      {{ sw_faq_html }}
+    </div>
+    {%- assign sw_faq_json = sw_faq_json | strip | remove_last: ',' -%}
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"FAQPage","@id":"{{ request.origin }}{{ product.url }}#faq","mainEntity":[{{ sw_faq_json }}]}
+    </script>
+  {%- endif -%}
+  {%- endunless -%}
 </div>
 
 <style>
+  .sw-pfaq { margin: 1.25rem 0 0; background: #fff; border: 1px solid #e8edf4; border-radius: 12px; padding: 1.25rem 1.5rem 0.75rem; }
+  .sw-pfaq__kop { font-size: 1rem; font-weight: 800; color: #061f40; margin: 0 0 .5rem; padding-bottom: .5rem; border-bottom: 2px solid #e8edf4; }
+  .sw-pfaq__item { border-bottom: 1px solid #f0f3f8; }
+  .sw-pfaq__item:last-child { border-bottom: 0; }
+  .sw-pfaq__item summary { cursor: pointer; list-style: none; padding: .7rem 1.6rem .7rem 0; font-size: .9375rem; font-weight: 700; color: #061f40; position: relative; }
+  .sw-pfaq__item summary::-webkit-details-marker { display: none; }
+  .sw-pfaq__item summary::after { content: '+'; position: absolute; right: .2rem; top: .55rem; font-size: 1.2rem; font-weight: 400; color: #0f6fe3; }
+  .sw-pfaq__item[open] summary::after { content: '\2212'; }
+  .sw-pfaq__item p { margin: 0 0 .9rem; font-size: .9rem; line-height: 1.6; color: #334155; }
+  .sw-pfaq__item p a { color: #0f6fe3; font-weight: 600; text-decoration: none; white-space: nowrap; }
+  .sw-pfaq__item p a:hover { text-decoration: underline; }
   .sw-gidsen { margin: 1rem 0 0; }
   .sw-gidsen__kop {
     font-size: .8rem; font-weight: 700; color: #374151; margin: 0 0 .5rem;

@@ -174,6 +174,20 @@
         assign sw_title = 'sw.collectie.titel_alles' | t | append: ' | ' | append: sw_brand
       when 'all'
         assign sw_title = 'sw.collectie.titel_alles' | t | append: ' | ' | append: sw_brand
+      when 'led-panelen' or 'led-tl-buizen' or 'led-panelen-60x60' or 'led-panelen-30x120' or 'led-panelen-accessoires'
+        # Het patroon stripte hier 'LED ' van de naam en gaf "panelen kopen - LED panelen".
+        # De collectienaam begint zelf al met LED, dus die staat gewoon voorop.
+        if request.locale.iso_code == 'en'
+          assign sw_title = 'Buy ' | append: collection.title | append: ' | ' | append: sw_brand
+        else
+          assign sw_title = collection.title | append: ' kopen | ' | append: sw_brand
+        endif
+      when 'aanbiedingen'
+        if request.locale.iso_code == 'en'
+          assign sw_title = 'LED lighting deals | ' | append: sw_brand
+        else
+          assign sw_title = 'Aanbiedingen LED-verlichting | ' | append: sw_brand
+        endif
       else
         # Het patroon zet zelf al 'LED' voor de naam. Begint de collectienaam ook met
         # LED (LED panelen, LED TL buizen), dan halen we dat eerst weg, anders staat er
