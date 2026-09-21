@@ -175,7 +175,15 @@
       when 'all'
         assign sw_title = 'sw.collectie.titel_alles' | t | append: ' | ' | append: sw_brand
       else
-        assign sw_coll_kop = 'sw.collectie.titel_patroon' | t: titel: collection.title
+        # Het patroon zet zelf al 'LED' voor de naam. Begint de collectienaam ook met
+        # LED (LED panelen, LED TL buizen), dan halen we dat eerst weg, anders staat er
+        # 'LED LED panelen' in de tab en bij Google.
+        assign sw_coll_naam = collection.title
+        assign sw_coll_begin = collection.title | slice: 0, 4
+        if sw_coll_begin == 'LED '
+          assign sw_coll_naam = collection.title | remove_first: 'LED '
+        endif
+        assign sw_coll_kop = 'sw.collectie.titel_patroon' | t: titel: sw_coll_naam
         assign sw_title = sw_coll_kop | append: ' | ' | append: sw_brand
     endcase
     if collection.description != blank
