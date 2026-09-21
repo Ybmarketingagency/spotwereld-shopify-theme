@@ -10,6 +10,24 @@
 {%- enddoc -%}
 
 {% unless style == 'none' %}
+  {%- if bar -%}
+    {%- comment -%}
+      Brede zoekbalk in de kop. Het is bewust geen echt formulier: een klik opent dezelfde
+      zoekdialoog als het icoon, met suggesties terwijl je typt en de prefix-fix uit
+      sw-zoek-prefix. Zo blijft er één zoekpad.
+    {%- endcomment -%}
+    <search-button class="search-action sw-zoekbalk{% if class != blank %} {{ class | strip }}{% endif %}">
+      <button
+        on:click="#search-modal/showDialog"
+        class="button-unstyled sw-zoekbalk__knop"
+        aria-label="{{ 'content.search_input_label' | t }}"
+        aria-haspopup="dialog"
+      >
+        <span class="sw-zoekbalk__tekst">{%- if request.locale.iso_code == 'en' -%}Search products...{%- else -%}Zoek producten...{%- endif -%}</span>
+        <span class="svg-wrapper sw-zoekbalk__icoon">{{ 'icon-search.svg' | inline_asset_content }}</span>
+      </button>
+    </search-button>
+  {%- else -%}
   <search-button
     class="search-action{% if display_style == 'text' %} search-action--text{% endif %}{% if class != blank %} {{ class | strip }}{% endif %}"
   >
@@ -28,9 +46,59 @@
       </span>
     </button>
   </search-button>
+  {%- endif -%}
 {% endunless %}
 
 {% stylesheet %}
+  /* Spotwereld: brede zoekbalk in de middenkolom van de kop */
+  .sw-zoekbalk {
+    width: 100%;
+    max-width: 600px;
+  }
+  .sw-zoekbalk__knop {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    width: 100%;
+    height: 44px;
+    padding: 0 0.9rem 0 1.1rem;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #6b7280;
+    font-size: 0.9375rem;
+    text-align: left;
+    cursor: text;
+    box-shadow: inset 0 0 0 1px rgba(20, 41, 87, 0.12);
+  }
+  .sw-zoekbalk__knop:hover,
+  .sw-zoekbalk__knop:focus-visible {
+    box-shadow: inset 0 0 0 2px #0f6fe3;
+    outline: none;
+  }
+  .sw-zoekbalk__tekst {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .sw-zoekbalk__icoon {
+    flex: none;
+    color: #142957;
+    width: 20px;
+    height: 20px;
+  }
+  .sw-zoekbalk__icoon svg {
+    width: 20px;
+    height: 20px;
+  }
+  /* de middenkolom mag meegroeien zodat de balk breed wordt */
+  .header__columns:has(.header__column--center .sw-zoekbalk) {
+    --header-center: minmax(0, 1fr);
+  }
+  .header__column--center:has(.sw-zoekbalk) {
+    width: 100%;
+  }
+
   .search-action {
     --search-border-radius: var(--style-border-radius-inputs);
     --search-border-width: var(--style-border-width-inputs);

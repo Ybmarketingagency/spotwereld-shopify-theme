@@ -99,7 +99,12 @@
     endif
   endif
   capture search
-    render 'search', style: search_style, class: search_class, display_style: section.settings.actions_display_style
+    # Staat de zoekfunctie in de middenkolom, dan is het een brede zoekbalk in plaats van een icoon.
+    assign sw_zoekbalk = false
+    if section.settings.search_position == 'center'
+      assign sw_zoekbalk = true
+    endif
+    render 'search', style: search_style, class: search_class, display_style: section.settings.actions_display_style, bar: sw_zoekbalk
   endcapture
 
   # Skip drawer search under specific conditions:

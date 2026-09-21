@@ -1,0 +1,59 @@
+{%- comment -%}
+  Kop van de winkel (sinds 22-09-2026): bovenste rij logo links, brede zoekbalk in het
+  midden, account en winkelwagen rechts met het woord eronder; daaronder de rij met alle
+  pagina's. De rijverdeling zelf staat in sections/header-group.json (menu_row bottom,
+  search_position center) en de zoekbalk in snippets/search.liquid. Hier alleen de
+  opmaak van account en winkelwagen: Horizon toont óf een icoon óf tekst, wij willen
+  allebei, icoon boven, woord eronder.
+{%- endcomment -%}
+<style>
+  @media screen and (min-width: 750px) {
+    .header__row--top header-actions {
+      gap: 0.25rem;
+    }
+    /* Account (niet ingelogd): eigen knop uit header-actions.liquid */
+    .header__row--top #sw-acct-btn {
+      flex-direction: column;
+      gap: 4px;
+      padding: 0.25rem 0.6rem;
+    }
+    .header__row--top #sw-acct-btn .account-button__text.hidden {
+      display: block !important;
+      font-size: 0.6875rem;
+      line-height: 1;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+    }
+    .header__row--top #sw-acct-btn .account-button__icon {
+      width: 20px;
+      height: 22px;
+    }
+    /* Winkelwagen */
+    .header__row--top .header-actions__cart-icon {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 0.25rem 0.6rem;
+    }
+    .header__row--top .header-actions__cart-icon > span.hidden {
+      display: block !important;
+      font-size: 0.6875rem;
+      line-height: 1;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      order: 2;
+    }
+    .header__row--top .header-actions__cart-icon > .svg-wrapper {
+      order: 1;
+    }
+    .header__row--top .header-actions__cart-icon .svg-wrapper svg {
+      width: 22px;
+      height: 22px;
+    }
+    /* Menurij: iets strakker en gecentreerd */
+    .header__row--bottom .header__columns {
+      padding-block: 0;
+    }
+  }
+</style>
