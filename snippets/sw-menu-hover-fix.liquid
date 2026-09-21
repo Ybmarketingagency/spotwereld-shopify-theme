@@ -141,7 +141,7 @@
 {%- endcomment -%}
 {%- unless request.locale.primary -%}
 <style>
-  .header-menu .menu-list__link { --menu-top-level-font-size: 0.8125rem; }
+  .header-menu .menu-list__list-item:not([slot='overflow']) .menu-list__link { font-size: 0.8125rem; }
   .header-menu .menu-list__list-item:not([slot='overflow']) .menu-list__link-title { padding-inline: 0.25rem; }
   .header-menu .menu-list { --menu-horizontal-gap: 0.75rem; }
 </style>
