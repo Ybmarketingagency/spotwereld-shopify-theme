@@ -1,0 +1,20 @@
+{%- doc -%}
+  Tekst van een menu-item.
+
+  Op de niet-standaardtaal (/en/) volgt een link naar een collectie de vertaalde
+  collectietitel in plaats van de vertaling van het menu-item zelf. Zo staan nieuwe
+  menu-items meteen in het Engels zodra de collectie vertaald is, ook als de
+  vertaling van het menu-item nog ontbreekt (die id's staan alleen in de
+  vertaalexport). Op de standaardtaal verandert er niets.
+
+  @param {object} link - het menu-item
+{%- enddoc -%}
+{%- liquid
+  assign sw_mt = link.title
+  unless request.locale.primary
+    if link.type == 'collection_link' and link.object != blank and link.object.title != blank
+      assign sw_mt = link.object.title
+    endif
+  endunless
+  echo sw_mt | escape
+-%}

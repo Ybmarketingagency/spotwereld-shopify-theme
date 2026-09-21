@@ -130,3 +130,19 @@
     );
   })();
 </script>
+
+{%- comment -%}
+  3. Compacter bovenmenu op /en/.
+     De Engelse labels zijn langer (Surface-mounted spotlights, Recessed
+     spotlights). Daardoor paste het menu op 1920 px niet meer en verdween
+     Accessories achter de knop More. Iets kleiner lettertype, minder ruimte
+     rond de woorden en een kleinere tussenruimte; alleen op de niet-standaardtaal,
+     het Nederlandse menu blijft zoals het was.
+{%- endcomment -%}
+{%- unless request.locale.primary -%}
+<style>
+  .header-menu .menu-list__link { --menu-top-level-font-size: 0.8125rem; }
+  .header-menu .menu-list__list-item:not([slot='overflow']) .menu-list__link-title { padding-inline: 0.25rem; }
+  .header-menu .menu-list { --menu-horizontal-gap: 0.75rem; }
+</style>
+{%- endunless -%}
