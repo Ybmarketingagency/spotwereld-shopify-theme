@@ -24,7 +24,8 @@
     data-testid="cart-icon"
   >
     <span class="{% if display_style == 'icon' %}hidden{% else %}mobile:hidden{% endif %}">
-      {{ 'content.cart_title' | t }}
+      {%- comment -%}Kop zegt Winkelwagen, zoals in het ontwerp; de locale-tekst is Winkelmandje.{%- endcomment -%}
+      {%- if request.locale.iso_code == 'en' -%}Cart{%- else -%}Winkelwagen{%- endif -%}
     </span>
 
     <span
