@@ -135,7 +135,9 @@
 {%- if sw_lees_handles != blank -%}
   {%- capture sw_lees_kaarten -%}
     {%- for sw_art in blogs['kennisbank'].articles -%}
-      {%- assign sw_art_zoek = ',' | append: sw_art.handle | append: ',' -%}
+      {%- comment -%} article.handle is 'kennisbank/slug', dus alleen het deel na de slash vergelijken {%- endcomment -%}
+      {%- assign sw_art_slug = sw_art.handle | split: '/' | last -%}
+      {%- assign sw_art_zoek = ',' | append: sw_art_slug | append: ',' -%}
       {%- if sw_lees_zoek contains sw_art_zoek -%}
         {%- assign sw_lees_aantal = sw_lees_aantal | plus: 1 -%}
         <a class="sw-lees-ook__kaart" href="{{ sw_art.url }}">
