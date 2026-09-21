@@ -61,6 +61,21 @@
         {%- if sw_bp_p == blank or sw_bp_p.available == false -%}{%- continue -%}{%- endif -%}
         {%- assign sw_bp_aantal = sw_bp_aantal | plus: 1 -%}
         {%- assign sw_bp_naam = sw_bp_p.title | split: '|' | first | strip -%}
+        {%- comment -%}
+          De knop onder de kaarten wijst naar de hoofdcategorie van het eerste product, niet naar
+          de eerste collectielink in de tekst: een badkamerartikel over inbouwspots linkte in
+          een bijzin naar wandlampen en kreeg daardoor "Bekijk alle wandlampen" onder vier
+          inbouwspots. Alleen als geen enkel product in een hoofdcategorie zit, valt hij terug
+          op de eerste collectielink uit het artikel.
+        {%- endcomment -%}
+        {%- if sw_bp_aantal == 1 -%}
+          {%- for sw_bp_pc in sw_bp_p.collections -%}
+            {%- if sw_bp_pc.handle == 'inbouwspots' or sw_bp_pc.handle == 'opbouwspots' or sw_bp_pc.handle == 'wandlampen' or sw_bp_pc.handle == 'hanglampen' or sw_bp_pc.handle == 'trapverlichting' or sw_bp_pc.handle == 'led-panelen' or sw_bp_pc.handle == 'led-tl-buizen' or sw_bp_pc.handle == 'accessoires' -%}
+              {%- assign sw_bp_coll = sw_bp_pc.handle -%}
+              {%- break -%}
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endif -%}
         <a class="sw-bp__kaart" href="{{ sw_bp_p.url }}">
           {%- if sw_bp_p.featured_image -%}
             <img src="{{ sw_bp_p.featured_image | image_url: width: 400 }}" alt="{{ sw_bp_p.featured_image.alt | default: sw_bp_naam | escape }}" loading="lazy" width="400" height="400">
