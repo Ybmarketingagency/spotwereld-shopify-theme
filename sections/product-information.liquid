@@ -610,7 +610,7 @@
           {%- if sw_en -%}{{ sw_lk_tekst }}. As a rule of thumb: 2700K is warm white for atmosphere, 3000K is warm white for living room and kitchen, 4000K is neutral white for workspaces, 6000K is daylight.{%- else -%}{{ sw_lk_tekst }}. Als vuistregel: 2700K is warm wit voor sfeer, 3000K is warm wit voor woonkamer en keuken, 4000K is neutraal wit voor werkplekken, 6000K is daglicht.{%- endif -%}
         {%- endcapture -%}
         {%- assign sw_a = sw_a | strip -%}
-        <details class="sw-pfaq__item"><summary>{{ sw_q }}</summary><p>{{ sw_a }} <a href="{{ sw_root }}/blogs/kennisbank">{% if sw_en %}More about light colour in the knowledge base{% else %}Meer over lichtkleur in de kennisbank{% endif %} &rarr;</a></p></details>
+        <details class="sw-pfaq__item"><summary>{{ sw_q }}</summary><p>{{ sw_a }} <a href="{{ sw_root }}/pages/verlichtingsgids">{% if sw_en %}More about light colour in the lighting guide{% else %}Meer over lichtkleur in de verlichtingsgids{% endif %} &rarr;</a></p></details>
         {%- capture sw_faq_json_item -%}{"@type":"Question","name":{{ sw_q | json }},"acceptedAnswer":{"@type":"Answer","text":{{ sw_a | json }}}}{%- endcapture -%}
         {%- assign sw_faq_json = sw_faq_json | append: sw_faq_json_item | append: ',' -%}
       {%- endunless -%}

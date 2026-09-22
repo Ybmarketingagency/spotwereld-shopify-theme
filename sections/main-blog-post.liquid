@@ -183,9 +183,9 @@
 
 {%- if sw_getoond > 0 -%}
   <aside class="sw-verder-lezen">
-    <h2>{% if request.locale.iso_code == 'en' %}More from the knowledge base{% else %}Meer uit de kennisbank{% endif %}</h2>
+    <h2>{% if request.locale.iso_code == 'en' %}More from the lighting guide{% else %}Meer uit de verlichtingsgids{% endif %}</h2>
     <div class="sw-verder-lezen__rij">{{ sw_kaarten }}</div>
-    <a class="sw-verder-lezen__alles" href="{{ blog.url }}">{% if request.locale.iso_code == 'en' %}All articles in the knowledge base{% else %}Alle artikelen in de kennisbank{% endif %}</a>
+    <a class="sw-verder-lezen__alles" href="{{ routes.root_url | append: '/pages/verlichtingsgids' | replace: '//', '/' }}">{% if request.locale.iso_code == 'en' %}All articles in the lighting guide{% else %}Alle artikelen in de verlichtingsgids{% endif %}</a>
   </aside>
 {%- endif -%}
 
