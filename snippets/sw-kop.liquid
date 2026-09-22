@@ -55,6 +55,33 @@
       width: 22px;
       height: 22px;
     }
+    /* Het icoon van de winkelwagen zat in een vak van 44 px en hing daardoor lager dan het
+       account-icoon. Zelfde maat als het account-icoon, dan staan ze op één hoogte. */
+    .header__row--top .header-actions__cart-icon > .svg-wrapper {
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    /* Het aantal-bolletje hoort rechtsboven op het icoon, niet rechtsboven in het hele blok;
+       en de uitsparing die Horizon in het icoon maskert laten we weg, die gaf een gat op de
+       verkeerde plek. */
+    .header__row--top .header-actions__cart-icon {
+      --cart-bubble-size: 16px;
+    }
+    .header__row--top .header-actions__cart-icon .cart-bubble {
+      top: 0;
+      right: auto;
+      left: calc(50% + 4px);
+    }
+    .header__row--top .header-actions__cart-icon.header-actions__cart-icon--has-cart svg {
+      mask: none;
+    }
+    /* De streep tussen de bovenste rij en de menurij (divider_width in header-group.json) */
+    .header__row--top {
+      --color-border: rgba(255, 255, 255, 0.18);
+    }
     /* Menurij: iets strakker en gecentreerd */
     .header__row--bottom .header__columns {
       padding-block: 0;
