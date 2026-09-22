@@ -436,11 +436,16 @@
   "currenciesAccepted": "EUR",
   "paymentAccepted": "iDEAL, Visa, Mastercard, Klarna, PayPal, Bancontact",
   {%- comment -%}
-    Geen sameAs: de Facebook- en Instagram-profielen die hier stonden bestaan
-    niet (facebook.com/spotwereld geeft een foutpagina). Zet ze pas terug als
-    de accounts er echt zijn; een verzonnen profiel in de schema-code is een
-    fout signaal naar Google.
+    sameAs: alleen profielen die echt bestaan en die wij beheren. Facebook en
+    Instagram staan er bewust niet in (die profielen bestaan niet). Erbij zetten
+    zodra er een vermelding is aangemaakt: zo knopen Google, Bing en AI-modellen
+    de entiteit Spotwereld aan elkaar over meerdere bronnen (22-09-2026).
   {%- endcomment -%}
+  "sameAs": [
+    "https://nl.trustpilot.com/review/spotwereld.nl",
+    "https://g.page/r/CWadLxsH2AjXEBM",
+    "https://share.google/2O78ArFxEhBAXlJKN"
+  ],
   "contactPoint": [
     {
       "@type": "ContactPoint",
@@ -497,7 +502,11 @@
   },
   "hasMap": "https://www.google.com/maps/search/?api=1&query=Deltazijde+10T%2C+1261+ZM+Blaricum",
   {%- comment -%} Het Google-bedrijfsprofiel, via de deellink die Google zelf uitgeeft. {%- endcomment -%}
-  "sameAs": ["https://share.google/2O78ArFxEhBAXlJKN"],
+  "sameAs": [
+    "https://share.google/2O78ArFxEhBAXlJKN",
+    "https://g.page/r/CWadLxsH2AjXEBM",
+    "https://nl.trustpilot.com/review/spotwereld.nl"
+  ],
   "areaServed": {
     "@type": "Country",
     "name": "Nederland"
