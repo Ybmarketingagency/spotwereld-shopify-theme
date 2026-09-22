@@ -26,6 +26,58 @@
     {%- content_for 'block', id: 'blog-post-content', type: '_blog-post-content' %}
 
     {%- comment -%}
+      Spotwereld E-E-A-T (22-09-2026). De kennisbank had geen enkel auteurssignaal: geen naam,
+      geen verantwoording, geen datum van controle. Google noemt dat bij Search Quality onder
+      "Who, How and Why" als iets wat op elke informatieve pagina zichtbaar hoort te zijn.
+      Verzinnen mag niet, dus dit blok toont alleen wat controleerbaar is: de uitgever met
+      KvK-nummer en vestigingsadres, waar de inhoud op gebaseerd is, en wanneer het artikel
+      voor het laatst is bijgewerkt. Staat er in de sectie-instellingen een naam ingevuld,
+      dan verschijnt die als auteur; anders is de winkel zelf de auteur.
+    {%- endcomment -%}
+    {%- liquid
+      assign sw_at_en = false
+      if request.locale.iso_code == 'en'
+        assign sw_at_en = true
+      endif
+      assign sw_at_naam = section.settings.sw_auteur_naam | default: article.author | strip
+      if sw_at_naam == blank or sw_at_naam == 'Spotwereld'
+        assign sw_at_naam = 'Spotwereld'
+        assign sw_at_persoon = false
+      else
+        assign sw_at_persoon = true
+      endif
+    -%}
+    <aside class="sw-verantwoording">
+      <h2>{% if sw_at_en %}About this article{% else %}Over dit artikel{% endif %}</h2>
+      <dl>
+        <dt>{% if sw_at_en %}Written by{% else %}Geschreven door{% endif %}</dt>
+        <dd>
+          {{ sw_at_naam | escape }}{% if sw_at_persoon and section.settings.sw_auteur_functie != blank %}, {{ section.settings.sw_auteur_functie | escape }}{% endif %}
+          {%- unless sw_at_persoon -%}
+            <span class="sw-verantwoording__sub">{% if sw_at_en %}LED lighting specialist, Blaricum (NL) &middot; Chamber of Commerce 84665688{% else %}gespecialiseerd in led-verlichting, Blaricum &middot; KvK 84665688{% endif %}</span>
+          {%- endunless -%}
+        </dd>
+
+        <dt>{% if sw_at_en %}Based on{% else %}Gebaseerd op{% endif %}</dt>
+        <dd>{% if sw_at_en %}European standards and regulations, the manufacturer documentation of our suppliers, and the measured specifications of the fixtures we sell ourselves. Figures that a supplier does not state, we leave out.{% else %}Europese normen en verordeningen, de fabrikantendocumentatie van onze leveranciers, en de opgemeten specificaties van de armaturen die we zelf verkopen. Cijfers die een leverancier niet opgeeft, laten we weg.{% endif %}</dd>
+
+        <dt>{% if sw_at_en %}Last updated{% else %}Laatst bijgewerkt{% endif %}</dt>
+        <dd>
+          <time datetime="{{ article.updated_at | default: article.published_at | date: '%Y-%m-%d' }}">
+            {%- if sw_at_en -%}
+              {{ article.updated_at | default: article.published_at | date: '%e %B %Y' | strip }}
+            {%- else -%}
+              {{ article.updated_at | default: article.published_at | date: '%d-%m-%Y' }}
+            {%- endif -%}
+          </time>
+        </dd>
+
+        <dt>{% if sw_at_en %}Spotted an error?{% else %}Klopt er iets niet?{% endif %}</dt>
+        <dd>{% if sw_at_en %}Mail{% else %}Mail{% endif %} <a href="mailto:info@spotwereld.nl?subject={{ article.title | url_encode }}">info@spotwereld.nl</a>{% if sw_at_en %} and we will check it.{% else %} en we kijken het na.{% endif %}</dd>
+      </dl>
+    </aside>
+
+    {%- comment -%}
       Bijpassende producten (21-09-2026). Uit GA4 over 22 aug t/m 21 sep: de kennisbank
       trekt bezoek maar leverde nul bestellingen. De artikelen linken wel naar producten,
       maar alleen als tekstlink midden in een alinea. Dit blok haalt de producten die in het
@@ -221,13 +273,10 @@
     "height": {{ 1200 | divided_by: article.image.aspect_ratio | round }}
   },
   {%- endif -%}
-  "author": {
-    "@type": "Organization",
-    "name": "{{ article.author | default: 'Spotwereld' | escape }}",
-    "url": "{{ request.origin }}"
-  },
+  "author": { "@id": "{{ request.origin }}/#organization" },
   "publisher": { "@id": "{{ request.origin }}/#organization" },
-  "inLanguage": "nl-NL"
+  "isAccessibleForFree": true,
+  "inLanguage": "{% if request.locale.iso_code == 'en' %}en{% else %}nl-NL{% endif %}"
   {%- if article.tags.size > 0 -%}
   ,"keywords": "{{ article.tags | join: ', ' | escape }}"
   {%- endif -%}
@@ -265,6 +314,69 @@
 {%- endif -%}
 
 {% stylesheet %}
+
+  /* Spotwereld: verantwoordingsblok onder het artikel (E-E-A-T, 22-09-2026) */
+  .sw-verantwoording {
+    width: 100%;
+    max-width: var(--normal-content-width);
+    margin: 2rem auto 0;
+    padding: 1.4rem 1.5rem 1.5rem;
+    border: 1px solid #e8edf4;
+    border-left: 3px solid #061f40;
+    border-radius: 12px;
+    background: #fff;
+  }
+
+  .sw-verantwoording h2 {
+    margin: 0 0 0.9rem;
+    font-size: 1rem;
+    font-weight: 800;
+    color: #061f40;
+    letter-spacing: -0.01em;
+  }
+
+  .sw-verantwoording dl {
+    display: grid;
+    grid-template-columns: minmax(8.5rem, auto) 1fr;
+    gap: 0.5rem 1.25rem;
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.55;
+  }
+
+  .sw-verantwoording dt {
+    margin: 0;
+    font-weight: 700;
+    color: #061f40;
+  }
+
+  .sw-verantwoording dd {
+    margin: 0;
+    color: #475569;
+  }
+
+  .sw-verantwoording__sub {
+    display: block;
+    font-size: 0.8125rem;
+    color: #64748b;
+  }
+
+  .sw-verantwoording a {
+    color: #061f40;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  @media (max-width: 600px) {
+    .sw-verantwoording dl {
+      grid-template-columns: 1fr;
+      gap: 0.15rem;
+    }
+
+    .sw-verantwoording dd {
+      margin-bottom: 0.6rem;
+    }
+  }
 
   /* Spotwereld: producten uit het artikel als kaart, onder de tekst */
   .sw-bp {
@@ -487,6 +599,26 @@
   ],
   "class": "section-wrapper",
   "settings": [
+    {
+      "type": "header",
+      "content": "Over dit artikel"
+    },
+    {
+      "type": "paragraph",
+      "content": "Blijft dit leeg, dan staat Spotwereld zelf als auteur onder elk kennisbank-artikel, met KvK-nummer en vestigingsplaats. Vul een naam in zodra er een vaste schrijver is."
+    },
+    {
+      "type": "text",
+      "id": "sw_auteur_naam",
+      "label": "Naam van de auteur",
+      "info": "Leeg laten om de winkel als auteur te tonen."
+    },
+    {
+      "type": "text",
+      "id": "sw_auteur_functie",
+      "label": "Functie of vakgebied",
+      "info": "Bijvoorbeeld: elektrotechnisch installateur. Alleen zichtbaar als er een naam staat."
+    },
     {
       "type": "select",
       "id": "content_direction",
