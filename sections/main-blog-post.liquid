@@ -39,7 +39,11 @@
       if request.locale.iso_code == 'en'
         assign sw_at_en = true
       endif
-      assign sw_at_naam = section.settings.sw_auteur_naam | default: article.author | strip
+      comment
+        Bewust NIET article.author: dat is de naam van het Shopify-account dat het artikel
+        aanmaakte (stond als 'Y O' op de live pagina). Alleen wat hier bewust is ingevuld.
+      endcomment
+      assign sw_at_naam = section.settings.sw_auteur_naam | strip
       if sw_at_naam == blank or sw_at_naam == 'Spotwereld'
         assign sw_at_naam = 'Spotwereld'
         assign sw_at_persoon = false
@@ -241,15 +245,21 @@
   </aside>
 {%- endif -%}
 
-<script type="application/ld+json">
-  {{ article | structured_data }}
-</script>
+{%- comment -%}
+  Shopify's eigen {{ article | structured_data }} stond hier. Dat filter zet
+  "author": {"@type":"Person","name":"Y O"} neer: de naam van het account waarmee het
+  artikel is aangemaakt. Het gebruikt bovendien dezelfde @id (#article) als ons eigen
+  blok hieronder, dus Google kreeg twee verschillende auteurs op een artikel te zien en
+  de accountnaam van de eigenaar kwam ongevraagd op een publieke pagina terecht.
+  Ons blok hieronder is compleet: headline, description, datums, image, publisher,
+  author, mainEntityOfPage en keywords. Dat van Shopify kan dus weg.
+{%- endcomment -%}
 
 {%- comment -%}
-  Spotwereld: aanvulling op Shopify's `article | structured_data`. Dat filter levert wel
-  headline, image, datePublished en author, maar niet publisher, dateModified,
-  mainEntityOfPage of description — allemaal velden die Google voor Article verwacht.
-  Los blok met eigen @id zodat het niet met het bovenstaande botst.
+  Spotwereld: het volledige Article-schema voor een kennisbank-artikel. Auteur en
+  uitgever wijzen allebei naar de organisatie uit meta-tags.liquid, waar KvK-nummer,
+  btw-nummer en vestigingsadres staan. Dat is controleerbaar; een verzonnen
+  persoonsnaam zou dat niet zijn.
 {%- endcomment -%}
 <script type="application/ld+json">
 {
