@@ -10,12 +10,14 @@
   @media screen and (min-width: 750px) {
     .header__row--top header-actions {
       gap: 0.25rem;
+      display: flex;
+      align-items: center;
     }
     /* Account (niet ingelogd): eigen knop uit header-actions.liquid */
     .header__row--top #sw-acct-btn {
       flex-direction: column;
       gap: 4px;
-      padding: 0.25rem 0.6rem;
+      padding: 0.25rem 0.6rem !important; /* de knop heeft inline padding .5rem */
     }
     .header__row--top #sw-acct-btn .account-button__text.hidden {
       display: block !important;
@@ -80,7 +82,7 @@
     }
     /* De streep tussen de bovenste rij en de menurij (divider_width in header-group.json) */
     .header__row--top {
-      --color-border: rgba(255, 255, 255, 0.18);
+      --color-border: rgba(255, 255, 255, 0.3);
     }
     /* Menurij: iets strakker en gecentreerd */
     .header__row--bottom .header__columns {
