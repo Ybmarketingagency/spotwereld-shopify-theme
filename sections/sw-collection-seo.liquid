@@ -304,6 +304,54 @@
     font-weight: 600;
     color: #0f6fe3;
   }
+
+  /* Vergelijkingstabellen in de collectietekst (22-09-2026): letterlijk overneembaar door
+     Google-snippets en AI-antwoorden, dus echte table-markup en geen opsomming. */
+  .sw-coll-seo__body table.sw-vergelijk {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.5rem 0 1.25rem;
+    font-size: 0.9rem;
+    background: #fff;
+    border: 1px solid #e8edf4;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .sw-coll-seo__body table.sw-vergelijk th,
+  .sw-coll-seo__body table.sw-vergelijk td {
+    padding: 0.6rem 0.75rem;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid #f0f3f8;
+  }
+
+  .sw-coll-seo__body table.sw-vergelijk th {
+    background: #f8fafc;
+    color: #061f40;
+    font-weight: 800;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .sw-coll-seo__body table.sw-vergelijk td:first-child {
+    font-weight: 700;
+    color: #061f40;
+    white-space: nowrap;
+  }
+
+  .sw-coll-seo__body table.sw-vergelijk tr:last-child td {
+    border-bottom: 0;
+  }
+
+  @media screen and (max-width: 749px) {
+    .sw-coll-seo__body table.sw-vergelijk {
+      display: block;
+      overflow-x: auto;
+      font-size: 0.85rem;
+    }
+  }
 {% endstylesheet %}
 
 {% schema %}
