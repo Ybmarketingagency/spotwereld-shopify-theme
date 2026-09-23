@@ -410,6 +410,57 @@
   </div>
 
   {%- comment -%}
+    Specificaties ook machineleesbaar (23-09-2026). Aanleiding: uit GA4 blijkt
+    chatgpt.com/ai-assistant een eigen kanaal met 38 sessies en 18% van de omzet, en
+    bijna twee derde van die sessies landt op een product- of collectiepagina. Een
+    assistent die "welke inbouwspot heeft IP65 en zaagmaat 68 mm" krijgt, moet die
+    waarden kunnen lezen; uit een HTML-tabel met inline styles komt dat er niet uit.
+
+    Dit blok hangt via hetzelfde @id aan het Product-schema uit meta-tags.liquid en voegt
+    er additionalProperty aan toe. Het gebruikt exact dezelfde sw_-variabelen als de
+    zichtbare tabel hierboven, dus er kan nooit iets in staan wat de bezoeker niet ziet,
+    en een leeg metaveld levert geen regel op. Zo blijft
+    [[feedback_geen_verzonnen_content]] ook hier afgedwongen.
+  {%- endcomment -%}
+  {%- capture sw_specs_json -%}
+    {%- assign sw_sep = '' -%}
+    {%- if sw_merk != blank -%}{{ sw_sep }}{"@type":"PropertyValue","name":"Merk","value":{{ sw_merk | json }}}{%- assign sw_sep = ',' -%}{%- endif -%}
+    {%- if sw_wattage != blank -%}{{ sw_sep }}{"@type":"PropertyValue","name":"Wattage","value":{{ sw_wattage | json }}}{%- assign sw_sep = ',' -%}{%- endif -%}
+    {%- if sw_maxwatt != blank -%}{{ sw_sep }}{"@type":"PropertyValue","name":"Maximaal wattage","value":{{ sw_maxwatt | json }}}{%- assign sw_sep = ',' -%}{%- endif -%}
+    {%- if sw_lumen != blank -%}{{ sw_sep }}{"@type":"PropertyValue","name":"Lichtopbrengst","value":{{ sw_lumen | json }}}{%- assign sw_sep = ',' -%}{%- endif -%}
+    {%- if sw_lichtkleur != blank -%}{{ sw_sep }}{"@type":"PropertyValue","name":"Lichtkleur","value":{{ sw_lichtkleur | json }}}{%- assign sw_sep = ',' -%}{%- endif -%}
+    {%- if sw_cri != blank -%}{{ sw_sep }}{"@type":"PropertyValue","name":"Kleurweergave (CRI)","value":{{ sw_cri | json }}}{%- assign sw_sep = ',' -%}{%- endif -%}
+    {%- if sw_lichthoek != blank -%}{{ sw_sep }}{"@type":"PropertyValue","name":"Lichthoek","value":{{ sw_lichthoek | json }}}{%- assign sw_sep = ',' -%}{%- endif -%}
+    {%- if sw_dimbaar != blank -%}{{ sw_sep }}{"@type":"PropertyValue","name":"Dimbaar","value":{{ sw_dimbaar | json }}}{%- assign sw_sep = ',' -%}{%- endif -%}
+    {%- if sw_driver != blank -%}{{ sw_sep }}{"@type":"PropertyValue","name":"Driver inbegrepen","value":{{ sw_driver | json }}}{%- assign sw_sep = ',' -%}{%- endif -%}
+    {%- if sw_fitting != blank -%}{{ sw_sep }}{"@type":"PropertyValue","name":"Fitting","value":{{ sw_fitting | json }}}{%- assign sw_sep = ',' -%}{%- endif -%}
+    {%- if sw_ip != blank -%}{{ sw_sep }}{"@type":"PropertyValue","name":"IP-waarde","value":{{ sw_ip | json }}}{%- assign sw_sep = ',' -%}{%- endif -%}
+    {%- if sw_zaagmaat != blank -%}{{ sw_sep }}{"@type":"PropertyValue","name":"Zaagmaat","value":{{ sw_zaagmaat | json }}}{%- assign sw_sep = ',' -%}{%- endif -%}
+    {%- if sw_diepte != blank -%}{{ sw_sep }}{"@type":"PropertyValue","name":"Inbouwdiepte","value":{{ sw_diepte | json }}}{%- assign sw_sep = ',' -%}{%- endif -%}
+    {%- if sw_afmetingen != blank -%}{{ sw_sep }}{"@type":"PropertyValue","name":"Afmetingen","value":{{ sw_afmetingen | json }}}{%- assign sw_sep = ',' -%}{%- endif -%}
+    {%- if sw_voltage != blank -%}{{ sw_sep }}{"@type":"PropertyValue","name":"Voltage","value":{{ sw_voltage | json }}}{%- assign sw_sep = ',' -%}{%- endif -%}
+    {%- if sw_materiaal != blank -%}{{ sw_sep }}{"@type":"PropertyValue","name":"Materiaal","value":{{ sw_materiaal | json }}}{%- assign sw_sep = ',' -%}{%- endif -%}
+    {%- if sw_levensduur != blank -%}{{ sw_sep }}{"@type":"PropertyValue","name":"Verwachte levensduur","value":{{ sw_levensduur | json }}}{%- assign sw_sep = ',' -%}{%- endif -%}
+    {%- if sw_garantie != blank -%}{{ sw_sep }}{"@type":"PropertyValue","name":"Garantie","value":{{ sw_garantie | json }}}{%- assign sw_sep = ',' -%}{%- endif -%}
+    {%- for opt in product.options_with_values -%}
+      {%- assign opt_name = opt.name | downcase -%}
+      {%- unless opt_name == 'title' or opt_name == 'ip-waarde' -%}
+        {%- assign opt_val = product.selected_or_first_available_variant.options[forloop.index0] -%}
+        {%- if opt_val != blank -%}
+          {%- if opt_name == 'kleur' -%}{%- assign opt_label = 'Kleur behuizing' -%}{%- else -%}{%- assign opt_label = opt.name -%}{%- endif -%}
+          {{ sw_sep }}{"@type":"PropertyValue","name":{{ opt_label | json }},"value":{{ opt_val | json }}}{%- assign sw_sep = ',' -%}
+        {%- endif -%}
+      {%- endunless -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+  {%- assign sw_specs_json = sw_specs_json | strip -%}
+  {%- if sw_specs_json != blank -%}
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Product","@id":"{{ product.url }}#product","additionalProperty":[{{ sw_specs_json }}]}
+</script>
+  {%- endif -%}
+
+  {%- comment -%}
     Handleiding. Staat er een bestand in het metaveld custom.handleiding, dan komt hier een
     knop naar de PDF. Zo hangt de winkelier bij elk product zelf een handleiding zonder dat
     er code bij hoeft. Shopify serveert het bestand vanaf spotwereld.nl/cdn/, dus vanaf
