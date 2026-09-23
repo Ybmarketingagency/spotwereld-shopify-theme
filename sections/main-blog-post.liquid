@@ -44,8 +44,8 @@
         aanmaakte (stond als 'Y O' op de live pagina). Alleen wat hier bewust is ingevuld.
       endcomment
       assign sw_at_naam = section.settings.sw_auteur_naam | strip
-      if sw_at_naam == blank or sw_at_naam == 'Spotwereld'
-        assign sw_at_naam = 'Spotwereld'
+      if sw_at_naam == blank or sw_at_naam == 'Spotwereld' or sw_at_naam == 'Spotwereld B.V.'
+        assign sw_at_naam = 'Spotwereld B.V.'
         assign sw_at_persoon = false
       else
         assign sw_at_persoon = true
