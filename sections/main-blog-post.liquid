@@ -535,8 +535,6 @@
 
   .sw-artikel-faq h3 {
     margin: 1.75rem 0 0.5rem;
-    font-size: 1.05rem;
-    line-height: 1.4;
   }
 
   .sw-artikel-faq h3:first-child {
@@ -546,6 +544,60 @@
   .sw-artikel-faq p {
     margin: 0;
     opacity: 0.85;
+  }
+
+
+  /* Spotwereld 27-09-2026: typografie van het artikel zelf.
+     Het thema zet --font-h2--size op clamp(2.25rem, 4.8vw, 3.0rem). De ondergrens van
+     die clamp is 36px, dus op een telefoon van 375px werd een tussenkop 36px terwijl de
+     artikeltitel 26px was en de lopende tekst 14px. De koppenhierarchie stond daarmee op
+     zijn kop: de tussenkop schreeuwde harder dan de titel en de tekst eronder was te
+     klein om een artikel van duizend woorden prettig door te lezen. Op desktop hetzelfde
+     verhaal (48px kop tegen 42px titel tegen 14px tekst).
+
+     Alleen binnen .blog-post-content, zodat collecties, producten en de homepagina hun
+     eigen schaal houden. Regel blijft: kop groter dan de tekst, titel groter dan de kop. */
+  .blog-post-content h2 {
+    font-size: 1.75rem;
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+    margin-top: 2.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .blog-post-content h3 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+    margin-top: 1.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .blog-post-content > *:first-child,
+  .blog-post-content rte-formatter > *:first-child {
+    margin-top: 0;
+  }
+
+  .blog-post-content p,
+  .blog-post-content li {
+    font-size: 1.0625rem;
+    line-height: 1.7;
+  }
+
+  @media screen and (max-width: 749px) {
+    .blog-post-content h2 {
+      font-size: 1.375rem;
+      margin-top: 2rem;
+    }
+
+    .blog-post-content h3 {
+      font-size: 1.125rem;
+    }
+
+    .blog-post-content p,
+    .blog-post-content li {
+      font-size: 1rem;
+      line-height: 1.65;
+    }
   }
 
   .blog-post-comments-container {
