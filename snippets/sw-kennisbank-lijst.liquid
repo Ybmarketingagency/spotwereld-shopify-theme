@@ -173,6 +173,9 @@
             assign sw_kb_woorden = 'inbouwspot,zaagmaat,gu10,geintegreerde,geïntegreerde,gipsplafond,inbouwdiepte'
             assign sw_kb_gids = 'inbouwspots-plaatsen'
             assign sw_kb_gids_titel = 'Inbouwspots plaatsen in een gipsplafond'
+            if sw_kb_en
+              assign sw_kb_gids_titel = 'Fitting recessed spotlights in a plasterboard ceiling'
+            endif
           when 2
             assign sw_kb_naam = 'Trapverlichting'
             if sw_kb_en
@@ -188,6 +191,9 @@
             assign sw_kb_woorden = 'dimmer,dimbaar,dimmen,dim2warm,triac'
             assign sw_kb_gids = 'led-dimmer-kiezen'
             assign sw_kb_gids_titel = 'De juiste dimmer kiezen'
+            if sw_kb_en
+              assign sw_kb_gids_titel = 'Which dimmer works with our LED spotlights?'
+            endif
           when 4
             assign sw_kb_naam = 'Lichtkleur en lichtopbrengst'
             if sw_kb_en
@@ -203,6 +209,9 @@
             assign sw_kb_woorden = 'tl,paneel,panelen,armatuur,ugr'
             assign sw_kb_gids = 'tl-naar-led'
             assign sw_kb_gids_titel = 'TL vervangen door LED-TL'
+            if sw_kb_en
+              assign sw_kb_gids_titel = 'Fluorescent to LED tubes: the sums'
+            endif
           when 6
             assign sw_kb_naam = 'Overige onderwerpen'
             if sw_kb_en
