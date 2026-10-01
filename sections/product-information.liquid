@@ -848,7 +848,7 @@
       if (e.target && (e.target.name === 'id' || (e.target.type === 'radio'))) setTimeout(swHerberekenStaffel, 120);
     }, true);
 
-    // Voorraadregel onder de prijs.
+    // Voorraadregel onder de prijs (sync 2026-10-01).
     // Stond hier als vaste tekst "Op voorraad", ook als de variant uitverkocht was: dan zei
     // de pagina tegelijk Op voorraad en Uitverkocht. Hij volgt nu de gekozen variant.
     var swVoorraad = {{% for sw_v in product.variants %}"{{ sw_v.id }}":{% if sw_v.available %}1{% else %}0{% endif %}{% unless forloop.last %},{% endunless %}{% endfor %}};
