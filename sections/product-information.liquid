@@ -851,7 +851,7 @@
     // Voorraadregel onder de prijs (sync 2026-10-01b).
     // Stond hier als vaste tekst "Op voorraad", ook als de variant uitverkocht was: dan zei
     // de pagina tegelijk Op voorraad en Uitverkocht. Hij volgt nu de gekozen variant.
-    var swVoorraad = {{% for sw_v in product.variants %}"{{ sw_v.id }}":{% if sw_v.available %}1{% else %}0{% endif %}{% unless forloop.last %},{% endunless %}{% endfor %}};
+    var swVoorraad = { {% for sw_v in product.variants %}"{{ sw_v.id }}":{% if sw_v.available %}1{% else %}0{% endif %}{% unless forloop.last %},{% endunless %}{% endfor %} };
     function swHuidigeVariant() {
       var veld = form && form.querySelector ? form.querySelector('[name="id"]') : null;
       if (veld && veld.value) return veld.value;
