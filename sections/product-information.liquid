@@ -848,17 +848,49 @@
       if (e.target && (e.target.name === 'id' || (e.target.type === 'radio'))) setTimeout(swHerberekenStaffel, 120);
     }, true);
 
-    // Stars + Op voorraad after price (universal)
+    // Voorraadregel onder de prijs.
+    // Stond hier als vaste tekst "Op voorraad", ook als de variant uitverkocht was: dan zei
+    // de pagina tegelijk Op voorraad en Uitverkocht. Hij volgt nu de gekozen variant.
+    var swVoorraad = {{% for sw_v in product.variants %}"{{ sw_v.id }}":{% if sw_v.available %}1{% else %}0{% endif %}{% unless forloop.last %},{% endunless %}{% endfor %}};
+    function swHuidigeVariant() {
+      var veld = form && form.querySelector ? form.querySelector('[name="id"]') : null;
+      if (veld && veld.value) return veld.value;
+      var m = location.search.match(/[?&]variant=(\d+)/);
+      return m ? m[1] : null;
+    }
+    function swVoorraadRegel() {
+      var blok = document.querySelector('.sw-extras');
+      if (!blok) return;
+      var id = swHuidigeVariant();
+      // Onbekende variant: dan maar niets beweren en de regel weglaten.
+      var op = id && Object.prototype.hasOwnProperty.call(swVoorraad, id) ? swVoorraad[id] === 1 : null;
+      if (op === null) { blok.style.display = 'none'; return; }
+      blok.style.display = 'flex';
+      var bol = blok.querySelector('.sw-voorraad-bol');
+      var tekst = blok.querySelector('.sw-voorraad-tekst');
+      var sub = blok.querySelector('.sw-voorraad-sub');
+      if (!bol || !tekst || !sub) return;
+      bol.style.color = op ? '#16a34a' : '#dc2626';
+      tekst.style.color = op ? '#16a34a' : '#dc2626';
+      tekst.textContent = op ? {{ 'sw.kaart.voorraad' | t | json }} : {{ 'sw.kaart.uitverkocht' | t | json }};
+      sub.style.display = op ? '' : 'none';
+    }
     var priceWrap = swZoekProductprijs('.price__regular');
     if (priceWrap && !document.querySelector('.sw-extras')) {
       priceWrap.insertAdjacentHTML('afterend',
         '<div class="sw-extras" style="display:flex;align-items:center;gap:1rem;margin:.5rem 0 .75rem;flex-wrap:wrap">' +
-        
         '<div style="display:flex;align-items:center;gap:.3rem">' +
-        '<span style="color:#16a34a;font-size:.9rem">&#9679;</span>' +
-        '<span style="color:#16a34a;font-size:.82rem;font-weight:600">{{ "sw.kaart.voorraad" | t }}</span>' +
-        '<span style="color:#94a3b8;font-size:.78rem">&mdash; {{ "sw.spec.leverbaar" | t }}</span></div>' +
+        '<span class="sw-voorraad-bol" style="color:#16a34a;font-size:.9rem">&#9679;</span>' +
+        '<span class="sw-voorraad-tekst" style="color:#16a34a;font-size:.82rem;font-weight:600">{{ "sw.kaart.voorraad" | t }}</span>' +
+        '<span class="sw-voorraad-sub" style="color:#94a3b8;font-size:.78rem">&mdash; {{ "sw.spec.leverbaar" | t }}</span></div>' +
         '</div>');
+      swVoorraadRegel();
+      document.addEventListener('change', function (e) {
+        if (e.target && (e.target.name === 'id' || e.target.type === 'radio')) setTimeout(swVoorraadRegel, 120);
+      }, true);
+      document.addEventListener('click', function (e) {
+        if (e.target && e.target.closest && e.target.closest('variant-picker, .sw-vcard, [data-variant-id]')) setTimeout(swVoorraadRegel, 200);
+      }, true);
     }
 
     // Hide buy it now
