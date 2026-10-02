@@ -874,6 +874,25 @@
       tekst.style.color = op ? '#16a34a' : '#dc2626';
       tekst.textContent = op ? {{ 'sw.kaart.voorraad' | t | json }} : {{ 'sw.kaart.uitverkocht' | t | json }};
       sub.style.display = op ? '' : 'none';
+      swMeldingBlok(op);
+    }
+    // Het meldblok hangt onder het productformulier zodra de variant uitverkocht is.
+    function swMeldingBlok(op) {
+      var blok = document.querySelector('[data-sw-melding]');
+      if (!blok) return;
+      if (op !== false) { blok.hidden = true; return; }
+      // Alleen verplaatsen als we het echte <form> hebben; anders zou het contactformulier
+      // in het productformulier belanden en dat mag niet.
+      if (form && form.tagName === 'FORM' && blok.previousElementSibling !== form) {
+        form.insertAdjacentElement('afterend', blok);
+      }
+      var naam = document.title;
+      var gekozen = document.querySelector('[data-sw-melding-product]');
+      var tekst = document.querySelector('[data-sw-melding-body]');
+      var variant = swHuidigeVariant();
+      if (gekozen) naam = gekozen.value || naam;
+      if (tekst) tekst.value = 'Voorraadmelding voor ' + naam + (variant ? ' (variant ' + variant + ')' : '') + ' - ' + location.href;
+      blok.hidden = false;
     }
     var priceWrap = swZoekProductprijs('.price__regular');
     if (priceWrap && !document.querySelector('.sw-extras')) {
@@ -1114,6 +1133,33 @@
   }
 })();
 </script>
+{%- comment -%}
+  Meldblok bij een uitverkochte variant.
+
+  Staat hier op sectieniveau en bewust NIET in het productformulier: een formulier in een
+  formulier mag niet van HTML. Het JavaScript hieronder verplaatst dit blok naar net onder
+  het productformulier en maakt het zichtbaar zodra de gekozen variant uitverkocht is.
+  Het gebruikt het ingebouwde contactformulier van Shopify, dus het mailtje komt gewoon
+  op info@spotwereld.nl binnen; geen app en geen extra dienst nodig.
+{%- endcomment -%}
+<div class="sw-melding" data-sw-melding hidden>
+  {% form 'contact', id: 'swMeldingForm' %}
+    {% if form.posted_successfully? %}
+      <div class="sw-melding__ok">{%- if request.locale.iso_code == 'en' -%}Thanks, we will email you as soon as it is back in stock.{%- else -%}Gelukt, we mailen je zodra hij weer op voorraad is.{%- endif -%}</div>
+    {% else %}
+      <div class="sw-melding__kop">{%- if request.locale.iso_code == 'en' -%}Email me when it is back{%- else -%}Mail mij zodra hij er weer is{%- endif -%}</div>
+      <p class="sw-melding__tekst">{%- if request.locale.iso_code == 'en' -%}Leave your email address and you will hear from us as soon as this one is back in stock. No newsletter, just this one message.{%- else -%}Laat je e-mailadres achter, dan hoor je van ons zodra deze weer op voorraad is. Geen nieuwsbrief, alleen dit berichtje.{%- endif -%}</p>
+      {% if form.errors %}<div class="sw-melding__fout">{{ form.errors | default_errors }}</div>{% endif %}
+      <input type="hidden" name="contact[Soort bericht]" value="Voorraadmelding">
+      <input type="hidden" name="contact[Product]" value="{{ product.title | escape }}" data-sw-melding-product>
+      <input type="hidden" name="contact[body]" value="Voorraadmelding voor {{ product.title | escape }}" data-sw-melding-body>
+      <div class="sw-melding__rij">
+        <input class="sw-melding__veld" type="email" name="contact[email]" required autocomplete="email" placeholder="{%- if request.locale.iso_code == 'en' -%}your@email.com{%- else -%}jouw@email.nl{%- endif -%}" aria-label="{%- if request.locale.iso_code == 'en' -%}Your email address{%- else -%}Je e-mailadres{%- endif -%}">
+        <button class="sw-melding__knop" type="submit">{%- if request.locale.iso_code == 'en' -%}Keep me posted{%- else -%}Houd mij op de hoogte{%- endif -%}</button>
+      </div>
+    {% endif %}
+  {% endform %}
+</div>
 <style>
 /* Voorkom FOUC: verberg variant picker + product form tot mijn JS klaar is, dan smooth fade-in */
 .product-information__details variant-picker-component,
@@ -1126,6 +1172,17 @@ body.sw-product-ready .product-information__details product-form-component{opaci
 .product-information__details:not(.sw-product-ready) .product-form{min-height:280px}
 /* Smooth fade voor sw-injected elementen */
 .sw-vol,.sw-extras,.sw-delivery,.sw-payment-icons,.sw-specs-table,.sw-thumbs{animation:swFadeIn .2s ease-out}
+.sw-melding{margin:.75rem 0 .25rem;padding:1rem 1.125rem;background:#f8fafc;border:1px solid #e2e8f0;border-left:3px solid #0F6FE3;border-radius:10px}
+.sw-melding__kop{font-weight:700;color:#142957;font-size:1rem;margin-bottom:.25rem}
+.sw-melding__tekst{color:#4b5563;font-size:.85rem;line-height:1.45;margin:0 0 .75rem}
+.sw-melding__rij{display:flex;gap:.5rem;flex-wrap:wrap}
+.sw-melding__veld{flex:1;min-width:11rem;height:44px;padding:0 .75rem;border:1px solid #cbd5e1;border-radius:8px;font-size:.9rem;background:#fff;color:#111827}
+.sw-melding__veld:focus{outline:none;border-color:#0F6FE3;box-shadow:0 0 0 3px rgba(15,111,227,.15)}
+.sw-melding__knop{height:44px;padding:0 1.1rem;border:0;border-radius:8px;background:#083D7D;color:#fff;font-weight:700;font-size:.9rem;cursor:pointer}
+.sw-melding__knop:hover{background:#0F6FE3}
+.sw-melding__ok{background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:.75rem .875rem;color:#166534;font-weight:600;font-size:.9rem}
+.sw-melding__fout{background:#fef2f2;border:1px solid #fca5a5;border-radius:8px;padding:.6rem .75rem;color:#dc2626;font-size:.85rem;margin-bottom:.6rem}
+@media(max-width:480px){.sw-melding__knop{width:100%}}
 .sw-handleiding:hover{background:#061f40;color:#fff}
 @keyframes swFadeIn{from{opacity:0}to{opacity:1}}
 /* Fix: toon Lichtkleur picker voor 2-temp producten — Horizon zet fieldset op display:none tijdens init */
