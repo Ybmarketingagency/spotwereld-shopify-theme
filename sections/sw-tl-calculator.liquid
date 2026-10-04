@@ -1,0 +1,339 @@
+{%- comment -%}
+  TL-naar-LED rekentool. Staat onder de gidstekst op /pages/tl-naar-led.
+
+  Waarom deze sectie bestaat: de collectiepagina's en gidsen hebben al inhoud genoeg
+  (gemeten 03-10-2026), wat ontbreekt zijn inkomende links. Een rekentool is het enige
+  op deze site waar een installateur, VvE-beheerder of klusblog naar kan doorverwijzen.
+
+  HARDE REGEL: hier staat geen enkel verzonnen getal in.
+  - Prijs, titel en URL van de buizen komen live uit collections.led-tl-buizen.
+  - Lumen en wattage van onze buizen staan in SPECS hieronder en komen woordelijk uit
+    de spectabel (metaveld custom.lichtopbrengst / custom.wattage) van elk product.
+    Wijzigt een product, pas dan ook deze tabel aan.
+  - Lumen van de oude TL-buizen komt uit de Philips MASTER TL-D Super 80 datasheet.
+  - Systeemvermogen (buis + voorschakelapparaat) staat in SW_OUD met de bron erbij.
+  Bronnen en volledige onderbouwing: F:\Claude\spotwereld-digital-pr\BRONNEN.md
+
+  Teksten staan inline met request.locale.iso_code, want locales/*.json synct niet
+  via GitHub. Zie reference_shopify_github_sync_locales.
+{%- endcomment -%}
+
+{%- assign en = false -%}
+{%- if request.locale.iso_code == 'en' -%}{%- assign en = true -%}{%- endif -%}
+{%- assign tl = collections['led-tl-buizen'] -%}
+
+<style>
+  .sw-tlc{background:#f9fafb;border-top:1px solid #e5e7eb;padding:3rem 0 3.5rem}
+  .sw-tlc-wrap{max-width:1040px;margin:0 auto;padding:0 1.5rem}
+  .sw-tlc-kop{margin:0 0 .5rem;font-size:clamp(1.5rem,3.5vw,2rem);font-weight:800;color:#111827}
+  .sw-tlc-lead{color:#6b7280;font-size:1rem;line-height:1.7;margin:0 0 2rem;max-width:46rem}
+  .sw-tlc-card{background:#fff;border:1px solid #e5e7eb;border-radius:1rem;padding:1.75rem;box-shadow:0 1px 6px rgba(0,0,0,.06)}
+  .sw-tlc-grid{display:grid;grid-template-columns:1fr;gap:1.75rem}
+  @media(min-width:900px){.sw-tlc-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:2rem}}
+  .sw-tlc-veld{margin-bottom:1.125rem}
+  .sw-tlc-veld:last-child{margin-bottom:0}
+  .sw-tlc-label{display:block;font-size:.875rem;font-weight:600;color:#374151;margin-bottom:.35rem}
+  .sw-tlc-hint{display:block;font-weight:400;color:#9ca3af;font-size:.8125rem;margin-top:.15rem}
+  .sw-tlc-input,.sw-tlc-select{width:100%;padding:.7rem .875rem;border:1px solid #d1d5db;border-radius:.5rem;font-size:.9375rem;font-family:inherit;color:#111827;background:#fff;box-sizing:border-box}
+  .sw-tlc-input:focus,.sw-tlc-select:focus{outline:none;border-color:#0F6FE3;box-shadow:0 0 0 3px rgba(15,111,227,.15)}
+  .sw-tlc-duo{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+  .sw-tlc-uit{background:#061f40;border-radius:1rem;padding:1.75rem;color:#fff}
+  .sw-tlc-groot{font-size:clamp(2rem,6vw,2.75rem);font-weight:800;line-height:1.05;margin:0}
+  .sw-tlc-grootlabel{color:#93c5fd;font-size:.875rem;font-weight:600;margin:.35rem 0 1.25rem}
+  .sw-tlc-rij{display:flex;justify-content:space-between;gap:1rem;padding:.6rem 0;border-top:1px solid rgba(255,255,255,.14);font-size:.9375rem}
+  .sw-tlc-rij span:first-child{color:#bfdbfe}
+  .sw-tlc-rij span:last-child{font-weight:700;text-align:right}
+  .sw-tlc-let{margin:1.25rem 0 0;padding:.875rem 1rem;border-radius:.625rem;background:rgba(255,255,255,.08);font-size:.875rem;line-height:1.6;color:#e5e7eb}
+  .sw-tlc-let strong{color:#fff}
+  .sw-tlc-let a{color:#fff;text-decoration:underline}
+  .sw-tlc-prod{display:block;margin:1.25rem 0 0;padding:1rem;border-radius:.75rem;background:#fff;text-decoration:none;border:1px solid #e5e7eb}
+  .sw-tlc-prod strong{display:block;color:#111827;font-size:.9375rem;font-weight:700;line-height:1.45;margin-bottom:.2rem}
+  .sw-tlc-prod span{color:#0F6FE3;font-size:.875rem;font-weight:700}
+  .sw-tlc-prod em{display:block;color:#6b7280;font-size:.8125rem;font-style:normal;margin-top:.35rem;line-height:1.55}
+  .sw-tlc-geen{margin:1.25rem 0 0;padding:1rem;border-radius:.75rem;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-size:.875rem;line-height:1.6}
+  .sw-tlc-geen a{color:#9a3412;font-weight:700}
+  .sw-tlc-bron{margin:2rem 0 0;border:1px solid #e5e7eb;border-radius:.75rem;background:#fff}
+  .sw-tlc-bron summary{cursor:pointer;padding:1rem 1.25rem;font-size:.9375rem;font-weight:700;color:#111827}
+  .sw-tlc-bron div{padding:0 1.25rem 1.25rem;color:#6b7280;font-size:.875rem;line-height:1.7}
+  .sw-tlc-bron table{width:100%;border-collapse:collapse;margin:.75rem 0}
+  .sw-tlc-bron th,.sw-tlc-bron td{text-align:left;padding:.4rem .5rem;border-bottom:1px solid #f3f4f6;font-size:.8125rem}
+  .sw-tlc-bron th{color:#374151;font-weight:700}
+  .sw-tlc-bron a{color:#0F6FE3}
+  .sw-tlc-zak{margin:2rem 0 0;padding:1.5rem;border-radius:.875rem;background:#EBF2FF;border:1px solid #bfdbfe}
+  .sw-tlc-zak h3{margin:0 0 .4rem;font-size:1.0625rem;font-weight:800;color:#083D7D}
+  .sw-tlc-zak p{margin:0;color:#1e3a5f;font-size:.9375rem;line-height:1.7}
+  .sw-tlc-zak a{color:#0F6FE3;font-weight:700}
+</style>
+
+<div class="sw-tlc">
+  <div class="sw-tlc-wrap">
+
+    {%- if en -%}
+      <h2 class="sw-tlc-kop">TL to LED calculator</h2>
+      <p class="sw-tlc-lead">Fluorescent tubes have not been produced for the European market since 24 August 2023. Replacing them is only worth it when the tube burns enough hours. Fill in your own situation: the calculation uses the real system wattages and our actual prices, not a rule of thumb.</p>
+    {%- else -%}
+      <h2 class="sw-tlc-kop">TL-naar-LED rekentool</h2>
+      <p class="sw-tlc-lead">TL-buizen worden sinds 24 augustus 2023 niet meer voor de Europese markt gemaakt. Of vervangen de moeite is, hangt vooral af van het aantal branduren. Vul je eigen situatie in: er wordt gerekend met de echte systeemvermogens en met onze werkelijke prijzen, niet met een vuistregel.</p>
+    {%- endif -%}
+
+    <div class="sw-tlc-grid">
+      <div class="sw-tlc-card">
+        <div class="sw-tlc-veld">
+          <label class="sw-tlc-label" for="sw-tlc-maat">
+            {%- if en -%}Length of the current tube{%- else -%}Lengte van de huidige buis{%- endif -%}
+            <span class="sw-tlc-hint">{%- if en -%}Measure the glass, excluding the pins{%- else -%}Meet het glas, zonder de pennen{%- endif -%}</span>
+          </label>
+          <select class="sw-tlc-select" id="sw-tlc-maat">
+            <option value="60">60 cm (T8, 18 {%- if en -%}watt{%- else -%}watt{%- endif -%})</option>
+            <option value="120" selected>120 cm (T8, 36 watt)</option>
+            <option value="150">150 cm (T8, 58 watt)</option>
+          </select>
+        </div>
+
+        <div class="sw-tlc-veld">
+          <label class="sw-tlc-label" for="sw-tlc-vsa">
+            {%- if en -%}Is there a starter in the fixture?{%- else -%}Zit er een starter in het armatuur?{%- endif -%}
+            <span class="sw-tlc-hint">{%- if en -%}A small round canister on the side that turns a quarter turn{%- else -%}Een klein rond busje aan de zijkant dat een kwartslag losdraait{%- endif -%}</span>
+          </label>
+          <select class="sw-tlc-select" id="sw-tlc-vsa">
+            <option value="kvg" selected>{%- if en -%}Yes, there is a starter (conventional){%- else -%}Ja, er zit een starter in (conventioneel){%- endif -%}</option>
+            <option value="hf">{%- if en -%}No starter (electronic / HF){%- else -%}Nee, geen starter (elektronisch / HF){%- endif -%}</option>
+            <option value="weet">{%- if en -%}I do not know{%- else -%}Weet ik niet{%- endif -%}</option>
+          </select>
+        </div>
+
+        <div class="sw-tlc-veld">
+          <label class="sw-tlc-label" for="sw-tlc-aantal">{%- if en -%}Number of tubes{%- else -%}Aantal buizen{%- endif -%}</label>
+          <input class="sw-tlc-input" id="sw-tlc-aantal" type="number" min="1" max="2000" step="1" value="1" inputmode="numeric">
+        </div>
+
+        <div class="sw-tlc-veld">
+          <label class="sw-tlc-label" for="sw-tlc-uren">{%- if en -%}Hours on{%- else -%}Hoe lang staat het licht aan{%- endif -%}</label>
+          <div class="sw-tlc-duo">
+            <input class="sw-tlc-input" id="sw-tlc-uren" type="number" min="0" max="24" step="0.5" value="8" inputmode="decimal" aria-label="{%- if en -%}Hours per day{%- else -%}Uur per dag{%- endif -%}">
+            <input class="sw-tlc-input" id="sw-tlc-dagen" type="number" min="1" max="7" step="1" value="5" inputmode="numeric" aria-label="{%- if en -%}Days per week{%- else -%}Dagen per week{%- endif -%}">
+          </div>
+          <span class="sw-tlc-hint">{%- if en -%}Hours per day and days per week{%- else -%}Uur per dag en dagen per week{%- endif -%}</span>
+        </div>
+
+        <div class="sw-tlc-veld">
+          <label class="sw-tlc-label" for="sw-tlc-prijs">
+            {%- if en -%}Your electricity price per kWh{%- else -%}Jouw stroomprijs per kWh{%- endif -%}
+            <span class="sw-tlc-hint">{%- if en -%}Take it from your own energy bill{%- else -%}Neem die over van je eigen energierekening{%- endif -%}</span>
+          </label>
+          <input class="sw-tlc-input" id="sw-tlc-prijs" type="number" min="0.01" max="2" step="0.01" value="0.27" inputmode="decimal">
+        </div>
+      </div>
+
+      <div class="sw-tlc-uit">
+        <p class="sw-tlc-groot" id="sw-tlc-besparing">&euro; 0</p>
+        <p class="sw-tlc-grootlabel" id="sw-tlc-besparinglabel">{%- if en -%}saved per year on electricity{%- else -%}besparing per jaar op stroom{%- endif -%}</p>
+
+        <div class="sw-tlc-rij"><span>{%- if en -%}Now{%- else -%}Nu{%- endif -%}</span><span id="sw-tlc-nu">&ndash;</span></div>
+        <div class="sw-tlc-rij"><span>{%- if en -%}With LED{%- else -%}Met LED{%- endif -%}</span><span id="sw-tlc-na">&ndash;</span></div>
+        <div class="sw-tlc-rij"><span>{%- if en -%}Purchase cost{%- else -%}Aanschaf{%- endif -%}</span><span id="sw-tlc-aanschaf">&ndash;</span></div>
+        <div class="sw-tlc-rij"><span>{%- if en -%}Payback time{%- else -%}Terugverdientijd{%- endif -%}</span><span id="sw-tlc-tvt">&ndash;</span></div>
+        <div class="sw-tlc-rij"><span>{%- if en -%}Light output{%- else -%}Lichtopbrengst{%- endif -%}</span><span id="sw-tlc-licht">&ndash;</span></div>
+
+        <div class="sw-tlc-let" id="sw-tlc-let"></div>
+        <div id="sw-tlc-advies"></div>
+      </div>
+    </div>
+
+    <details class="sw-tlc-bron">
+      <summary>{%- if en -%}Where these numbers come from{%- else -%}Waar deze getallen vandaan komen{%- endif -%}</summary>
+      <div>
+        {%- if en -%}
+          <p>The wattage printed on a fluorescent tube is not what the fixture draws from the wall: the ballast consumes extra on top. So we calculate with system power, tube plus ballast:</p>
+        {%- else -%}
+          <p>Het wattage op een TL-buis is niet wat het armatuur uit de muur trekt: het voorschakelapparaat verbruikt er zelf nog bij. Daarom wordt er gerekend met systeemvermogen, buis plus voorschakelapparaat:</p>
+        {%- endif -%}
+        <table>
+          <tr>
+            <th>{%- if en -%}Tube{%- else -%}Buis{%- endif -%}</th>
+            <th>{%- if en -%}With starter (conventional){%- else -%}Met starter (conventioneel){%- endif -%}</th>
+            <th>{%- if en -%}Without starter (HF){%- else -%}Zonder starter (HF){%- endif -%}</th>
+            <th>{%- if en -%}Lumen when new{%- else -%}Lumen nieuw{%- endif -%}</th>
+          </tr>
+          <tr><td>T8 18W, 60 cm</td><td>27 W</td><td>19 W</td><td>1.350 lm</td></tr>
+          <tr><td>T8 36W, 120 cm</td><td>44 W</td><td>40 W</td><td>3.250 lm</td></tr>
+          <tr><td>T8 58W, 150 cm</td><td>70 W</td><td>56 W</td><td>5.240 lm</td></tr>
+        </table>
+        {%- if en -%}
+          <p>The lumen figures are the rated values from the Philips MASTER TL-D Super 80 datasheet, the most common tube in Dutch fixtures. System power follows the ballast losses commonly quoted for these tubes: roughly 8 to 12 watt for a conventional ballast and considerably less for an electronic one. These are averages, and your own fixture can be a few watt off, so read the outcome as an order of magnitude rather than a meter reading.</p>
+          <p>The LED side uses the actual wattage and light output from our own product pages, at the highest setting for the adjustable tubes. The purchase cost is the current price in this shop and updates by itself. Not included: labour, and the longer service life. Our tubes are rated at 50,000 hours against 12,000 to 17,000 hours for a fluorescent tube, which weighs heaviest where you need a lift to reach the fixture.</p>
+          <p>Sources: <a href="https://www.rvo.nl/energiemaatregelen/gf2" rel="nofollow">RVO, recognised measure GF2</a> and the Philips MASTER TL-D Super 80 datasheet.</p>
+        {%- else -%}
+          <p>De lumenwaarden zijn de nominale waarden uit de datasheet van de Philips MASTER TL-D Super 80, de meest voorkomende buis in Nederlandse armaturen. Het systeemvermogen volgt de verliezen die voor deze buizen gangbaar worden opgegeven: ruwweg 8 tot 12 watt bij een conventioneel voorschakelapparaat en aanzienlijk minder bij een elektronisch. Dit zijn gemiddelden en jouw armatuur kan een paar watt afwijken, dus lees de uitkomst als een orde van grootte en niet als een meterstand.</p>
+          <p>De LED-kant is het werkelijke wattage en de werkelijke lichtopbrengst van onze eigen productpagina's, bij de instelbare buizen op de hoogste stand. De aanschafprijs is de actuele prijs in deze winkel en loopt automatisch mee. Niet meegerekend: arbeid, en de langere levensduur. Onze buizen staan op 50.000 uur tegen 12.000 tot 17.000 uur voor een TL-buis, en dat weegt het zwaarst waar je een hoogwerker nodig hebt om bij het armatuur te komen.</p>
+          <p>Bronnen: <a href="https://www.rvo.nl/energiemaatregelen/gf2" rel="nofollow">RVO, erkende maatregel GF2</a> en de datasheet van de Philips MASTER TL-D Super 80.</p>
+        {%- endif -%}
+      </div>
+    </details>
+
+    <div class="sw-tlc-zak">
+      {%- if en -%}
+        <h3>For businesses: this is a recognised measure</h3>
+        <p>Replacing T8 tubes with LED tubes is listed by the Dutch government as recognised measure GF2 under the energy saving obligation, for fixtures burning more than 1,600 hours a year. Replacing the whole fixture is GG1. More than a handful to do? <a href="{{ routes.root_url }}/pages/partner-worden">Ask for business pricing</a>.</p>
+      {%- else -%}
+        <h3>Zakelijk: dit is een erkende maatregel</h3>
+        <p>TL8-buizen vervangen door LED-buizen staat bij de Rijksdienst voor Ondernemend Nederland als erkende maatregel GF2 onder de energiebesparingsplicht, voor armaturen die meer dan 1.600 uur per jaar branden. Het hele armatuur vervangen is GG1. Gaat het om meer dan een handvol? <a href="{{ routes.root_url }}/pages/partner-worden">Vraag een zakelijke prijs aan</a>.</p>
+      {%- endif -%}
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function(){
+  var EN = {{ en | json }};
+  var ROOT = {{ routes.root_url | json }};
+
+  /* Systeemvermogen en lumen van de OUDE buis. Onderbouwing in het bronnenblok. */
+  var SW_OUD = {
+    '60':  { kvg: 27, hf: 19, lumen: 1350, watt: 18 },
+    '120': { kvg: 44, hf: 40, lumen: 3250, watt: 36 },
+    '150': { kvg: 70, hf: 56, lumen: 5240, watt: 58 }
+  };
+
+  /* Onze buizen. watt en lumen staan woordelijk in de spectabel van het product;
+     prijs, titel en URL komen live uit de collectie. */
+  var SPECS = {
+    'led-tl-buis-t8-120cm-cct':        { maat: '120', watt: 18, lumen: 2700, ip: 'IP20' },
+    'led-tl-buis-t8-120cm-high-lumen': { maat: '120', watt: 20, lumen: 2400, ip: 'IP22' },
+    'led-tl-buis-t8-150cm-cct':        { maat: '150', watt: 25, lumen: 3625, ip: 'IP20' },
+    'led-tl-buis-t8-150cm-high-lumen': { maat: '150', watt: 25, lumen: 3500, ip: 'IP22' }
+  };
+  var LIVE = {
+    {%- for p in tl.products -%}
+      {{ p.handle | json }}: { titel: {{ p.title | json }}, url: {{ p.url | json }}, prijs: {{ p.price | divided_by: 100.0 }} }{%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  };
+
+  /* Beste keuze per maat: van de buizen die we echt in de collectie hebben,
+     die met de hoogste lichtopbrengst. */
+  var KEUZE = {};
+  Object.keys(SPECS).forEach(function(h){
+    if (!LIVE[h]) return;
+    var s = SPECS[h];
+    if (!KEUZE[s.maat] || s.lumen > SPECS[KEUZE[s.maat]].lumen) KEUZE[s.maat] = h;
+  });
+
+  function el(id){ return document.getElementById('sw-tlc-' + id); }
+  var velden = ['maat','vsa','aantal','uren','dagen','prijs'];
+  if (!el('maat')) return;
+
+  function euro(n){
+    var d = n < 100 ? 2 : 0;
+    return '\u20AC\u00A0' + n.toLocaleString(EN ? 'en-GB' : 'nl-NL', { minimumFractionDigits: d, maximumFractionDigits: d });
+  }
+  function getal(n, d){
+    d = d || 0;
+    return n.toLocaleString(EN ? 'en-GB' : 'nl-NL', { minimumFractionDigits: d, maximumFractionDigits: d });
+  }
+  function begrens(v, min, max, fallback){
+    v = parseFloat(String(v).replace(',', '.'));
+    if (!isFinite(v)) return fallback;
+    return Math.min(max, Math.max(min, v));
+  }
+
+  function reken(){
+    var maat   = el('maat').value;
+    var vsa    = el('vsa').value;
+    var aantal = Math.round(begrens(el('aantal').value, 1, 2000, 1));
+    var uren   = begrens(el('uren').value, 0, 24, 8);
+    var dagen  = Math.round(begrens(el('dagen').value, 1, 7, 5));
+    var prijs  = begrens(el('prijs').value, 0.01, 2, 0.27);
+
+    var oud = SW_OUD[maat];
+    var urenJaar = uren * dagen * 52;
+
+    /* Bij "weet ik niet" rekenen we met de HF-waarde: dat is de laagste besparing
+       van de twee, dus de uitkomst belooft nooit meer dan er te halen is. */
+    var oudW = vsa === 'kvg' ? oud.kvg : oud.hf;
+    var kwhOud = aantal * oudW / 1000 * urenJaar;
+
+    var handle = KEUZE[maat];
+
+    if (!handle) {
+      el('besparing').innerHTML = '&ndash;';
+      el('besparinglabel').textContent = EN ? 'this length is not in our range' : 'deze maat voeren we niet';
+      el('nu').textContent = getal(kwhOud) + ' kWh \u00B7 ' + euro(kwhOud * prijs);
+      el('na').innerHTML = '&ndash;';
+      el('aanschaf').innerHTML = '&ndash;';
+      el('tvt').innerHTML = '&ndash;';
+      el('licht').innerHTML = '&ndash;';
+      el('let').innerHTML = '';
+      el('advies').innerHTML = '<div class="sw-tlc-geen">' + (EN
+        ? 'We stock T8 tubes in 120 and 150 cm only, so we have no replacement for a 60 cm tube. Replacing the whole fixture is an option: see the <a href="' + ROOT + '/collections/led-panelen">LED panels</a>.'
+        : 'We voeren T8-buizen alleen in 120 en 150 cm, dus voor een buis van 60 cm hebben we geen vervanger. Het hele armatuur vervangen kan wel: kijk bij de <a href="' + ROOT + '/collections/led-panelen">LED-panelen</a>.') + '</div>';
+      return;
+    }
+
+    var spec = SPECS[handle], live = LIVE[handle];
+    var kwhLed = aantal * spec.watt / 1000 * urenJaar;
+    var besparing = (kwhOud - kwhLed) * prijs;
+    var aanschaf = aantal * live.prijs;
+    var lichtPct = Math.round(spec.lumen / oud.lumen * 100);
+
+    el('besparing').textContent = euro(Math.max(0, besparing));
+    el('besparinglabel').textContent = EN ? 'saved per year on electricity' : 'besparing per jaar op stroom';
+    el('nu').textContent = getal(kwhOud) + ' kWh \u00B7 ' + euro(kwhOud * prijs);
+    el('na').textContent = getal(kwhLed) + ' kWh \u00B7 ' + euro(kwhLed * prijs);
+    el('aanschaf').textContent = euro(aanschaf) + ' (' + aantal + '\u00D7)';
+    el('licht').textContent = getal(oud.lumen * aantal) + ' \u2192 ' + getal(spec.lumen * aantal) + ' lm (' + lichtPct + '%)';
+
+    if (besparing <= 0) {
+      el('tvt').textContent = EN ? 'never' : 'nooit';
+    } else {
+      var maanden = aanschaf / (besparing / 12);
+      if (maanden > 120) {
+        el('tvt').textContent = EN ? 'over 10 years' : 'meer dan 10 jaar';
+      } else if (maanden < 24) {
+        el('tvt').textContent = getal(Math.round(maanden)) + (EN ? ' months' : ' maanden');
+      } else {
+        el('tvt').textContent = getal(maanden / 12, 1) + (EN ? ' years' : ' jaar');
+      }
+    }
+
+    var waarschuwingen = [];
+    if (urenJaar < 1600) {
+      waarschuwingen.push(EN
+        ? '<strong>Few burning hours.</strong> At ' + getal(urenJaar) + ' hours a year this is not an energy decision. The reason to switch is that fluorescent tubes are no longer made, so replacements get harder to find.'
+        : '<strong>Weinig branduren.</strong> Bij ' + getal(urenJaar) + ' uur per jaar is dit geen energiebeslissing. De reden om over te stappen is dat TL-buizen niet meer gemaakt worden, dus dat vervangers steeds moeilijker te vinden zijn.');
+    }
+    if (lichtPct < 90) {
+      waarschuwingen.push(EN
+        ? '<strong>Less light.</strong> This tube gives ' + lichtPct + '% of what a new ' + oud.watt + 'W fluorescent tube gives. For a workshop or garage that is usually enough, but where you need the same light level, count on one extra fixture or look at an <a href="' + ROOT + '/collections/led-panelen">LED panel</a> instead.'
+        : '<strong>Minder licht.</strong> Deze buis geeft ' + lichtPct + '% van wat een nieuwe TL van ' + oud.watt + 'W geeft. Voor een werkplaats of garage is dat meestal genoeg, maar waar je hetzelfde lichtniveau nodig hebt, reken dan op een armatuur extra of kijk naar een <a href="' + ROOT + '/collections/led-panelen">LED-paneel</a>.');
+    }
+    if (vsa === 'weet') {
+      waarschuwingen.push(EN
+        ? '<strong>Ballast type unknown.</strong> We calculated with the electronic ballast, the lower of the two. With a conventional ballast the saving comes out higher.'
+        : '<strong>Type voorschakelapparaat onbekend.</strong> Er is gerekend met het elektronische apparaat, de laagste van de twee. Bij een conventioneel apparaat valt de besparing hoger uit.');
+    }
+    waarschuwingen.push(EN
+      ? '<strong>Rewiring is part of the job.</strong> Every tube we sell runs on mains voltage, so the ballast has to come out of the fixture. That is work for someone who knows their way around a fixture, and the steps are above.'
+      : '<strong>Herbedraden hoort erbij.</strong> Elke buis die wij verkopen werkt op netspanning, dus het voorschakelapparaat moet uit het armatuur. Dat is werk voor iemand die weet wat hij doet, en de stappen staan hierboven.');
+    el('let').innerHTML = waarschuwingen.join('<br><br>');
+
+    el('advies').innerHTML = '<a class="sw-tlc-prod" href="' + live.url + '">' +
+      '<strong>' + live.titel + '</strong>' +
+      '<span>' + euro(live.prijs) + (EN ? ' each' : ' per stuk') + '</span>' +
+      '<em>' + spec.watt + ' W \u00B7 ' + getal(spec.lumen) + ' lm \u00B7 ' + spec.ip + ' \u00B7 G13</em></a>';
+  }
+
+  velden.forEach(function(v){
+    el(v).addEventListener('input', reken);
+    el(v).addEventListener('change', reken);
+  });
+  reken();
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Spotwereld TL-rekentool",
+  "settings": []
+}
+{% endschema %}

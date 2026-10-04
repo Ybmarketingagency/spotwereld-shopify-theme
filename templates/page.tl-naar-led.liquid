@@ -5,15 +5,15 @@
   "@context": "https://schema.org",
   "@type": "HowTo",
   "name": "Een TL-buis vervangen door een LED-TL buis",
-  "description": "De oude buis eruit, de starter vervangen door een LED-starter en de LED-buis plaatsen. Geldt voor armaturen met een conventioneel voorschakelapparaat.",
+  "description": "De oude buis eruit, het voorschakelapparaat uit het armatuur en de LED-buis op netspanning aansluiten. Geldt voor de LED-TL buizen die wij voeren: die werken alle vier direct op netspanning.",
   "url": "https://spotwereld.nl/pages/tl-naar-led",
-  "totalTime": "PT10M",
+  "totalTime": "PT20M",
   "tool": [
-    { "@type": "HowToTool", "name": "Spanningszoeker" }
+    { "@type": "HowToTool", "name": "Spanningszoeker" },
+    { "@type": "HowToTool", "name": "Schroevendraaier" }
   ],
   "supply": [
-    { "@type": "HowToSupply", "name": "LED-TL buis in de juiste lengte" },
-    { "@type": "HowToSupply", "name": "LED-starter" }
+    { "@type": "HowToSupply", "name": "LED-TL buis in de juiste lengte" }
   ],
   "step": [
     {
@@ -31,8 +31,8 @@
     {
       "@type": "HowToStep",
       "position": 3,
-      "name": "Starter vervangen",
-      "text": "Draai de starter een kwartslag los en trek hem uit de houder. Plaats de meegeleverde LED-starter in dezelfde houder."
+      "name": "Voorschakelapparaat eruit",
+      "text": "Haal het voorschakelapparaat en de starterhouder uit het circuit en sluit de fase en de nul rechtstreeks op de fittingen aan. Onze LED-buizen werken op netspanning, dus de spoel mag er niet tussen blijven zitten."
     },
     {
       "@type": "HowToStep",
@@ -58,3 +58,9 @@
 {%- endcomment -%}
 
 {{ page.content }}
+
+{%- comment -%}
+  De rekentool staat onder de gidstekst. Dit is het stuk van deze pagina waar
+  andere sites naar kunnen verwijzen; zie F:\Claude\spotwereld-digital-pr.
+{%- endcomment -%}
+{% section 'sw-tl-calculator' %}
