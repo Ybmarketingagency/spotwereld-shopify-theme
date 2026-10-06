@@ -351,6 +351,29 @@
       {%- endif -%}
     {%- endunless -%}
     {%- assign sw_maxwatt = product.metafields.custom.max_wattage -%}
+    {%- comment -%}
+      Energielabel (07-10-2026). Er is geen metaveld-definitie voor, en de eerdere pogingen via
+      shopify.energy-efficiency-class strandden op validatie. Daarom twee tags per product:
+      energielabel-g en eprel-2208415. De klasse komt uit de officiële EPREL-database, niet van
+      de leverancier. Zonder tag verschijnt er niets.
+    {%- endcomment -%}
+    {%- assign sw_elabel = '' -%}
+    {%- assign sw_eprel = '' -%}
+    {%- for sw_t in product.tags -%}
+      {%- assign sw_tl = sw_t | downcase -%}
+      {%- if sw_tl contains 'energielabel-' -%}{%- assign sw_elabel = sw_tl | remove: 'energielabel-' | upcase -%}{%- endif -%}
+      {%- if sw_tl contains 'eprel-' -%}{%- assign sw_eprel = sw_tl | remove: 'eprel-' -%}{%- endif -%}
+    {%- endfor -%}
+    {%- case sw_elabel -%}
+      {%- when 'A' -%}{%- assign sw_ekleur = '#00a651' -%}
+      {%- when 'B' -%}{%- assign sw_ekleur = '#50b848' -%}
+      {%- when 'C' -%}{%- assign sw_ekleur = '#bed630' -%}
+      {%- when 'D' -%}{%- assign sw_ekleur = '#fff200' -%}
+      {%- when 'E' -%}{%- assign sw_ekleur = '#fdb913' -%}
+      {%- when 'F' -%}{%- assign sw_ekleur = '#f37021' -%}
+      {%- when 'G' -%}{%- assign sw_ekleur = '#ed1c24' -%}
+      {%- else -%}{%- assign sw_elabel = '' -%}
+    {%- endcase -%}
 
     {%- comment -%} Terugval: uitsluitend waardes die letterlijk in de titel staan {%- endcomment -%}
     {%- assign sw_tparts = product.title | split: '|' -%}
@@ -380,6 +403,7 @@
         {%- if product.selected_or_first_available_variant.sku != blank -%}
         <tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500;width:45%">SKU</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ product.selected_or_first_available_variant.sku }}</td></tr>
         {%- endif -%}
+        {%- if sw_elabel != blank -%}<tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">Energielabel</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600"><span style="display:inline-flex;align-items:center;gap:.5rem;flex-wrap:wrap"><span aria-label="Energieklasse {{ sw_elabel }}" style="display:inline-block;background:{{ sw_ekleur }};color:{% if sw_elabel == 'D' or sw_elabel == 'C' %}#1e293b{% else %}#fff{% endif %};font-weight:800;line-height:1;padding:.3rem .9rem .3rem .55rem;clip-path:polygon(0 0,78% 0,100% 50%,78% 100%,0 100%)">{{ sw_elabel }}</span>{%- if sw_eprel != blank -%}<a href="https://eprel.ec.europa.eu/qr/{{ sw_eprel }}" target="_blank" rel="noopener" style="color:#1e3a8a;font-weight:500;font-size:.8rem">Productinformatieblad</a>{%- endif -%}</span></td></tr>{%- endif -%}
         {%- if sw_merk != blank -%}<tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">{{ 'sw.spec.merk' | t }}</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_merk }}</td></tr>{%- endif -%}
         {%- if sw_levensduur != blank -%}<tr style="border-bottom:1px solid #f0f3f8"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">{{ 'sw.spec.levensduur' | t }}</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_levensduur }}</td></tr>{%- endif -%}
         {%- if sw_garantie != blank -%}<tr style="border-bottom:1px solid #f0f3f8;background:#f8fafc"><td style="padding:.6rem .75rem .6rem 0;color:#6b7280;font-weight:500">{{ 'sw.spec.garantie' | t }}</td><td style="padding:.6rem 0;color:#1e293b;font-weight:600">{{ sw_garantie }}</td></tr>{%- endif -%}
@@ -425,6 +449,7 @@
   {%- capture sw_specs_json -%}
     {%- assign sw_sep = '' -%}
     {%- if sw_merk != blank -%}{{ sw_sep }}{"@type":"PropertyValue","name":"Merk","value":{{ sw_merk | json }}}{%- assign sw_sep = ',' -%}{%- endif -%}
+    {%- if sw_elabel != blank -%}{{ sw_sep }}{"@type":"PropertyValue","name":"Energielabel","value":{{ sw_elabel | json }}}{%- assign sw_sep = ',' -%}{%- endif -%}
     {%- if sw_wattage != blank -%}{{ sw_sep }}{"@type":"PropertyValue","name":"Wattage","value":{{ sw_wattage | json }}}{%- assign sw_sep = ',' -%}{%- endif -%}
     {%- if sw_maxwatt != blank -%}{{ sw_sep }}{"@type":"PropertyValue","name":"Maximaal wattage","value":{{ sw_maxwatt | json }}}{%- assign sw_sep = ',' -%}{%- endif -%}
     {%- if sw_lumen != blank -%}{{ sw_sep }}{"@type":"PropertyValue","name":"Lichtopbrengst","value":{{ sw_lumen | json }}}{%- assign sw_sep = ',' -%}{%- endif -%}
