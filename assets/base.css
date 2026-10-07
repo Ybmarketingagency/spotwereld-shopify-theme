@@ -4386,6 +4386,30 @@ product-recommendations:has([data-has-recommendations='false']) {
     transform: rotate(45deg) translate(1px, -1px);
   }
 
+  /* Subitems (LED panelen > 60x60, Railverlichting > 1-fase, ...). Het thema zet ze plat
+     onder het hoofditem; zonder deze regels stonden ze klein en zonder marge tegen de
+     linkerrand, en vielen ze op een telefoon nauwelijks op als tikbare keuze. */
+  header-drawer .menu-drawer .menu-drawer__menu--childlist {
+    padding: 0 0 8px;
+  }
+  header-drawer .menu-drawer .menu-drawer__menu--childlist .menu-drawer__list-item {
+    border: 0;
+  }
+  header-drawer .menu-drawer .menu-drawer__menu-item--child {
+    min-height: 44px;
+    padding: 10px 22px 10px 38px;
+    font-size: 1.45rem;
+    font-weight: 500;
+    color: #3b4a6b;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  header-drawer .menu-drawer .menu-drawer__menu-item--child:hover,
+  header-drawer .menu-drawer .menu-drawer__menu-item--child:active,
+  header-drawer .menu-drawer .menu-drawer__menu-item--child[aria-current="page"] {
+    background: #f2f7ff;
+    color: #0f6fe3;
+  }
+
   /* Bezorgbelofte-footer, onderaan gepind */
   header-drawer .menu-drawer.menu-drawer::after {
     content: "✓ Vandaag besteld, morgen verzonden";
