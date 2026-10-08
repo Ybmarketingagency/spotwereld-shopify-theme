@@ -4,11 +4,12 @@
   (_blog-post-content) en door het productblok onderaan (main-blog-post).
 
   Volgorde:
-  1. een productsoort in de handle van het artikel (trap, tl, paneel, wandlamp, inbouw...)
-     "Hoe sluit je inbouwspots aan" linkt naar een dimmer, maar de lezer zoekt inbouwspots.
+  1. een productsoort in de handle van het artikel (trap, tl, paneel, wandlamp, rail,
+     dimmer/driver, opbouw, inbouw/spot). "Hoe sluit je inbouwspots aan" linkt naar een
+     dimmer, maar de lezer zoekt inbouwspots.
   2. de hoofdcategorie van het eerste beschikbare product dat in het artikel gelinkt wordt
   3. de eerste collectielink in de tekst
-  4. algemene trefwoorden (dimmer, driver, gu10, lamp)
+  4. algemene trefwoorden (gu10, lamp)
   Een collectie die niet bestaat of leeg is, levert niets op.
   Op /en/ is de handle vertaald, dus de Engelse trefwoorden staan ernaast.
 
@@ -29,6 +30,14 @@
     assign sw_ac = 'wandlampen'
   elsif sw_ac_t contains 'hanglamp' or sw_ac_t contains 'pendant'
     assign sw_ac = 'hanglampen'
+  elsif sw_ac_t contains '3-fase' or sw_ac_t contains '3-phase'
+    assign sw_ac = '3-fase-railverlichting'
+  elsif sw_ac_t contains '1-fase' or sw_ac_t contains '1-phase'
+    assign sw_ac = '1-fase-railverlichting'
+  elsif sw_ac_t contains '-rail-' or sw_ac_t contains '-track-'
+    assign sw_ac = 'railverlichting'
+  elsif sw_ac_t contains 'dimmer' or sw_ac_t contains 'driver'
+    assign sw_ac = 'accessoires'
   elsif sw_ac_t contains 'opbouw' or sw_ac_t contains 'surface'
     assign sw_ac = 'opbouwspots'
   elsif sw_ac_t contains 'inbouw' or sw_ac_t contains 'spot' or sw_ac_t contains 'recessed'
@@ -64,9 +73,7 @@
   endif
 
   if sw_ac == blank
-    if sw_ac_t contains 'dimmer' or sw_ac_t contains 'driver'
-      assign sw_ac = 'accessoires'
-    elsif sw_ac_t contains 'gu10' or sw_ac_t contains 'lamp' or sw_ac_t contains 'bulb'
+    if sw_ac_t contains 'gu10' or sw_ac_t contains 'lamp' or sw_ac_t contains 'bulb'
       assign sw_ac = 'led-lampen'
     endif
   endif
