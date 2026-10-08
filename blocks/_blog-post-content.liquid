@@ -1,8 +1,48 @@
+{%- comment -%}
+  Spotwereld (08-10-2026): doorklikknop direct onder het eerste antwoord.
+  Elk kennisbank-artikel opent met het antwoord in de eerste alinea. Wie daarna weet wat
+  hij nodig heeft, moest tot onder het artikel scrollen voor een link naar de producten.
+  Search Console liet zien dat de kennisbank het meeste verkeer trekt, dus hier wordt
+  direct na die eerste alinea een knop naar de bijbehorende collectie gezet.
+  Welke collectie dat is, bepaalt snippets/sw-artikel-collectie.liquid.
+  Alleen op artikelen van de kennisbank, en alleen als er een niet-lege collectie is.
+{%- endcomment -%}
+{%- liquid
+  assign sw_cta = ''
+  if blog.handle == 'kennisbank'
+    capture sw_cta_h
+      render 'sw-artikel-collectie', article: article
+    endcapture
+    assign sw_cta_h = sw_cta_h | strip
+    if sw_cta_h != blank
+      assign sw_cta_c = collections[sw_cta_h]
+      capture sw_cta
+        echo '<p class="sw-cta-top"><a href="' | append: sw_cta_c.url | append: '">'
+        if request.locale.iso_code == 'en'
+          echo 'Know what you need? View all '
+        else
+          echo 'Weet je wat je zoekt? Bekijk alle '
+        endif
+        echo sw_cta_c.title | escape | append: ' (' | append: sw_cta_c.products_count | append: ')'
+        echo ' <span aria-hidden="true">&rarr;</span></a></p>'
+      endcapture
+    endif
+  endif
 
-
+  assign sw_inhoud = article.content
+  if sw_cta != blank
+    if sw_inhoud contains '</p>'
+      assign sw_eerste = sw_inhoud | split: '</p>' | first | append: '</p>'
+      assign sw_rest = sw_inhoud | remove_first: sw_eerste
+      assign sw_inhoud = sw_eerste | append: sw_cta | append: sw_rest
+    else
+      assign sw_inhoud = sw_inhoud | append: sw_cta
+    endif
+  endif
+-%}
 <div class="blog-post-content rte">
   <rte-formatter>
-    {{ article.content }}
+    {{ sw_inhoud }}
   </rte-formatter>
 </div>
 
@@ -10,6 +50,27 @@
   .blog-post-content {
     max-width: var(--normal-content-width);
     margin: 0 auto;
+  }
+
+  .blog-post-content .sw-cta-top {
+    margin: 0.4rem 0 1.6rem;
+  }
+
+  .blog-post-content .sw-cta-top a {
+    display: inline-block;
+    padding: 0.65rem 1.05rem;
+    background: #083d7d;
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.3;
+    border-radius: 8px;
+    text-decoration: none;
+  }
+
+  .blog-post-content .sw-cta-top a:hover {
+    background: #061f40;
+    color: #fff;
   }
 {% endstylesheet %}
 

@@ -25,61 +25,6 @@
     {%- endif -%}
     {%- content_for 'block', id: 'blog-post-content', type: '_blog-post-content' %}
 
-    {%- comment -%}
-      Spotwereld E-E-A-T (22-09-2026). De kennisbank had geen enkel auteurssignaal: geen naam,
-      geen verantwoording, geen datum van controle. Google noemt dat bij Search Quality onder
-      "Who, How and Why" als iets wat op elke informatieve pagina zichtbaar hoort te zijn.
-      Verzinnen mag niet, dus dit blok toont alleen wat controleerbaar is: de uitgever met
-      KvK-nummer en vestigingsadres, waar de inhoud op gebaseerd is, en wanneer het artikel
-      voor het laatst is bijgewerkt. Staat er in de sectie-instellingen een naam ingevuld,
-      dan verschijnt die als auteur; anders is de winkel zelf de auteur.
-    {%- endcomment -%}
-    {%- liquid
-      assign sw_at_en = false
-      if request.locale.iso_code == 'en'
-        assign sw_at_en = true
-      endif
-      comment
-        Bewust NIET article.author: dat is de naam van het Shopify-account dat het artikel
-        aanmaakte (stond als 'Y O' op de live pagina). Alleen wat hier bewust is ingevuld.
-      endcomment
-      assign sw_at_naam = section.settings.sw_auteur_naam | strip
-      if sw_at_naam == blank or sw_at_naam == 'Spotwereld' or sw_at_naam == 'Spotwereld B.V.'
-        assign sw_at_naam = 'Spotwereld B.V.'
-        assign sw_at_persoon = false
-      else
-        assign sw_at_persoon = true
-      endif
-    -%}
-    <aside class="sw-verantwoording">
-      <h2>{% if sw_at_en %}About this article{% else %}Over dit artikel{% endif %}</h2>
-      <dl>
-        <dt>{% if sw_at_en %}Written by{% else %}Geschreven door{% endif %}</dt>
-        <dd>
-          {{ sw_at_naam | escape }}{% if sw_at_persoon and section.settings.sw_auteur_functie != blank %}, {{ section.settings.sw_auteur_functie | escape }}{% endif %}
-          {%- unless sw_at_persoon -%}
-            <span class="sw-verantwoording__sub">{% if sw_at_en %}LED lighting specialist, Blaricum (NL) &middot; Chamber of Commerce 84665688{% else %}gespecialiseerd in led-verlichting, Blaricum &middot; KvK 84665688{% endif %}</span>
-          {%- endunless -%}
-        </dd>
-
-        <dt>{% if sw_at_en %}Based on{% else %}Gebaseerd op{% endif %}</dt>
-        <dd>{% if sw_at_en %}European standards and regulations, the manufacturer documentation of our suppliers, and the measured specifications of the fixtures we sell ourselves. Figures that a supplier does not state, we leave out.{% else %}Europese normen en verordeningen, de fabrikantendocumentatie van onze leveranciers, en de opgemeten specificaties van de armaturen die we zelf verkopen. Cijfers die een leverancier niet opgeeft, laten we weg.{% endif %}</dd>
-
-        <dt>{% if sw_at_en %}Last updated{% else %}Laatst bijgewerkt{% endif %}</dt>
-        <dd>
-          <time datetime="{{ article.updated_at | default: article.published_at | date: '%Y-%m-%d' }}">
-            {%- if sw_at_en -%}
-              {{ article.updated_at | default: article.published_at | date: '%e %B %Y' | strip }}
-            {%- else -%}
-              {{ article.updated_at | default: article.published_at | date: '%d-%m-%Y' }}
-            {%- endif -%}
-          </time>
-        </dd>
-
-        <dt>{% if sw_at_en %}Spotted an error?{% else %}Klopt er iets niet?{% endif %}</dt>
-        <dd>{% if sw_at_en %}Mail{% else %}Mail{% endif %} <a href="mailto:info@spotwereld.nl?subject={{ article.title | url_encode }}">info@spotwereld.nl</a>{% if sw_at_en %} and we will check it.{% else %} en we kijken het na.{% endif %}</dd>
-      </dl>
-    </aside>
 
     {%- comment -%}
       Bijpassende producten (21-09-2026). Uit GA4 over 22 aug t/m 21 sep: de kennisbank
@@ -144,6 +89,9 @@
         </a>
       {%- endfor -%}
     {%- endcapture -%}
+    {%- capture sw_bp_coll_vast -%}{%- render 'sw-artikel-collectie', article: article -%}{%- endcapture -%}
+    {%- assign sw_bp_coll_vast = sw_bp_coll_vast | strip -%}
+    {%- if sw_bp_coll_vast != blank -%}{%- assign sw_bp_coll = sw_bp_coll_vast -%}{%- endif -%}
     {%- if sw_bp_aantal > 0 -%}
       <aside class="sw-bp">
         <h2 class="sw-bp__kop">{% if request.locale.iso_code == 'en' %}Products mentioned in this article{% else %}De producten uit dit artikel{% endif %}</h2>
@@ -157,6 +105,62 @@
       </aside>
     {%- endif -%}
 
+
+    {%- comment -%}
+      Spotwereld E-E-A-T (22-09-2026). De kennisbank had geen enkel auteurssignaal: geen naam,
+      geen verantwoording, geen datum van controle. Google noemt dat bij Search Quality onder
+      "Who, How and Why" als iets wat op elke informatieve pagina zichtbaar hoort te zijn.
+      Verzinnen mag niet, dus dit blok toont alleen wat controleerbaar is: de uitgever met
+      KvK-nummer en vestigingsadres, waar de inhoud op gebaseerd is, en wanneer het artikel
+      voor het laatst is bijgewerkt. Staat er in de sectie-instellingen een naam ingevuld,
+      dan verschijnt die als auteur; anders is de winkel zelf de auteur.
+    {%- endcomment -%}
+    {%- liquid
+      assign sw_at_en = false
+      if request.locale.iso_code == 'en'
+        assign sw_at_en = true
+      endif
+      comment
+        Bewust NIET article.author: dat is de naam van het Shopify-account dat het artikel
+        aanmaakte (stond als 'Y O' op de live pagina). Alleen wat hier bewust is ingevuld.
+      endcomment
+      assign sw_at_naam = section.settings.sw_auteur_naam | strip
+      if sw_at_naam == blank or sw_at_naam == 'Spotwereld' or sw_at_naam == 'Spotwereld B.V.'
+        assign sw_at_naam = 'Spotwereld B.V.'
+        assign sw_at_persoon = false
+      else
+        assign sw_at_persoon = true
+      endif
+    -%}
+    <aside class="sw-verantwoording">
+      <h2>{% if sw_at_en %}About this article{% else %}Over dit artikel{% endif %}</h2>
+      <dl>
+        <dt>{% if sw_at_en %}Written by{% else %}Geschreven door{% endif %}</dt>
+        <dd>
+          {{ sw_at_naam | escape }}{% if sw_at_persoon and section.settings.sw_auteur_functie != blank %}, {{ section.settings.sw_auteur_functie | escape }}{% endif %}
+          {%- unless sw_at_persoon -%}
+            <span class="sw-verantwoording__sub">{% if sw_at_en %}LED lighting specialist, Blaricum (NL) &middot; Chamber of Commerce 84665688{% else %}gespecialiseerd in led-verlichting, Blaricum &middot; KvK 84665688{% endif %}</span>
+          {%- endunless -%}
+        </dd>
+
+        <dt>{% if sw_at_en %}Based on{% else %}Gebaseerd op{% endif %}</dt>
+        <dd>{% if sw_at_en %}European standards and regulations, the manufacturer documentation of our suppliers, and the measured specifications of the fixtures we sell ourselves. Figures that a supplier does not state, we leave out.{% else %}Europese normen en verordeningen, de fabrikantendocumentatie van onze leveranciers, en de opgemeten specificaties van de armaturen die we zelf verkopen. Cijfers die een leverancier niet opgeeft, laten we weg.{% endif %}</dd>
+
+        <dt>{% if sw_at_en %}Last updated{% else %}Laatst bijgewerkt{% endif %}</dt>
+        <dd>
+          <time datetime="{{ article.updated_at | default: article.published_at | date: '%Y-%m-%d' }}">
+            {%- if sw_at_en -%}
+              {{ article.updated_at | default: article.published_at | date: '%e %B %Y' | strip }}
+            {%- else -%}
+              {{ article.updated_at | default: article.published_at | date: '%d-%m-%Y' }}
+            {%- endif -%}
+          </time>
+        </dd>
+
+        <dt>{% if sw_at_en %}Spotted an error?{% else %}Klopt er iets niet?{% endif %}</dt>
+        <dd>{% if sw_at_en %}Mail{% else %}Mail{% endif %} <a href="mailto:info@spotwereld.nl?subject={{ article.title | url_encode }}">info@spotwereld.nl</a>{% if sw_at_en %} and we will check it.{% else %} en we kijken het na.{% endif %}</dd>
+      </dl>
+    </aside>
 
     {% comment %} Dynamic area for @app blocks only, at the bottom {% endcomment %}
     {% content_for 'blocks' %}

@@ -1,0 +1,77 @@
+{%- comment -%}
+  Spotwereld (08-10-2026): geeft de handle van de hoofdcollectie die bij een
+  kennisbank-artikel hoort. Gebruikt door de doorklikknop bovenaan het artikel
+  (_blog-post-content) en door het productblok onderaan (main-blog-post).
+
+  Volgorde:
+  1. de hoofdcategorie van het eerste beschikbare product dat in het artikel gelinkt wordt
+  2. de eerste collectielink in de tekst
+  3. een trefwoord in de handle van het artikel
+  Een collectie die niet bestaat of leeg is, levert niets op.
+
+  Aanroep: {% capture x %}{% render 'sw-artikel-collectie', article: article %}{% endcapture %}
+{%- endcomment -%}
+{%- liquid
+  assign sw_ac_hoofd = 'inbouwspots,opbouwspots,wandlampen,hanglampen,trapverlichting,led-panelen,led-tl-buizen,led-lampen,accessoires' | split: ','
+  assign sw_ac = ''
+
+  assign sw_ac_delen = article.content | split: '/products/'
+  for sw_ac_deel in sw_ac_delen offset: 1
+    assign sw_ac_h = sw_ac_deel | split: '"' | first | split: "'" | first | split: '?' | first | split: '#' | first | split: '/' | first | strip
+    if sw_ac_h == blank
+      continue
+    endif
+    assign sw_ac_p = all_products[sw_ac_h]
+    if sw_ac_p == blank or sw_ac_p.available == false
+      continue
+    endif
+    for sw_ac_pc in sw_ac_p.collections
+      if sw_ac_hoofd contains sw_ac_pc.handle
+        assign sw_ac = sw_ac_pc.handle
+        break
+      endif
+    endfor
+    break
+  endfor
+
+  if sw_ac == blank
+    assign sw_ac_cdelen = article.content | split: '/collections/'
+    if sw_ac_cdelen.size > 1
+      assign sw_ac = sw_ac_cdelen[1] | split: '"' | first | split: "'" | first | split: '?' | first | split: '#' | first | split: '/' | first | strip
+    endif
+  endif
+
+  if sw_ac == blank
+    assign sw_ac_t = article.handle | prepend: '-' | append: '-'
+    comment
+      Op /en/ is de handle vertaald, dus de Engelse trefwoorden staan ernaast.
+    endcomment
+    if sw_ac_t contains 'trap' or sw_ac_t contains 'stair'
+      assign sw_ac = 'trapverlichting'
+    elsif sw_ac_t contains '-tl-' or sw_ac_t contains 'tl-buis' or sw_ac_t contains 'armatuur' or sw_ac_t contains 'tube' or sw_ac_t contains 'fluorescent'
+      assign sw_ac = 'led-tl-buizen'
+    elsif sw_ac_t contains 'paneel' or sw_ac_t contains 'panelen' or sw_ac_t contains 'panel'
+      assign sw_ac = 'led-panelen'
+    elsif sw_ac_t contains 'wandlamp' or sw_ac_t contains 'wall-light' or sw_ac_t contains 'wall-lamp'
+      assign sw_ac = 'wandlampen'
+    elsif sw_ac_t contains 'hanglamp' or sw_ac_t contains 'pendant'
+      assign sw_ac = 'hanglampen'
+    elsif sw_ac_t contains 'opbouw' or sw_ac_t contains 'surface'
+      assign sw_ac = 'opbouwspots'
+    elsif sw_ac_t contains 'inbouw' or sw_ac_t contains 'spot' or sw_ac_t contains 'recessed'
+      assign sw_ac = 'inbouwspots'
+    elsif sw_ac_t contains 'dimmer' or sw_ac_t contains 'driver'
+      assign sw_ac = 'accessoires'
+    elsif sw_ac_t contains 'gu10' or sw_ac_t contains 'lamp' or sw_ac_t contains 'bulb'
+      assign sw_ac = 'led-lampen'
+    endif
+  endif
+
+  if sw_ac != blank
+    assign sw_ac_c = collections[sw_ac]
+    if sw_ac_c == blank or sw_ac_c.products_count == 0
+      assign sw_ac = ''
+    endif
+  endif
+-%}
+{{- sw_ac -}}
