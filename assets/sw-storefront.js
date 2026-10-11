@@ -133,6 +133,8 @@
 /* ===== WELKOM POPUP v2 — vanaf scratch ===== */
 (function(){
   var DISCOUNT_CODE = 'WELKOM5';
+  // Taalvoorvoegsel meenemen, anders komt /en/ op de Nederlandse /contact uit.
+  var SHOP_ROOT = (window.Shopify && window.Shopify.routes && window.Shopify.routes.root) || '/';
   var POPUP_DELAY = 30000;
   var SHOWN_KEY = 'sw_popup_shown_v2';
   var CODE_KEY  = 'sw_discount_code_v2';
@@ -168,15 +170,25 @@
       '<div style="font-size:3.5rem;font-weight:900;margin:.25rem 0;letter-spacing:-.03em;line-height:1;background:linear-gradient(135deg,#083D7D,#0F6FE3);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">5% korting</div>'+
       '<h2 style="font-size:1.4rem;font-weight:900;color:#061f40;margin:0 0 .5rem;letter-spacing:-.02em">Op je eerste bestelling</h2>'+
       '<p style="color:#475569;font-size:.92rem;line-height:1.5;margin:0 0 1.25rem">Meld je aan voor onze nieuwsbrief en ontvang direct 5% korting op je volgende LED-spot bestelling.</p>'+
-      '<form id="swp2-form" style="display:flex;flex-direction:column;gap:.6rem">'+
-        '<input type="email" id="swp2-email" required placeholder="jouw@email.nl" autocomplete="email" style="width:100%;padding:.85rem 1rem;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.95rem;outline:none;box-sizing:border-box;font-family:inherit">'+
+      // LET OP: dit moet een echt formulier zijn dat de browser zelf verstuurt.
+      // Shopify beschermt /contact met hCaptcha (captcha-bootstrap). Die haakt in op
+      // het submit-event van een <form> en voegt pas dan het token toe. Een losse
+      // fetch() wordt nooit onderschept, komt zonder token binnen en geeft HTTP 400.
+      // Zo zijn alle popup-aanmeldingen tot 11-10-2026 weggegooid.
+      '<iframe name="swp2-frame" id="swp2-frame" title="" style="display:none" aria-hidden="true"></iframe>'+
+      '<form id="swp2-form" method="post" action="'+SHOP_ROOT+'contact" target="swp2-frame" accept-charset="UTF-8" style="display:flex;flex-direction:column;gap:.6rem">'+
+        '<input type="hidden" name="form_type" value="customer">'+
+        '<input type="hidden" name="utf8" value="✓">'+
+        '<input type="hidden" name="contact[tags]" value="newsletter,welkom-5">'+
+        '<input type="hidden" name="contact[accepts_marketing]" value="true">'+
+        '<input type="email" id="swp2-email" name="contact[email]" required placeholder="jouw@email.nl" autocomplete="email" style="width:100%;padding:.85rem 1rem;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.95rem;outline:none;box-sizing:border-box;font-family:inherit">'+
         '<button type="submit" id="swp2-submit" style="background:linear-gradient(135deg,#083D7D,#0F6FE3);color:#fff;border:0;border-radius:8px;padding:.95rem 1rem;font-weight:700;font-size:.95rem;cursor:pointer;font-family:inherit">Stuur mij de kortingscode</button>'+
         '<p style="font-size:.7rem;color:#94a3b8;margin:.5rem 0 0">Geen spam, alleen tips &amp; aanbiedingen. Afmelden kan altijd.</p>'+
       '</form>'+
       '<div id="swp2-success" style="display:none">'+
         '<span style="display:inline-block;background:#16a34a;color:#fff;font-weight:800;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;padding:.35rem .75rem;border-radius:999px;margin-bottom:.75rem">Gelukt!</span>'+
         '<h2 style="font-size:1.4rem;font-weight:900;color:#061f40;margin:.5rem 0">Hier is je code</h2>'+
-        '<p style="color:#475569;font-size:.92rem;line-height:1.5;margin:0 0 1rem">Gebruik deze code bij de checkout. Een kopie staat ook in je inbox.</p>'+
+        '<p style="color:#475569;font-size:.92rem;line-height:1.5;margin:0 0 1rem">Gebruik deze code bij het afrekenen. Schrijf hem even over, we sturen geen losse bevestigingsmail.</p>'+
         '<div style="display:inline-flex;align-items:center;gap:.6rem;background:#f1f5f9;border:2px dashed #0F6FE3;border-radius:10px;padding:.85rem 1.1rem;margin:.5rem 0 1rem;font-family:Courier New,monospace;font-size:1.4rem;font-weight:900;color:#061f40;letter-spacing:.1em"><span id="swp2-code-txt">WELKOM5</span><button type="button" id="swp2-copy" style="background:#061f40;color:#fff;border:0;padding:.4rem .75rem;border-radius:6px;font-size:.75rem;font-weight:600;cursor:pointer;letter-spacing:.05em;font-family:inherit">Kopieer</button></div>'+
         '<button type="button" id="swp2-done" style="background:linear-gradient(135deg,#083D7D,#0F6FE3);color:#fff;border:0;border-radius:8px;padding:.85rem 1rem;font-weight:700;font-size:.95rem;cursor:pointer;width:100%;font-family:inherit">Verder winkelen</button>'+
       '</div>';
@@ -221,28 +233,40 @@
     var form = card.querySelector('#swp2-form');
     var successDiv = card.querySelector('#swp2-success');
     var submitBtn = card.querySelector('#swp2-submit');
-    form.addEventListener('submit', function(e){
-      e.preventDefault();
+    // Het formulier verstuurt zichzelf naar een verborgen iframe, zodat hCaptcha
+    // zijn werk kan doen en de popup toch blijft staan. preventDefault zou de
+    // captcha-koppeling juist kapotmaken, dus die staat hier bewust niet.
+    var frame = card.querySelector('#swp2-frame');
+    var afgerond = false;
+
+    function toonCode(){
+      if (afgerond) return;
+      afgerond = true;
+      setCode(DISCOUNT_CODE);
+      markShown();
+      form.style.display = 'none';
+      var intro = card.querySelector('p[style*="margin:0 0 1.25rem"]');
+      if (intro) intro.style.display = 'none';
+      successDiv.style.display = 'block';
+    }
+
+    if (frame) {
+      frame.addEventListener('load', function(){
+        // Vuurt ook een keer op about:blank bij het aanmaken; pas reageren
+        // zodra er echt is verstuurd.
+        if (submitBtn.disabled) toonCode();
+      });
+    }
+
+    form.addEventListener('submit', function(){
       var emailEl = card.querySelector('#swp2-email');
       var email = (emailEl.value||'').trim();
       if (!email || email.indexOf('@') < 1) return;
       submitBtn.disabled = true;
       submitBtn.textContent = 'Bezig...';
-      var fd = new FormData();
-      fd.append('form_type','customer');
-      fd.append('utf8','✓');
-      fd.append('contact[tags]','newsletter,welkom-5');
-      fd.append('contact[accepts_marketing]','true');
-      fd.append('contact[email]', email);
-      fetch(((window.Shopify && window.Shopify.routes && window.Shopify.routes.root) || '/') + 'contact', { method:'POST', body: fd, credentials:'same-origin' })
-        .catch(function(){})
-        .finally(function(){
-          setCode(DISCOUNT_CODE);
-          markShown();
-          form.style.display = 'none';
-          card.querySelector('p[style*="margin:0 0 1.25rem"]').style.display = 'none';
-          successDiv.style.display = 'block';
-        });
+      // Terugval: blijft de iframe hangen (captcha-uitdaging, trage verbinding),
+      // dan krijgt de bezoeker na 8 seconden alsnog zijn code.
+      setTimeout(toonCode, 8000);
     });
 
     // Copy
