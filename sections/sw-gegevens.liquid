@@ -189,7 +189,19 @@
           {{ 'sw.kassa.door' | t }}
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
         </button>
-        <p style="text-align:center;font-size:.78rem;color:#94a3b8;margin:.85rem 0 0;line-height:1.5">{{ 'sw.kassa.volgende' | t }}</p>
+        {%- comment -%}
+          Stond hier: "In de volgende stap vul je je bezorgadres en kies je
+          betaalmethode". Dat las als: dit moet ik zo nog een keer doen, terwijl het
+          adres hierboven via cartCreate wordt meegestuurd. Inline gezet omdat de
+          GitHub-sync locales/*.json overslaat.
+        {%- endcomment -%}
+        <p style="text-align:center;font-size:.78rem;color:#94a3b8;margin:.85rem 0 0;line-height:1.5">
+          {%- if request.locale.iso_code == 'en' -%}
+            Your details are carried over. One more step: choose your payment method.
+          {%- else -%}
+            Je gegevens gaan mee. Nog &eacute;&eacute;n stap: je betaalmethode kiezen.
+          {%- endif -%}
+        </p>
       </form>
     </div>
 
@@ -202,8 +214,44 @@
             <div class="swg-sum-row" style="color:#16a34a"><span>{{ d.title }}</span><span>&minus;{{ d.total_allocated_amount | money }}</span></div>
           {%- endfor -%}
         </div>
-        <div class="swg-sum-row"><span>{{ 'sw.kassa.stap_bezorging' | t }}</span><span style="color:#94a3b8">{{ 'sw.kassa.berekend' | t }}</span></div>
-        <div class="swg-sum-row total"><span>{{ 'sw.kassa.totaal' | t }}<small>{{ 'sw.kassa.excl' | t }}</small></span><span id="swg-total">{{ cart.total_price | money }}</span></div>
+        {%- comment -%}
+          Verzendkosten staan hier uitgerekend in plaats van "berekend bij de volgende
+          stap". Twee van de afgebroken checkouts in oktober haakten precies hier af:
+          ze zagen de EUR 7,95 pas na het invullen van zeven velden.
+          Houd de twee bedragen gelijk aan snippets/sw-gratis-verzending.liquid en aan
+          Instellingen > Verzending > Algemeen profiel > Standaard NL.
+        {%- endcomment -%}
+        {%- liquid
+          assign swg_free_from = 5000
+          assign swg_ship_rate = 795
+          if cart.total_price >= swg_free_from
+            assign swg_ship = 0
+          else
+            assign swg_ship = swg_ship_rate
+          endif
+          assign swg_grand = cart.total_price | plus: swg_ship
+        -%}
+        <div class="swg-sum-row">
+          <span>{{ 'sw.kassa.stap_bezorging' | t }}</span>
+          <span id="swg-ship" data-free-from="{{ swg_free_from }}" data-rate="{{ swg_ship_rate }}"{% if swg_ship == 0 %} style="color:#16a34a;font-weight:700"{% endif %}>
+            {%- if swg_ship == 0 -%}
+              {%- if request.locale.iso_code == 'en' -%}Free{%- else -%}Gratis{%- endif -%}
+            {%- else -%}
+              {{- swg_ship | money -}}
+            {%- endif -%}
+          </span>
+        </div>
+        <div class="swg-sum-row total"><span>{{ 'sw.kassa.totaal' | t }}</span><span id="swg-total">{{ swg_grand | money }}</span></div>
+        {%- if cart.item_count > 0 and cart.total_price < swg_free_from -%}
+          {%- assign swg_rest = swg_free_from | minus: cart.total_price -%}
+          <p id="swg-freeship" style="margin:.4rem 0 0;font-size:.78rem;color:#1e3a5f;background:#f4f8ff;border:1px solid #d8e6fb;border-radius:8px;padding:.5rem .65rem;line-height:1.4">
+            {%- if request.locale.iso_code == 'en' -%}
+              Add <strong>{{ swg_rest | money }}</strong> and delivery is free. <a href="{{ sw_root }}/cart" style="color:#0f6fe3;font-weight:600">Back to cart</a>
+            {%- else -%}
+              Nog <strong>{{ swg_rest | money }}</strong> en je bezorging is gratis. <a href="{{ sw_root }}/cart" style="color:#0f6fe3;font-weight:600">Terug naar de winkelmand</a>
+            {%- endif -%}
+          </p>
+        {%- endif -%}
 
         <div class="swg-discount">
           <label for="swg-discount-input">{{ 'sw.kassa.korting' | t }}</label>
@@ -579,8 +627,33 @@
     var sub = document.getElementById('swg-subtotal');
     var tot = document.getElementById('swg-total');
     var rows = document.getElementById('swg-discount-rows');
+    var ship = document.getElementById('swg-ship');
+    var nudge = document.getElementById('swg-freeship');
     if (sub) sub.textContent = money(cart.items_subtotal_price);
-    if (tot) tot.textContent = money(cart.total_price);
+
+    // Verzending herrekenen: een kortingscode kan de bestelling onder de grens
+    // voor gratis verzending duwen, dan moet het totaal mee omhoog.
+    var freeFrom = ship ? parseInt(ship.getAttribute('data-free-from'), 10) : 5000;
+    var rate = ship ? parseInt(ship.getAttribute('data-rate'), 10) : 795;
+    var isEn = document.documentElement.lang && document.documentElement.lang.indexOf('en') === 0;
+    var shipCost = cart.total_price >= freeFrom ? 0 : rate;
+    if (ship) {
+      ship.textContent = shipCost === 0 ? (isEn ? 'Free' : 'Gratis') : money(shipCost);
+      ship.style.color = shipCost === 0 ? '#16a34a' : '';
+      ship.style.fontWeight = shipCost === 0 ? '700' : '';
+    }
+    if (nudge) {
+      if (shipCost === 0) {
+        nudge.hidden = true;
+      } else {
+        nudge.hidden = false;
+        var rest = money(freeFrom - cart.total_price);
+        nudge.innerHTML = isEn
+          ? 'Add <strong>' + rest + '</strong> and delivery is free.'
+          : 'Nog <strong>' + rest + '</strong> en je bezorging is gratis.';
+      }
+    }
+    if (tot) tot.textContent = money(cart.total_price + shipCost);
     if (!rows) return;
     rows.innerHTML = '';
     (cart.cart_level_discount_applications || []).forEach(function(d){

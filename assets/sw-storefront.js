@@ -83,7 +83,12 @@
   // Save scroll voor Shopify's facet form submit; restore na page load
   document.addEventListener('submit', function(e){
     var form = e.target;
-    if (form && (form.id||'').indexOf('facets') > -1 || (form.className||'').indexOf('facets') > -1){
+    // LET OP: niet form.id gebruiken. HTMLFormElement heeft [LegacyOverrideBuiltIns],
+    // dus een veld met name="id" (elk Shopify-productformulier heeft er een voor de
+    // variant) overschrijft form.id met een element. form.id.indexOf gooit dan.
+    var formId = form && form.getAttribute ? (form.getAttribute('id') || '') : '';
+    var formClass = form && typeof form.className === 'string' ? form.className : '';
+    if (formId.indexOf('facets') > -1 || formClass.indexOf('facets') > -1){
       try { sessionStorage.setItem('sw_scroll', String(window.scrollY)); } catch(err){}
     }
   }, true);

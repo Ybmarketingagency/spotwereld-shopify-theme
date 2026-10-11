@@ -1,0 +1,134 @@
+{%- doc -%}
+  Voortgangsbalk naar gratis verzending.
+
+  De twee bedragen hieronder moeten gelijk blijven aan Shopify:
+  Instellingen > Verzending en bezorging > Algemeen profiel > Domestic >
+  "Standaard NL". Stand 11-10-2026: EUR 7,95 onder EUR 50, gratis vanaf EUR 50.
+  Gemeten via /cart/shipping_rates.json, niet overgenomen uit een tekst op de site.
+  Wijzigt het tarief in Shopify, pas het hier en in sections/sw-gegevens.liquid aan.
+
+  @param {string} [variant] - 'compact' voor de winkelwagenlade
+{%- enddoc -%}
+
+{%- liquid
+  assign sw_free_from = 5000
+  assign sw_ship_rate = 795
+  assign sw_resterend = sw_free_from | minus: cart.total_price
+  assign sw_pct = cart.total_price | times: 100.0 | divided_by: sw_free_from
+  if sw_pct > 100
+    assign sw_pct = 100
+  endif
+-%}
+
+{%- if cart.item_count > 0 -%}
+  <div class="sw-vz-balk{% if variant == 'compact' %} sw-vz-balk--compact{% endif %}">
+    {%- if cart.total_price >= sw_free_from -%}
+      <p class="sw-vz-tekst sw-vz-tekst--gehaald">
+        <span aria-hidden="true">&#10003;</span>
+        {%- if request.locale.iso_code == 'en' -%}
+          Great, your delivery is free
+        {%- else -%}
+          Gelukt, je bezorging is gratis
+        {%- endif -%}
+      </p>
+    {%- else -%}
+      <p class="sw-vz-tekst">
+        {%- if request.locale.iso_code == 'en' -%}
+          Add <strong>{{ sw_resterend | money }}</strong> for free delivery
+        {%- else -%}
+          Nog <strong>{{ sw_resterend | money }}</strong> en je bezorging is gratis
+        {%- endif -%}
+      </p>
+    {%- endif -%}
+    <div
+      class="sw-vz-spoor"
+      role="progressbar"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      aria-valuenow="{{ sw_pct | round }}"
+      aria-label="{% if request.locale.iso_code == 'en' %}Progress towards free delivery{% else %}Voortgang naar gratis verzending{% endif %}"
+    >
+      <span class="sw-vz-vulling{% if cart.total_price >= sw_free_from %} sw-vz-vulling--gehaald{% endif %}" style="width:{{ sw_pct | round }}%"></span>
+    </div>
+    {%- if cart.total_price < sw_free_from -%}
+      <p class="sw-vz-sub">
+        {%- if request.locale.iso_code == 'en' -%}
+          Delivery is {{ sw_ship_rate | money }} below {{ sw_free_from | money }}
+        {%- else -%}
+          Onder {{ sw_free_from | money }} kost bezorging {{ sw_ship_rate | money }}
+        {%- endif -%}
+      </p>
+    {%- endif -%}
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .sw-vz-balk {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 0.85rem 0.95rem;
+    margin-block-end: 0.75rem;
+    background: #f4f8ff;
+    border: 1px solid #d8e6fb;
+    border-radius: 10px;
+  }
+
+  .sw-vz-balk--compact {
+    padding: 0.65rem 0.75rem;
+    gap: 0.3rem;
+  }
+
+  .sw-vz-tekst {
+    margin: 0;
+    font-size: 0.85rem;
+    line-height: 1.35;
+    color: #1e3a5f;
+  }
+
+  .sw-vz-tekst strong {
+    font-weight: 800;
+    color: #061f40;
+  }
+
+  .sw-vz-tekst--gehaald {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 700;
+    color: #15803d;
+  }
+
+  .sw-vz-spoor {
+    position: relative;
+    block-size: 7px;
+    inline-size: 100%;
+    background: #dbe7f7;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .sw-vz-vulling {
+    display: block;
+    block-size: 100%;
+    background: linear-gradient(90deg, #0f6fe3, #3b8bf0);
+    border-radius: 999px;
+    transition: width 0.35s ease;
+  }
+
+  .sw-vz-vulling--gehaald {
+    background: linear-gradient(90deg, #15803d, #22c55e);
+  }
+
+  .sw-vz-sub {
+    margin: 0;
+    font-size: 0.72rem;
+    color: #64748b;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sw-vz-vulling {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
