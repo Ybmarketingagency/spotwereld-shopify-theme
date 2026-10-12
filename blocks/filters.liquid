@@ -50,25 +50,35 @@
   assign sw_set = ''
 
   if sw_h contains 'accessoire'
-    assign sw_set = ',filter.p.m.custom.soort_filter,filter.p.m.custom.fitting_filter,filter.p.m.custom.wattage_filter,filter.p.m.custom.lichtkleur,filter.v.option.kleur,'
+    # soort, fitting, wattage, lichtkleur, kleur
+    assign sw_set = ',' | append: 'filter.p.m.custom.soort_filter,' | append: 'filter.p.m.custom.fitting_filter,' | append: 'filter.p.m.custom.wattage_filter,' | append: 'filter.p.m.custom.lichtkleur,' | append: 'filter.v.option.kleur,'
   elsif sw_h contains 'inbouwspot'
-    assign sw_set = ',filter.v.option.kleur,filter.v.option.dimbaar,filter.p.m.custom.lichtkleur,filter.p.m.custom.zaagmaat_filter,filter.p.m.custom.inbouwdiepte_filter,filter.p.m.custom.buitenmaat_filter,filter.p.m.custom.ip_waarde_filter,filter.p.m.custom.wattage_filter,filter.p.m.custom.kantelbaar_filter,filter.p.m.custom.lichtopbrengst_filter,'
+    # kleur, dimbaar, lichtkleur, fitting, zaagmaat, inbouwdiepte, buitenmaat, ip, wattage, kantelbaar
+    assign sw_set = ',' | append: 'filter.v.option.kleur,' | append: 'filter.v.option.dimbaar,' | append: 'filter.p.m.custom.lichtkleur,' | append: 'filter.p.m.custom.fitting_filter,' | append: 'filter.p.m.custom.zaagmaat_filter,' | append: 'filter.p.m.custom.inbouwdiepte_filter,' | append: 'filter.p.m.custom.buitenmaat_filter,' | append: 'filter.p.m.custom.ip_waarde_filter,' | append: 'filter.p.m.custom.wattage_filter,' | append: 'filter.p.m.custom.kantelbaar_filter,'
   elsif sw_h == 'trapverlichting'
-    assign sw_set = ',filter.v.option.kleur,filter.p.m.custom.lichtkleur,filter.p.m.custom.zaagmaat_filter,filter.p.m.custom.inbouwdiepte_filter,filter.p.m.custom.wattage_filter,filter.p.m.custom.ip_waarde_filter,filter.p.m.custom.materiaal_filter,'
+    # soort, kleur, lichtkleur, materiaal, wattage, zaagmaat, inbouwdiepte, ip
+    assign sw_set = ',' | append: 'filter.p.m.custom.soort_filter,' | append: 'filter.v.option.kleur,' | append: 'filter.p.m.custom.lichtkleur,' | append: 'filter.p.m.custom.materiaal_filter,' | append: 'filter.p.m.custom.wattage_filter,' | append: 'filter.p.m.custom.zaagmaat_filter,' | append: 'filter.p.m.custom.inbouwdiepte_filter,' | append: 'filter.p.m.custom.ip_waarde_filter,'
   elsif sw_h contains 'opbouwspot'
-    assign sw_set = ',filter.v.option.kleur,filter.p.m.custom.lichtkleur,filter.p.m.custom.fitting_filter,filter.p.m.custom.lichtpunten_filter,filter.p.m.custom.kantelbaar_filter,filter.p.m.custom.materiaal_filter,filter.p.m.custom.ip_waarde_filter,filter.p.m.custom.wattage_filter,'
+    # kleur, fitting, lichtpunten, lichtkleur, materiaal, kantelbaar, ip, wattage
+    assign sw_set = ',' | append: 'filter.v.option.kleur,' | append: 'filter.p.m.custom.fitting_filter,' | append: 'filter.p.m.custom.lichtpunten_filter,' | append: 'filter.p.m.custom.lichtkleur,' | append: 'filter.p.m.custom.materiaal_filter,' | append: 'filter.p.m.custom.kantelbaar_filter,' | append: 'filter.p.m.custom.ip_waarde_filter,' | append: 'filter.p.m.custom.wattage_filter,'
   elsif sw_h contains 'hanglamp'
-    assign sw_set = ',filter.v.option.kleur,filter.p.m.custom.fitting_filter,filter.p.m.custom.lichtpunten_filter,filter.p.m.custom.lichtkleur,filter.p.m.custom.materiaal_filter,filter.p.m.custom.lichtopbrengst_filter,filter.v.option.dimbaar,'
+    # kleur, fitting, lichtpunten, lichtkleur, materiaal, dimbaar
+    assign sw_set = ',' | append: 'filter.v.option.kleur,' | append: 'filter.p.m.custom.fitting_filter,' | append: 'filter.p.m.custom.lichtpunten_filter,' | append: 'filter.p.m.custom.lichtkleur,' | append: 'filter.p.m.custom.materiaal_filter,' | append: 'filter.v.option.dimbaar,'
   elsif sw_h contains 'wandlamp'
-    assign sw_set = ',filter.v.option.kleur,filter.p.m.custom.fitting_filter,filter.p.m.custom.lichtpunten_filter,filter.p.m.custom.lichtkleur,filter.p.m.custom.ip_waarde_filter,filter.p.m.custom.materiaal_filter,filter.p.m.custom.lichtopbrengst_filter,'
+    # kleur, fitting, lichtpunten, lichtkleur, ip, materiaal
+    assign sw_set = ',' | append: 'filter.v.option.kleur,' | append: 'filter.p.m.custom.fitting_filter,' | append: 'filter.p.m.custom.lichtpunten_filter,' | append: 'filter.p.m.custom.lichtkleur,' | append: 'filter.p.m.custom.ip_waarde_filter,' | append: 'filter.p.m.custom.materiaal_filter,'
   elsif sw_h contains 'paneel' or sw_h contains 'panelen'
-    assign sw_set = ',filter.p.m.custom.paneelmaat_filter,filter.p.m.custom.lichtkleur,filter.p.m.custom.wattage_filter,filter.p.m.custom.lichtopbrengst_filter,filter.p.m.custom.montage_filter,filter.v.option.dimbaar,filter.p.m.custom.ip_waarde_filter,filter.v.option.kleur,'
+    # paneelmaat, lichtkleur, wattage, ip, dimbaar, kleur
+    assign sw_set = ',' | append: 'filter.p.m.custom.paneelmaat_filter,' | append: 'filter.p.m.custom.lichtkleur,' | append: 'filter.p.m.custom.wattage_filter,' | append: 'filter.p.m.custom.ip_waarde_filter,' | append: 'filter.v.option.dimbaar,' | append: 'filter.v.option.kleur,'
   elsif sw_h contains 'tl-buizen' or sw_h contains 'tl-buis'
-    assign sw_set = ',filter.p.m.custom.lengte_filter,filter.p.m.custom.fitting_filter,filter.p.m.custom.lichtkleur,filter.p.m.custom.wattage_filter,filter.p.m.custom.lichtopbrengst_filter,'
+    # lengte, fitting, lichtkleur, wattage
+    assign sw_set = ',' | append: 'filter.p.m.custom.lengte_filter,' | append: 'filter.p.m.custom.fitting_filter,' | append: 'filter.p.m.custom.lichtkleur,' | append: 'filter.p.m.custom.wattage_filter,'
   elsif sw_h contains 'rail' or sw_h contains 'fase'
-    assign sw_set = ',filter.p.m.custom.railtype_filter,filter.p.m.custom.soort_filter,filter.v.option.kleur,filter.p.m.custom.fitting_filter,filter.p.m.custom.lichtkleur,filter.p.m.custom.wattage_filter,filter.p.m.custom.lengte_filter,filter.p.m.custom.lichtopbrengst_filter,filter.v.option.dimbaar,'
+    # railtype, soort, kleur, lichtkleur, wattage, dimbaar
+    assign sw_set = ',' | append: 'filter.p.m.custom.railtype_filter,' | append: 'filter.p.m.custom.soort_filter,' | append: 'filter.v.option.kleur,' | append: 'filter.p.m.custom.lichtkleur,' | append: 'filter.p.m.custom.wattage_filter,' | append: 'filter.v.option.dimbaar,'
   elsif sw_h contains 'led-lampen' or sw_h contains 'lichtbron'
-    assign sw_set = ',filter.p.m.custom.fitting_filter,filter.p.m.custom.lichtkleur,filter.p.m.custom.wattage_filter,filter.p.m.custom.lichtopbrengst_filter,filter.v.option.dimbaar,filter.p.m.custom.soort_filter,'
+    # fitting, soort, lichtkleur, wattage, dimbaar
+    assign sw_set = ',' | append: 'filter.p.m.custom.fitting_filter,' | append: 'filter.p.m.custom.soort_filter,' | append: 'filter.p.m.custom.lichtkleur,' | append: 'filter.p.m.custom.wattage_filter,' | append: 'filter.v.option.dimbaar,'
   endif
 
   # Is de bezoeker al aan het filteren, dan laten we de dunne filters staan:
