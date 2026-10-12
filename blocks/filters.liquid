@@ -39,7 +39,8 @@
   #   2. Houdt een toegestaan filter in deze collectie minder dan twee
   #      bruikbare waarden over, dan verdwijnt het ook: met een waarde valt er
   #      niets te filteren (en een filter dat alles teruggeeft is ruis).
-  #      Een filter dat de bezoeker al heeft aangevinkt blijft altijd staan.
+  #      Zodra de bezoeker iets heeft aangevinkt geldt regel 2 niet meer, zodat
+  #      er geen filtergroepen verdwijnen onder zijn handen vandaan.
   #
   # Een lege set (zoekpagina, gemengde collecties als Alle producten en
   # Aanbiedingen, een nieuwe collectie) betekent: alles mag, regel 2 ruimt op.
@@ -70,6 +71,14 @@
     assign sw_set = ',filter.p.m.custom.fitting_filter,filter.p.m.custom.lichtkleur,filter.p.m.custom.wattage_filter,filter.p.m.custom.lichtopbrengst_filter,filter.v.option.dimbaar,filter.p.m.custom.soort_filter,'
   endif
 
+  # Is de bezoeker al aan het filteren, dan laten we de dunne filters staan:
+  # anders verdwijnen er filtergroepen onder zijn handen vandaan zodra hij iets
+  # aanvinkt. Regel 2 geldt dus alleen op de onaangeraakte collectiepagina.
+  assign sw_any_active = 0
+  for sw_f in filters
+    assign sw_any_active = sw_any_active | plus: sw_f.active_values.size
+  endfor
+
   assign sw_hide = ','
   for sw_f in filters
     assign sw_keep = true
@@ -85,7 +94,7 @@
         endunless
       endif
 
-      if sw_keep and sw_f.type != 'boolean' and sw_f.active_values.size == 0
+      if sw_keep and sw_f.type != 'boolean' and sw_any_active == 0
         assign sw_usable = 0
         for sw_v in sw_f.values
           if sw_v.count > 0
