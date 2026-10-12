@@ -26,6 +26,84 @@
   assign filters = filters | default: results.filters
   assign total_active_values = 0
 
+  # --------------------------------------------------------------------------
+  # Spotwereld: elke collectie zijn eigen filterset (server-side, geen JS)
+  #
+  # Search & Discovery levert zijn filters aan ELKE collectie, en er is maar
+  # een collection.json, dus zonder deze stap krijgen hanglampen hetzelfde
+  # zaagmaat- en inbouwdiepte-filter als inbouwspots. Hieronder bepaalt de
+  # collectiehandle welke filters een pagina mag tonen.
+  #
+  # Twee regels, in deze volgorde:
+  #   1. Staat het filter niet in de set van deze collectie, dan verdwijnt het.
+  #   2. Houdt een toegestaan filter in deze collectie minder dan twee
+  #      bruikbare waarden over, dan verdwijnt het ook: met een waarde valt er
+  #      niets te filteren (en een filter dat alles teruggeeft is ruis).
+  #      Een filter dat de bezoeker al heeft aangevinkt blijft altijd staan.
+  #
+  # Een lege set (zoekpagina, gemengde collecties als Alle producten en
+  # Aanbiedingen, een nieuwe collectie) betekent: alles mag, regel 2 ruimt op.
+  # Filters die hier wel staan maar nog niet in Search & Discovery bestaan,
+  # doen simpelweg niets tot ze daar worden aangezet.
+  assign sw_h = collection.handle | default: ''
+  assign sw_set = ''
+
+  if sw_h contains 'accessoire'
+    assign sw_set = ',filter.p.m.custom.soort_filter,filter.p.m.custom.fitting_filter,filter.p.m.custom.wattage_filter,filter.p.m.custom.lichtkleur,filter.v.option.kleur,'
+  elsif sw_h contains 'inbouwspot'
+    assign sw_set = ',filter.v.option.kleur,filter.v.option.dimbaar,filter.p.m.custom.lichtkleur,filter.p.m.custom.zaagmaat_filter,filter.p.m.custom.inbouwdiepte_filter,filter.p.m.custom.buitenmaat_filter,filter.p.m.custom.ip_waarde_filter,filter.p.m.custom.wattage_filter,filter.p.m.custom.kantelbaar_filter,filter.p.m.custom.lichtopbrengst_filter,'
+  elsif sw_h == 'trapverlichting'
+    assign sw_set = ',filter.v.option.kleur,filter.p.m.custom.lichtkleur,filter.p.m.custom.zaagmaat_filter,filter.p.m.custom.inbouwdiepte_filter,filter.p.m.custom.wattage_filter,filter.p.m.custom.ip_waarde_filter,filter.p.m.custom.materiaal_filter,'
+  elsif sw_h contains 'opbouwspot'
+    assign sw_set = ',filter.v.option.kleur,filter.p.m.custom.lichtkleur,filter.p.m.custom.fitting_filter,filter.p.m.custom.lichtpunten_filter,filter.p.m.custom.kantelbaar_filter,filter.p.m.custom.materiaal_filter,filter.p.m.custom.ip_waarde_filter,filter.p.m.custom.wattage_filter,'
+  elsif sw_h contains 'hanglamp'
+    assign sw_set = ',filter.v.option.kleur,filter.p.m.custom.fitting_filter,filter.p.m.custom.lichtpunten_filter,filter.p.m.custom.lichtkleur,filter.p.m.custom.materiaal_filter,filter.p.m.custom.lichtopbrengst_filter,filter.v.option.dimbaar,'
+  elsif sw_h contains 'wandlamp'
+    assign sw_set = ',filter.v.option.kleur,filter.p.m.custom.fitting_filter,filter.p.m.custom.lichtpunten_filter,filter.p.m.custom.lichtkleur,filter.p.m.custom.ip_waarde_filter,filter.p.m.custom.materiaal_filter,filter.p.m.custom.lichtopbrengst_filter,'
+  elsif sw_h contains 'paneel' or sw_h contains 'panelen'
+    assign sw_set = ',filter.p.m.custom.paneelmaat_filter,filter.p.m.custom.lichtkleur,filter.p.m.custom.wattage_filter,filter.p.m.custom.lichtopbrengst_filter,filter.p.m.custom.montage_filter,filter.v.option.dimbaar,filter.p.m.custom.ip_waarde_filter,filter.v.option.kleur,'
+  elsif sw_h contains 'tl-buizen' or sw_h contains 'tl-buis'
+    assign sw_set = ',filter.p.m.custom.lengte_filter,filter.p.m.custom.fitting_filter,filter.p.m.custom.lichtkleur,filter.p.m.custom.wattage_filter,filter.p.m.custom.lichtopbrengst_filter,'
+  elsif sw_h contains 'rail' or sw_h contains 'fase'
+    assign sw_set = ',filter.p.m.custom.railtype_filter,filter.p.m.custom.soort_filter,filter.v.option.kleur,filter.p.m.custom.fitting_filter,filter.p.m.custom.lichtkleur,filter.p.m.custom.wattage_filter,filter.p.m.custom.lengte_filter,filter.p.m.custom.lichtopbrengst_filter,filter.v.option.dimbaar,'
+  elsif sw_h contains 'led-lampen' or sw_h contains 'lichtbron'
+    assign sw_set = ',filter.p.m.custom.fitting_filter,filter.p.m.custom.lichtkleur,filter.p.m.custom.wattage_filter,filter.p.m.custom.lichtopbrengst_filter,filter.v.option.dimbaar,filter.p.m.custom.soort_filter,'
+  endif
+
+  assign sw_hide = ','
+  for sw_f in filters
+    assign sw_keep = true
+
+    if sw_f.type == 'price_range'
+      # Het prijsfilter staat uit op Spotwereld; stond tot nu toe met CSS verstopt.
+      assign sw_keep = false
+    else
+      if sw_set != ''
+        assign sw_pm = ',' | append: sw_f.param_name | append: ','
+        unless sw_set contains sw_pm
+          assign sw_keep = false
+        endunless
+      endif
+
+      if sw_keep and sw_f.type != 'boolean' and sw_f.active_values.size == 0
+        assign sw_usable = 0
+        for sw_v in sw_f.values
+          if sw_v.count > 0
+            assign sw_usable = sw_usable | plus: 1
+          endif
+        endfor
+        if sw_usable < 2
+          assign sw_keep = false
+        endif
+      endif
+    endif
+
+    unless sw_keep
+      assign sw_hide = sw_hide | append: sw_f.param_name | append: ','
+    endunless
+  endfor
+  # --------------------------------------------------------------------------
+
   # Calculate facets margin style
   capture facets_margin_style
     echo '--facets-margin: 0px '
@@ -166,6 +244,8 @@
 
               {% capture rendered_filters %}
                 {%- for filter in filters -%}
+                  {%- assign sw_param_key = "," | append: filter.param_name | append: "," -%}
+                  {%- if sw_hide contains sw_param_key -%}{%- continue -%}{%- endif -%}
                   {% case filter.type %}
                     {% when 'price_range' %}
                       {%- liquid
@@ -435,6 +515,8 @@
                 {% assign is_active = false %}
 
                 {%- for filter in filters -%}
+                  {%- assign sw_param_key = "," | append: filter.param_name | append: "," -%}
+                  {%- if sw_hide contains sw_param_key -%}{%- continue -%}{%- endif -%}
                   {% case filter.type %}
                     {% when 'price_range' %}
                       {%- liquid

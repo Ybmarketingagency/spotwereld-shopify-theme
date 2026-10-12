@@ -70,7 +70,7 @@
           {% endif %}
 
           {% if filter.type == 'boolean' or show_filter_label %}
-            {{ filter.label | escape }}: {{ value.label | escape }}
+            {%- render 'sw-filter-label', filter: filter -%}: {{ value.label | escape }}
           {% else %}
             {{ value.label | escape }}
           {% endif %}

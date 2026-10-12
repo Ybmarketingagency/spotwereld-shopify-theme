@@ -1,0 +1,27 @@
+{%- doc -%}
+  Toont de naam van een filter.
+
+  Het variant-optiefilter heet in Shopify "Kleur", maar op Spotwereld gaat dat over
+  de kleur van de behuizing en niet over de lichtkleur. Dat werd tot nu toe met
+  JavaScript in templates/collection.json rechtgezet: het label werd na het laden
+  overschreven, dus de bezoeker zag eerst "Kleur" staan. Dit doet hetzelfde
+  server-side.
+
+  Geen locale-keys hier: de GitHub-sync trekt locales/*.json niet binnen, dus een
+  key uit de repo rendert live als "Translation missing".
+
+  @param {object} filter - Het filter
+{%- enddoc -%}
+{%- liquid
+  assign sw_label = filter.label
+
+  if filter.param_name == 'filter.v.option.kleur'
+    if request.locale.iso_code == 'en'
+      assign sw_label = 'Housing colour'
+    else
+      assign sw_label = 'Kleur behuizing'
+    endif
+  endif
+
+  echo sw_label | escape
+-%}
