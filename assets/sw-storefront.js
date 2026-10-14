@@ -14,6 +14,7 @@
  *   2. Scrollpositie bewaren rond Shopify's facet-submit
  *   3. Volgorde van de productkaarten (merkprioriteit + kleurvarianten bij elkaar)
  *   4. Welkom 5%-kortingpopup
+ *   5. Formuliermelding via Resend (kopie van elk /contact-formulier naar info@)
  *
  * De productfilters stonden hier ook in: een tabel per producthandle plus client-side
  * verbergen van kaarten. Dat is op 2026-08-14 verwijderd. Alle filters draaien nu op
@@ -324,4 +325,56 @@
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
+})();
+/* ===== 5. Formuliermelding via Resend =====
+ * Shopify mailt contactformulieren naar het winkeladres, maar die mails kwamen in
+ * oktober 2026 niet aan en laten nergens een spoor achter. Daarom gaat van elk
+ * formulier dat naar /contact post (contact, partner, voorraadmelding, nieuwsbrief,
+ * popup) een kopie naar onze eigen endpoint op Vercel, die via Resend mailt.
+ *
+ * Bewust GEEN preventDefault en geen fetch() naar /contact: Shopify's hCaptcha hangt
+ * aan het submit-event (zie de popup hierboven). Wij luisteren alleen mee in de
+ * capture-fase en versturen met sendBeacon, dat ook overleeft als de pagina wegnavigeert.
+ */
+(function(){
+  var MELDING_URL = 'https://spotwereld-formulieren.vercel.app/api/formulier';
+  var laatste = new WeakMap();
+
+  window.addEventListener('submit', function(e){
+    var form = e.target;
+    if (!form || form.tagName !== 'FORM') return;
+    if (String(form.getAttribute('action') || '').indexOf('/contact') === -1) return;
+
+    var fd;
+    try { fd = new FormData(form); } catch (err) { return; }
+    var velden = {};
+    fd.forEach(function(v, k){
+      var m = /^contact\[(.+)\]$/.exec(k);
+      if (m && typeof v === 'string') velden[m[1]] = v;
+    });
+    if (!velden.email) return;
+
+    // hCaptcha onderschept het eerste submit en verstuurt het formulier daarna opnieuw.
+    // Dezelfde inhoud binnen 30 seconden sturen we niet nog een keer.
+    var sleutel = JSON.stringify(velden);
+    var vorige = laatste.get(form);
+    if (vorige && vorige.sleutel === sleutel && Date.now() - vorige.t < 30000) return;
+    laatste.set(form, { sleutel: sleutel, t: Date.now() });
+
+    var payload = JSON.stringify({
+      form_type: fd.get('form_type') || '',
+      velden: velden,
+      pagina: location.href.split('#')[0],
+      taal: document.documentElement.lang || ''
+    });
+    try {
+      // text/plain houdt het een 'simple request': geen CORS-preflight nodig.
+      var blob = new Blob([payload], { type: 'text/plain;charset=UTF-8' });
+      if (navigator.sendBeacon && navigator.sendBeacon(MELDING_URL, blob)) return;
+    } catch (err) {}
+    try {
+      fetch(MELDING_URL, { method: 'POST', body: payload, keepalive: true, mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=UTF-8' } });
+    } catch (err) {}
+  }, true);
 })();
