@@ -897,10 +897,34 @@
       if (!bol || !tekst || !sub) return;
       bol.style.color = op ? '#16a34a' : '#dc2626';
       tekst.style.color = op ? '#16a34a' : '#dc2626';
-      tekst.textContent = op ? {{ 'sw.kaart.voorraad' | t | json }} : {{ 'sw.kaart.uitverkocht' | t | json }};
+      tekst.textContent = op ? swVoorraadTekst(id) : {{ 'sw.kaart.uitverkocht' | t | json }};
       sub.style.display = op ? '' : 'none';
       swMeldingBlok(op);
     }
+    // Aantallen komen van spotwereld-formulieren.vercel.app/api/voorraad, uit de uurexport van
+    // de leverancier. Bij 0, geen getal of een mislukte aanvraag blijft de gewone tekst staan;
+    // er wordt nooit een aantal verzonnen. Boven SW_RUIM tonen we geen getal.
+    var SW_RUIM = 100;
+    var swAantal = {};
+    function swVoorraadTekst(id) {
+      var n = swAantal[id];
+      if (!(n > 0)) return {{ 'sw.kaart.voorraad' | t | json }};
+      {%- if request.locale.iso_code == 'en' -%}
+      return n > SW_RUIM ? 'Plenty in stock' : 'In stock: ' + n + ' pcs';
+      {%- else -%}
+      return n > SW_RUIM ? 'Ruim op voorraad' : 'Op voorraad: ' + n + ' stuks';
+      {%- endif -%}
+    }
+    try {
+      fetch('https://spotwereld-formulieren.vercel.app/api/voorraad?ids=' + Object.keys(swVoorraad).slice(0, 100).join(','))
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (j) {
+          if (!j || !j.varianten) return;
+          swAantal = j.varianten;
+          swVoorraadRegel();
+        })
+        .catch(function () {});
+    } catch (e) {}
     // Het meldblok hangt onder het productformulier zodra de variant uitverkocht is.
     function swMeldingBlok(op) {
       var blok = document.querySelector('[data-sw-melding]');
