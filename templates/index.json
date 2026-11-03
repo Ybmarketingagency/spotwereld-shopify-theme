@@ -121,9 +121,14 @@
         "padding-block-start": 0,
         "padding-block-end": 0
       }
+    },
+    "spotwereld_black_friday_hero": {
+      "type": "sw-black-friday-hero",
+      "settings": {}
     }
   },
   "order": [
+    "spotwereld_black_friday_hero",
     "spotwereld_hero",
     "spotwereld_black_friday",
     "spotwereld_usp",

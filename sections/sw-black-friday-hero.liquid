@@ -1,0 +1,120 @@
+{%- comment -%}
+  Black Friday-hero op de homepagina. Neemt van 20 t/m 30 november de plek van de gewone hero
+  (spotwereld_hero) en van de Black Friday-banner eronder over; daarbuiten staat hij uit.
+  Het inline script zet een klasse op <html> voordat de rest van de pagina getekend wordt,
+  dus er springt niets. Liquid kan dit niet doen omdat Shopify de homepagina cachet.
+  Voorbeeld bekijken voor de start: spotwereld.nl/?bf-preview
+  Data gelijk houden met sections/sw-black-friday-banner.liquid en snippets/sw-bf-kop.liquid.
+{%- endcomment -%}
+
+{%- assign sw_bf_start = '2026-11-20' -%}
+{%- assign sw_bf_end = '2026-11-30' -%}
+{%- assign sw_vandaag = 'now' | date: '%Y-%m-%d' -%}
+{%- assign sw_en = false -%}
+{%- if request.locale.iso_code == 'en' -%}{%- assign sw_en = true -%}{%- endif -%}
+{%- assign sw_root = routes.root_url | append: '/' | replace: '//', '/' | remove_last: '/' -%}
+{%- assign sw_img = 'https://cdn.shopify.com/s/files/1/0988/8720/5208/files/sw-black-friday-2026-producten.jpg' -%}
+
+{%- if sw_vandaag <= sw_bf_end -%}
+<script>
+(function(){
+  var s = new Date('{{ sw_bf_start }}T00:00:00+01:00'), e = new Date('{{ sw_bf_end }}T23:59:59+01:00'), n = new Date();
+  if ((n >= s && n <= e) || /[?&]bf-preview\b/.test(location.search)) document.documentElement.classList.add('sw-bfh-aan');
+})();
+</script>
+<style>
+.sw-bfh{display:none;position:relative;overflow:hidden;background:#050d1a;color:#fff}
+.sw-bfh-aan .sw-bfh{display:block}
+.sw-bfh-aan [id$="__spotwereld_hero"],.sw-bfh-aan #sw-bfb{display:none}
+.sw-bfh-img{position:absolute;top:0;right:0;bottom:0;width:66%;height:100%;object-fit:cover;object-position:75% 50%}
+.sw-bfh::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,#050d1a 0%,#050d1a 34%,rgba(5,13,26,.8) 50%,rgba(5,13,26,.1) 78%);pointer-events:none}
+.sw-bfh-in{position:relative;z-index:2;max-width:1280px;margin:0 auto;padding:0 2rem;min-height:520px;display:flex;align-items:center}
+.sw-bfh-body{max-width:40rem;padding:2.5rem 0}
+.sw-bfh-kicker{display:inline-flex;align-items:center;gap:.5rem;font-size:.8rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#fdba74;margin:0 0 1rem}
+.sw-bfh-kicker::before{content:"";width:.55rem;height:.55rem;border-radius:50%;background:#f97316;box-shadow:0 0 0 4px rgba(249,115,22,.25);animation:sw-bfh-puls 1.6s ease-in-out infinite}
+@keyframes sw-bfh-puls{50%{box-shadow:0 0 0 8px rgba(249,115,22,0)}}
+.sw-bfh-titel{margin:0 0 .75rem;font-weight:900;text-transform:uppercase;line-height:.92;letter-spacing:-.02em;font-size:clamp(3rem,8vw,6rem);color:#fff}
+.sw-bfh-titel span{display:block;color:transparent;-webkit-text-stroke:2px #fff}
+.sw-bfh-sub{font-size:clamp(1.25rem,2.4vw,1.75rem);font-weight:800;line-height:1.25;margin:0 0 .5rem;color:#fff}
+.sw-bfh-sub b{color:#fb923c}
+.sw-bfh-klein{color:#bfdbfe;font-size:1rem;line-height:1.6;margin:0 0 1.5rem}
+.sw-bfh-klok{display:flex;gap:.5rem;margin:0 0 1.75rem}
+.sw-bfh-klok div{min-width:4.25rem;padding:.6rem .5rem .5rem;border-radius:.625rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);text-align:center;backdrop-filter:blur(6px)}
+.sw-bfh-klok b{display:block;font-size:1.75rem;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+.sw-bfh-klok small{display:block;margin-top:.3rem;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:#93c5fd}
+.sw-bfh .sw-bfh-btn{display:inline-flex;align-items:center;gap:.5rem;font-weight:800;font-size:1.05rem;padding:.95rem 2.25rem;border-radius:.625rem;color:#fff;background:linear-gradient(135deg,#ea580c,#f97316);text-decoration:none;box-shadow:0 10px 30px -8px rgba(249,115,22,.6);transition:transform .15s,box-shadow .15s}
+.sw-bfh .sw-bfh-btn:hover{transform:translateY(-2px);box-shadow:0 14px 34px -8px rgba(249,115,22,.75)}
+.sw-bfh-btn svg{transition:transform .15s}
+.sw-bfh-btn:hover svg{transform:translateX(3px)}
+.sw-bfh-usp{display:flex;flex-wrap:wrap;gap:.5rem 1.25rem;margin:1.25rem 0 0;padding:0;list-style:none;font-size:.85rem;color:#cbd5e1}
+.sw-bfh-usp li{display:inline-flex;align-items:center;gap:.4rem}
+.sw-bfh-usp li::before{content:"\2713";color:#fb923c;font-weight:800}
+.sw-bfh-stip{position:absolute;z-index:2;right:max(2rem,calc((100vw - 1280px)/2 + 2rem));top:50%;width:11rem;height:11rem;margin-top:-5.5rem;border-radius:50%;background:radial-gradient(circle at 30% 25%,#fb923c,#ea580c 70%);display:flex;flex-direction:column;align-items:center;justify-content:center;transform:rotate(-10deg);box-shadow:0 20px 50px -10px rgba(234,88,12,.6),inset 0 0 0 6px rgba(255,255,255,.15)}
+.sw-bfh-stip b{font-size:3.5rem;font-weight:900;line-height:1;letter-spacing:-.04em}
+.sw-bfh-stip small{font-size:.85rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;margin-top:.25rem}
+@media(max-width:1023px){.sw-bfh-stip{width:8.5rem;height:8.5rem;margin-top:-4.25rem}.sw-bfh-stip b{font-size:2.6rem}.sw-bfh-stip small{font-size:.7rem}}
+@media(max-width:767px){
+  .sw-bfh-img{position:relative;display:block;width:100%;height:210px;object-position:80% 60%}
+  .sw-bfh::before{bottom:auto;height:210px;background:linear-gradient(to top,#050d1a 0%,rgba(5,13,26,0) 55%)}
+  .sw-bfh-in{min-height:0;padding:0 1.25rem}
+  .sw-bfh-body{padding:.25rem 0 2rem}
+  .sw-bfh-stip{top:1rem;right:1rem;margin-top:0;width:6.5rem;height:6.5rem}
+  .sw-bfh-stip b{font-size:2rem}
+  .sw-bfh-stip small{font-size:.6rem}
+  .sw-bfh-titel span{-webkit-text-stroke:1.5px #fff}
+  .sw-bfh-klok div{min-width:0;flex:1}
+  .sw-bfh .sw-bfh-btn{width:100%;justify-content:center}
+}
+@media(prefers-reduced-motion:reduce){.sw-bfh-kicker::before{animation:none}}
+</style>
+
+<section class="sw-bfh" aria-label="Black Friday">
+  <img class="sw-bfh-img" src="{{ sw_img }}?width=1600" srcset="{{ sw_img }}?width=800 800w, {{ sw_img }}?width=1200 1200w, {{ sw_img }}?width=1584 1584w" sizes="(min-width: 768px) 66vw, 100vw" alt="{% if sw_en %}LED recessed spotlights in white and black, GU10 LED bulbs, a track spotlight and an LED panel{% else %}Led inbouwspots in wit en zwart, GU10-ledlampen, een railspot en een led-paneel{% endif %}" width="1584" height="672" decoding="async">
+  <div class="sw-bfh-stip" aria-hidden="true"><b>-10%</b><small>{% if sw_en %}on everything{% else %}op alles{% endif %}</small></div>
+  <div class="sw-bfh-in">
+    <div class="sw-bfh-body">
+      <p class="sw-bfh-kicker">{% if sw_en %}Black Week, 20 to 30 November{% else %}Black Week, 20 t/m 30 november{% endif %}</p>
+      <h2 class="sw-bfh-titel">Black <span>Friday</span></h2>
+      <p class="sw-bfh-sub">{% if sw_en %}<b>10% off</b> all LED lighting{% else %}<b>10% korting</b> op alle led verlichting{% endif %}</p>
+      <p class="sw-bfh-klein">{% if sw_en %}Recessed spotlights, LED bulbs, panels, track lighting and wall lights. Automatically in your cart, no code needed.{% else %}Inbouwspots, led lampen, led panelen, railverlichting en wandlampen. Automatisch in je winkelwagen, geen code nodig.{% endif %}</p>
+      <div class="sw-bfh-klok" id="sw-bfh-klok" data-end="{{ sw_bf_end }}" aria-label="{% if sw_en %}Time left{% else %}Resterende tijd{% endif %}">
+        <div><b data-d>0</b><small>{% if sw_en %}days{% else %}dagen{% endif %}</small></div>
+        <div><b data-u>00</b><small>{% if sw_en %}hours{% else %}uur{% endif %}</small></div>
+        <div><b data-m>00</b><small>min</small></div>
+        <div><b data-s>00</b><small>sec</small></div>
+      </div>
+      <a class="sw-bfh-btn" href="{{ sw_root }}/pages/black-friday">{% if sw_en %}Shop the deals{% else %}Shop de deals{% endif %}<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <ul class="sw-bfh-usp">
+        <li>{% if sw_en %}No code needed{% else %}Geen code nodig{% endif %}</li>
+        <li>{% if sw_en %}Free shipping from €50{% else %}Gratis verzending vanaf €50{% endif %}</li>
+        <li>{% if sw_en %}14-day returns{% else %}14 dagen retour{% endif %}</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  if (!document.documentElement.classList.contains('sw-bfh-aan')) return;
+  var k = document.getElementById('sw-bfh-klok'); if (!k) return;
+  var end = new Date(k.dataset.end + 'T23:59:59+01:00');
+  function z(x){ return (x < 10 ? '0' : '') + x; }
+  function tik(){
+    var s = Math.max(0, Math.floor((end - new Date()) / 1000));
+    k.querySelector('[data-d]').textContent = Math.floor(s / 86400);
+    k.querySelector('[data-u]').textContent = z(Math.floor(s % 86400 / 3600));
+    k.querySelector('[data-m]').textContent = z(Math.floor(s % 3600 / 60));
+    k.querySelector('[data-s]').textContent = z(s % 60);
+  }
+  tik(); setInterval(tik, 1000);
+})();
+</script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Black Friday-hero",
+  "settings": [],
+  "presets": [{ "name": "Black Friday-hero" }]
+}
+{% endschema %}
