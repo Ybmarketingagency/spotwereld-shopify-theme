@@ -3,7 +3,7 @@
   afgeronde kaart met foto, verloop eroverheen, blauwe verloopknop. Voor de start telt hij
   af naar de start, tijdens de actie naar het einde, en daarna verbergt hij zichzelf. Dat
   doet het script, omdat Shopify de homepagina cachet en 'now' in Liquid dan achterloopt;
-  de Liquid-check is alleen een vangnet. Foto gemaakt met Gemini (03-11-2026); op mobiel staat hij als strook boven de tekst.
+  de Liquid-check is alleen een vangnet. Productfoto gemaakt met Gemini (03-11-2026), bewust zonder meubels; op mobiel als strook boven de tekst.
   Data gelijk houden met templates/page.black-friday.liquid.
 {%- endcomment -%}
 
@@ -13,7 +13,7 @@
 {%- assign sw_en = false -%}
 {%- if request.locale.iso_code == 'en' -%}{%- assign sw_en = true -%}{%- endif -%}
 {%- assign sw_root = routes.root_url | append: '/' | replace: '//', '/' | remove_last: '/' -%}
-{%- assign sw_img = 'https://cdn.shopify.com/s/files/1/0988/8720/5208/files/sw-black-friday-2026.jpg' -%}
+{%- assign sw_img = 'https://cdn.shopify.com/s/files/1/0988/8720/5208/files/sw-black-friday-2026-producten.jpg' -%}
 
 {%- if sw_vandaag <= sw_bf_end -%}
 <style>
@@ -26,7 +26,7 @@
 .sw-bfb-body{position:relative;z-index:1;padding:2rem;max-width:34rem}
 @media(max-width:767px){
   .sw-bfb{display:block;min-height:0;background:#061224}
-  .sw-bfb img{position:relative;height:200px;object-position:78% 40%}
+  .sw-bfb img{position:relative;height:200px;object-position:80% 60%}
   .sw-bfb::after{inset:0 0 auto 0;height:200px;background:linear-gradient(to top,#061224 0%,rgba(6,18,36,0) 55%)}
   .sw-bfb-body{padding:.25rem 1.5rem 1.75rem}
 }
@@ -40,23 +40,19 @@
 .sw-bfb-actions{display:flex;flex-wrap:wrap;align-items:center;gap:.75rem 1.25rem}
 .sw-bfb-btn{display:inline-flex;align-items:center;font-weight:700;padding:.75rem 2rem;border-radius:.5rem;color:#fff;background:linear-gradient(135deg,#083D7D,#0F6FE3);text-decoration:none}
 .sw-bfb-btn:hover{filter:brightness(1.1)}
-.sw-bfb-link{color:#fff;font-size:.875rem;font-weight:600;text-decoration:underline;text-underline-offset:3px}
 </style>
 
 <div class="sw-bfb-outer" id="sw-bfb" data-start="{{ sw_bf_start }}" data-end="{{ sw_bf_end }}">
   <div class="sw-bfb-wrap">
     <section class="sw-bfb" aria-label="Black Friday">
-      <img src="{{ sw_img }}?width=1600" srcset="{{ sw_img }}?width=700 700w, {{ sw_img }}?width=1100 1100w, {{ sw_img }}?width=1600 1600w" sizes="(min-width: 1280px) 1248px, 100vw" alt="{% if sw_en %}Living room at night with a row of warm white recessed LED spotlights{% else %}Woonkamer 's avonds met een rij warmwitte led inbouwspots{% endif %}" width="1584" height="672" loading="lazy" decoding="async">
+      <img src="{{ sw_img }}?width=1600" srcset="{{ sw_img }}?width=700 700w, {{ sw_img }}?width=1100 1100w, {{ sw_img }}?width=1600 1600w" sizes="(min-width: 1280px) 1248px, 100vw" alt="{% if sw_en %}LED recessed spotlights in white and black, GU10 LED bulbs, a track spotlight and an LED panel{% else %}Led inbouwspots in wit en zwart, GU10-ledlampen, een railspot en een led-paneel{% endif %}" width="1584" height="672" loading="lazy" decoding="async">
       <div class="sw-bfb-body">
         <p class="sw-bfb-kicker">Black Friday 2026</p>
-        <h2 class="sw-bfb-title">{% if sw_en %}10% off everything{% else %}10% korting op alles{% endif %}</h2>
-        <p class="sw-bfb-sub">{% if sw_en %}From Friday 20 November up to and including Cyber Monday 30 November. The discount comes off automatically in your cart, no code needed.{% else %}Van vrijdag 20 november tot en met Cyber Monday 30 november. De korting gaat er automatisch af in je winkelwagen, geen code nodig.{% endif %}</p>
+        <h2 class="sw-bfb-title">{% if sw_en %}10% off all LED lighting{% else %}10% korting op alle led verlichting{% endif %}</h2>
+        <p class="sw-bfb-sub">{% if sw_en %}On recessed spotlights, LED bulbs, LED panels, track lighting and wall lights. From Friday 20 November up to and including Cyber Monday 30 November, automatically in your cart, no code needed.{% else %}Op inbouwspots, led lampen, led panelen, railverlichting en wandlampen. Van vrijdag 20 november tot en met Cyber Monday 30 november, automatisch in je winkelwagen, geen code nodig.{% endif %}</p>
         <p class="sw-bfb-count" id="sw-bfb-count" hidden><span class="sw-bfb-dot" aria-hidden="true"></span><span id="sw-bfb-count-txt"></span></p>
         <div class="sw-bfb-actions">
           <a class="sw-bfb-btn" href="{{ sw_root }}/pages/black-friday">{% if sw_en %}See the Black Friday deals{% else %}Bekijk de Black Friday-deals{% endif %}</a>
-          {%- if pages['black-friday-inbouwspots'] != blank -%}
-          <a class="sw-bfb-link" href="{{ sw_root }}/pages/black-friday-inbouwspots">{% if sw_en %}Recessed spots{% else %}Inbouwspots{% endif %}</a>
-          {%- endif -%}
         </div>
       </div>
     </section>
