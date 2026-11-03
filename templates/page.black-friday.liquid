@@ -1,0 +1,212 @@
+{% layout 'theme' %}
+
+{%- comment -%}
+  Vaste Black Friday-pagina op /pages/black-friday. De URL blijft elk jaar dezelfde, zodat
+  de positie in Google meegroeit; alleen de data hieronder (sw_bf_*) gaan jaarlijks om.
+  De status ("start over X dagen", "loopt nu", "afgelopen") zet een klein script in de
+  browser, omdat Shopify deze pagina cachet en 'now' in Liquid dan achterloopt.
+  De korting zelf is een automatische korting in Shopify, geen code.
+{%- endcomment -%}
+
+{%- assign sw_bf_start = '2026-11-20' -%}
+{%- assign sw_bf_end = '2026-11-30' -%}
+{%- assign sw_en = false -%}
+{%- if request.locale.iso_code == 'en' -%}{%- assign sw_en = true -%}{%- endif -%}
+{%- assign sw_root = routes.root_url | append: '/' | replace: '//', '/' | remove_last: '/' -%}
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Wanneer is Black Friday 2026?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Black Friday valt in 2026 op vrijdag 27 november, Cyber Monday op maandag 30 november. Bij Spotwereld loopt de actie langer: van vrijdag 20 november tot en met maandag 30 november 2026." }
+    },
+    {
+      "@type": "Question",
+      "name": "Heb ik een kortingscode nodig?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Nee. De 10% korting gaat er tijdens de actie automatisch af in de winkelwagen. Je ziet het bedrag van de korting voordat je betaalt." }
+    },
+    {
+      "@type": "Question",
+      "name": "Geldt de korting ook op producten die al in de aanbieding staan?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Ja. De 10% gaat over de prijs die je in de winkel ziet, dus ook over producten die al afgeprijsd zijn." }
+    },
+    {
+      "@type": "Question",
+      "name": "Is de korting echt?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Ja. We hebben de prijzen in de dertig dagen voor de actie niet verhoogd. De 10% gaat dus over de laagste prijs van de afgelopen dertig dagen, zoals de wet voorschrijft." }
+    },
+    {
+      "@type": "Question",
+      "name": "Wat kost verzending tijdens Black Friday?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Hetzelfde als altijd: gratis vanaf 50 euro, daaronder 4,95 of 7,95 euro. Op werkdagen besteld is morgen verzonden. Je hebt 14 dagen retourrecht." }
+    }
+  ]
+}
+</script>
+
+<style>
+.sw-bf{--sw-ink:#12181f;--sw-body:#414a55;--sw-muted:#767f8b;--sw-rule:#e2e5e9;--sw-fill:#f7f8f9;--sw-accent:#0a3a72;background:#fff;color:var(--sw-body)}
+.sw-bf-wrap{max-width:1140px;margin:0 auto;padding:2.5rem 1rem 4.5rem}
+@media(min-width:768px){.sw-bf-wrap{padding:3.5rem 1.5rem 5.5rem}}
+.sw-bf-hero{background:var(--sw-ink);color:#fff}
+.sw-bf-hero .sw-bf-wrap{padding-top:2.75rem;padding-bottom:2.75rem}
+.sw-bf-kicker{font-size:.6875rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#a7aeb6;margin:0 0 .875rem}
+.sw-bf-hero h1{font-size:clamp(1.875rem,4.4vw,3rem);font-weight:700;letter-spacing:-.02em;line-height:1.12;margin:0 0 1rem;color:#fff;max-width:42rem}
+.sw-bf-lead{font-size:1.125rem;line-height:1.6;color:#c9cfd6;margin:0 0 1.5rem;max-width:40rem}
+.sw-bf-status{display:inline-block;font-size:.8125rem;font-weight:600;padding:.375rem .75rem;border:1px solid #3a434e;color:#fff;margin:0 0 1.5rem}
+.sw-bf-status:empty{display:none}
+.sw-bf-btn{display:inline-block;background:#fff;color:var(--sw-ink);font-weight:600;text-decoration:none;padding:.875rem 1.5rem;font-size:.9375rem}
+.sw-bf-btn:hover{background:#e2e5e9}
+.sw-bf-facts{display:grid;grid-template-columns:1fr;gap:0;border-bottom:1px solid var(--sw-rule)}
+@media(min-width:768px){.sw-bf-facts{grid-template-columns:repeat(3,1fr)}}
+.sw-bf-fact{padding:1.25rem 1rem;border-top:1px solid var(--sw-rule);font-size:.9375rem;line-height:1.5}
+@media(min-width:768px){.sw-bf-fact{border-top:0;padding:1.5rem;border-left:1px solid var(--sw-rule)}.sw-bf-fact:first-child{border-left:0}}
+.sw-bf-fact strong{display:block;color:var(--sw-ink);font-size:1rem;margin-bottom:.25rem}
+.sw-bf h2{font-size:1.5rem;font-weight:700;color:var(--sw-ink);letter-spacing:-.012em;line-height:1.3;margin:0 0 .5rem}
+.sw-bf-sub{margin:0 0 1.75rem;font-size:1rem;line-height:1.6;max-width:40rem}
+.sw-bf-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
+@media(min-width:768px){.sw-bf-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:1.5rem}}
+@media(min-width:1024px){.sw-bf-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.sw-bf-card{display:flex;flex-direction:column;text-decoration:none;color:inherit;border:1px solid var(--sw-rule);background:#fff;transition:border-color .15s}
+.sw-bf-card:hover{border-color:#b9c0c8}
+.sw-bf-card-img{aspect-ratio:1/1;background:var(--sw-fill);overflow:hidden}
+.sw-bf-card-img img{width:100%;height:100%;object-fit:contain;display:block}
+.sw-bf-card-body{padding:.875rem 1rem 1rem}
+.sw-bf-card-title{font-weight:600;color:var(--sw-ink);font-size:.9688rem;line-height:1.35;margin:0 0 .25rem}
+.sw-bf-card-meta{font-size:.8125rem;color:var(--sw-muted);margin:0}
+.sw-bf-card-price{font-size:.875rem;color:var(--sw-ink);margin:.5rem 0 0}
+.sw-bf-card-price s{color:var(--sw-muted);margin-right:.25rem}
+.sw-bf-during{display:none}
+.sw-bf.is-live .sw-bf-during{display:inline}
+.sw-bf.is-live .sw-bf-before{display:none}
+.sw-bf-faq{max-width:44rem}
+.sw-bf-faq details{border-top:1px solid var(--sw-rule);padding:1rem 0}
+.sw-bf-faq details:last-child{border-bottom:1px solid var(--sw-rule)}
+.sw-bf-faq summary{cursor:pointer;font-weight:600;color:var(--sw-ink);font-size:1rem;line-height:1.4}
+.sw-bf-faq details p{margin:.625rem 0 0;font-size:.9688rem;line-height:1.65}
+.sw-bf-faq a,.sw-bf-extra a{color:var(--sw-accent)}
+.sw-bf-section{border-top:1px solid var(--sw-rule)}
+.sw-bf-extra{max-width:44rem;font-size:1rem;line-height:1.7}
+</style>
+
+<div class="sw-bf" id="sw-bf" data-start="{{ sw_bf_start }}" data-end="{{ sw_bf_end }}">
+
+  <section class="sw-bf-hero">
+    <div class="sw-bf-wrap">
+      <p class="sw-bf-kicker">Black Friday 2026</p>
+      <h1>{% if sw_en %}Black Friday lighting: 10% off everything{% else %}Black Friday verlichting: 10% korting op alles{% endif %}</h1>
+      <p class="sw-bf-lead">
+        {% if sw_en %}
+          From Friday 20 November up to and including Cyber Monday 30 November 2026, 10% comes off automatically in your cart. No code needed, on the entire range of recessed spots, LED panels, track lighting and wall lights.
+        {% else %}
+          Van vrijdag 20 november tot en met Cyber Monday 30 november 2026 gaat er automatisch 10% af in je winkelwagen. Geen code nodig, op het hele assortiment inbouwspots, led-panelen, railverlichting en wandlampen.
+        {% endif %}
+      </p>
+      <p class="sw-bf-status" id="sw-bf-status" aria-live="polite"></p>
+      <div><a class="sw-bf-btn" href="{{ sw_root }}/collections/inbouwspots">{% if sw_en %}Shop recessed spotlights{% else %}Bekijk de inbouwspots{% endif %}</a></div>
+    </div>
+  </section>
+
+  <div class="sw-bf-wrap" style="padding-top:0;padding-bottom:0">
+    <div class="sw-bf-facts">
+      <div class="sw-bf-fact"><strong>{% if sw_en %}10% off automatically{% else %}Automatisch 10% korting{% endif %}</strong>{% if sw_en %}Visible in your cart before you pay.{% else %}Je ziet het in de winkelwagen, voordat je betaalt.{% endif %}</div>
+      <div class="sw-bf-fact"><strong>{% if sw_en %}Free shipping from €50{% else %}Gratis verzending vanaf €50{% endif %}</strong>{% if sw_en %}Ordered on a working day, shipped the next day.{% else %}Op werkdagen vandaag besteld, morgen verzonden.{% endif %}</div>
+      <div class="sw-bf-fact"><strong>{% if sw_en %}14-day returns{% else %}14 dagen retourrecht{% endif %}</strong>{% if sw_en %}Also on everything bought during Black Friday.{% else %}Ook op alles wat je tijdens Black Friday koopt.{% endif %}</div>
+    </div>
+  </div>
+
+  <section>
+    <div class="sw-bf-wrap">
+      <h2>{% if sw_en %}Every category is included{% else %}Elke categorie doet mee{% endif %}</h2>
+      <p class="sw-bf-sub">
+        <span class="sw-bf-before">{% if sw_en %}Prices below are the current prices. During the promotion 10% comes off in your cart.{% else %}Hieronder de huidige prijzen. Tijdens de actie gaat daar in de winkelwagen 10% vanaf.{% endif %}</span>
+        <span class="sw-bf-during">{% if sw_en %}The struck-through price is the normal price, the second price is what you pay with 10% off.{% else %}De doorgestreepte prijs is de normale prijs, de tweede wat je betaalt met 10% korting.{% endif %}</span>
+      </p>
+
+      {%- assign sw_bf_handles = 'inbouwspots,opbouwspots,led-panelen,railverlichting,wandlampen,trapverlichting,led-tl-buizen,led-lampen,hanglampen,accessoires' | split: ',' -%}
+      <div class="sw-bf-grid">
+        {%- for h in sw_bf_handles -%}
+          {%- assign c = collections[h] -%}
+          {%- if c == blank or c.products_count == 0 -%}{%- continue -%}{%- endif -%}
+          {%- assign sw_min = nil -%}
+          {%- assign sw_img = c.featured_image -%}
+          {%- for p in c.products limit: 50 -%}
+            {%- if p.available == false -%}{%- continue -%}{%- endif -%}
+            {%- if sw_min == nil or p.price_min < sw_min -%}{%- assign sw_min = p.price_min -%}{%- endif -%}
+            {%- if sw_img == blank -%}{%- assign sw_img = p.featured_image -%}{%- endif -%}
+          {%- endfor -%}
+          <a class="sw-bf-card" href="{{ sw_root }}/collections/{{ c.handle }}">
+            <div class="sw-bf-card-img">
+              {%- if sw_img -%}{{ sw_img | image_url: width: 400 | image_tag: loading: 'lazy', alt: c.title }}{%- endif -%}
+            </div>
+            <div class="sw-bf-card-body">
+              <p class="sw-bf-card-title">{{ c.title }}</p>
+              <p class="sw-bf-card-meta">{{ c.products_count }} {% if sw_en %}products{% else %}producten{% endif %}</p>
+              {%- comment -%} Boven 50 producten ziet Liquid niet de hele collectie, dan kan "vanaf" niet kloppen {%- endcomment -%}
+              {%- if sw_min and c.products_count <= 50 -%}
+                {%- assign sw_bf_price = sw_min | times: 90 | divided_by: 100 -%}
+                <p class="sw-bf-card-price">
+                  <span class="sw-bf-before">{% if sw_en %}from{% else %}vanaf{% endif %} {{ sw_min | money }}</span>
+                  <span class="sw-bf-during">{% if sw_en %}from{% else %}vanaf{% endif %} <s>{{ sw_min | money }}</s>{{ sw_bf_price | money }}</span>
+                </p>
+              {%- endif -%}
+            </div>
+          </a>
+        {%- endfor -%}
+      </div>
+    </div>
+  </section>
+
+  {%- if page.content != blank -%}
+  <section class="sw-bf-section">
+    <div class="sw-bf-wrap"><div class="sw-bf-extra">{{ page.content }}</div></div>
+  </section>
+  {%- endif -%}
+
+  <section class="sw-bf-section">
+    <div class="sw-bf-wrap">
+      <h2>{% if sw_en %}Frequently asked questions{% else %}Veelgestelde vragen{% endif %}</h2>
+      <div class="sw-bf-faq">
+        {% if sw_en %}
+        <details open><summary>When is Black Friday 2026?</summary><p>Black Friday falls on Friday 27 November 2026, Cyber Monday on Monday 30 November. Our promotion runs longer: from Friday 20 November up to and including Monday 30 November 2026.</p></details>
+        <details><summary>Do I need a discount code?</summary><p>No. During the promotion 10% comes off automatically in your cart. You see the discount before you pay.</p></details>
+        <details><summary>Does the discount also apply to products already on sale?</summary><p>Yes. The 10% comes off the price you see in the shop, including products that are already reduced.</p></details>
+        <details><summary>Is the discount real?</summary><p>Yes. We did not raise any prices in the thirty days before the promotion. The 10% is taken off the lowest price of the past thirty days, as Dutch law requires.</p></details>
+        <details><summary>What does shipping cost during Black Friday?</summary><p>The same as always: free from €50, otherwise €4.95 or €7.95. Ordered on a working day, shipped the next day. You have 14 days to return. See <a href="{{ sw_root }}/pages/verzending-retouren">shipping and returns</a>.</p></details>
+        {% else %}
+        <details open><summary>Wanneer is Black Friday 2026?</summary><p>Black Friday valt in 2026 op vrijdag 27 november, Cyber Monday op maandag 30 november. Bij ons loopt de actie langer: van vrijdag 20 november tot en met maandag 30 november 2026.</p></details>
+        <details><summary>Heb ik een kortingscode nodig?</summary><p>Nee. De 10% korting gaat er tijdens de actie automatisch af in de winkelwagen. Je ziet het bedrag van de korting voordat je betaalt.</p></details>
+        <details><summary>Geldt de korting ook op producten die al in de aanbieding staan?</summary><p>Ja. De 10% gaat over de prijs die je in de winkel ziet, dus ook over producten die al afgeprijsd zijn.</p></details>
+        <details><summary>Is de korting echt?</summary><p>Ja. We hebben de prijzen in de dertig dagen voor de actie niet verhoogd. De 10% gaat dus over de laagste prijs van de afgelopen dertig dagen, zoals de wet voorschrijft. <a href="{{ sw_root }}/blogs/kennisbank/hoe-herken-je-een-nepkorting-op-verlichting">Zo herken je een nepkorting</a>.</p></details>
+        <details><summary>Wat kost verzending tijdens Black Friday?</summary><p>Hetzelfde als altijd: gratis vanaf €50, daaronder €4,95 of €7,95. Op werkdagen vandaag besteld, morgen verzonden. Je hebt 14 dagen retourrecht. Zie <a href="{{ sw_root }}/pages/verzending-retouren">verzending en retouren</a>.</p></details>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+(function(){
+  var el = document.getElementById('sw-bf'); if (!el) return;
+  var out = document.getElementById('sw-bf-status');
+  var en = {{ sw_en | json }};
+  // Nederlandse tijd: de actie begint om 00:00 en eindigt om 23:59 lokale tijd.
+  var start = new Date(el.dataset.start + 'T00:00:00+01:00');
+  var end = new Date(el.dataset.end + 'T23:59:59+01:00');
+  var now = new Date();
+  if (now >= start && now <= end) {
+    el.classList.add('is-live');
+    var left = Math.ceil((end - now) / 864e5);
+    out.textContent = en ? ('On now, ' + (left > 1 ? left + ' days left' : 'last day')) : ('Loopt nu, ' + (left > 1 ? 'nog ' + left + ' dagen' : 'laatste dag'));
+  } else if (now < start) {
+    var d = Math.ceil((start - now) / 864e5);
+    out.textContent = en ? ('Starts in ' + d + (d === 1 ? ' day' : ' days')) : ('Start over ' + d + (d === 1 ? ' dag' : ' dagen'));
+  } else {
+    out.textContent = en ? 'This promotion has ended' : 'Deze actie is afgelopen';
+  }
+})();
+</script>
