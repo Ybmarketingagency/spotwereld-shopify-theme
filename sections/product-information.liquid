@@ -878,7 +878,11 @@
     // de pagina tegelijk Op voorraad en Uitverkocht. Hij volgt nu de gekozen variant.
     var swVoorraad = { {% for sw_v in product.variants %}"{{ sw_v.id }}":{% if sw_v.available %}1{% else %}0{% endif %}{% unless forloop.last %},{% endunless %}{% endfor %} };
     function swHuidigeVariant() {
-      var veld = form && form.querySelector ? form.querySelector('[name="id"]') : null;
+      // Eerst het formulier zoals het nu in de pagina staat: na een variantwissel kan `form`
+      // naar een vervangen element wijzen dat nog de oude variant bevat.
+      var veld = Array.prototype.slice.call(document.querySelectorAll('form[action*="/cart/add"] [name="id"]'))
+        .find(function (el) { return el.value && !el.closest(swNietDeProductprijs); }) || null;
+      if (!veld) veld = form && form.querySelector ? form.querySelector('[name="id"]') : null;
       if (veld && veld.value) return veld.value;
       var m = location.search.match(/[?&]variant=(\d+)/);
       return m ? m[1] : null;
@@ -959,8 +963,13 @@
       if (tekst) tekst.value = 'Voorraadmelding voor ' + naam + (variant ? ' (variant ' + variant + ')' : '') + ' - ' + location.href;
       blok.hidden = false;
     }
-    var priceWrap = swZoekProductprijs('.price__regular');
-    if (priceWrap && !document.querySelector('.sw-extras')) {
+    // Bij een variantwissel tekent het thema het prijsblok opnieuw en verdwijnt de regel die we
+    // erachter hebben gezet (gemeten 03-11-2026: Wit -> Zwart en de voorraadregel was weg tot
+    // een refresh). Daarom zet swPlaatsVoorraadRegel hem terug zodra hij ontbreekt.
+    function swPlaatsVoorraadRegel() {
+      if (document.querySelector('.sw-extras')) return false;
+      var priceWrap = swZoekProductprijs('.price__regular');
+      if (!priceWrap) return false;
       priceWrap.insertAdjacentHTML('afterend',
         '<div class="sw-extras" style="display:flex;align-items:center;gap:1rem;margin:.5rem 0 .75rem;flex-wrap:wrap">' +
         '<div style="display:flex;align-items:center;gap:.3rem">' +
@@ -969,6 +978,15 @@
         '<span class="sw-voorraad-sub" style="color:#94a3b8;font-size:.78rem">&mdash; {{ "sw.spec.leverbaar" | t }}</span></div>' +
         '</div>');
       swVoorraadRegel();
+      return true;
+    }
+    if (swPlaatsVoorraadRegel()) {
+      new MutationObserver(function () {
+        clearTimeout(window.swVoorraadTimer);
+        // Alleen terugzetten als hij weg is; zelf de tekst bijwerken zou een nieuwe mutatie
+        // geven en dus een lus.
+        window.swVoorraadTimer = setTimeout(swPlaatsVoorraadRegel, 80);
+      }).observe(document.body, { childList: true, subtree: true });
       document.addEventListener('change', function (e) {
         if (e.target && (e.target.name === 'id' || e.target.type === 'radio')) setTimeout(swVoorraadRegel, 120);
       }, true);
