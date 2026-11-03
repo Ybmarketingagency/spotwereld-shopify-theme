@@ -1,0 +1,103 @@
+{%- comment -%}
+  Black Friday-banner bovenaan de homepagina. Voor de start telt hij af naar de start,
+  tijdens de actie naar het einde, en daarna verbergt hij zichzelf. Dat doet het script,
+  omdat Shopify de homepagina cachet en 'now' in Liquid dan achterloopt; de Liquid-check
+  hieronder is alleen een vangnet voor wie geen JavaScript heeft.
+  Data gelijk houden met templates/page.black-friday.liquid.
+{%- endcomment -%}
+
+{%- assign sw_bf_start = '2026-11-20' -%}
+{%- assign sw_bf_end = '2026-11-30' -%}
+{%- assign sw_vandaag = 'now' | date: '%Y-%m-%d' -%}
+{%- assign sw_en = false -%}
+{%- if request.locale.iso_code == 'en' -%}{%- assign sw_en = true -%}{%- endif -%}
+{%- assign sw_root = routes.root_url | append: '/' | replace: '//', '/' | remove_last: '/' -%}
+
+{%- if sw_vandaag <= sw_bf_end -%}
+<style>
+.sw-bfb{background:#12181f;color:#fff}
+.sw-bfb[hidden]{display:none}
+.sw-bfb-wrap{max-width:1280px;margin:0 auto;padding:1.75rem 1rem;display:grid;grid-template-columns:1fr;gap:1.25rem;align-items:center}
+@media(min-width:900px){.sw-bfb-wrap{grid-template-columns:1fr auto;gap:2.5rem;padding:2rem 2rem}}
+.sw-bfb-kicker{font-size:.6875rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#a7aeb6;margin:0 0 .5rem}
+.sw-bfb-title{font-size:clamp(1.625rem,4vw,2.5rem);font-weight:800;line-height:1.1;letter-spacing:-.02em;margin:0 0 .5rem;color:#fff}
+.sw-bfb-sub{font-size:1rem;line-height:1.55;color:#c9cfd6;margin:0;max-width:38rem}
+.sw-bfb-links{display:flex;flex-wrap:wrap;gap:.375rem .5rem;margin:1rem 0 0}
+.sw-bfb-links a{font-size:.8125rem;color:#fff;text-decoration:none;border:1px solid #3a434e;padding:.3125rem .625rem;transition:border-color .15s}
+.sw-bfb-links a:hover{border-color:#a7aeb6}
+.sw-bfb-side{display:flex;flex-direction:column;gap:1rem;align-items:flex-start}
+@media(min-width:900px){.sw-bfb-side{align-items:flex-end}}
+.sw-bfb-label{font-size:.75rem;color:#a7aeb6;margin:0 0 .375rem}
+.sw-bfb-clock{display:flex;gap:.5rem}
+.sw-bfb-unit{min-width:3.5rem;text-align:center;border:1px solid #3a434e;padding:.5rem .375rem}
+.sw-bfb-num{display:block;font-size:1.5rem;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.sw-bfb-txt{display:block;font-size:.6875rem;color:#a7aeb6;margin-top:.25rem}
+.sw-bfb-btn{display:inline-block;background:#fff;color:#12181f;font-weight:600;text-decoration:none;padding:.875rem 1.5rem;font-size:.9375rem;transition:background .15s}
+.sw-bfb-btn:hover{background:#e2e5e9}
+</style>
+
+<section class="sw-bfb" id="sw-bfb" data-start="{{ sw_bf_start }}" data-end="{{ sw_bf_end }}" aria-label="Black Friday">
+  <div class="sw-bfb-wrap">
+    <div>
+      <p class="sw-bfb-kicker">Black Friday 2026</p>
+      <h2 class="sw-bfb-title">{% if sw_en %}10% off everything{% else %}10% korting op alles{% endif %}</h2>
+      <p class="sw-bfb-sub">
+        {% if sw_en %}From Friday 20 November up to and including Cyber Monday 30 November. The discount comes off automatically in your cart, no code needed.{% else %}Van vrijdag 20 november tot en met Cyber Monday 30 november. De korting gaat er automatisch af in je winkelwagen, geen code nodig.{% endif %}
+      </p>
+      <div class="sw-bfb-links">
+        {%- assign sw_alle = 'black-friday-inbouwspots,black-friday-led-lampen,black-friday-railverlichting,black-friday-buitenverlichting,black-friday-wandlampen,black-friday-hanglampen' | split: ',' -%}
+        {%- if sw_en -%}
+          {%- assign sw_labels = 'Recessed spots,LED bulbs,Track lighting,Outdoor lighting,Wall lights,Pendant lights' | split: ',' -%}
+        {%- else -%}
+          {%- assign sw_labels = 'Inbouwspots,Led lampen,Railverlichting,Buitenverlichting,Wandlampen,Hanglampen' | split: ',' -%}
+        {%- endif -%}
+        {%- for h in sw_alle -%}
+          {%- if pages[h] != blank -%}<a href="{{ sw_root }}/pages/{{ h }}">{{ sw_labels[forloop.index0] }}</a>{%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+    <div class="sw-bfb-side">
+      <div>
+        <p class="sw-bfb-label" id="sw-bfb-label">{% if sw_en %}Starts in{% else %}Start over{% endif %}</p>
+        <div class="sw-bfb-clock" aria-live="off">
+          <span class="sw-bfb-unit"><span class="sw-bfb-num" data-u="d">-</span><span class="sw-bfb-txt">{% if sw_en %}days{% else %}dagen{% endif %}</span></span>
+          <span class="sw-bfb-unit"><span class="sw-bfb-num" data-u="h">-</span><span class="sw-bfb-txt">{% if sw_en %}hours{% else %}uur{% endif %}</span></span>
+          <span class="sw-bfb-unit"><span class="sw-bfb-num" data-u="m">-</span><span class="sw-bfb-txt">{% if sw_en %}min{% else %}min{% endif %}</span></span>
+        </div>
+      </div>
+      <a class="sw-bfb-btn" href="{{ sw_root }}/pages/black-friday">{% if sw_en %}See the Black Friday deals{% else %}Bekijk de Black Friday-deals{% endif %}</a>
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  var el = document.getElementById('sw-bfb'); if (!el) return;
+  var en = {{ sw_en | json }};
+  var start = new Date(el.dataset.start + 'T00:00:00+01:00');
+  var end = new Date(el.dataset.end + 'T23:59:59+01:00');
+  var label = document.getElementById('sw-bfb-label');
+  var nums = {};
+  el.querySelectorAll('[data-u]').forEach(function(n){ nums[n.dataset.u] = n; });
+  function tik(){
+    var now = new Date();
+    if (now > end) { el.hidden = true; return; }
+    var doel = now < start ? start : end;
+    label.textContent = now < start ? (en ? 'Starts in' : 'Start over') : (en ? 'Ends in' : 'Nog geldig');
+    var s = Math.max(0, Math.floor((doel - now) / 1000));
+    nums.d.textContent = Math.floor(s / 86400);
+    nums.h.textContent = Math.floor(s % 86400 / 3600);
+    nums.m.textContent = Math.floor(s % 3600 / 60);
+  }
+  tik(); setInterval(tik, 30000);
+})();
+</script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Black Friday-banner",
+  "settings": [],
+  "presets": [{ "name": "Black Friday-banner" }]
+}
+{% endschema %}

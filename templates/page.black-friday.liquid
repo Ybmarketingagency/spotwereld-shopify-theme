@@ -161,9 +161,13 @@
       {%- assign sw_alle = 'black-friday-inbouwspots,black-friday-led-lampen,black-friday-wandlampen,black-friday-buitenverlichting,black-friday-railverlichting,black-friday-hanglampen' | split: ',' -%}
       <p class="sw-bf-sub" style="margin:2rem 0 .5rem"><strong style="color:var(--sw-ink)">{% if sw_en %}Black Friday per category{% else %}Black Friday per categorie{% endif %}</strong></p>
       <p class="sw-bf-extra" style="display:flex;flex-wrap:wrap;gap:.5rem 1.25rem;margin:0">
+        {%- if sw_en -%}
+          {%- assign sw_labels = 'Recessed spots,LED bulbs,Wall lights,Outdoor lighting,Track lighting,Pendant lights' | split: ',' -%}
+        {%- else -%}
+          {%- assign sw_labels = 'Inbouwspots,Led lampen,Wandlampen,Buitenverlichting,Railverlichting,Hanglampen' | split: ',' -%}
+        {%- endif -%}
         {%- for h in sw_alle -%}
-          {%- assign sw_p = pages[h] -%}
-          {%- if sw_p != blank -%}<a href="{{ sw_root }}/pages/{{ h }}">{{ sw_p.title }}</a>{%- endif -%}
+          {%- if pages[h] != blank -%}<a href="{{ sw_root }}/pages/{{ h }}">Black Friday {{ sw_labels[forloop.index0] | downcase }}</a>{%- endif -%}
         {%- endfor -%}
       </p>
     </div>

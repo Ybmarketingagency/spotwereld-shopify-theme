@@ -8,6 +8,10 @@
  * ------------------------------------------------------------
  */{
   "sections": {
+    "spotwereld_black_friday": {
+      "type": "sw-black-friday-banner",
+      "settings": {}
+    },
     "spotwereld_hero": {
       "type": "custom-liquid",
       "settings": {
@@ -120,6 +124,7 @@
     }
   },
   "order": [
+    "spotwereld_black_friday",
     "spotwereld_hero",
     "spotwereld_usp",
     "spotwereld_category_grid",
