@@ -903,16 +903,16 @@
     }
     // Aantallen komen van spotwereld-formulieren.vercel.app/api/voorraad, uit de uurexport van
     // de leverancier. Bij 0, geen getal of een mislukte aanvraag blijft de gewone tekst staan;
-    // er wordt nooit een aantal verzonnen. Boven SW_RUIM tonen we geen getal.
-    var SW_RUIM = 100;
+    // er wordt nooit een aantal verzonnen. Grote aantallen met een punt als duizendtal (53.600).
     var swAantal = {};
     function swVoorraadTekst(id) {
       var n = swAantal[id];
       if (!(n > 0)) return {{ 'sw.kaart.voorraad' | t | json }};
+      var getal = String(n).replace(/\B(?=(\d{3})+(?!\d))/g, {%- if request.locale.iso_code == 'en' -%}','{%- else -%}'.'{%- endif -%});
       {%- if request.locale.iso_code == 'en' -%}
-      return n > SW_RUIM ? 'Plenty in stock' : 'In stock: ' + n + ' pcs';
+      return 'In stock: ' + getal + ' pcs';
       {%- else -%}
-      return n > SW_RUIM ? 'Ruim op voorraad' : 'Op voorraad: ' + n + ' stuks';
+      return 'Op voorraad: ' + getal + ' stuks';
       {%- endif -%}
     }
     try {
