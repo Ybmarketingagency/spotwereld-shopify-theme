@@ -908,8 +908,8 @@
     // de leverancier. Bij 0, geen getal of een mislukte aanvraag blijft de gewone tekst staan;
     // er wordt nooit een aantal verzonnen. Grote aantallen met een punt als duizendtal (53.600).
     // Nalevering: bij 0 of negatief (nabestelling bij de leverancier) een oranje regel in plaats
-    // van "Op voorraad". Staat UIT tot de user het goedkeurt; bekijken kan met ?sw_nalevering=1.
-    var SW_NALEVERING_AAN = false || /[?&]sw_nalevering=1/.test(location.search);
+    // van "Op voorraad". Aangezet op 03-11-2026 op verzoek van de user.
+    var SW_NALEVERING_AAN = true;
     var swAantal = {};
     function swIsNalevering(id) {
       return SW_NALEVERING_AAN && typeof swAantal[id] === 'number' && swAantal[id] <= 0;
