@@ -1,0 +1,258 @@
+{% layout 'theme' %}
+
+{%- comment -%}
+  Black Friday per categorie, voor de zoekopdrachten "black friday inbouwspots",
+  "black friday led lampen", "black friday wandlampen" enzovoort (Google Autocomplete,
+  03-11-2026). Eén template voor alle pagina's; de handle van de pagina bepaalt de
+  collectie en de teksten. Aantallen en prijzen komen live uit de collectie, zodat de
+  tekst nooit iets belooft wat er niet is. Actiedata staan in page.black-friday.liquid
+  en hier; jaarlijks allebei omzetten.
+{%- endcomment -%}
+
+{%- assign sw_bf_start = '2026-11-20' -%}
+{%- assign sw_bf_end = '2026-11-30' -%}
+{%- assign sw_en = false -%}
+{%- if request.locale.iso_code == 'en' -%}{%- assign sw_en = true -%}{%- endif -%}
+{%- assign sw_root = routes.root_url | append: '/' | replace: '//', '/' | remove_last: '/' -%}
+
+{%- case page.handle -%}
+  {%- when 'black-friday-led-lampen' -%}
+    {%- assign sw_col = 'led-lampen' -%}
+    {%- if sw_en -%}
+      {%- capture sw_h1 -%}Black Friday LED bulbs: 10% off{%- endcapture -%}
+      {%- capture sw_lead -%}GU10 LED bulbs, smart Zigbee bulbs and Dim2Warm bulbs that turn warmer as you dim. From 20 to 30 November 10% comes off automatically in your cart.{%- endcapture -%}
+      {%- capture sw_tips -%}<li><strong>Check the fitting first.</strong> Almost all bulbs in this range are GU10; a few are G9, MR11 or E27. <a href="{{ sw_root }}/blogs/kennisbank/wat-is-een-gu10-fitting">What is a GU10 fitting?</a></li><li><strong>Dimmable or not.</strong> Most bulbs here are dimmable on a trailing edge (triac) dimmer. The Tresso dims in three steps with your normal switch.</li><li><strong>Warm or warmer.</strong> 2700K is cosy, 3000K slightly fresher. <a href="{{ sw_root }}/blogs/kennisbank/wat-is-het-verschil-tussen-2700k-en-3000k">2700K or 3000K?</a></li>{%- endcapture -%}
+      {%- capture sw_faq -%}<details><summary>Which LED bulb replaces a 50 W halogen spot?</summary><p>A GU10 LED bulb of about 5 to 7 W with 350 to 500 lumen. The lumen figure is on every product in this collection.</p></details><details><summary>Do you have smart bulbs?</summary><p>Yes, the Zigo and Chromo bulbs work over Zigbee, the Chromo is also available on 2.4 GHz.</p></details>{%- endcapture -%}
+    {%- else -%}
+      {%- capture sw_h1 -%}Black Friday led lampen: 10% korting{%- endcapture -%}
+      {%- capture sw_lead -%}GU10-ledlampen, slimme Zigbee-lampen en Dim2Warm-lampen die warmer worden als je dimt. Van 20 tot en met 30 november gaat er automatisch 10% af in je winkelwagen.{%- endcapture -%}
+      {%- capture sw_tips -%}<li><strong>Kijk eerst naar de fitting.</strong> Bijna alle lampen in deze collectie zijn GU10; een paar zijn G9, MR11 of E27. <a href="{{ sw_root }}/blogs/kennisbank/wat-is-een-gu10-fitting">Wat is een GU10-fitting?</a></li><li><strong>Dimbaar of niet.</strong> De meeste lampen hier zijn dimbaar op een fase-afsnijdingsdimmer (triac). De Tresso dimt in drie standen met je gewone schakelaar.</li><li><strong>Warm of warmer.</strong> 2700K is knus, 3000K net iets frisser. <a href="{{ sw_root }}/blogs/kennisbank/wat-is-het-verschil-tussen-2700k-en-3000k">2700K of 3000K?</a></li>{%- endcapture -%}
+      {%- capture sw_faq -%}<details><summary>Welke led lamp vervangt een halogeenspot van 50 watt?</summary><p>Een GU10-ledlamp van ongeveer 5 tot 7 watt met 350 tot 500 lumen. Het aantal lumen staat bij elk product in deze collectie.</p></details><details><summary>Hebben jullie slimme lampen?</summary><p>Ja, de Zigo- en Chromo-lampen werken via Zigbee, de Chromo is er ook op 2,4 GHz.</p></details>{%- endcapture -%}
+    {%- endif -%}
+  {%- when 'black-friday-wandlampen' -%}
+    {%- assign sw_col = 'wandlampen' -%}
+    {%- if sw_en -%}
+      {%- capture sw_h1 -%}Black Friday wall lights: 10% off{%- endcapture -%}
+      {%- capture sw_lead -%}Up &amp; down wall lights, outdoor wall lights up to IP65 and a rechargeable wall light that needs no wiring. From 20 to 30 November 10% comes off automatically in your cart.{%- endcapture -%}
+      {%- capture sw_tips -%}<li><strong>Indoor or outdoor.</strong> Outdoors you need at least IP44; IP20 is for indoors only. <a href="{{ sw_root }}/blogs/kennisbank/mag-een-ip44-lamp-buiten-hangen">Can an IP44 light hang outside?</a></li><li><strong>Bulb included or not.</strong> COB wall lights have built-in LEDs; GU10 and G9 models need a separate bulb.</li><li><strong>No connection point?</strong> <a href="{{ sw_root }}/blogs/kennisbank/wandlamp-zonder-lichtpunt-welke-opties-heb-je">Wall light without a connection point: your options</a></li>{%- endcapture -%}
+      {%- capture sw_faq -%}<details><summary>Do you have wall lights with a motion sensor?</summary><p>Yes, the Senso has a built-in motion sensor.</p></details><details><summary>How do I connect a wall light?</summary><p>Step by step in <a href="{{ sw_root }}/blogs/kennisbank/hoe-sluit-je-een-wandlamp-aan">How do you connect a wall light?</a></p></details>{%- endcapture -%}
+    {%- else -%}
+      {%- capture sw_h1 -%}Black Friday wandlampen: 10% korting{%- endcapture -%}
+      {%- capture sw_lead -%}Up &amp; down wandlampen, buitenwandlampen tot IP65 en een oplaadbare wandlamp zonder bedrading. Van 20 tot en met 30 november gaat er automatisch 10% af in je winkelwagen.{%- endcapture -%}
+      {%- capture sw_tips -%}<li><strong>Binnen of buiten.</strong> Buiten heb je minimaal IP44 nodig; IP20 is alleen voor binnen. <a href="{{ sw_root }}/blogs/kennisbank/mag-een-ip44-lamp-buiten-hangen">Mag een IP44-lamp buiten hangen?</a></li><li><strong>Lamp erbij of niet.</strong> COB-wandlampen hebben ingebouwde led; GU10- en G9-modellen hebben een losse lamp nodig.</li><li><strong>Geen lichtpunt op de muur?</strong> <a href="{{ sw_root }}/blogs/kennisbank/wandlamp-zonder-lichtpunt-welke-opties-heb-je">Wandlamp zonder lichtpunt: welke opties heb je?</a></li>{%- endcapture -%}
+      {%- capture sw_faq -%}<details><summary>Hebben jullie wandlampen met bewegingssensor?</summary><p>Ja, de Senso heeft een ingebouwde bewegingssensor.</p></details><details><summary>Hoe sluit ik een wandlamp aan?</summary><p>Stap voor stap in <a href="{{ sw_root }}/blogs/kennisbank/hoe-sluit-je-een-wandlamp-aan">Hoe sluit je een wandlamp aan?</a></p></details>{%- endcapture -%}
+    {%- endif -%}
+  {%- when 'black-friday-buitenverlichting' -%}
+    {%- assign sw_col = 'inbouwspots-buiten' -%}
+    {%- if sw_en -%}
+      {%- capture sw_h1 -%}Black Friday outdoor lighting: 10% off{%- endcapture -%}
+      {%- capture sw_lead -%}IP65 recessed spots for canopies, porches and soffits, including a spot with a motion sensor and complete sets with remote control. From 20 to 30 November 10% comes off automatically in your cart.{%- endcapture -%}
+      {%- capture sw_tips -%}<li><strong>IP44 or IP65.</strong> Under a canopy IP44 is enough, where rain can reach the spot choose IP65. <a href="{{ sw_root }}/blogs/kennisbank/wat-is-het-verschil-tussen-ip44-en-ip65">IP44 versus IP65</a></li><li><strong>How much light.</strong> <a href="{{ sw_root }}/blogs/kennisbank/hoeveel-lumen-heb-je-nodig-voor-buitenverlichting">How many lumens for outdoor lighting?</a></li><li><strong>Wall lights for outside</strong> are in the <a href="{{ sw_root }}/pages/black-friday-wandlampen">Black Friday wall lights</a>.</li>{%- endcapture -%}
+      {%- capture sw_faq -%}<details><summary>Do you have an outdoor spot with a motion sensor?</summary><p>Yes, the Movo recessed spot has a built-in motion sensor and is IP65.</p></details><details><summary>Can I dim outdoor spots?</summary><p>Many of them, yes. Which ones is stated per product.</p></details>{%- endcapture -%}
+    {%- else -%}
+      {%- capture sw_h1 -%}Black Friday buitenverlichting: 10% korting{%- endcapture -%}
+      {%- capture sw_lead -%}IP65-inbouwspots voor overkapping, veranda en dakgoot, met een spot met bewegingssensor en complete sets met afstandsbediening. Van 20 tot en met 30 november gaat er automatisch 10% af in je winkelwagen.{%- endcapture -%}
+      {%- capture sw_tips -%}<li><strong>IP44 of IP65.</strong> Onder een overkapping is IP44 genoeg, waar regen bij de spot komt kies je IP65. <a href="{{ sw_root }}/blogs/kennisbank/wat-is-het-verschil-tussen-ip44-en-ip65">IP44 tegenover IP65</a></li><li><strong>Hoeveel licht.</strong> <a href="{{ sw_root }}/blogs/kennisbank/hoeveel-lumen-heb-je-nodig-voor-buitenverlichting">Hoeveel lumen heb je nodig voor buitenverlichting?</a></li><li><strong>Wandlampen voor buiten</strong> staan bij <a href="{{ sw_root }}/pages/black-friday-wandlampen">Black Friday wandlampen</a>.</li>{%- endcapture -%}
+      {%- capture sw_faq -%}<details><summary>Hebben jullie een buitenspot met bewegingssensor?</summary><p>Ja, de Movo-inbouwspot heeft een ingebouwde bewegingssensor en is IP65.</p></details><details><summary>Kan ik buitenspots dimmen?</summary><p>Veel wel. Welke staat per product vermeld.</p></details>{%- endcapture -%}
+    {%- endif -%}
+  {%- when 'black-friday-railverlichting' -%}
+    {%- assign sw_col = 'railverlichting' -%}
+    {%- if sw_en -%}
+      {%- capture sw_h1 -%}Black Friday track lighting: 10% off{%- endcapture -%}
+      {%- capture sw_lead -%}1-phase track for the home, 3-phase track for shops and offices, with track spots, light bars, pendants and all parts. From 20 to 30 November 10% comes off automatically in your cart.{%- endcapture -%}
+      {%- capture sw_tips -%}<li><strong>1-phase or 3-phase.</strong> Spots and track must match; a 3-phase spot does not fit a 1-phase track.</li><li><strong>Track length and power supply.</strong> <a href="{{ sw_root }}/blogs/kennisbank/hoeveel-meter-rail-en-welke-voeding-heb-je-nodig">How much track and which power supply?</a></li><li><strong>Connectors.</strong> <a href="{{ sw_root }}/blogs/kennisbank/welke-3-fase-rail-connector-heb-je-nodig">Which 3-phase connector do you need?</a></li>{%- endcapture -%}
+      {%- capture sw_faq -%}<details><summary>Do you have track spots with high colour rendering?</summary><p>Yes, several 3-phase spots have a CRI above 90; it is stated per product.</p></details><details><summary>How do I mount a 1-phase track?</summary><p>See <a href="{{ sw_root }}/blogs/kennisbank/hoe-monteer-je-een-1-fase-rail">How do you mount a 1-phase track?</a></p></details>{%- endcapture -%}
+    {%- else -%}
+      {%- capture sw_h1 -%}Black Friday railverlichting: 10% korting{%- endcapture -%}
+      {%- capture sw_lead -%}1-fase rail voor thuis, 3-fase rail voor winkel en kantoor, met railspots, lichtbalken, hanglampen en alle onderdelen. Van 20 tot en met 30 november gaat er automatisch 10% af in je winkelwagen.{%- endcapture -%}
+      {%- capture sw_tips -%}<li><strong>1-fase of 3-fase.</strong> Spot en rail moeten bij elkaar passen; een 3-fase spot past niet op een 1-fase rail.</li><li><strong>Lengte en voeding.</strong> <a href="{{ sw_root }}/blogs/kennisbank/hoeveel-meter-rail-en-welke-voeding-heb-je-nodig">Hoeveel meter rail en welke voeding heb je nodig?</a></li><li><strong>Verbinders.</strong> <a href="{{ sw_root }}/blogs/kennisbank/welke-3-fase-rail-connector-heb-je-nodig">Welke 3-fase rail connector heb je nodig?</a></li>{%- endcapture -%}
+      {%- capture sw_faq -%}<details><summary>Hebben jullie railspots met een hoge kleurweergave?</summary><p>Ja, meerdere 3-fase spots hebben een CRI boven de 90; dat staat per product vermeld.</p></details><details><summary>Hoe monteer ik een 1-fase rail?</summary><p>Zie <a href="{{ sw_root }}/blogs/kennisbank/hoe-monteer-je-een-1-fase-rail">Hoe monteer je een 1-fase rail?</a></p></details>{%- endcapture -%}
+    {%- endif -%}
+  {%- when 'black-friday-hanglampen' -%}
+    {%- assign sw_col = 'hanglampen' -%}
+    {%- if sw_en -%}
+      {%- capture sw_h1 -%}Black Friday pendant lights: 10% off{%- endcapture -%}
+      {%- capture sw_lead -%}Pendant lights for above the dining table, with adjustable height, and pendants that hang straight from a 1-phase or 3-phase track. From 20 to 30 November 10% comes off automatically in your cart.{%- endcapture -%}
+      {%- capture sw_tips -%}<li><strong>Height above the table.</strong> <a href="{{ sw_root }}/blogs/kennisbank/hoe-hoog-hang-je-een-lamp-boven-de-eettafel">How high do you hang a lamp above the dining table?</a></li><li><strong>On a track.</strong> <a href="{{ sw_root }}/blogs/kennisbank/kun-je-een-hanglamp-aan-een-railsysteem-hangen">Can you hang a pendant on a track?</a></li><li><strong>Connecting.</strong> <a href="{{ sw_root }}/blogs/kennisbank/hoe-sluit-je-een-hanglamp-aan">How do you connect a pendant light?</a></li>{%- endcapture -%}
+      {%- capture sw_faq -%}<details><summary>Is the bulb included?</summary><p>That differs per lamp: GU10 and E27 models need a separate bulb, integrated LED models do not. It is stated per product.</p></details>{%- endcapture -%}
+    {%- else -%}
+      {%- capture sw_h1 -%}Black Friday hanglampen: 10% korting{%- endcapture -%}
+      {%- capture sw_lead -%}Hanglampen voor boven de eettafel, met verstelbare hoogte, en hanglampen die direct aan een 1-fase of 3-fase rail hangen. Van 20 tot en met 30 november gaat er automatisch 10% af in je winkelwagen.{%- endcapture -%}
+      {%- capture sw_tips -%}<li><strong>Hoogte boven de tafel.</strong> <a href="{{ sw_root }}/blogs/kennisbank/hoe-hoog-hang-je-een-lamp-boven-de-eettafel">Hoe hoog hang je een lamp boven de eettafel?</a></li><li><strong>Aan een rail.</strong> <a href="{{ sw_root }}/blogs/kennisbank/kun-je-een-hanglamp-aan-een-railsysteem-hangen">Kun je een hanglamp aan een railsysteem hangen?</a></li><li><strong>Aansluiten.</strong> <a href="{{ sw_root }}/blogs/kennisbank/hoe-sluit-je-een-hanglamp-aan">Hoe sluit je een hanglamp aan?</a></li>{%- endcapture -%}
+      {%- capture sw_faq -%}<details><summary>Zit de lamp erbij?</summary><p>Dat verschilt per hanglamp: GU10- en E27-modellen hebben een losse lamp nodig, modellen met ingebouwde led niet. Het staat per product vermeld.</p></details>{%- endcapture -%}
+    {%- endif -%}
+  {%- else -%}
+    {%- assign sw_col = 'inbouwspots' -%}
+    {%- if sw_en -%}
+      {%- capture sw_h1 -%}Black Friday recessed spotlights: 10% off LED spots{%- endcapture -%}
+      {%- capture sw_lead -%}Dimmable LED recessed spots, IP65 spots for bathroom and outdoors, Dim2Warm spots and complete sets with remote control. From 20 to 30 November 10% comes off automatically in your cart.{%- endcapture -%}
+      {%- capture sw_tips -%}<li><strong>Cut-out size.</strong> Measure the hole before you buy. <a href="{{ sw_root }}/blogs/kennisbank/welke-zaagmaat-heb-je-nodig-voor-inbouwspots">Which cut-out size do you need?</a></li><li><strong>Recess depth.</strong> Spots with integrated LED need much less depth than a GU10 set-up. <a href="{{ sw_root }}/blogs/kennisbank/hoeveel-inbouwdiepte-heb-je-nodig-voor-een-inbouwspot">How much recess depth do you need?</a></li><li><strong>Dimmer.</strong> <a href="{{ sw_root }}/blogs/kennisbank/welke-led-dimmer-heb-je-nodig-voor-je-spots">Which LED dimmer do you need?</a></li>{%- endcapture -%}
+      {%- capture sw_faq -%}<details><summary>Which spots are suitable for the bathroom?</summary><p>The IP65 spots, such as Lesto, Lyvo, Cielo and Ferro. See <a href="{{ sw_root }}/collections/inbouwspots-badkamer">bathroom recessed spots</a>.</p></details><details><summary>Do you sell spots per set?</summary><p>Yes, the Dovo set comes in 6 and 10 pieces, with remote control.</p></details>{%- endcapture -%}
+    {%- else -%}
+      {%- capture sw_h1 -%}Black Friday inbouwspots: 10% korting op led spots{%- endcapture -%}
+      {%- capture sw_lead -%}Dimbare led inbouwspots, IP65-spots voor badkamer en buiten, Dim2Warm-spots en complete sets met afstandsbediening. Van 20 tot en met 30 november gaat er automatisch 10% af in je winkelwagen.{%- endcapture -%}
+      {%- capture sw_tips -%}<li><strong>Zaagmaat.</strong> Meet het gat voordat je koopt. <a href="{{ sw_root }}/blogs/kennisbank/welke-zaagmaat-heb-je-nodig-voor-inbouwspots">Welke zaagmaat heb je nodig?</a></li><li><strong>Inbouwdiepte.</strong> Spots met vaste led vragen veel minder diepte dan een GU10-opstelling. <a href="{{ sw_root }}/blogs/kennisbank/hoeveel-inbouwdiepte-heb-je-nodig-voor-een-inbouwspot">Hoeveel inbouwdiepte heb je nodig?</a></li><li><strong>Dimmer.</strong> <a href="{{ sw_root }}/blogs/kennisbank/welke-led-dimmer-heb-je-nodig-voor-je-spots">Welke led-dimmer heb je nodig?</a></li>{%- endcapture -%}
+      {%- capture sw_faq -%}<details><summary>Welke spots zijn geschikt voor de badkamer?</summary><p>De IP65-spots, zoals Lesto, Lyvo, Cielo en Ferro. Zie <a href="{{ sw_root }}/collections/inbouwspots-badkamer">inbouwspots voor de badkamer</a>.</p></details><details><summary>Verkopen jullie spots per set?</summary><p>Ja, de Dovo-set is er in 6 en 10 stuks, met afstandsbediening.</p></details>{%- endcapture -%}
+    {%- endif -%}
+{%- endcase -%}
+
+{%- assign c = collections[sw_col] -%}
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": {% if sw_en %}"Do I need a discount code?"{% else %}"Heb ik een kortingscode nodig?"{% endif %},
+      "acceptedAnswer": { "@type": "Answer", "text": {% if sw_en %}"No. From 20 to 30 November 2026 10% comes off automatically in your cart."{% else %}"Nee. Van 20 tot en met 30 november 2026 gaat er automatisch 10% af in je winkelwagen."{% endif %} }
+    }
+  ]
+}
+</script>
+
+<style>
+.sw-bf{--sw-ink:#12181f;--sw-body:#414a55;--sw-muted:#767f8b;--sw-rule:#e2e5e9;--sw-fill:#f7f8f9;--sw-accent:#0a3a72;background:#fff;color:var(--sw-body)}
+.sw-bf-wrap{max-width:1140px;margin:0 auto;padding:2.5rem 1rem 4rem}
+@media(min-width:768px){.sw-bf-wrap{padding:3rem 1.5rem 4.5rem}}
+.sw-bf-hero{background:var(--sw-ink);color:#fff}
+.sw-bf-hero .sw-bf-wrap{padding-top:2.5rem;padding-bottom:2.5rem}
+.sw-bf-kicker{font-size:.6875rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#a7aeb6;margin:0 0 .875rem}
+.sw-bf-kicker a{color:#a7aeb6}
+.sw-bf-hero h1{font-size:clamp(1.75rem,4vw,2.625rem);font-weight:700;letter-spacing:-.02em;line-height:1.15;margin:0 0 1rem;color:#fff;max-width:44rem}
+.sw-bf-lead{font-size:1.0625rem;line-height:1.6;color:#c9cfd6;margin:0 0 1.25rem;max-width:42rem}
+.sw-bf-status{display:inline-block;font-size:.8125rem;font-weight:600;padding:.375rem .75rem;border:1px solid #3a434e;color:#fff;margin:0}
+.sw-bf-status:empty{display:none}
+.sw-bf h2{font-size:1.375rem;font-weight:700;color:var(--sw-ink);letter-spacing:-.012em;line-height:1.3;margin:0 0 1rem}
+.sw-bf-tips{max-width:44rem;margin:0 0 0;padding-left:1.25rem;font-size:1rem;line-height:1.65}
+.sw-bf-tips li{margin-bottom:.625rem}
+.sw-bf-tips strong{color:var(--sw-ink)}
+.sw-bf a{color:var(--sw-accent)}
+.sw-bf-sub{margin:0 0 1.5rem;font-size:.9688rem;line-height:1.6;max-width:42rem}
+.sw-bf-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
+@media(min-width:768px){.sw-bf-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:1.25rem}}
+@media(min-width:1024px){.sw-bf-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.sw-bf-card{display:flex;flex-direction:column;text-decoration:none;color:inherit;border:1px solid var(--sw-rule);background:#fff;transition:border-color .15s}
+.sw-bf-card:hover{border-color:#b9c0c8}
+.sw-bf .sw-bf-card{color:inherit}
+.sw-bf-card-img{aspect-ratio:1/1;background:var(--sw-fill);overflow:hidden}
+.sw-bf-card-img img{width:100%;height:100%;object-fit:contain;display:block}
+.sw-bf-card-body{padding:.75rem .875rem .875rem}
+.sw-bf-card-title{font-weight:600;color:var(--sw-ink);font-size:.875rem;line-height:1.35;margin:0}
+.sw-bf-card-price{font-size:.875rem;color:var(--sw-ink);margin:.375rem 0 0}
+.sw-bf-card-price s{color:var(--sw-muted);margin-right:.25rem}
+.sw-bf-during{display:none}
+.sw-bf.is-live .sw-bf-during{display:inline}
+.sw-bf.is-live .sw-bf-before{display:none}
+.sw-bf-more{margin:1.5rem 0 0}
+.sw-bf-btn{display:inline-block;background:var(--sw-ink);color:#fff !important;font-weight:600;text-decoration:none;padding:.875rem 1.5rem;font-size:.9375rem}
+.sw-bf-section{border-top:1px solid var(--sw-rule)}
+.sw-bf-faq{max-width:44rem}
+.sw-bf-faq details{border-top:1px solid var(--sw-rule);padding:1rem 0}
+.sw-bf-faq details:last-child{border-bottom:1px solid var(--sw-rule)}
+.sw-bf-faq summary{cursor:pointer;font-weight:600;color:var(--sw-ink);font-size:1rem;line-height:1.4}
+.sw-bf-faq details p{margin:.625rem 0 0;font-size:.9688rem;line-height:1.65}
+.sw-bf-links{display:flex;flex-wrap:wrap;gap:.5rem 1.25rem;font-size:.9375rem}
+</style>
+
+<div class="sw-bf" id="sw-bf" data-start="{{ sw_bf_start }}" data-end="{{ sw_bf_end }}">
+  <section class="sw-bf-hero">
+    <div class="sw-bf-wrap">
+      <p class="sw-bf-kicker"><a href="{{ sw_root }}/pages/black-friday">Black Friday 2026</a></p>
+      <h1>{{ sw_h1 }}</h1>
+      <p class="sw-bf-lead">{{ sw_lead }}</p>
+      <p class="sw-bf-status" id="sw-bf-status" aria-live="polite"></p>
+    </div>
+  </section>
+
+  {%- if c != blank and c.products_count > 0 -%}
+  <section>
+    <div class="sw-bf-wrap">
+      <h2>{{ c.title }}: {{ c.products_count }} {% if sw_en %}products{% else %}producten{% endif %}</h2>
+      <p class="sw-bf-sub">
+        <span class="sw-bf-before">{% if sw_en %}These are the current prices. During the promotion 10% comes off in your cart, also on products that are already reduced.{% else %}Dit zijn de huidige prijzen. Tijdens de actie gaat er in de winkelwagen 10% vanaf, ook op producten die al afgeprijsd zijn.{% endif %}</span>
+        <span class="sw-bf-during">{% if sw_en %}Struck-through is the normal price, next to it what you pay with 10% off.{% else %}Doorgestreept is de normale prijs, ernaast wat je betaalt met 10% korting.{% endif %}</span>
+      </p>
+      <div class="sw-bf-grid">
+        {%- assign sw_n = 0 -%}
+        {%- for p in c.products limit: 50 -%}
+          {%- if p.available == false -%}{%- continue -%}{%- endif -%}
+          {%- assign sw_n = sw_n | plus: 1 -%}
+          {%- if sw_n > 12 -%}{%- break -%}{%- endif -%}
+          {%- assign sw_bf_price = p.price_min | times: 90 | divided_by: 100 -%}
+          <a class="sw-bf-card" href="{{ p.url }}">
+            <div class="sw-bf-card-img">{%- if p.featured_image -%}{{ p.featured_image | image_url: width: 400 | image_tag: loading: 'lazy', alt: p.title }}{%- endif -%}</div>
+            <div class="sw-bf-card-body">
+              <p class="sw-bf-card-title">{{ p.title | split: ' | ' | first }}</p>
+              <p class="sw-bf-card-price">
+                {%- assign sw_van = '' -%}{%- if p.price_varies -%}{%- if sw_en -%}{%- assign sw_van = 'from ' -%}{%- else -%}{%- assign sw_van = 'vanaf ' -%}{%- endif -%}{%- endif -%}
+                <span class="sw-bf-before">{{ sw_van }}{{ p.price_min | money }}</span>
+                <span class="sw-bf-during">{{ sw_van }}<s>{{ p.price_min | money }}</s>{{ sw_bf_price | money }}</span>
+              </p>
+            </div>
+          </a>
+        {%- endfor -%}
+      </div>
+      <p class="sw-bf-more"><a class="sw-bf-btn" href="{{ c.url }}">{% if sw_en %}View all {{ c.products_count }} products{% else %}Bekijk alle {{ c.products_count }} producten{% endif %}</a></p>
+    </div>
+  </section>
+  {%- endif -%}
+
+  <section class="sw-bf-section">
+    <div class="sw-bf-wrap">
+      <h2>{% if sw_en %}Before you buy{% else %}Waar let je op{% endif %}</h2>
+      <ul class="sw-bf-tips">{{ sw_tips }}</ul>
+    </div>
+  </section>
+
+  <section class="sw-bf-section">
+    <div class="sw-bf-wrap">
+      <h2>{% if sw_en %}Frequently asked questions{% else %}Veelgestelde vragen{% endif %}</h2>
+      <div class="sw-bf-faq">
+        {{ sw_faq }}
+        {% if sw_en %}
+        <details><summary>Do I need a discount code?</summary><p>No. From 20 to 30 November 2026 10% comes off automatically in your cart. Free shipping from €50, 14 days to return.</p></details>
+        {% else %}
+        <details><summary>Heb ik een kortingscode nodig?</summary><p>Nee. Van 20 tot en met 30 november 2026 gaat er automatisch 10% af in je winkelwagen. Gratis verzending vanaf €50, 14 dagen retourrecht.</p></details>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+  <section class="sw-bf-section">
+    <div class="sw-bf-wrap">
+      <h2>{% if sw_en %}More Black Friday{% else %}Meer Black Friday{% endif %}</h2>
+      <div class="sw-bf-links">
+        <a href="{{ sw_root }}/pages/black-friday">{% if sw_en %}All Black Friday offers{% else %}Alle Black Friday-aanbiedingen{% endif %}</a>
+        {%- assign sw_alle = 'black-friday-inbouwspots,black-friday-led-lampen,black-friday-wandlampen,black-friday-buitenverlichting,black-friday-railverlichting,black-friday-hanglampen' | split: ',' -%}
+        {%- for h in sw_alle -%}
+          {%- if h == page.handle -%}{%- continue -%}{%- endif -%}
+          {%- assign sw_p = pages[h] -%}
+          {%- if sw_p != blank -%}<a href="{{ sw_root }}/pages/{{ h }}">{{ sw_p.title }}</a>{%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+(function(){
+  var el = document.getElementById('sw-bf'); if (!el) return;
+  var out = document.getElementById('sw-bf-status');
+  var en = {{ sw_en | json }};
+  var start = new Date(el.dataset.start + 'T00:00:00+01:00');
+  var end = new Date(el.dataset.end + 'T23:59:59+01:00');
+  var now = new Date();
+  if (now >= start && now <= end) {
+    el.classList.add('is-live');
+    var left = Math.ceil((end - now) / 864e5);
+    out.textContent = en ? ('On now, ' + (left > 1 ? left + ' days left' : 'last day')) : ('Loopt nu, ' + (left > 1 ? 'nog ' + left + ' dagen' : 'laatste dag'));
+  } else if (now < start) {
+    var d = Math.ceil((start - now) / 864e5);
+    out.textContent = en ? ('Starts in ' + d + (d === 1 ? ' day' : ' days')) : ('Start over ' + d + (d === 1 ? ' dag' : ' dagen'));
+  } else {
+    out.textContent = en ? 'This promotion has ended' : 'Deze actie is afgelopen';
+  }
+})();
+</script>
