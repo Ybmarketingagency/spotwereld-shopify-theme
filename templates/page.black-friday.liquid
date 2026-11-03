@@ -72,6 +72,8 @@
       {%- comment -%} Categorieën met een eigen Black Friday-pagina linken daarheen, de rest naar de collectie. {%- endcomment -%}
       {%- assign sw_bf_handles = 'inbouwspots,led-lampen,railverlichting,wandlampen,inbouwspots-buiten,hanglampen,opbouwspots,led-panelen,trapverlichting,led-tl-buizen' | split: ',' -%}
       {%- assign sw_bf_paginas = 'black-friday-inbouwspots,black-friday-led-lampen,black-friday-railverlichting,black-friday-wandlampen,black-friday-buitenverlichting,black-friday-hanglampen,,,,' | split: ',' -%}
+      {%- comment -%} Subcollecties delen vaak de foto van hun hoofdcollectie; sw_gebruikt voorkomt twee gelijke tegels. {%- endcomment -%}
+      {%- assign sw_gebruikt = '' -%}
       <div class="sw-bf-grid">
         {%- for h in sw_bf_handles -%}
           {%- assign c = collections[h] -%}
@@ -81,11 +83,16 @@
           {%- if sw_pg != blank and pages[sw_pg] != blank -%}{%- assign sw_link = sw_root | append: '/pages/' | append: sw_pg -%}{%- endif -%}
           {%- assign sw_min = nil -%}
           {%- assign sw_img = c.featured_image -%}
+          {%- if sw_img != blank -%}{%- assign sw_sleutel = sw_img.src | append: ';' -%}{%- if sw_gebruikt contains sw_sleutel -%}{%- assign sw_img = nil -%}{%- endif -%}{%- endif -%}
           {%- for p in c.products limit: 50 -%}
             {%- if p.available == false -%}{%- continue -%}{%- endif -%}
             {%- if sw_min == nil or p.price_min < sw_min -%}{%- assign sw_min = p.price_min -%}{%- endif -%}
-            {%- if sw_img == blank -%}{%- assign sw_img = p.featured_image -%}{%- endif -%}
+            {%- if sw_img == blank and p.featured_image -%}
+              {%- assign sw_sleutel = p.featured_image.src | append: ';' -%}
+              {%- unless sw_gebruikt contains sw_sleutel -%}{%- assign sw_img = p.featured_image -%}{%- endunless -%}
+            {%- endif -%}
           {%- endfor -%}
+          {%- if sw_img -%}{%- assign sw_gebruikt = sw_gebruikt | append: sw_img.src | append: ';' -%}{%- endif -%}
           <a class="sw-bf-card" href="{{ sw_link }}">
             <span class="sw-bf-badge sw-bf-tijdens">-10%</span>
             <div class="sw-bf-card-img">{%- if sw_img -%}{{ sw_img | image_url: width: 400 | image_tag: loading: 'lazy', alt: c.title }}{%- endif -%}</div>
