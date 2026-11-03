@@ -895,18 +895,34 @@
       var tekst = blok.querySelector('.sw-voorraad-tekst');
       var sub = blok.querySelector('.sw-voorraad-sub');
       if (!bol || !tekst || !sub) return;
-      bol.style.color = op ? '#16a34a' : '#dc2626';
-      tekst.style.color = op ? '#16a34a' : '#dc2626';
+      var na = op && swIsNalevering(id);
+      var kleur = !op ? '#dc2626' : na ? '#d97706' : '#16a34a';
+      bol.style.color = kleur;
+      tekst.style.color = kleur;
       tekst.textContent = op ? swVoorraadTekst(id) : {{ 'sw.kaart.uitverkocht' | t | json }};
-      sub.style.display = op ? '' : 'none';
+      // "Direct leverbaar" klopt niet bij nalevering.
+      sub.style.display = op && !na ? '' : 'none';
       swMeldingBlok(op);
     }
     // Aantallen komen van spotwereld-formulieren.vercel.app/api/voorraad, uit de uurexport van
     // de leverancier. Bij 0, geen getal of een mislukte aanvraag blijft de gewone tekst staan;
     // er wordt nooit een aantal verzonnen. Grote aantallen met een punt als duizendtal (53.600).
+    // Nalevering: bij 0 of negatief (nabestelling bij de leverancier) een oranje regel in plaats
+    // van "Op voorraad". Staat UIT tot de user het goedkeurt; bekijken kan met ?sw_nalevering=1.
+    var SW_NALEVERING_AAN = false || /[?&]sw_nalevering=1/.test(location.search);
     var swAantal = {};
+    function swIsNalevering(id) {
+      return SW_NALEVERING_AAN && typeof swAantal[id] === 'number' && swAantal[id] <= 0;
+    }
     function swVoorraadTekst(id) {
       var n = swAantal[id];
+      if (swIsNalevering(id)) {
+        {%- if request.locale.iso_code == 'en' -%}
+        return 'Backorder: longer delivery time';
+        {%- else -%}
+        return 'Nalevering: langere levertijd';
+        {%- endif -%}
+      }
       if (!(n > 0)) return {{ 'sw.kaart.voorraad' | t | json }};
       var getal = String(n).replace(/\B(?=(\d{3})+(?!\d))/g, {%- if request.locale.iso_code == 'en' -%}','{%- else -%}'.'{%- endif -%});
       {%- if request.locale.iso_code == 'en' -%}
