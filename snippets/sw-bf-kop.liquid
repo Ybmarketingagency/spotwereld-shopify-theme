@@ -16,13 +16,18 @@
       {%- if ouder -%}<a href="{{ root }}/pages/black-friday">Black Friday</a><span>&#9656;</span>{%- endif -%}
       <strong>{{ crumb }}</strong>
     </nav>
+    <p class="sw-bf-kicker">{% if en %}Black Week, 20 to 30 November 2026{% else %}Black Week, 20 t/m 30 november 2026{% endif %}</p>
     <h1>{{ titel }}</h1>
     <p class="sw-bf-lead">{{ lead }}</p>
-    <div class="sw-bf-pills">
-      <span class="sw-bf-pill"><span class="sw-bf-dot" aria-hidden="true"></span>{% if en %}20 to 30 November 2026{% else %}20 t/m 30 november 2026{% endif %}</span>
-      <span class="sw-bf-pill" id="sw-bf-status" hidden></span>
+    <p class="sw-bf-status" id="sw-bf-status" hidden></p>
+    <div class="sw-bf-klok" id="sw-bf-klok" hidden>
+      <div><b data-d>0</b><small>{% if en %}days{% else %}dagen{% endif %}</small></div>
+      <div><b data-u>00</b><small>{% if en %}hours{% else %}uur{% endif %}</small></div>
+      <div><b data-m>00</b><small>min</small></div>
+      <div><b data-s>00</b><small>sec</small></div>
     </div>
   </div>
+  <div class="sw-bf-stip" aria-hidden="true"><b>-10%</b><small>{% if en %}on everything{% else %}op alles{% endif %}</small></div>
 </section>
 
 <div class="sw-bf-usp">
@@ -42,17 +47,26 @@
   var en = {{ en | json }};
   var start = new Date('{{ sw_bf_start }}T00:00:00+01:00');
   var end = new Date('{{ sw_bf_end }}T23:59:59+01:00');
-  var now = new Date(), t;
+  var klok = document.getElementById('sw-bf-klok');
+  var now = new Date(), doel = null, t;
   if (now >= start && now <= end) {
     el.classList.add('is-live');
-    var left = Math.ceil((end - now) / 864e5);
-    t = en ? ('On now, ' + (left > 1 ? left + ' days left' : 'last day')) : ('Loopt nu, ' + (left > 1 ? 'nog ' + left + ' dagen' : 'laatste dag'));
+    doel = end; t = en ? 'On now, ends in' : 'Loopt nu, nog';
   } else if (now < start) {
-    var d = Math.ceil((start - now) / 864e5);
-    t = en ? ('Starts in ' + d + (d === 1 ? ' day' : ' days')) : ('Start over ' + d + (d === 1 ? ' dag' : ' dagen'));
+    doel = start; t = en ? 'Starts in' : 'Start over';
   } else {
     t = en ? 'This promotion has ended' : 'Deze actie is afgelopen';
   }
   out.textContent = t; out.hidden = false;
+  if (!doel) return;
+  function z(x){ return (x < 10 ? '0' : '') + x; }
+  function tik(){
+    var s = Math.max(0, Math.floor((doel - new Date()) / 1000));
+    klok.querySelector('[data-d]').textContent = Math.floor(s / 86400);
+    klok.querySelector('[data-u]').textContent = z(Math.floor(s % 86400 / 3600));
+    klok.querySelector('[data-m]').textContent = z(Math.floor(s % 3600 / 60));
+    klok.querySelector('[data-s]').textContent = z(s % 60);
+  }
+  tik(); klok.hidden = false; setInterval(tik, 1000);
 })();
 </script>
