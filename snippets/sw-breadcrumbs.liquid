@@ -21,6 +21,10 @@
   if request.page_type == 'page' and page.handle != 'bedankt'
     assign sw_bc_toon = true
   endif
+  # De Black Friday-pagina's hebben net als collecties hun kruimelpad in de kop.
+  if request.page_type == 'page' and page.template_suffix contains 'black-friday'
+    assign sw_bc_toon = false
+  endif
   if request.page_type == 'blog'
     assign sw_bc_toon = true
   endif

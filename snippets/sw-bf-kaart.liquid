@@ -1,0 +1,19 @@
+{%- comment -%}
+  Productkaart op de Black Friday-pagina's, zelfde opmaak als sw-pp-card op de homepagina.
+  Parameters: p (product), en (bool). Tijdens de actie (klasse is-live op #sw-bf) staat de
+  normale prijs doorgestreept met de prijs na 10% ernaast, plus een -10%-label.
+{%- endcomment -%}
+{%- assign sw_bfp = p.price_min | times: 90 | divided_by: 100 -%}
+<a href="{{ p.url }}" class="sw-bf-card">
+  <span class="sw-bf-badge sw-bf-tijdens">-10%</span>
+  {%- if p.available -%}<span class="sw-bf-stock">{% if en %}In stock{% else %}Op voorraad{% endif %}</span>{%- endif -%}
+  <div class="sw-bf-card-img">
+    {%- if p.featured_image -%}{{ p.featured_image | image_url: width: 400 | image_tag: loading: 'lazy', alt: p.title }}{%- endif -%}
+  </div>
+  <p class="sw-bf-card-name">{{ p.title | split: ' | ' | first | remove: 'LED Inbouwspot ' | remove: 'LED Recessed Spotlight ' }}</p>
+  <p class="sw-bf-card-price">
+    {%- if p.price_varies -%}<small>{% if en %}from{% else %}vanaf{% endif %}</small>{%- endif -%}
+    <span class="sw-bf-voor"><b>{{ p.price_min | money }}</b></span>
+    <span class="sw-bf-tijdens"><s>{{ p.price_min | money }}</s> <b>{{ sw_bfp | money }}</b></span>
+  </p>
+</a>

@@ -1,0 +1,100 @@
+{%- comment -%}
+  Gedeelde opmaak van de Black Friday-pagina's (page.black-friday en
+  page.black-friday-categorie). Overgenomen van de collectiekop (templates/collection.json)
+  en de productkaarten op de homepagina (sw-pp-*), zodat deze pagina's niet als los
+  blok aanvoelen.
+{%- endcomment -%}
+<style>
+.sw-bf{background:#fff;color:#334155;font-size:1rem}
+.sw-bf a{color:#0F6FE3}
+.sw-bf-in{max-width:1280px;margin:0 auto;padding:0 1.5rem}
+@media(max-width:639px){.sw-bf-in{padding:0 1rem}}
+
+/* kop */
+.sw-bf-hero{position:relative;overflow:hidden;background:linear-gradient(120deg,#061f40 0%,#0a2d5e 55%,#0f3d7a 100%);padding:2.25rem 0 2.5rem}
+.sw-bf-hero-img{position:absolute;top:0;right:0;bottom:0;width:62%;object-fit:cover;object-position:70% 45%;opacity:.95}
+.sw-bf-hero::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,#061f40 0%,#061f40 38%,rgba(6,31,64,.75) 55%,rgba(6,31,64,.15) 100%);pointer-events:none}
+.sw-bf-hero::after{content:"";position:absolute;right:-80px;top:-80px;width:320px;height:320px;border-radius:50%;background:rgba(255,255,255,.035);pointer-events:none;z-index:1}
+@media(max-width:767px){
+  .sw-bf-hero{padding-top:0}
+  .sw-bf-hero-img{position:relative;display:block;width:100%;height:170px}
+  .sw-bf-hero::before{top:0;bottom:auto;height:170px;background:linear-gradient(to top,#061f40 0%,rgba(6,31,64,0) 60%)}
+}
+.sw-bf-hero .sw-bf-in{position:relative;z-index:2}
+.sw-bf-crumbs{display:flex;align-items:center;flex-wrap:wrap;gap:.375rem;margin:0 0 .875rem;font-size:.78rem;color:rgba(255,255,255,.45)}
+@media(max-width:767px){.sw-bf-crumbs{margin-top:.25rem}}
+.sw-bf .sw-bf-crumbs a{color:rgba(255,255,255,.45);text-decoration:none}
+.sw-bf .sw-bf-crumbs a:hover{color:rgba(255,255,255,.8)}
+.sw-bf-crumbs span{font-size:.6rem}
+.sw-bf-crumbs strong{color:rgba(255,255,255,.8);font-weight:400}
+.sw-bf-hero h1{color:#fff;font-weight:900;font-size:clamp(1.75rem,4vw,2.5rem);margin:0 0 .625rem;letter-spacing:-.03em;line-height:1.1;max-width:36rem}
+.sw-bf-lead{color:rgba(255,255,255,.75);margin:0 0 1.25rem;font-size:.95rem;line-height:1.6;max-width:32rem}
+.sw-bf-pills{display:flex;flex-wrap:wrap;gap:.625rem;align-items:center}
+.sw-bf-pill{display:inline-flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.1);backdrop-filter:blur(8px);padding:.55rem 1.05rem;border-radius:999px;border:1px solid rgba(255,255,255,.12);color:#fff;font-size:.85rem;font-weight:600}
+.sw-bf-pill[hidden]{display:none}
+.sw-bf-dot{width:.5rem;height:.5rem;border-radius:50%;background:#60a5fa;flex-shrink:0}
+.sw-bf .sw-bf-btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;font-weight:700;padding:.75rem 1.75rem;border-radius:.5rem;color:#fff;background:linear-gradient(135deg,#083D7D,#0F6FE3);text-decoration:none;font-size:.9rem;transition:all .15s}
+.sw-bf .sw-bf-btn:hover{background:linear-gradient(135deg,#062d5c,#0a5abf);transform:translateY(-1px)}
+
+/* voordelen, zelfde als de usp-balk op de homepagina */
+.sw-bf-usp{background:#fff;border-bottom:1px solid #e5e7eb}
+.sw-bf-usp-grid{display:grid;grid-template-columns:1fr;gap:0}
+@media(min-width:768px){.sw-bf-usp-grid{grid-template-columns:repeat(3,1fr)}}
+.sw-bf-usp-item{display:flex;align-items:center;gap:.75rem;padding:1rem 0}
+@media(max-width:767px){.sw-bf-usp-item + .sw-bf-usp-item{border-top:1px solid #f1f5f9}}
+.sw-bf-usp-ico{width:2.25rem;height:2.25rem;border-radius:.5rem;background:#eff6ff;color:#0F6FE3;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sw-bf-usp-item strong{display:block;color:#061f40;font-size:.875rem;font-weight:700}
+.sw-bf-usp-item small{display:block;color:#6b7280;font-size:.78rem}
+
+/* secties */
+.sw-bf-sec{padding:3rem 0}
+.sw-bf-sec--grijs{background:#f8fafc}
+.sw-bf-kop{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem}
+.sw-bf-kop h2{font-size:1.5rem;font-weight:800;color:#061f40;margin:0;letter-spacing:-.02em}
+.sw-bf-kop p{color:#6b7280;font-size:.875rem;margin:.25rem 0 0;max-width:40rem}
+.sw-bf-kop-lijn{flex:1;height:1px;background:linear-gradient(to right,#0F6FE3,transparent);min-width:50px}
+
+/* kaarten, zelfde als sw-pp-card op de homepagina */
+.sw-bf-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
+@media(min-width:768px){.sw-bf-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(min-width:1024px){.sw-bf-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.sw-bf .sw-bf-card{background:#fff;border:1px solid #e5e7eb;border-radius:.75rem;padding:.875rem .875rem 1rem;text-decoration:none;color:inherit;display:flex;flex-direction:column;position:relative;transition:all .2s;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.sw-bf .sw-bf-card:hover{border-color:#cbd5e1;box-shadow:0 4px 16px rgba(8,61,125,.1);transform:translateY(-2px)}
+.sw-bf-card-img{aspect-ratio:1;background:#f8fafc;border-radius:.5rem;overflow:hidden;margin-bottom:.625rem;display:flex;align-items:center;justify-content:center}
+.sw-bf-card-img img{width:100%;height:100%;object-fit:contain;display:block}
+.sw-bf-card-name{font-weight:600;color:#1e293b;font-size:.85rem;margin:0 0 .375rem;line-height:1.35;min-height:2.3em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.sw-bf-card-meta{color:#6b7280;font-size:.78rem;margin:0 0 .375rem}
+.sw-bf-card-price{display:flex;align-items:baseline;flex-wrap:wrap;gap:.4rem;margin:auto 0 0}
+.sw-bf-card-price b{color:#083D7D;font-weight:700;font-size:1.05rem;line-height:1}
+.sw-bf-card-price s{color:#64748b;font-size:.78rem}
+.sw-bf-card-price small{color:#6b7280;font-size:.75rem}
+.sw-bf-badge{position:absolute;top:.5rem;left:.5rem;z-index:2;font-size:.68rem;font-weight:700;padding:.22rem .5rem;border-radius:4px;background:#f97316;color:#fff}
+.sw-bf-stock{position:absolute;top:.5rem;right:.5rem;z-index:2;font-size:.65rem;font-weight:600;color:#16a34a;background:rgba(255,255,255,.95);padding:.18rem .45rem;border-radius:4px;display:inline-flex;align-items:center;gap:.25rem}
+.sw-bf-stock::before{content:'';width:6px;height:6px;border-radius:50%;background:#16a34a}
+.sw-bf-tijdens{display:none}
+.sw-bf.is-live .sw-bf-tijdens{display:inline}
+.sw-bf.is-live .sw-bf-voor{display:none}
+.sw-bf-meer{margin:1.75rem 0 0;text-align:center}
+
+/* tips */
+.sw-bf-tips{display:grid;grid-template-columns:1fr;gap:1rem;list-style:none;margin:0;padding:0}
+@media(min-width:768px){.sw-bf-tips{grid-template-columns:repeat(3,1fr)}}
+.sw-bf-tips li{background:#fff;border:1px solid #e5e7eb;border-radius:.75rem;padding:1.25rem;font-size:.9rem;line-height:1.6;color:#475569}
+.sw-bf-tips strong{display:block;color:#061f40;font-size:1rem;margin-bottom:.375rem}
+
+/* vragen */
+.sw-bf-faq{display:flex;flex-direction:column;gap:.625rem;max-width:52rem}
+.sw-bf-faq details{background:#fff;border:1px solid #e5e7eb;border-radius:.75rem;padding:1rem 1.25rem}
+.sw-bf-faq details[open]{border-color:#bfdbfe;box-shadow:0 4px 16px rgba(8,61,125,.06)}
+.sw-bf-faq summary{cursor:pointer;font-weight:700;color:#061f40;font-size:.95rem;line-height:1.4;list-style:none;display:flex;justify-content:space-between;gap:1rem}
+.sw-bf-faq summary::-webkit-details-marker{display:none}
+.sw-bf-faq summary::after{content:"+";color:#0F6FE3;font-weight:700;font-size:1.1rem;line-height:1}
+.sw-bf-faq details[open] summary::after{content:"\2212"}
+.sw-bf-faq details p{margin:.625rem 0 0;font-size:.9rem;line-height:1.65;color:#475569}
+
+/* categorieknoppen */
+.sw-bf-chips{display:flex;flex-wrap:wrap;gap:.5rem}
+.sw-bf .sw-bf-chip{display:inline-flex;align-items:center;padding:.5rem 1rem;border-radius:999px;border:1px solid #e5e7eb;background:#fff;color:#061f40;font-size:.85rem;font-weight:600;text-decoration:none;transition:all .15s}
+.sw-bf .sw-bf-chip:hover{border-color:#0F6FE3;color:#0F6FE3}
+.sw-bf-tekst{max-width:52rem;font-size:.95rem;line-height:1.7}
+</style>

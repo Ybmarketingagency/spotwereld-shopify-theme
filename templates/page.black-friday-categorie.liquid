@@ -5,12 +5,10 @@
   "black friday led lampen", "black friday wandlampen" enzovoort (Google Autocomplete,
   03-11-2026). Eén template voor alle pagina's; de handle van de pagina bepaalt de
   collectie en de teksten. Aantallen en prijzen komen live uit de collectie, zodat de
-  tekst nooit iets belooft wat er niet is. Actiedata staan in page.black-friday.liquid
-  en hier; jaarlijks allebei omzetten.
+  tekst nooit iets belooft wat er niet is. Actiedata, kop en opmaak staan in
+  snippets/sw-bf-kop.liquid en snippets/sw-bf-stijl.liquid, gedeeld met de hub.
 {%- endcomment -%}
 
-{%- assign sw_bf_start = '2026-11-20' -%}
-{%- assign sw_bf_end = '2026-11-30' -%}
 {%- assign sw_en = false -%}
 {%- if request.locale.iso_code == 'en' -%}{%- assign sw_en = true -%}{%- endif -%}
 {%- assign sw_root = routes.root_url | append: '/' | replace: '//', '/' | remove_last: '/' -%}
@@ -112,103 +110,46 @@
 }
 </script>
 
-<style>
-.sw-bf{--sw-ink:#12181f;--sw-body:#414a55;--sw-muted:#767f8b;--sw-rule:#e2e5e9;--sw-fill:#f7f8f9;--sw-accent:#0a3a72;background:#fff;color:var(--sw-body)}
-.sw-bf-wrap{max-width:1140px;margin:0 auto;padding:2.5rem 1rem 4rem}
-@media(min-width:768px){.sw-bf-wrap{padding:3rem 1.5rem 4.5rem}}
-.sw-bf-hero{background:var(--sw-ink);color:#fff}
-.sw-bf-hero .sw-bf-wrap{padding-top:2.5rem;padding-bottom:2.5rem}
-.sw-bf-kicker{font-size:.6875rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#a7aeb6;margin:0 0 .875rem}
-.sw-bf-kicker a{color:#a7aeb6}
-.sw-bf-hero h1{font-size:clamp(1.75rem,4vw,2.625rem);font-weight:700;letter-spacing:-.02em;line-height:1.15;margin:0 0 1rem;color:#fff;max-width:44rem}
-.sw-bf-lead{font-size:1.0625rem;line-height:1.6;color:#c9cfd6;margin:0 0 1.25rem;max-width:42rem}
-.sw-bf-status{display:inline-block;font-size:.8125rem;font-weight:600;padding:.375rem .75rem;border:1px solid #3a434e;color:#fff;margin:0}
-.sw-bf-status:empty{display:none}
-.sw-bf h2{font-size:1.375rem;font-weight:700;color:var(--sw-ink);letter-spacing:-.012em;line-height:1.3;margin:0 0 1rem}
-.sw-bf-tips{max-width:44rem;margin:0 0 0;padding-left:1.25rem;font-size:1rem;line-height:1.65}
-.sw-bf-tips li{margin-bottom:.625rem}
-.sw-bf-tips strong{color:var(--sw-ink)}
-.sw-bf a{color:var(--sw-accent)}
-.sw-bf-sub{margin:0 0 1.5rem;font-size:.9688rem;line-height:1.6;max-width:42rem}
-.sw-bf-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
-@media(min-width:768px){.sw-bf-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:1.25rem}}
-@media(min-width:1024px){.sw-bf-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
-.sw-bf-card{display:flex;flex-direction:column;text-decoration:none;color:inherit;border:1px solid var(--sw-rule);background:#fff;transition:border-color .15s}
-.sw-bf-card:hover{border-color:#b9c0c8}
-.sw-bf .sw-bf-card{color:inherit}
-.sw-bf-card-img{aspect-ratio:1/1;background:var(--sw-fill);overflow:hidden}
-.sw-bf-card-img img{width:100%;height:100%;object-fit:contain;display:block}
-.sw-bf-card-body{padding:.75rem .875rem .875rem}
-.sw-bf-card-title{font-weight:600;color:var(--sw-ink);font-size:.875rem;line-height:1.35;margin:0}
-.sw-bf-card-price{font-size:.875rem;color:var(--sw-ink);margin:.375rem 0 0}
-.sw-bf-card-price s{color:var(--sw-muted);margin-right:.25rem}
-.sw-bf-during{display:none}
-.sw-bf.is-live .sw-bf-during{display:inline}
-.sw-bf.is-live .sw-bf-before{display:none}
-.sw-bf-more{margin:1.5rem 0 0}
-.sw-bf-btn{display:inline-block;background:var(--sw-ink);color:#fff !important;font-weight:600;text-decoration:none;padding:.875rem 1.5rem;font-size:.9375rem}
-.sw-bf-section{border-top:1px solid var(--sw-rule)}
-.sw-bf-faq{max-width:44rem}
-.sw-bf-faq details{border-top:1px solid var(--sw-rule);padding:1rem 0}
-.sw-bf-faq details:last-child{border-bottom:1px solid var(--sw-rule)}
-.sw-bf-faq summary{cursor:pointer;font-weight:600;color:var(--sw-ink);font-size:1rem;line-height:1.4}
-.sw-bf-faq details p{margin:.625rem 0 0;font-size:.9688rem;line-height:1.65}
-.sw-bf-links{display:flex;flex-wrap:wrap;gap:.5rem 1.25rem;font-size:.9375rem}
-</style>
+{%- render 'sw-bf-stijl' -%}
+{%- assign sw_crumb = sw_h1 | split: ':' | first -%}
 
-<div class="sw-bf" id="sw-bf" data-start="{{ sw_bf_start }}" data-end="{{ sw_bf_end }}">
-  <section class="sw-bf-hero">
-    <div class="sw-bf-wrap">
-      <p class="sw-bf-kicker"><a href="{{ sw_root }}/pages/black-friday">Black Friday 2026</a></p>
-      <h1>{{ sw_h1 }}</h1>
-      <p class="sw-bf-lead">{{ sw_lead }}</p>
-      <p class="sw-bf-status" id="sw-bf-status" aria-live="polite"></p>
-    </div>
-  </section>
+<div class="sw-bf" id="sw-bf">
+  {%- render 'sw-bf-kop', titel: sw_h1, lead: sw_lead, crumb: sw_crumb, en: sw_en, root: sw_root, ouder: true -%}
 
   {%- if c != blank and c.products_count > 0 -%}
-  <section>
-    <div class="sw-bf-wrap">
-      <h2>{{ c.title }}: {{ c.products_count }} {% if sw_en %}products{% else %}producten{% endif %}</h2>
-      <p class="sw-bf-sub">
-        <span class="sw-bf-before">{% if sw_en %}These are the current prices. During the promotion 10% comes off in your cart, also on products that are already reduced.{% else %}Dit zijn de huidige prijzen. Tijdens de actie gaat er in de winkelwagen 10% vanaf, ook op producten die al afgeprijsd zijn.{% endif %}</span>
-        <span class="sw-bf-during">{% if sw_en %}Struck-through is the normal price, next to it what you pay with 10% off.{% else %}Doorgestreept is de normale prijs, ernaast wat je betaalt met 10% korting.{% endif %}</span>
-      </p>
+  <section class="sw-bf-sec sw-bf-sec--grijs">
+    <div class="sw-bf-in">
+      <div class="sw-bf-kop">
+        <div>
+          <h2>{{ c.title }}</h2>
+          <p><span class="sw-bf-voor">{% if sw_en %}{{ c.products_count }} products. These are the current prices; during the promotion 10% comes off in your cart, also on products that are already reduced.{% else %}{{ c.products_count }} producten. Dit zijn de huidige prijzen; tijdens de actie gaat er in de winkelwagen 10% vanaf, ook op producten die al afgeprijsd zijn.{% endif %}</span><span class="sw-bf-tijdens">{% if sw_en %}Struck through is the normal price, next to it what you pay with 10% off.{% else %}Doorgestreept is de normale prijs, ernaast wat je betaalt met 10% korting.{% endif %}</span></p>
+        </div>
+        <div class="sw-bf-kop-lijn"></div>
+      </div>
       <div class="sw-bf-grid">
         {%- assign sw_n = 0 -%}
         {%- for p in c.products limit: 50 -%}
           {%- if p.available == false -%}{%- continue -%}{%- endif -%}
           {%- assign sw_n = sw_n | plus: 1 -%}
           {%- if sw_n > 12 -%}{%- break -%}{%- endif -%}
-          {%- assign sw_bf_price = p.price_min | times: 90 | divided_by: 100 -%}
-          <a class="sw-bf-card" href="{{ p.url }}">
-            <div class="sw-bf-card-img">{%- if p.featured_image -%}{{ p.featured_image | image_url: width: 400 | image_tag: loading: 'lazy', alt: p.title }}{%- endif -%}</div>
-            <div class="sw-bf-card-body">
-              <p class="sw-bf-card-title">{{ p.title | split: ' | ' | first }}</p>
-              <p class="sw-bf-card-price">
-                {%- assign sw_van = '' -%}{%- if p.price_varies -%}{%- if sw_en -%}{%- assign sw_van = 'from ' -%}{%- else -%}{%- assign sw_van = 'vanaf ' -%}{%- endif -%}{%- endif -%}
-                <span class="sw-bf-before">{{ sw_van }}{{ p.price_min | money }}</span>
-                <span class="sw-bf-during">{{ sw_van }}<s>{{ p.price_min | money }}</s>{{ sw_bf_price | money }}</span>
-              </p>
-            </div>
-          </a>
+          {%- render 'sw-bf-kaart', p: p, en: sw_en -%}
         {%- endfor -%}
       </div>
-      <p class="sw-bf-more"><a class="sw-bf-btn" href="{{ c.url }}">{% if sw_en %}View all {{ c.products_count }} products{% else %}Bekijk alle {{ c.products_count }} producten{% endif %}</a></p>
+      <p class="sw-bf-meer"><a class="sw-bf-btn" href="{{ c.url }}">{% if sw_en %}View all {{ c.products_count }} products{% else %}Bekijk alle {{ c.products_count }} producten{% endif %}</a></p>
     </div>
   </section>
   {%- endif -%}
 
-  <section class="sw-bf-section">
-    <div class="sw-bf-wrap">
-      <h2>{% if sw_en %}Before you buy{% else %}Waar let je op{% endif %}</h2>
+  <section class="sw-bf-sec">
+    <div class="sw-bf-in">
+      <div class="sw-bf-kop"><div><h2>{% if sw_en %}Before you buy{% else %}Waar let je op{% endif %}</h2></div><div class="sw-bf-kop-lijn"></div></div>
       <ul class="sw-bf-tips">{{ sw_tips }}</ul>
     </div>
   </section>
 
-  <section class="sw-bf-section">
-    <div class="sw-bf-wrap">
-      <h2>{% if sw_en %}Frequently asked questions{% else %}Veelgestelde vragen{% endif %}</h2>
+  <section class="sw-bf-sec sw-bf-sec--grijs">
+    <div class="sw-bf-in">
+      <div class="sw-bf-kop"><div><h2>{% if sw_en %}Frequently asked questions{% else %}Veelgestelde vragen{% endif %}</h2></div><div class="sw-bf-kop-lijn"></div></div>
       <div class="sw-bf-faq">
         {{ sw_faq }}
         {% if sw_en %}
@@ -220,11 +161,11 @@
     </div>
   </section>
 
-  <section class="sw-bf-section">
-    <div class="sw-bf-wrap">
-      <h2>{% if sw_en %}More Black Friday{% else %}Meer Black Friday{% endif %}</h2>
-      <div class="sw-bf-links">
-        <a href="{{ sw_root }}/pages/black-friday">{% if sw_en %}All Black Friday offers{% else %}Alle Black Friday-aanbiedingen{% endif %}</a>
+  <section class="sw-bf-sec">
+    <div class="sw-bf-in">
+      <div class="sw-bf-kop"><div><h2>{% if sw_en %}More Black Friday{% else %}Meer Black Friday{% endif %}</h2></div><div class="sw-bf-kop-lijn"></div></div>
+      <div class="sw-bf-chips">
+        <a class="sw-bf-chip" href="{{ sw_root }}/pages/black-friday">{% if sw_en %}All Black Friday offers{% else %}Alle Black Friday-aanbiedingen{% endif %}</a>
         {%- assign sw_alle = 'black-friday-inbouwspots,black-friday-led-lampen,black-friday-wandlampen,black-friday-buitenverlichting,black-friday-railverlichting,black-friday-hanglampen' | split: ',' -%}
         {%- if sw_en -%}
           {%- assign sw_labels = 'Recessed spots,LED bulbs,Wall lights,Outdoor lighting,Track lighting,Pendant lights' | split: ',' -%}
@@ -233,30 +174,9 @@
         {%- endif -%}
         {%- for h in sw_alle -%}
           {%- if h == page.handle -%}{%- continue -%}{%- endif -%}
-          {%- if pages[h] != blank -%}<a href="{{ sw_root }}/pages/{{ h }}">Black Friday {{ sw_labels[forloop.index0] | downcase }}</a>{%- endif -%}
+          {%- if pages[h] != blank -%}<a class="sw-bf-chip" href="{{ sw_root }}/pages/{{ h }}">{{ sw_labels[forloop.index0] }}</a>{%- endif -%}
         {%- endfor -%}
       </div>
     </div>
   </section>
 </div>
-
-<script>
-(function(){
-  var el = document.getElementById('sw-bf'); if (!el) return;
-  var out = document.getElementById('sw-bf-status');
-  var en = {{ sw_en | json }};
-  var start = new Date(el.dataset.start + 'T00:00:00+01:00');
-  var end = new Date(el.dataset.end + 'T23:59:59+01:00');
-  var now = new Date();
-  if (now >= start && now <= end) {
-    el.classList.add('is-live');
-    var left = Math.ceil((end - now) / 864e5);
-    out.textContent = en ? ('On now, ' + (left > 1 ? left + ' days left' : 'last day')) : ('Loopt nu, ' + (left > 1 ? 'nog ' + left + ' dagen' : 'laatste dag'));
-  } else if (now < start) {
-    var d = Math.ceil((start - now) / 864e5);
-    out.textContent = en ? ('Starts in ' + d + (d === 1 ? ' day' : ' days')) : ('Start over ' + d + (d === 1 ? ' dag' : ' dagen'));
-  } else {
-    out.textContent = en ? 'This promotion has ended' : 'Deze actie is afgelopen';
-  }
-})();
-</script>

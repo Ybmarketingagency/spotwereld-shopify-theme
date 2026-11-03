@@ -1,0 +1,58 @@
+{%- comment -%}
+  Kop + voordelenbalk + aftelscript van de Black Friday-pagina's.
+  Parameters: titel, lead, en (bool), root, ouder (true op categoriepagina's:
+  dan staat de hub als tussenstap in het kruimelpad).
+  Actiedata staan hier; jaarlijks omzetten.
+{%- endcomment -%}
+{%- assign sw_bf_start = '2026-11-20' -%}
+{%- assign sw_bf_end = '2026-11-30' -%}
+{%- assign sw_bf_img = 'https://cdn.shopify.com/s/files/1/0988/8720/5208/files/sw-black-friday-2026.jpg' -%}
+
+<section class="sw-bf-hero">
+  <img class="sw-bf-hero-img" src="{{ sw_bf_img }}?width=1400" srcset="{{ sw_bf_img }}?width=700 700w, {{ sw_bf_img }}?width=1100 1100w, {{ sw_bf_img }}?width=1584 1584w" sizes="(min-width: 768px) 62vw, 100vw" alt="{% if en %}Living room at night with a row of warm white recessed LED spotlights{% else %}Woonkamer 's avonds met een rij warmwitte led inbouwspots{% endif %}" width="1584" height="672" fetchpriority="high">
+  <div class="sw-bf-in">
+    <nav class="sw-bf-crumbs" aria-label="{% if en %}Breadcrumb{% else %}Kruimelpad{% endif %}">
+      <a href="{{ root }}/">Home</a><span>&#9656;</span>
+      {%- if ouder -%}<a href="{{ root }}/pages/black-friday">Black Friday</a><span>&#9656;</span>{%- endif -%}
+      <strong>{{ crumb }}</strong>
+    </nav>
+    <h1>{{ titel }}</h1>
+    <p class="sw-bf-lead">{{ lead }}</p>
+    <div class="sw-bf-pills">
+      <span class="sw-bf-pill"><span class="sw-bf-dot" aria-hidden="true"></span>{% if en %}20 to 30 November 2026{% else %}20 t/m 30 november 2026{% endif %}</span>
+      <span class="sw-bf-pill" id="sw-bf-status" hidden></span>
+    </div>
+  </div>
+</section>
+
+<div class="sw-bf-usp">
+  <div class="sw-bf-in">
+    <div class="sw-bf-usp-grid">
+      <div class="sw-bf-usp-item"><span class="sw-bf-usp-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></span><span><strong>{% if en %}10% off automatically{% else %}Automatisch 10% korting{% endif %}</strong><small>{% if en %}No code, visible in your cart{% else %}Geen code, zichtbaar in je winkelwagen{% endif %}</small></span></div>
+      <div class="sw-bf-usp-item"><span class="sw-bf-usp-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></span><span><strong>{% if en %}Free shipping from €50{% else %}Gratis verzending vanaf €50{% endif %}</strong><small>{% if en %}Ordered today, shipped tomorrow{% else %}Vandaag besteld, morgen verzonden{% endif %}</small></span></div>
+      <div class="sw-bf-usp-item"><span class="sw-bf-usp-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg></span><span><strong>{% if en %}14-day returns{% else %}14 dagen retourrecht{% endif %}</strong><small>{% if en %}Also on Black Friday orders{% else %}Ook op je Black Friday-bestelling{% endif %}</small></span></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var el = document.getElementById('sw-bf'); if (!el) return;
+  var out = document.getElementById('sw-bf-status');
+  var en = {{ en | json }};
+  var start = new Date('{{ sw_bf_start }}T00:00:00+01:00');
+  var end = new Date('{{ sw_bf_end }}T23:59:59+01:00');
+  var now = new Date(), t;
+  if (now >= start && now <= end) {
+    el.classList.add('is-live');
+    var left = Math.ceil((end - now) / 864e5);
+    t = en ? ('On now, ' + (left > 1 ? left + ' days left' : 'last day')) : ('Loopt nu, ' + (left > 1 ? 'nog ' + left + ' dagen' : 'laatste dag'));
+  } else if (now < start) {
+    var d = Math.ceil((start - now) / 864e5);
+    t = en ? ('Starts in ' + d + (d === 1 ? ' day' : ' days')) : ('Start over ' + d + (d === 1 ? ' dag' : ' dagen'));
+  } else {
+    t = en ? 'This promotion has ended' : 'Deze actie is afgelopen';
+  }
+  out.textContent = t; out.hidden = false;
+})();
+</script>
