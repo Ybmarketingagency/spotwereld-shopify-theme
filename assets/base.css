@@ -4588,3 +4588,4 @@ product-recommendations:has([data-has-recommendations='false']) {
 /* sync 2026-10-05 accessoires-tegel v2 */
 
 :root { --sw-rail-order-version: 20261104; }
+:root { --sw-variant-stock-version: 20261104; }

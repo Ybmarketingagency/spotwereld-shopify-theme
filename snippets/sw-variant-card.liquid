@@ -82,6 +82,16 @@
   </a>
   <div class="product-card__content sw-vcard-content">
     <div class="sw-vcard-media">
+      {%- unless variant.available -%}
+        <div
+          class="product-badges product-badges--{{ settings.badge_position }}"
+          style="--padding-block-start:0px;--padding-inline-start:0px;--badge-border-radius:{{ settings.badge_corner_radius }}px;--badge-font-family:var(--font-{{ settings.badge_font_family }}--family);--badge-font-weight:var(--font-{{ settings.badge_font_family }}--weight);--badge-text-transform:{{ settings.badge_text_transform }};"
+        >
+          <div class="product-badges__badge product-badges__badge--rectangle color-{{ settings.badge_sold_out_color_scheme }}">
+            {{- 'content.product_badge_sold_out' | t -}}
+          </div>
+        </div>
+      {%- endunless -%}
       {%- if foto -%}
         <img
           src="{{ foto | image_url: width: 600 }}"
@@ -119,6 +129,8 @@
     </a>
   </div>
 </product-card>
+
+{% render 'product-badges-styles' %}
 
 {% stylesheet %}
   product-card.sw-vcard{position:relative;display:flex;flex-direction:column;height:100%}
