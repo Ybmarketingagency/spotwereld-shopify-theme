@@ -1,0 +1,47 @@
+{%- comment -%}
+  Stable server-side tile order: white rails (recessed, surface), black rails
+  (recessed, surface), other rails, spots, other luminaires, connectors, accessories.
+  Rail lengths sort numerically within each colour/mount, then by circuit count.
+  Handles remain Dutch on translated pages; do not classify using translated titles.
+{%- endcomment -%}
+{%- liquid
+  assign sw_handle = product.handle | downcase
+  assign sw_colour = colour | default: product.title | downcase
+  assign sw_group = 7
+  assign sw_mount = 1
+  assign sw_length = 0
+  assign sw_phase = 3
+  assign sw_kind = product.metafields.custom.soort_filter.value | downcase
+  assign sw_tail = sw_handle | split: '-rail-' | last
+  assign sw_cm = sw_tail | split: '-' | first | remove: 'cm' | plus: 0
+  if sw_handle contains '-rail-'
+    if sw_cm > 0 or sw_kind == 'rail'
+      assign sw_group = 2
+      assign sw_length = sw_cm
+      if sw_colour contains 'wit' or sw_colour contains 'white'
+        assign sw_group = 0
+      elsif sw_colour contains 'zwart' or sw_colour contains 'black'
+        assign sw_group = 1
+      endif
+      if sw_handle contains 'inbouw' or sw_handle contains 'recessed'
+        assign sw_mount = 0
+      endif
+    endif
+  endif
+  if sw_group == 7
+    if sw_handle contains 'railspot' or sw_handle contains 'railarmatuur' or sw_handle contains 'opbouwspot'
+      unless sw_handle contains 'filter' or sw_handle contains 'sierring'
+        assign sw_group = 3
+      endunless
+    elsif sw_handle contains 'hanglamp' or sw_handle contains 'raillichtbalk' or sw_handle contains 'noodverlichting'
+      assign sw_group = 4
+    elsif sw_handle contains 'connector' or sw_handle contains 'koppel' or sw_handle contains 'middenvoeding'
+      assign sw_group = 5
+    endif
+  endif
+  if sw_handle contains '1-fase'
+    assign sw_phase = 1
+  endif
+  assign sw_length_key = sw_length | prepend: '00000' | slice: -5, 5
+-%}
+{{- sw_group -}}{{- sw_mount -}}{{- sw_length_key -}}{{- sw_phase -}}-{{- sw_handle -}}-{{- sw_colour -}}
