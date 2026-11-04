@@ -1,0 +1,29 @@
+{%- comment -%}
+  NL shipping estimate in cents. Matches Shopify profiles:
+  ordinary items EUR 7.95 below EUR 50, otherwise free;
+  long rails EUR 10 once per order, including above EUR 50.
+  Shopify combines both profiles for mixed baskets.
+{%- endcomment -%}
+{%- liquid
+  assign sw_long_handles = '1-fase-rail-300cm,3-fase-rail-300cm,3-fase-rail-400cm' | split: ','
+  assign sw_has_long = false
+  assign sw_has_standard = false
+  for sw_item in cart.items
+    if sw_item.requires_shipping == false
+      continue
+    endif
+    if sw_long_handles contains sw_item.product.handle
+      assign sw_has_long = true
+    else
+      assign sw_has_standard = true
+    endif
+  endfor
+  assign sw_shipping = 0
+  if sw_has_long
+    assign sw_shipping = 1000
+  endif
+  if sw_has_standard and cart.total_price < 5000
+    assign sw_shipping = sw_shipping | plus: 795
+  endif
+-%}
+{{- sw_shipping -}}

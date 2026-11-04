@@ -224,11 +224,10 @@
         {%- liquid
           assign swg_free_from = 5000
           assign swg_ship_rate = 795
-          if cart.total_price >= swg_free_from
-            assign swg_ship = 0
-          else
-            assign swg_ship = swg_ship_rate
-          endif
+        -%}
+        {%- capture swg_ship -%}{%- render 'sw-shipping-cost', cart: cart -%}{%- endcapture -%}
+        {%- liquid
+          assign swg_ship = swg_ship | plus: 0
           assign swg_grand = cart.total_price | plus: swg_ship
         -%}
         <div class="swg-sum-row">
@@ -242,7 +241,15 @@
           </span>
         </div>
         <div class="swg-sum-row total"><span>{{ 'sw.kassa.totaal' | t }}</span><span id="swg-total">{{ swg_grand | money }}</span></div>
-        {%- if cart.item_count > 0 and cart.total_price < swg_free_from -%}
+        {%- if swg_ship >= 1000 -%}
+          <p id="swg-freeship" style="margin:.4rem 0 0;font-size:.78rem;color:#1e3a5f;background:#f4f8ff;border:1px solid #d8e6fb;border-radius:8px;padding:.5rem .65rem;line-height:1.4">
+            {%- if request.locale.iso_code == 'en' -%}
+              Long rails over 2 metres: {{ 1000 | money }} delivery, including on orders over {{ swg_free_from | money }}. Standard items add {{ swg_ship_rate | money }} below {{ swg_free_from | money }}.
+            {%- else -%}
+              Lange rails boven 2 meter: {{ 1000 | money }} verzending, ook vanaf {{ swg_free_from | money }}. Voor gewone producten komt onder {{ swg_free_from | money }} nog {{ swg_ship_rate | money }} bij.
+            {%- endif -%}
+          </p>
+        {%- elsif cart.item_count > 0 and cart.total_price < swg_free_from -%}
           {%- assign swg_rest = swg_free_from | minus: cart.total_price -%}
           <p id="swg-freeship" style="margin:.4rem 0 0;font-size:.78rem;color:#1e3a5f;background:#f4f8ff;border:1px solid #d8e6fb;border-radius:8px;padding:.5rem .65rem;line-height:1.4">
             {%- if request.locale.iso_code == 'en' -%}
@@ -636,14 +643,27 @@
     var freeFrom = ship ? parseInt(ship.getAttribute('data-free-from'), 10) : 5000;
     var rate = ship ? parseInt(ship.getAttribute('data-rate'), 10) : 795;
     var isEn = document.documentElement.lang && document.documentElement.lang.indexOf('en') === 0;
-    var shipCost = cart.total_price >= freeFrom ? 0 : rate;
+    var longHandles = ['1-fase-rail-300cm', '3-fase-rail-300cm', '3-fase-rail-400cm'];
+    var hasLong = false;
+    var hasStandard = false;
+    (cart.items || []).forEach(function(item){
+      if (item.requires_shipping === false) return;
+      if (longHandles.indexOf(item.handle) !== -1) hasLong = true;
+      else hasStandard = true;
+    });
+    var shipCost = (hasLong ? 1000 : 0) + (hasStandard && cart.total_price < freeFrom ? rate : 0);
     if (ship) {
       ship.textContent = shipCost === 0 ? (isEn ? 'Free' : 'Gratis') : money(shipCost);
       ship.style.color = shipCost === 0 ? '#16a34a' : '';
       ship.style.fontWeight = shipCost === 0 ? '700' : '';
     }
     if (nudge) {
-      if (shipCost === 0) {
+      if (hasLong) {
+        nudge.hidden = false;
+        nudge.textContent = isEn
+          ? 'Long rails over 2 metres: ' + money(1000) + ' delivery, including on orders over ' + money(freeFrom) + '. Standard items add ' + money(rate) + ' below ' + money(freeFrom) + '.'
+          : 'Lange rails boven 2 meter: ' + money(1000) + ' verzending, ook vanaf ' + money(freeFrom) + '. Voor gewone producten komt onder ' + money(freeFrom) + ' nog ' + money(rate) + ' bij.';
+      } else if (shipCost === 0) {
         nudge.hidden = true;
       } else {
         nudge.hidden = false;

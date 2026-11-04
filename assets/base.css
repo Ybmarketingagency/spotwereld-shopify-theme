@@ -4589,3 +4589,4 @@ product-recommendations:has([data-has-recommendations='false']) {
 
 :root { --sw-rail-order-version: 20261104; }
 :root { --sw-variant-stock-version: 20261104.2; }
+:root { --sw-long-rail-shipping-version: 20261104; }

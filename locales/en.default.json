@@ -374,8 +374,8 @@
         "titel_html": "Premium<br>LED Lighting"
       },
       "usp": {
-        "verzending": "Free shipping",
-        "verzending_sub": "On orders over &euro;50",
+        "verzending": "Delivery",
+        "verzending_sub": "Free from €50, except long rails",
         "levering": "Fast delivery",
         "levering_sub": "Order today, shipped tomorrow",
         "garantie": "5-year warranty",
@@ -468,7 +468,7 @@
     "balk": {
       "aria": "Announcements",
       "levering": "&#9889;&nbsp;Order today, shipped tomorrow&nbsp;",
-      "verzending": "&nbsp;Free shipping over &euro;50&nbsp;",
+      "verzending": "&nbsp;Free shipping over &euro;50&nbsp; (except long rails)",
       "retour": "&nbsp;&#8635;&nbsp;14-day return policy&nbsp;"
     },
     "popup": {
@@ -510,7 +510,7 @@
     },
     "mand": {
       "bekijk": "View cart →",
-      "verzending": "Free shipping from €50",
+      "verzending": "Free shipping from €50 (except long rails)",
       "retour": "14-day returns",
       "btw": "Incl. VAT",
       "toevoegen": "Add to cart"
@@ -604,7 +604,7 @@
       "kop2": "premium LED lighting",
       "hero_tekst": "We believe good lighting transforms a room completely. Spotwereld supplies quality LED products at fair prices, with personal advice.",
       "knop_contact": "Get in touch",
-      "gratis": "Free from &euro;50",
+      "gratis": "Free from &euro;50 (except long rails)",
       "verhaal_label": "OUR STORY",
       "waarom": "Why Spotwereld?",
       "kwaliteit": "Top quality",
@@ -612,7 +612,7 @@
       "advies": "Personal advice",
       "advies_tekst": "Our experts help you find the right lighting for every room and situation.",
       "levering": "Fast delivery",
-      "levering_tekst": "Order today, shipped tomorrow. Free shipping from &euro;50.",
+      "levering_tekst": "Order today, shipped tomorrow. Free shipping from &euro;50. (except long rails)",
       "retour_tekst": "Not happy? Send the product back within 14 days at your own expense. Money back within 5 working days.",
       "slot_kop": "Ready to transform your home?",
       "slot_tekst": "Discover our complete range of premium LED lighting.",
@@ -632,7 +632,7 @@
       "bedankt": "&#10003; Thanks for your message! We will reply as soon as we can.",
       "onderwerp": "Subject",
       "v1": "How long does delivery take?",
-      "a1": "Order today, shipped tomorrow. Free over &euro;50.",
+      "a1": "Order today, shipped tomorrow. Free over &euro;50. (except long rails)",
       "v2": "Can I return my order?",
       "a2": "Yes, within 14 days of receipt. Return shipping is at the buyer’s expense &mdash; money back within 5 working days.",
       "a3": "iDEAL, Visa, Mastercard, Klarna and more. Always safe and reliable.",
@@ -654,7 +654,7 @@
     "verz": {
       "sub": "Everything you need to know about delivery and returns",
       "bezorging": "Delivery",
-      "b1": "Free delivery on orders over &euro;50",
+      "b1": "Free delivery on orders over &euro;50 (except long rails)",
       "b3": "Delivery by PostNL or DHL",
       "b4": "Track &amp; trace by email",
       "retour": "Returns",
@@ -669,9 +669,9 @@
       "t1": "Order under &euro;25",
       "t1_sub": "Delivery by PostNL or DHL, 1&ndash;2 working days",
       "t2": "Order &euro;25 to &euro;50",
-      "t3": "Order over &euro;50",
+      "t3": "Standard products from &euro;50",
       "gratis": "FREE",
-      "t3_sub": "Free delivery, next working day",
+      "t3_sub": "Long rails over 2 metres always cost &euro;10 to ship.",
       "vandaag": "Order today",
       "morgen": "shipped tomorrow",
       "werkdagen": "On working days (Mon&ndash;Fri). Public holidays excluded.",
@@ -685,11 +685,11 @@
       "s4": "Money back",
       "s4_tekst": "After receipt and inspection, money back within 5 working days.",
       "voorwaarden": "Conditions:",
-      "letop_tekst": "Delivery takes place on working days. Orders placed at the weekend are processed on Monday.",
+      "letop_tekst": "Rails over 2 metres: &euro;10 delivery per order, including on orders from &euro;50. If the order also contains standard products and is below &euro;50, total delivery is &euro;17.95. Rails of exactly 2 metres use the standard rate. Delivery takes place on working days.",
       "voorwaarden_tekst": "The product must be unused. Returns are possible up to 14 days after receipt. Damage caused by careless use is not covered."
     },
     "prod": {
-      "verzenden": "&#10003; Free shipping from &euro;50",
+      "verzenden": "&#10003; Free shipping from &euro;50 (except long rails)",
       "retour": "&#10003;&#32;14-day right of return",
       "garantie": "&#10003; 5-year warranty",
       "levering": "&#10003; Order today, shipped tomorrow",
@@ -736,7 +736,7 @@
       "contact_titel": "Contact us &mdash; advice on LED lighting",
       "contact_desc": "Questions about cut-out size, light colour or dimming? Call (0)85 333 26 72 or email info@spotwereld.nl. We reply within one working day.",
       "verzending_titel": "Shipping, delivery times and returns",
-      "verzending_desc": "Order today, shipped tomorrow. Free delivery from &euro; 50, fourteen days to change your mind and returns via a PostNL service point.",
+      "verzending_desc": "Order today, shipped tomorrow. Free delivery from &euro; 50, fourteen days to change your mind and returns via a PostNL service point. (except long rails)",
       "partner_titel": "Become a partner &mdash; for installers and trade",
       "partner_desc": "Installers, electricians and contractors can become a Spotwereld partner. Once we have checked your registration number you receive your own discount code.",
       "gegevens_titel": "Checkout",

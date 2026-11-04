@@ -5,6 +5,8 @@
   Instellingen > Verzending en bezorging > Algemeen profiel > Domestic >
   "Standaard NL". Stand 11-10-2026: EUR 7,95 onder EUR 50, gratis vanaf EUR 50.
   Gemeten via /cart/shipping_rates.json, niet overgenomen uit een tekst op de site.
+  Lange rails vallen vanaf 04-11-2026 in een apart profiel: EUR 10 per bestelling.
+  Zie sw-shipping-cost voor de combinatie van gewone producten en lange rails.
   Wijzigt het tarief in Shopify, pas het hier en in sections/sw-gegevens.liquid aan.
 
   @param {string} [variant] - 'compact' voor de winkelwagenlade
@@ -19,9 +21,29 @@
     assign sw_pct = 100
   endif
 -%}
+{%- capture sw_actual_shipping -%}{%- render 'sw-shipping-cost', cart: cart -%}{%- endcapture -%}
+{%- assign sw_actual_shipping = sw_actual_shipping | plus: 0 -%}
 
 {%- if cart.item_count > 0 -%}
   <div class="sw-vz-balk{% if variant == 'compact' %} sw-vz-balk--compact{% endif %}">
+    {%- if sw_actual_shipping >= 1000 -%}
+      <p class="sw-vz-tekst">
+        {%- if request.locale.iso_code == 'en' -%}
+          Delivery: <strong>{{ sw_actual_shipping | money }}</strong>
+        {%- else -%}
+          Verzending: <strong>{{ sw_actual_shipping | money }}</strong>
+        {%- endif -%}
+      </p>
+      <p class="sw-vz-sub">
+        {%- if request.locale.iso_code == 'en' -%}
+          Long rails over 2 metres cost {{ 1000 | money }} to ship, including on orders over {{ sw_free_from | money }}.
+          {%- if sw_actual_shipping > 1000 %} Standard items add {{ sw_ship_rate | money }} below {{ sw_free_from | money }}.{% endif -%}
+        {%- else -%}
+          Lange rails boven 2 meter kosten {{ 1000 | money }} aan verzending, ook vanaf {{ sw_free_from | money }}.
+          {%- if sw_actual_shipping > 1000 %} Voor gewone producten komt onder {{ sw_free_from | money }} nog {{ sw_ship_rate | money }} bij.{% endif -%}
+        {%- endif -%}
+      </p>
+    {%- else -%}
     {%- if cart.total_price >= sw_free_from -%}
       <p class="sw-vz-tekst sw-vz-tekst--gehaald">
         <span aria-hidden="true">&#10003;</span>
@@ -58,6 +80,7 @@
           Onder {{ sw_free_from | money }} kost bezorging {{ sw_ship_rate | money }}
         {%- endif -%}
       </p>
+    {%- endif -%}
     {%- endif -%}
   </div>
 {%- endif -%}

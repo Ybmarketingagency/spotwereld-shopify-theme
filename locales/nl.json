@@ -366,8 +366,8 @@
         "titel_html": "Premium<br>LED Verlichting"
       },
       "usp": {
-        "verzending": "Gratis Verzending",
-        "verzending_sub": "Bij bestellingen boven &euro;50",
+        "verzending": "Verzending",
+        "verzending_sub": "Gratis vanaf €50, behalve lange rails",
         "levering": "Snelle Levering",
         "levering_sub": "Vandaag besteld, morgen verzonden",
         "garantie": "5 Jaar Garantie",
@@ -460,7 +460,7 @@
     "balk": {
       "aria": "Aankondigingen",
       "levering": "&#9889;&nbsp;Vandaag besteld, morgen verzonden&nbsp;",
-      "verzending": "&nbsp;Gratis verzending bij &euro;50+&nbsp;",
+      "verzending": "&nbsp;Gratis verzending bij &euro;50+&nbsp; (behalve lange rails)",
       "retour": "&nbsp;&#8635;&nbsp;14 dagen retourbeleid&nbsp;"
     },
     "popup": {
@@ -502,7 +502,7 @@
     },
     "mand": {
       "bekijk": "Bekijk winkelmand →",
-      "verzending": "Gratis verzending v.a. €50",
+      "verzending": "Gratis verzending v.a. €50 (behalve lange rails)",
       "retour": "14 dagen retour",
       "btw": "Incl. BTW",
       "toevoegen": "Toevoegen aan winkelwagen"
@@ -596,7 +596,7 @@
       "kop2": "premium LED verlichting",
       "hero_tekst": "Wij geloven dat goede verlichting een ruimte compleet transformeert. Spotwereld levert kwalitatieve LED producten met eerlijke prijzen en persoonlijk advies.",
       "knop_contact": "Contact opnemen",
-      "gratis": "Gratis v.a. &euro;50",
+      "gratis": "Gratis v.a. &euro;50 (behalve lange rails)",
       "verhaal_label": "ONS VERHAAL",
       "waarom": "Waarom Spotwereld?",
       "kwaliteit": "Topkwaliteit",
@@ -604,7 +604,7 @@
       "advies": "Persoonlijk advies",
       "advies_tekst": "Onze experts helpen je de juiste verlichting te vinden voor elke ruimte en situatie.",
       "levering": "Snelle levering",
-      "levering_tekst": "Vandaag besteld, morgen verzonden. Gratis verzending vanaf &euro;50.",
+      "levering_tekst": "Vandaag besteld, morgen verzonden. Gratis verzending vanaf &euro;50. (behalve lange rails)",
       "retour_tekst": "Niet tevreden? Stuur het product binnen 14 dagen terug op eigen kosten. Geld terug binnen 5 werkdagen.",
       "slot_kop": "Klaar om je woning te transformeren?",
       "slot_tekst": "Ontdek ons complete assortiment premium LED verlichting.",
@@ -624,7 +624,7 @@
       "bedankt": "&#10003; Bedankt voor je bericht! We reageren zo snel mogelijk.",
       "onderwerp": "Onderwerp",
       "v1": "Hoe lang duurt de levering?",
-      "a1": "Vandaag besteld, morgen verzonden. Gratis bij &euro;50+.",
+      "a1": "Vandaag besteld, morgen verzonden. Gratis bij &euro;50+. (behalve lange rails)",
       "v2": "Kan ik mijn bestelling retourneren?",
       "a2": "Ja, binnen 14 dagen na ontvangst. De retourzending is voor rekening van de koper &mdash; geld terug binnen 5 werkdagen.",
       "a3": "iDEAL, Visa, Mastercard, Klarna en meer. Altijd veilig en betrouwbaar.",
@@ -646,7 +646,7 @@
     "verz": {
       "sub": "Alles wat je moet weten over bezorging en terugsturen",
       "bezorging": "Bezorging",
-      "b1": "Gratis bezorging bij bestellingen &euro;50+",
+      "b1": "Gratis bezorging bij bestellingen &euro;50+ (behalve lange rails)",
       "b3": "Bezorging via PostNL of DHL",
       "b4": "Track &amp; trace per e-mail",
       "retour": "Retourneren",
@@ -661,9 +661,9 @@
       "t1": "Bestelling onder &euro;25",
       "t1_sub": "Bezorging via PostNL of DHL, 1&ndash;2 werkdagen",
       "t2": "Bestelling &euro;25 tot &euro;50",
-      "t3": "Bestelling boven &euro;50",
+      "t3": "Gewone producten vanaf &euro;50",
       "gratis": "GRATIS",
-      "t3_sub": "Gratis bezorging, volgende werkdag",
+      "t3_sub": "Lange rails boven 2 meter kosten altijd &euro;10 aan verzending.",
       "vandaag": "Vandaag besteld",
       "morgen": "morgen verzonden",
       "werkdagen": "Op werkdagen (ma&ndash;vr). Uitgezonderd feestdagen.",
@@ -677,11 +677,11 @@
       "s4": "Geld terug",
       "s4_tekst": "Na ontvangst en controle, geld terug binnen 5 werkdagen.",
       "voorwaarden": "Voorwaarden:",
-      "letop_tekst": "Bezorging vindt plaats op werkdagen. Bestellingen geplaatst in het weekend worden maandag verwerkt.",
+      "letop_tekst": "Rails langer dan 2 meter: &euro;10 verzending per bestelling, ook vanaf &euro;50. Bestel je daarnaast gewone producten en blijft het bestelbedrag onder &euro;50, dan betaal je samen &euro;17,95. Rails van precies 2 meter vallen onder het gewone tarief. Bezorging vindt plaats op werkdagen.",
       "voorwaarden_tekst": "Product mag niet gebruikt zijn. Retourneren kan tot 14 dagen na ontvangst. Bij beschadiging door onzorgvuldig gebruik geldt geen garantie."
     },
     "prod": {
-      "verzenden": "&#10003; Gratis verzenden vanaf &euro;50",
+      "verzenden": "&#10003; Gratis verzenden vanaf &euro;50 (behalve lange rails)",
       "retour": "&#10003;&#32;14 dagen retourrecht",
       "garantie": "&#10003; 5 jaar garantie",
       "levering": "&#10003; Vandaag besteld, morgen verzonden",
@@ -728,7 +728,7 @@
       "contact_titel": "Contact opnemen &mdash; advies over LED verlichting",
       "contact_desc": "Vragen over zaagmaat, lichtkleur of dimmen? Bel (0)85 333 26 72 of mail info@spotwereld.nl. We antwoorden binnen 24 uur op werkdagen.",
       "verzending_titel": "Verzending, levertijd en retourneren",
-      "verzending_desc": "Vandaag besteld, morgen verzonden. Gratis verzending vanaf &euro; 50, veertien dagen bedenktijd en retour via een PostNL-servicepunt.",
+      "verzending_desc": "Vandaag besteld, morgen verzonden. Gratis verzending vanaf &euro; 50, veertien dagen bedenktijd en retour via een PostNL-servicepunt. (behalve lange rails)",
       "partner_titel": "Partner worden voor installateurs en bedrijven",
       "partner_desc": "Installateurs, elektriciens en aannemers kunnen partner worden bij Spotwereld. Na controle van je KvK-nummer ontvang je een eigen kortingscode.",
       "gegevens_titel": "Afrekenen",
