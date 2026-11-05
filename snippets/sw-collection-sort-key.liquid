@@ -19,6 +19,7 @@
   assign group = 0
   assign accessory = ''
   assign model = handle
+  assign specification = ''
 
   if handle contains 'connector' or handle contains 'koppeling' or handle contains 'middenvoeding'
     assign accessory = 'koppelingen'
@@ -63,6 +64,16 @@
     if start == prefix_dash
       assign name = handle | remove_first: prefix_dash | split: '-' | first
       assign model = prefix | append: '-' | append: name
+      if prefix == 'led-paneel' or prefix == 'led-lichtframe' or prefix == 'opbouwframe-led-paneel'
+        assign model_prefix = model | append: '-'
+        assign size = handle | remove_first: model_prefix | split: '-' | first
+        if prefix == 'opbouwframe-led-paneel'
+          assign size = name
+        endif
+        if size contains 'x'
+          assign specification = size
+        endif
+      endif
       break
     endif
   endfor
@@ -78,7 +89,7 @@
     assign tube_tail = handle | remove_first: model | remove_first: '-'
     assign tube_length = tube_tail | split: '-' | first | remove: 'cm' | plus: 0
     if tube_length > 0
-      assign handle = tube_length | prepend: '00000' | slice: -5, 5 | append: '-' | append: product.handle
+      assign specification = tube_length | prepend: '00000' | slice: -5, 5
     endif
   endif
 
@@ -104,5 +115,5 @@
     assign colour_rank = 3
   endif
 -%}
-{{- group -}}|{{- accessory -}}|{{- brand -}}|{{- model -}}|{{- colour_rank -}}-{{- colour_key -}}|{{- handle -}}
+{{- group -}}|{{- accessory -}}|{{- brand -}}|{{- model -}}|{{- specification -}}|{{- colour_rank -}}-{{- colour_key -}}|{{- handle -}}
 {%- endif -%}
