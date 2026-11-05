@@ -49,9 +49,10 @@ export default class ResultsList extends PaginatedList {
         .catch(() => null));
     }
     const replies = await Promise.all(requests);
+    const currentCards = grid.querySelectorAll(':scope > li');
     if (!this.isConnected || this.refs.grid !== grid ||
-        cards.some((card, index) => grid.children[index] !== card) ||
-        grid.children.length !== cards.length) return;
+        cards.some((card, index) => currentCards[index] !== card) ||
+        currentCards.length !== cards.length) return;
 
     const quantities = Object.assign({}, ...replies.map((reply) => reply?.varianten));
     const backorders = candidates.filter(({ ids }) =>
