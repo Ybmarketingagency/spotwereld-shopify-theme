@@ -53,6 +53,8 @@
     assign accessory = 'overige'
   endif
   if accessory != blank
+    assign group = 2
+  elsif collection_handle contains 'opbouwspots' and handle contains 'ar111'
     assign group = 1
   endif
 
