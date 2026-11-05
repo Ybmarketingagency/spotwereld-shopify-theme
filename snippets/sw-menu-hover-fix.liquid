@@ -33,6 +33,12 @@
   /* 2b. Paneelinhoud onder de knop. De waarde komt uit het script hieronder;
      de clamp voorkomt dat de links van het scherm af lopen op smallere vensters. */
   @media screen and (min-width: 750px) {
+    /* Het paneel sluit direct aan op de knop. Het onzichtbare vlak mag
+       daarom geen muisklikken van naastgelegen menulinks onderscheppen. */
+    #header-component .menu-list__list-item:not([slot='overflow']) > .menu-list__link::after {
+      pointer-events: none;
+    }
+
     /* 3. Een echte dropdown in plaats van een balk over de volle breedte.
 
        Horizon laat de header meegroeien met het paneel (--submenu-height) en
