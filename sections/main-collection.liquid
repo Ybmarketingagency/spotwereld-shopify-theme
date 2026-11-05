@@ -1,6 +1,10 @@
 
 
 {% stylesheet %}
+  [data-sw-backorder-label] [data-sw-stock-ids]:not([data-sw-stock-confirmed]) .sw-card-stock {
+    visibility: hidden;
+  }
+
   [data-sw-backorder-label] .sw-card-stock.sw-card-stock--backorder {
     color: #92400e;
     background: #fffbeb;

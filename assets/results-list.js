@@ -58,11 +58,17 @@ export default class ResultsList extends PaginatedList {
     const backorders = candidates.filter(({ ids }) =>
       ids.every((id) => Number.isSafeInteger(quantities[id]) && quantities[id] <= 0)
     );
-    if (!backorders.length) return;
 
-    for (const { badge } of backorders) {
+    for (const { card, ids } of candidates) {
+      if (ids.some((id) => Number.isSafeInteger(quantities[id]) && quantities[id] > 0)) {
+        card.setAttribute('data-sw-stock-confirmed', '');
+      }
+    }
+
+    for (const { card, badge } of backorders) {
       badge.textContent = label;
       badge.classList.add('sw-card-stock--backorder');
+      card.setAttribute('data-sw-stock-confirmed', '');
     }
     if (this.hasAttribute('data-sw-backorder-sort')) {
       const firstSoldOut = cards.find((card) => !card.hasAttribute('data-sw-stock-ids'));
