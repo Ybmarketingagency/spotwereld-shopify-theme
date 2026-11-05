@@ -23,15 +23,16 @@ export default class ResultsList extends PaginatedList {
   /**
    * De tegels staan onzichtbaar tot de nalevering-tegels op hun plek staan (zie de CSS in
    * main-collection.liquid), zodat de bezoeker ze niet ziet verspringen. Lukt het ophalen
-   * niet, dan worden ze toch getoond; de CSS toont ze sowieso na 1 seconde. Bij een
-   * filterwissel gaat de vlag er eerst weer af, zodat ook dan niets verspringt.
+   * niet, dan worden ze toch getoond; de CSS toont ze sowieso na 1 seconde. De vlag gaat er
+   * bij een nieuwe ronde eerst weer af, maar morph.js laat hem staan bij een filterwissel:
+   * het raster is dan al getoond en hoeft niet opnieuw een seconde leeg te blijven.
    */
   #sortThenReveal() {
     this.removeAttribute('data-sw-stock-ready');
     this.#mergeSortedCollectionPages()
       .then(() => this.#updateBackorderCards())
       .catch(() => {})
-      .finally(() => this.setAttribute('data-sw-stock-ready', ''));
+      .finally(() => this.setAttribute('data-sw-stock-ready', '1'));
   }
 
   disconnectedCallback() {

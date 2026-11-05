@@ -45,7 +45,15 @@ export const MORPH_OPTIONS = {
   },
   onBeforeUpdate(oldNode, newNode) {
     if (oldNode instanceof Element && newNode instanceof Element) {
-      const attributes = ['product-grid-view', 'data-current-checked', 'data-previous-checked', 'cart-summary-sticky'];
+      // data-sw-stock-ready blijft staan: het raster is al getoond, dus na een filterwissel
+      // hoeft het niet opnieuw onzichtbaar te worden (zie results-list.js en main-collection.liquid).
+      const attributes = [
+        'product-grid-view',
+        'data-current-checked',
+        'data-previous-checked',
+        'cart-summary-sticky',
+        'data-sw-stock-ready',
+      ];
 
       for (const attribute of attributes) {
         const oldValue = oldNode.getAttribute(attribute);
