@@ -1,5 +1,16 @@
 
 
+{% stylesheet %}
+  [data-sw-backorder-label] .sw-card-stock.sw-card-stock--backorder {
+    color: #92400e;
+    background: #fffbeb;
+  }
+
+  [data-sw-backorder-label] .sw-card-stock.sw-card-stock--backorder::before {
+    background: currentColor;
+  }
+{% endstylesheet %}
+
 <script
   src="{{ 'results-list.js' | asset_url }}"
   type="module"
@@ -64,6 +75,8 @@
   style="--padding-block-start: {{ section.settings.padding-block-start }}px; --padding-block-end: {{ section.settings.padding-block-end }}px;"
   section-id="{{ section.id }}"
   infinite-scroll="{{ sw_infinite_scroll }}"
+  data-sw-backorder-label="{% if request.locale.iso_code == 'en' %}On backorder{% else %}Op nalevering{% endif %}"
+  {% if sw_stock_sort %}data-sw-backorder-sort{% endif %}
   {% if sw_merge_catalog %}data-sw-collection-size="{{ collection.products_count }}"{% endif %}
 >
   {% render 'skip-to-content-link', href: '#ResultsList', text: 'accessibility.skip_to_results_list' %}
@@ -185,6 +198,7 @@
                 class="product-grid__item product-grid__item--{{ sw_tegel | minus: 1 }}"
                 data-page="{{ paginate.current_page }}"
                 data-product-id="{{ product.id }}"
+                {% if variant.available %}data-sw-stock-ids="{{ variant.id }}"{% endif %}
                 {% if sw_merge_catalog %}data-sw-sort-key="{{ sw_tile_key | escape }}"{% endif %}
                 ref="cards[]"
               >
@@ -209,6 +223,7 @@
               class="product-grid__item product-grid__item--{{ sw_tegel | minus: 1 }}"
               data-page="{{ paginate.current_page }}"
               data-product-id="{{ product.id }}"
+              {% if product.available %}data-sw-stock-ids="{{ product.variants | where: 'available' | map: 'id' | join: ',' }}"{% endif %}
               {% if sw_merge_catalog %}data-sw-sort-key="{{ sw_tile_key | escape }}"{% endif %}
               ref="cards[]"
             >

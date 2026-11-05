@@ -10,17 +10,63 @@ export default class ResultsList extends PaginatedList {
     super.connectedCallback();
 
     mediaQueryLarge.addEventListener('change', this.#handleMediaQueryChange);
+    this.addEventListener('pagination:render', this.#handlePageRender);
     this.setAttribute('initialized', '');
-    this.#mergeSortedCollectionPages();
+    this.#mergeSortedCollectionPages().then(() => this.#updateBackorderCards());
   }
 
   updatedCallback() {
     super.updatedCallback();
-    this.#mergeSortedCollectionPages();
+    this.#mergeSortedCollectionPages().then(() => this.#updateBackorderCards());
   }
 
   disconnectedCallback() {
     mediaQueryLarge.removeEventListener('change', this.#handleMediaQueryChange);
+    this.removeEventListener('pagination:render', this.#handlePageRender);
+  }
+
+  #handlePageRender = () => this.#updateBackorderCards();
+
+  async #updateBackorderCards() {
+    const label = this.dataset.swBackorderLabel;
+    const { grid } = this.refs;
+    if (!label || !grid) return;
+
+    const cards = [...grid.querySelectorAll(':scope > li')];
+    const candidates = cards.flatMap((card) => {
+      const badge = card.querySelector('.sw-card-stock');
+      const ids = card.dataset.swStockIds?.split(',').filter(Boolean);
+      return badge && ids?.length ? [{ card, badge, ids }] : [];
+    });
+    const ids = [...new Set(candidates.flatMap((candidate) => candidate.ids))];
+    if (!ids.length) return;
+
+    const requests = [];
+    for (let offset = 0; offset < ids.length; offset += 100) {
+      const batch = ids.slice(offset, offset + 100).join(',');
+      requests.push(fetch(`https://spotwereld-formulieren.vercel.app/api/voorraad?ids=${batch}`)
+        .then((response) => response.ok ? response.json() : null)
+        .catch(() => null));
+    }
+    const replies = await Promise.all(requests);
+    if (!this.isConnected || this.refs.grid !== grid ||
+        cards.some((card, index) => grid.children[index] !== card) ||
+        grid.children.length !== cards.length) return;
+
+    const quantities = Object.assign({}, ...replies.map((reply) => reply?.varianten));
+    const backorders = candidates.filter(({ ids }) =>
+      ids.every((id) => Number.isSafeInteger(quantities[id]) && quantities[id] <= 0)
+    );
+    if (!backorders.length) return;
+
+    for (const { badge } of backorders) {
+      badge.textContent = label;
+      badge.classList.add('sw-card-stock--backorder');
+    }
+    if (this.hasAttribute('data-sw-backorder-sort')) {
+      const firstSoldOut = cards.find((card) => !card.hasAttribute('data-sw-stock-ids'));
+      for (const { card } of backorders) grid.insertBefore(card, firstSoldOut ?? null);
+    }
   }
 
   /**

@@ -188,6 +188,7 @@ export default class PaginatedList extends Component {
     }
 
     grid.append(...nextPageItemElements);
+    this.dispatchEvent(new Event('pagination:render'));
 
     this.#aspectRatioHelper.processNewElements();
 
@@ -227,6 +228,7 @@ export default class PaginatedList extends Component {
 
     // Prepend the new elements
     grid.prepend(...previousPageItemElements);
+    this.dispatchEvent(new Event('pagination:render'));
 
     this.#aspectRatioHelper.processNewElements();
 
