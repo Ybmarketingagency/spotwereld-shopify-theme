@@ -1,0 +1,106 @@
+{%- comment -%}
+  Default catalog order, shared by normal and per-colour cards.
+  Handles keep model families stable when the storefront language changes.
+{%- endcomment -%}
+{%- doc -%}
+  @param {object} product - The product shown on the tile
+  @param {string} [colour] - The tile's housing colour
+  @param {string} collection_handle - The current collection handle
+  @param {boolean} [rail_sort] - Use the rail collection order
+{%- enddoc -%}
+{%- if rail_sort -%}
+  {%- render 'sw-rail-sort-key', product: product, colour: colour -%}
+{%- else -%}
+{%- liquid
+  assign handle = product.handle | downcase
+  assign kind = product.metafields.custom.soort_filter.value | handleize
+  assign brand = product.metafields.custom.merk.value | default: product.vendor | handleize
+  assign type = product.type | handleize
+  assign group = 0
+  assign accessory = ''
+  assign model = handle
+
+  if handle contains 'connector' or handle contains 'koppeling' or handle contains 'middenvoeding'
+    assign accessory = 'koppelingen'
+  elsif handle contains 'opzetstuk'
+    assign accessory = 'opzetstukken'
+  elsif handle contains 'opbouwframe' or handle contains 'stucframe' or handle contains 'inbouwframe'
+    assign accessory = 'montageframes'
+  elsif handle contains 'sierring' or handle contains 'honingraatfilter'
+    assign accessory = 'ringen-en-filters'
+  elsif handle contains 'ophangset' or handle contains 'ophangkit' or handle contains 'pendelset' or handle contains 'systeemplafond-clip'
+    assign accessory = 'ophanging'
+  elsif handle contains 'eindkap' or handle contains 'blindplaat'
+    assign accessory = 'railafwerking'
+  elsif handle contains 'adapter' or handle contains 'monopoint'
+    assign accessory = 'adapters'
+  elsif handle contains 'fitting'
+    assign accessory = 'fittingen'
+  elsif handle contains 'driver' or handle contains 'transformator'
+    assign accessory = 'drivers'
+  elsif handle contains 'dimmer'
+    assign accessory = 'dimmers'
+  elsif handle contains 'stekker' or handle contains 'lasklem' or handle contains 'netsnoer'
+    assign accessory = 'aansluitmateriaal'
+  elsif handle contains 'gu10-led-lamp' or handle contains 'g9-led-lamp' or handle contains 'led-filament' or handle contains 'led-module'
+    unless collection_handle == 'led-lampen'
+      assign accessory = 'lichtbronnen'
+    endunless
+  elsif type == 'accessoires' or kind == 'accessoire' or kind == 'accessoires'
+    assign accessory = 'overige'
+  endif
+  if accessory != blank
+    assign group = 1
+  endif
+
+  assign family_prefixes = 'led-opbouwspot,led-inbouwspot,led-inbouwspots-set,led-wandlamp,led-hanglamp,led-railspot,led-trapverlichting,led-steplight,led-paneel,led-lichtframe,led-tl-buis,gu10-led-lamp,opzetstuk' | split: ','
+  for prefix in family_prefixes
+    assign prefix_dash = prefix | append: '-'
+    assign prefix_length = prefix_dash.size
+    assign start = handle | slice: 0, prefix_length
+    if start == prefix_dash
+      assign name = handle | remove_first: prefix_dash | split: '-' | first
+      assign model = prefix | append: '-' | append: name
+      break
+    endif
+  endfor
+
+  if handle contains '-fase-rail-'
+    assign rail_tail = handle | split: '-fase-rail-' | last
+    assign rail_length = rail_tail | split: '-' | first | remove: 'cm' | plus: 0
+    if rail_length > 0
+      assign model = 'rail'
+      assign handle = rail_length | prepend: '00000' | slice: -5, 5 | append: '-' | append: product.handle
+    endif
+  elsif model == 'led-tl-buis-t5' or model == 'led-tl-buis-t8'
+    assign tube_tail = handle | remove_first: model | remove_first: '-'
+    assign tube_length = tube_tail | split: '-' | first | remove: 'cm' | plus: 0
+    if tube_length > 0
+      assign handle = tube_length | prepend: '00000' | slice: -5, 5 | append: '-' | append: product.handle
+    endif
+  endif
+
+  assign colour_key = colour | handleize
+  if colour_key == blank
+    assign product_words = product.handle | prepend: '-' | append: '-'
+    assign known_colours = 'zwart-goud,wit-goud,mat-wit,mat-zwart,antraciet,wit,zwart,beige,brons,chroom,goud,grijs,messing,zilver,roestbruin,white,black' | split: ','
+    for known_colour in known_colours
+      assign token = known_colour | prepend: '-' | append: '-'
+      if product_words contains token
+        assign colour_key = known_colour
+        break
+      endif
+    endfor
+  endif
+
+  assign colour_rank = 2
+  if colour_key contains 'wit' or colour_key contains 'white'
+    assign colour_rank = 0
+  elsif colour_key contains 'zwart' or colour_key contains 'black'
+    assign colour_rank = 1
+  elsif colour_key == blank
+    assign colour_rank = 3
+  endif
+-%}
+{{- group -}}|{{- accessory -}}|{{- brand -}}|{{- model -}}|{{- colour_rank -}}-{{- colour_key -}}|{{- handle -}}
+{%- endif -%}

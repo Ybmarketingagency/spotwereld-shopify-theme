@@ -3,6 +3,7 @@
 
   @param {object} results - The results of the search
   @param {string} sort_by - The current sort by
+  @param {string} [default_sort_by] - The storefront default order
   @param {string} filter_style - The filter style
   @param {string} [suffix] - { 'desktop' | 'mobile' | 'overflow' } Used on `form` attributes to connect inputs to a form[id]
   @param {string} [sort_position] - { 'desktop' | 'mobile' } Used in a data-testID selector for automated testing
@@ -20,7 +21,7 @@
   data-should-use-select-on-mobile="{{ should_use_select_on_mobile }}"
 >
   {% liquid
-    assign default_sort_by = results.default_sort_by
+    assign default_sort_by = default_sort_by | default: results.default_sort_by
     for option in results.sort_options
       if option.value == sort_by
         assign status = option.name

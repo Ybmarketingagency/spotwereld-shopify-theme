@@ -4,6 +4,7 @@
 
   @param {object} results - The search results object
   @param {number} results_size - The number of products in the search results
+  @param {string} [default_sort_by] - The storefront default order
   @param {object} [filters] - The filters object
 {%- enddoc -%}
 
@@ -22,7 +23,8 @@
 {%- liquid
   assign block_settings = block.settings
   assign products_count = results_size
-  assign sort_by = results.sort_by | default: results.default_sort_by
+  assign default_sort_by = default_sort_by | default: results.default_sort_by
+  assign sort_by = results.sort_by | default: default_sort_by
   assign filters = filters | default: results.filters
   assign total_active_values = 0
 
@@ -197,6 +199,7 @@
         {% render 'sorting',
           results: results,
           sort_by: sort_by,
+          default_sort_by: default_sort_by,
           filter_style: block_settings.filter_style,
           suffix: 'desktop',
           sort_position: 'desktop',
@@ -357,6 +360,7 @@
                 {% render 'sorting',
                   results: results,
                   sort_by: sort_by,
+                  default_sort_by: default_sort_by,
                   filter_style: block_settings.filter_style,
                   suffix: 'desktop',
                   sort_position: 'desktop',
@@ -441,6 +445,7 @@
             {% render 'sorting',
               results: results,
               sort_by: sort_by,
+              default_sort_by: default_sort_by,
               filter_style: block_settings.filter_style,
               suffix: 'mobile',
               sort_position: 'mobile',
@@ -565,6 +570,7 @@
               {% render 'sorting',
                 results: results,
                 sort_by: sort_by,
+                default_sort_by: default_sort_by,
                 filter_style: block_settings.filter_style,
                 suffix: 'overflow',
                 should_use_select_on_mobile: should_use_select_on_mobile,

@@ -24,12 +24,30 @@
 
 {%- liquid
   assign sw_rail_sort = false
+  assign sw_catalog_sort = false
+  assign sw_default_sort = collection.default_sort_by
   assign sw_infinite_scroll = section.settings.enable_infinite_scroll
   if collection.handle contains 'railverlichting' or collection.handle == '1-fase-rails-en-onderdelen'
     if collection.sort_by == blank or collection.sort_by == 'manual' or collection.sort_by == 'relevance'
       assign sw_rail_sort = true
       assign sw_infinite_scroll = false
     endif
+  elsif collection.handle contains 'inbouwspot' or collection.handle contains 'inbouw-spot'
+    # Preserve recessed spotlight collections.
+  else
+    assign sw_default_sort = 'manual'
+    if collection.sort_by == blank or collection.sort_by == 'manual'
+      assign sw_catalog_sort = true
+      assign sw_infinite_scroll = false
+    endif
+  endif
+  assign sw_sort_cards = false
+  if sw_rail_sort or sw_catalog_sort
+    assign sw_sort_cards = true
+  endif
+  assign sw_merge_catalog = false
+  if sw_catalog_sort and collection.products_count > 250
+    assign sw_merge_catalog = true
   endif
 -%}
 {% comment %} We always render this full-width, as the child blocks have width: page/full settings {% endcomment %}
@@ -39,6 +57,7 @@
   style="--padding-block-start: {{ section.settings.padding-block-start }}px; --padding-block-end: {{ section.settings.padding-block-end }}px;"
   section-id="{{ section.id }}"
   infinite-scroll="{{ sw_infinite_scroll }}"
+  {% if sw_merge_catalog %}data-sw-collection-size="{{ collection.products_count }}"{% endif %}
 >
   {% render 'skip-to-content-link', href: '#ResultsList', text: 'accessibility.skip_to_results_list' %}
 
@@ -82,7 +101,8 @@
       type: 'filters',
       id: 'filters',
       results: collection,
-      results_size: sw_tegels
+      results_size: sw_tegels,
+      default_sort_by: sw_default_sort
     %}
 
     {% assign products_per_page = 24 %}
@@ -91,8 +111,8 @@
       {% assign products_per_page = section.settings.products_per_page %}
     {% endif %}
 
-    {%- if sw_rail_sort -%}
-      {%- comment -%}Sort every colour tile together, not just one 24-product batch.{%- endcomment -%}
+    {%- if sw_sort_cards -%}
+      {%- comment -%}Sort related colour tiles together before rendering the product grid.{%- endcomment -%}
       {%- assign products_per_page = 250 -%}
     {%- endif -%}
 
@@ -141,12 +161,18 @@
               {%- if sw_gezien contains sw_mark -%}{%- continue -%}{%- endif -%}
               {%- assign sw_gezien = sw_gezien | append: sw_mark -%}
               {%- assign sw_tegel = sw_tegel | plus: 1 -%}
-              {%- if sw_rail_sort -%}SWRAILITEM{% render 'sw-rail-sort-key', product: product, colour: variant.options[sw_kleur_idx] %}SWRAILHTML{%- endif -%}
+              {%- if sw_sort_cards -%}
+                {%- capture sw_tile_key -%}
+                  {%- render 'sw-collection-sort-key', product: product, colour: variant.options[sw_kleur_idx], collection_handle: collection.handle, rail_sort: sw_rail_sort -%}
+                {%- endcapture -%}
+                SWCOLLECTIONITEM{{ sw_tile_key }}SWCOLLECTIONHTML
+              {%- endif -%}
               <li
                 id="{{ section.id }}-{{ product.id }}-{{ variant.id }}"
                 class="product-grid__item product-grid__item--{{ sw_tegel | minus: 1 }}"
                 data-page="{{ paginate.current_page }}"
                 data-product-id="{{ product.id }}"
+                {% if sw_merge_catalog %}data-sw-sort-key="{{ sw_tile_key | escape }}"{% endif %}
                 ref="cards[]"
               >
                 {% render 'sw-variant-card', product: product, variant: variant %}
@@ -154,12 +180,18 @@
             {%- endfor -%}
           {%- else -%}
             {%- assign sw_tegel = sw_tegel | plus: 1 -%}
-            {%- if sw_rail_sort -%}SWRAILITEM{% render 'sw-rail-sort-key', product: product, colour: sw_kleur_eerste %}SWRAILHTML{%- endif -%}
+            {%- if sw_sort_cards -%}
+              {%- capture sw_tile_key -%}
+                {%- render 'sw-collection-sort-key', product: product, colour: sw_kleur_eerste, collection_handle: collection.handle, rail_sort: sw_rail_sort -%}
+              {%- endcapture -%}
+              SWCOLLECTIONITEM{{ sw_tile_key }}SWCOLLECTIONHTML
+            {%- endif -%}
             <li
               id="{{ section.id }}-{{ product.id }}"
               class="product-grid__item product-grid__item--{{ sw_tegel | minus: 1 }}"
               data-page="{{ paginate.current_page }}"
               data-product-id="{{ product.id }}"
+              {% if sw_merge_catalog %}data-sw-sort-key="{{ sw_tile_key | escape }}"{% endif %}
               ref="cards[]"
             >
               {% # theme-check-disable %}
@@ -170,12 +202,12 @@
         {% endfor %}
       {% endcapture %}
 
-      {%- if sw_rail_sort -%}
-        {%- assign sw_rail_cards = children | split: 'SWRAILITEM' | sort -%}
+      {%- if sw_sort_cards -%}
+        {%- assign sw_sorted_cards = children | split: 'SWCOLLECTIONITEM' | sort -%}
         {%- capture children -%}
-          {%- for sw_rail_card in sw_rail_cards -%}
-            {%- if sw_rail_card contains 'SWRAILHTML' -%}
-              {{- sw_rail_card | split: 'SWRAILHTML' | last -}}
+          {%- for sw_card in sw_sorted_cards -%}
+            {%- if sw_card contains 'SWCOLLECTIONHTML' -%}
+              {{- sw_card | split: 'SWCOLLECTIONHTML' | last -}}
             {%- endif -%}
           {%- endfor -%}
         {%- endcapture -%}
