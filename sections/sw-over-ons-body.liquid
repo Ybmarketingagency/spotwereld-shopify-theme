@@ -25,13 +25,13 @@
     <aside class="sw-ks-sidebar">
       <h3>{{ 'sw.nav.klantenservice' | t }}</h3>
       <nav>
-        <a href="{{ sw_root }}/pages/contact">Contact</a>
-        <a href="{{ sw_root }}/pages/over-ons">{{ 'sw.nav.overons' | t }}</a>
-        <a href="{{ sw_root }}/pages/veelgestelde-vragen">{{ 'sw.nav.faq' | t }}</a>
-        <a href="{{ sw_root }}/pages/verzending-retouren">{{ 'sw.nav.verzending' | t }}</a>
-        <a href="{{ sw_root }}/pages/garantie">{{ 'sw.nav.garantie' | t }}</a>
-        <a href="{{ sw_root }}/pages/algemene-voorwaarden">{{ 'sw.nav.voorwaarden' | t }}</a>
-        <a href="{{ sw_root }}/pages/privacyverklaring">{{ 'sw.nav.privacy' | t }}</a>
+        <a href="{{ sw_root }}/pages/contact"{% if page.handle == 'contact' %} class="sw-active"{% endif %}>Contact</a>
+        <a href="{{ sw_root }}/pages/over-ons"{% if page.handle == 'over-ons' %} class="sw-active"{% endif %}>{{ 'sw.nav.overons' | t }}</a>
+        <a href="{{ sw_root }}/pages/veelgestelde-vragen"{% if page.handle == 'veelgestelde-vragen' %} class="sw-active"{% endif %}>{{ 'sw.nav.faq' | t }}</a>
+        <a href="{{ sw_root }}/pages/verzending-retouren"{% if page.handle == 'verzending-retouren' %} class="sw-active"{% endif %}>{{ 'sw.nav.verzending' | t }}</a>
+        <a href="{{ sw_root }}/pages/garantie"{% if page.handle == 'garantie' %} class="sw-active"{% endif %}>{{ 'sw.nav.garantie' | t }}</a>
+        <a href="{{ sw_root }}/pages/algemene-voorwaarden"{% if page.handle == 'algemene-voorwaarden' %} class="sw-active"{% endif %}>{{ 'sw.nav.voorwaarden' | t }}</a>
+        <a href="{{ sw_root }}/pages/privacyverklaring"{% if page.handle == 'privacyverklaring' %} class="sw-active"{% endif %}>{{ 'sw.nav.privacy' | t }}</a>
       </nav>
     </aside>
 
@@ -96,11 +96,6 @@
   </div>
 </div>
 
-<script>
-document.querySelectorAll('.sw-ks-sidebar a').forEach(function(a){
-  if(a.pathname===window.location.pathname){a.classList.add('sw-active');}
-});
-</script>
 
 {% schema %}
 {
