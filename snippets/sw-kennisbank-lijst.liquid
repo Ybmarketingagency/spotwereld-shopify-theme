@@ -161,6 +161,12 @@
   {%- endcomment -%}
   {%- assign sw_kb_gehad = '' -%}
 
+  {%- comment -%}
+    Zonder paginate geeft Liquid maximaal 50 artikelen terug. Bij 98 artikelen
+    (05-11-2026) ontbraken er daardoor 48 op de verlichtingsgids. 250 is het
+    maximum dat paginate per pagina toestaat.
+  {%- endcomment -%}
+  {%- paginate sw_kb_blog.articles by 250 -%}
   <div class="sw-kb">
     {%- for sw_kb_i in (1..6) -%}
       {%- liquid
@@ -320,6 +326,7 @@
       <p><a href="{{ sw_kb_root }}/pages/contact" class="sw-btn">{% if sw_kb_en %}Get in touch{% else %}Neem contact op{% endif %}</a></p>
     </div>
   </div>
+  {%- endpaginate -%}
 {%- endif -%}
 
-{% comment %}sync 20260829-2{% endcomment %}
+{% comment %}sync 20261105-1{% endcomment %}

@@ -4593,3 +4593,5 @@ product-recommendations:has([data-has-recommendations='false']) {
 
 :root { --sw-collection-order-version: 20261105.2; }
 :root { --sw-sidebar-liquid-version: 20261105.3; }
+
+:root { --sw-kb-paginate-version: 20261105; }
