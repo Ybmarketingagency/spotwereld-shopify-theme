@@ -12,6 +12,12 @@ export default class ResultsList extends PaginatedList {
     mediaQueryLarge.addEventListener('change', this.#handleMediaQueryChange);
     this.addEventListener('pagination:render', this.#handlePageRender);
     this.setAttribute('initialized', '');
+    this.#gridObserver.observe(this, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['data-sw-stock-handled'],
+    });
     this.#sortThenReveal();
   }
 
@@ -21,23 +27,58 @@ export default class ResultsList extends PaginatedList {
   }
 
   /**
+   * Na een filterwissel of een andere herrendering van de sectie roept morph.js updatedCallback
+   * aan op de losse kopie uit het antwoord, niet op het raster dat in de pagina staat. Daarom
+   * houden we het raster zelf in de gaten: zodra er nieuwe tegels in staan zonder onze
+   * voorraadmarkering, halen we de voorraad opnieuw op.
+   */
+  #gridObserver = new MutationObserver(() => this.#refreshWhenGridChanged());
+
+  #stockBusy = false;
+
+  #stockPending = false;
+
+  #refreshWhenGridChanged() {
+    const grid = this.querySelector('[data-testid="product-grid"]');
+    // Onze eigen verschuivingen laten de markering staan; een nieuw raster komt zonder.
+    if (!grid || grid.hasAttribute('data-sw-stock-handled')) return;
+    if (this.#stockBusy) {
+      this.#stockPending = true;
+      return;
+    }
+    // updatedCallback ververst eerst de refs, want het raster is zojuist opnieuw opgebouwd.
+    this.updatedCallback();
+  }
+
+  /**
    * De tegels staan onzichtbaar tot de nalevering-tegels op hun plek staan (zie de CSS in
    * main-collection.liquid), zodat de bezoeker ze niet ziet verspringen. Lukt het ophalen
-   * niet, dan worden ze toch getoond; de CSS toont ze sowieso na 1 seconde. De vlag gaat er
-   * bij een nieuwe ronde eerst weer af, maar morph.js laat hem staan bij een filterwissel:
-   * het raster is dan al getoond en hoeft niet opnieuw een seconde leeg te blijven.
+   * niet, dan worden ze toch getoond; de CSS toont ze sowieso na 1 seconde.
    */
   #sortThenReveal() {
+    this.#stockBusy = true;
+    this.#stockPending = false;
     this.removeAttribute('data-sw-stock-ready');
+    this.querySelector('[data-testid="product-grid"]')?.setAttribute('data-sw-stock-handled', '1');
     this.#mergeSortedCollectionPages()
       .then(() => this.#updateBackorderCards())
       .catch(() => {})
-      .finally(() => this.setAttribute('data-sw-stock-ready', '1'));
+      .finally(() => {
+        this.#stockBusy = false;
+        // Kwam er onderweg een nieuw raster binnen, dan tellen die tegels en niet deze ronde.
+        if (this.#stockPending) {
+          this.#stockPending = false;
+          this.updatedCallback();
+          return;
+        }
+        this.setAttribute('data-sw-stock-ready', '1');
+      });
   }
 
   disconnectedCallback() {
     mediaQueryLarge.removeEventListener('change', this.#handleMediaQueryChange);
     this.removeEventListener('pagination:render', this.#handlePageRender);
+    this.#gridObserver.disconnect();
   }
 
   #handlePageRender = () => this.#updateBackorderCards();
