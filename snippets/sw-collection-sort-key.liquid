@@ -53,7 +53,7 @@
     assign group = 1
   endif
 
-  assign family_prefixes = 'led-opbouwspot,led-inbouwspot,led-inbouwspots-set,led-wandlamp,led-hanglamp,led-railspot,led-trapverlichting,led-steplight,led-paneel,led-lichtframe,led-tl-buis,gu10-led-lamp,opzetstuk' | split: ','
+  assign family_prefixes = 'led-opbouwspot,led-inbouwspot,led-inbouwspots-set,led-wandlamp,led-hanglamp,led-railspot,led-railarmatuur,led-raillichtbalk,led-noodverlichting,led-trapverlichting,led-steplight,led-paneel,led-lichtframe,led-tl-buis,gu10-led-lamp,opzetstuk,opbouwframe-led-paneel' | split: ','
   for prefix in family_prefixes
     assign prefix_dash = prefix | append: '-'
     assign prefix_length = prefix_dash.size
