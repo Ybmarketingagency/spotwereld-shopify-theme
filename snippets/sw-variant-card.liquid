@@ -77,7 +77,11 @@
 -%}
 
 <product-card class="product-card sw-vcard" data-product-id="{{ product.id }}" data-variant-id="{{ variant.id }}">
-  <a href="{{ variant.url }}" class="product-card__link sw-vcard-link">
+  {%- comment -%}
+    product-card.js eist ref="productCardLink"; zonder die verwijzing stopt connectedCallback
+    met een fout en wordt de kaart nooit afgemaakt.
+  {%- endcomment -%}
+  <a href="{{ variant.url }}" class="product-card__link sw-vcard-link" ref="productCardLink">
     <span class="visually-hidden">{{ kaart_titel }}</span>
   </a>
   <div class="product-card__content sw-vcard-content">

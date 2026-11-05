@@ -134,8 +134,18 @@ export default class ResultsList extends PaginatedList {
       badge.append(woord, aantal.toLocaleString(document.documentElement.lang || 'nl-NL'));
     }
 
+    // Twee teksten in het badge: op de telefoon past alleen de korte naast de badges
+    // linksboven, op een breed scherm staat de volledige tekst er (zie de CSS).
+    const shortLabel = this.dataset.swBackorderShort || label;
     for (const { card, badge } of backorders) {
-      badge.textContent = label;
+      const lang = document.createElement('span');
+      lang.className = 'sw-card-stock-lang';
+      lang.textContent = label;
+      const kort = document.createElement('span');
+      kort.className = 'sw-card-stock-kort';
+      kort.textContent = shortLabel;
+      badge.textContent = '';
+      badge.append(lang, kort);
       badge.classList.add('sw-card-stock--backorder');
       card.setAttribute('data-sw-stock-confirmed', '');
     }

@@ -26,9 +26,26 @@
 
   /* Twee tegels naast elkaar op de telefoon: dan past alleen het aantal naast de badges
      linksboven. Het groene bolletje blijft, dus het blijft leesbaar als voorraad. */
+  .sw-card-stock-kort {
+    display: none;
+  }
+
   @media (max-width: 749px) {
-    .sw-card-stock-woord {
+    .sw-card-stock-woord,
+    .sw-card-stock-lang {
       display: none;
+    }
+
+    .sw-card-stock-kort {
+      display: inline;
+    }
+
+    /* Gemeten op 375px: met "Nalevering" op .65rem bleef het badge 87px en botste hij nog
+       net met de badges linksboven (81px in een kaart van 182px). Op .58rem is het 78px. */
+    .product-card .sw-card-stock,
+    .sw-vcard .sw-card-stock {
+      font-size: .58rem;
+      padding: .16rem .36rem;
     }
   }
 
@@ -107,6 +124,7 @@
   section-id="{{ section.id }}"
   infinite-scroll="{{ sw_infinite_scroll }}"
   data-sw-backorder-label="{% if request.locale.iso_code == 'en' %}On backorder{% else %}Op nalevering{% endif %}"
+  data-sw-backorder-short="{% if request.locale.iso_code == 'en' %}Backorder{% else %}Nalevering{% endif %}"
   {% if sw_stock_sort %}data-sw-backorder-sort{% endif %}
   {% if sw_merge_catalog %}data-sw-collection-size="{{ collection.products_count }}"{% endif %}
 >
