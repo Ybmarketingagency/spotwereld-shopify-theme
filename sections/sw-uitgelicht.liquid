@@ -1,0 +1,77 @@
+<section class="sw-selectie" id="sw-selectie-{{ section.id }}" hidden>
+  <h2>{% if request.locale.iso_code == 'en' %}Featured products{% else %}Uitgelicht{% endif %}</h2>
+  <ul class="sw-selectie__grid" role="list"></ul>
+</section>
+
+{% stylesheet %}
+  .sw-selectie { max-width: 1280px; margin-inline: auto; padding: 1.75rem 2rem 2.25rem; }
+  .sw-selectie h2 { margin: 0 0 1rem; color: #061f40; font-size: 1.5rem; font-weight: 800; }
+  .sw-selectie__grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 1rem; list-style: none; margin: 0; padding: 0; }
+  .sw-selectie__card { display: flex; flex-direction: column; gap: .5rem; height: 100%; padding: .875rem; border: 1px solid #e5e7eb; border-radius: .75rem; color: #1e293b; text-decoration: none; }
+  .sw-selectie__card:hover { border-color: #0f6fe3; }
+  .sw-selectie__card img { width: 100%; aspect-ratio: 1; object-fit: contain; background: #f8fafc; border-radius: .5rem; }
+  .sw-selectie__title { font-size: .875rem; line-height: 1.35; }
+  .sw-selectie__price { color: #083d7d; font-weight: 700; margin-top: auto; }
+  @media (max-width: 900px) { .sw-selectie__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (max-width: 600px) {
+    .sw-selectie { padding-inline: 1rem; }
+    .sw-selectie__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
+  }
+{% endstylesheet %}
+
+<script>
+  (() => {
+    const section = document.getElementById('sw-selectie-{{ section.id }}');
+    const root = {{ routes.root_url | json }}.replace(/\/$/, '');
+    const formatter = new Intl.NumberFormat(document.documentElement.lang || 'nl-NL', {
+      style: 'currency', currency: window.Shopify?.currency?.active || 'EUR'
+    });
+    const get = async (url) => {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error('Featured products: ' + response.status);
+      return response.json();
+    };
+    const card = async ({ handle, variantId }) => {
+      if (!/^[a-z0-9-]+$/.test(handle) || !/^\d+$/.test(variantId)) return null;
+      const url = root + '/products/' + handle;
+      const product = await get(url + '.js');
+      const variant = product.variants.find(item => String(item.id) === variantId && item.available);
+      if (!variant) return null;
+      const row = document.createElement('li');
+      const link = document.createElement('a');
+      link.className = 'sw-selectie__card';
+      link.href = url + '?variant=' + variantId;
+      const src = variant.featured_image?.src || product.featured_image;
+      if (src) {
+        const image = document.createElement('img');
+        image.src = src;
+        image.width = image.height = 240;
+        image.loading = 'lazy';
+        image.alt = '';
+        link.append(image);
+      }
+      const title = document.createElement('strong');
+      title.className = 'sw-selectie__title';
+      title.textContent = product.title + (product.variants.length > 1 ? ' · ' + variant.title : '');
+      const price = document.createElement('span');
+      price.className = 'sw-selectie__price';
+      price.textContent = formatter.format(variant.price / 100);
+      link.append(title, price);
+      row.append(link);
+      return row;
+    };
+    get('https://raw.githubusercontent.com/Ybmarketingagency/spotwereld-voorraad/main/voorraad.json').then(async data => {
+      const age = Date.now() - Date.parse(data.gemeten);
+      if (!(age >= -300000 && age < 3 * 3600000) || !Array.isArray(data.uitgelicht)) return;
+      const results = await Promise.allSettled(data.uitgelicht.slice(0, 5).map(card));
+      const cards = results.filter(result => result.status === 'fulfilled' && result.value).map(result => result.value);
+      if (!cards.length) return;
+      section.querySelector('ul').append(...cards);
+      section.hidden = false;
+    }).catch(() => {});
+  })();
+</script>
+
+{% schema %}
+{"name":"Spotwereld uitgelicht","settings":[],"presets":[{"name":"Spotwereld uitgelicht"}]}
+{% endschema %}

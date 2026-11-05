@@ -42,6 +42,10 @@
         "padding-block-end": 0
       }
     },
+    "spotwereld_uitgelicht": {
+      "type": "sw-uitgelicht",
+      "settings": {}
+    },
     "spotwereld_populaire_producten": {
       "type": "custom-liquid",
       "settings": {
@@ -133,6 +137,7 @@
     "spotwereld_black_friday",
     "spotwereld_usp",
     "spotwereld_category_grid",
+    "spotwereld_uitgelicht",
     "spotwereld_populaire_producten",
     "spotwereld_led_strips",
     "spotwereld_banners",
