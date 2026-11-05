@@ -45,8 +45,15 @@
   if sw_rail_sort or sw_catalog_sort
     assign sw_sort_cards = true
   endif
+  assign sw_stock_sort = sw_sort_cards
+  if collection.sort_by == blank or collection.sort_by == sw_default_sort
+    assign sw_stock_sort = true
+  endif
+  if sw_stock_sort
+    assign sw_infinite_scroll = false
+  endif
   assign sw_merge_catalog = false
-  if sw_catalog_sort and collection.products_count > 250
+  if sw_stock_sort and collection.products_count > 250
     assign sw_merge_catalog = true
   endif
 -%}
@@ -111,12 +118,13 @@
       {% assign products_per_page = section.settings.products_per_page %}
     {% endif %}
 
-    {%- if sw_sort_cards -%}
+    {%- if sw_stock_sort -%}
       {%- comment -%}Sort related colour tiles together before rendering the product grid.{%- endcomment -%}
       {%- assign products_per_page = 250 -%}
     {%- endif -%}
 
     {% paginate collection.products by products_per_page %}
+      {%- assign sw_page_key = paginate.current_page | prepend: '00000' | slice: -5, 5 -%}
       {% capture children %}
         {% assign sw_tegel = 0 %}
         {% for product in collection.products limit: 250 %}
@@ -161,9 +169,14 @@
               {%- if sw_gezien contains sw_mark -%}{%- continue -%}{%- endif -%}
               {%- assign sw_gezien = sw_gezien | append: sw_mark -%}
               {%- assign sw_tegel = sw_tegel | plus: 1 -%}
-              {%- if sw_sort_cards -%}
+              {%- if sw_stock_sort -%}
                 {%- capture sw_tile_key -%}
-                  {%- render 'sw-collection-sort-key', product: product, colour: variant.options[sw_kleur_idx], collection_handle: collection.handle, rail_sort: sw_rail_sort -%}
+                  {%- if variant.available -%}0{%- else -%}1{%- endif -%}
+                  {%- if sw_sort_cards -%}
+                    {%- render 'sw-collection-sort-key', product: product, colour: variant.options[sw_kleur_idx], collection_handle: collection.handle, rail_sort: sw_rail_sort -%}
+                  {%- else -%}
+                    {{- sw_page_key -}}{{- sw_tegel | prepend: '000000' | slice: -6, 6 -}}
+                  {%- endif -%}
                 {%- endcapture -%}
                 SWCOLLECTIONITEM{{ sw_tile_key }}SWCOLLECTIONHTML
               {%- endif -%}
@@ -180,9 +193,14 @@
             {%- endfor -%}
           {%- else -%}
             {%- assign sw_tegel = sw_tegel | plus: 1 -%}
-            {%- if sw_sort_cards -%}
+            {%- if sw_stock_sort -%}
               {%- capture sw_tile_key -%}
-                {%- render 'sw-collection-sort-key', product: product, colour: sw_kleur_eerste, collection_handle: collection.handle, rail_sort: sw_rail_sort -%}
+                {%- if product.available -%}0{%- else -%}1{%- endif -%}
+                {%- if sw_sort_cards -%}
+                  {%- render 'sw-collection-sort-key', product: product, colour: sw_kleur_eerste, collection_handle: collection.handle, rail_sort: sw_rail_sort -%}
+                {%- else -%}
+                  {{- sw_page_key -}}{{- sw_tegel | prepend: '000000' | slice: -6, 6 -}}
+                {%- endif -%}
               {%- endcapture -%}
               SWCOLLECTIONITEM{{ sw_tile_key }}SWCOLLECTIONHTML
             {%- endif -%}
@@ -202,7 +220,7 @@
         {% endfor %}
       {% endcapture %}
 
-      {%- if sw_sort_cards -%}
+      {%- if sw_stock_sort -%}
         {%- assign sw_sorted_cards = children | split: 'SWCOLLECTIONITEM' | sort -%}
         {%- capture children -%}
           {%- for sw_card in sw_sorted_cards -%}
