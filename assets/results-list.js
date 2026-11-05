@@ -115,10 +115,23 @@ export default class ResultsList extends PaginatedList {
       ids.every((id) => Number.isSafeInteger(quantities[id]) && quantities[id] <= 0)
     );
 
-    for (const { card, ids } of candidates) {
-      if (ids.some((id) => Number.isSafeInteger(quantities[id]) && quantities[id] > 0)) {
-        card.setAttribute('data-sw-stock-confirmed', '');
-      }
+    // Het aantal achter "Op voorraad". Heeft een kaart meerdere varianten, dan tonen we het
+    // aantal van de eerste leverbare variant: dat is de variant die de productpagina opent.
+    // Staat die op 0 terwijl een andere kleur wel voorraad heeft, dan blijft het kale label
+    // staan, want een 0 naast een groen bolletje klopt niet.
+    for (const { card, badge, ids } of candidates) {
+      if (!ids.some((id) => Number.isSafeInteger(quantities[id]) && quantities[id] > 0)) continue;
+      card.setAttribute('data-sw-stock-confirmed', '');
+      const aantal = quantities[ids.find((id) => Number.isSafeInteger(quantities[id]))];
+      if (!(aantal > 0)) continue;
+      if (!badge.dataset.swStockLabel) badge.dataset.swStockLabel = badge.textContent.trim();
+      // Het woord staat in een eigen span, want op een smal scherm botst de volledige tekst
+      // met de badges linksboven; daar blijft alleen het aantal over (zie de CSS).
+      const woord = document.createElement('span');
+      woord.className = 'sw-card-stock-woord';
+      woord.textContent = `${badge.dataset.swStockLabel}: `;
+      badge.textContent = '';
+      badge.append(woord, aantal.toLocaleString(document.documentElement.lang || 'nl-NL'));
     }
 
     for (const { card, badge } of backorders) {

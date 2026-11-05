@@ -18,6 +18,20 @@
     visibility: hidden;
   }
 
+  /* Met het aantal erbij wordt het badge breder; hij mag niet over de foto lopen of afbreken. */
+  .sw-card-stock {
+    white-space: nowrap;
+    max-width: calc(100% - 1rem);
+  }
+
+  /* Twee tegels naast elkaar op de telefoon: dan past alleen het aantal naast de badges
+     linksboven. Het groene bolletje blijft, dus het blijft leesbaar als voorraad. */
+  @media (max-width: 749px) {
+    .sw-card-stock-woord {
+      display: none;
+    }
+  }
+
   [data-sw-backorder-label] .sw-card-stock.sw-card-stock--backorder {
     color: #92400e;
     background: #fffbeb;
