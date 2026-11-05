@@ -900,19 +900,16 @@
       var sub = blok.querySelector('.sw-voorraad-sub');
       if (!bol || !tekst || !sub) return;
       var na = op && swIsNalevering(id);
-      var kleur = !op ? '#dc2626' : !swAantalGeladen ? '#64748b' : na ? '#d97706' : '#16a34a';
+      var kleur = !op ? '#dc2626' : !Number.isSafeInteger(swAantal[id]) ? '#64748b' : na ? '#d97706' : '#16a34a';
       bol.style.color = kleur;
       tekst.style.color = kleur;
       tekst.textContent = op ? swVoorraadTekst(id) : {{ 'sw.kaart.uitverkocht' | t | json }};
-      // "Direct leverbaar" klopt niet bij nalevering.
-      sub.style.display = op && swAantalGeladen && !na ? '' : 'none';
+      // Toon directe levering alleen bij een positief aantal.
+      sub.style.display = op && swAantal[id] > 0 ? '' : 'none';
       swMeldingBlok(op);
     }
-    // Aantallen komen van spotwereld-formulieren.vercel.app/api/voorraad, uit de uurexport van
-    // de leverancier. Bij 0, geen getal of een mislukte aanvraag blijft de gewone tekst staan;
-    // er wordt nooit een aantal verzonnen. Grote aantallen met een punt als duizendtal (53.600).
-    // Nalevering: bij 0 of negatief (nabestelling bij de leverancier) een oranje regel in plaats
-    // van "Op voorraad". Aangezet op 03-11-2026 op verzoek van de user.
+    // De voorraad-API geeft bevestigde aantallen. Bij nul of negatief is het artikel
+    // een nalevering. Bij een ontbrekend aantal verwijst de regel naar een aanvraag.
     var SW_NALEVERING_AAN = true;
     var swAantal = {};
     var swAantalGeladen = false;
@@ -934,12 +931,12 @@
       var n = swAantal[id];
       if (swIsNalevering(id)) {
         {%- if request.locale.iso_code == 'en' -%}
-        return 'Backorder: longer delivery time';
+        return '0 pcs in stock · Backorder: longer delivery time';
         {%- else -%}
-        return 'Nalevering: langere levertijd';
+        return '0 stuks op voorraad · Nalevering: langere levertijd';
         {%- endif -%}
       }
-      if (!(n > 0)) return {{ 'sw.kaart.voorraad' | t | json }};
+      if (!(n > 0)) return {% if request.locale.iso_code == 'en' %}'Stock quantity on request'{% else %}'Voorraadaantal op aanvraag'{% endif %};
       var getal = String(n).replace(/\B(?=(\d{3})+(?!\d))/g, {%- if request.locale.iso_code == 'en' -%}','{%- else -%}'.'{%- endif -%});
       {%- if request.locale.iso_code == 'en' -%}
       return 'In stock: ' + getal + ' pcs';
