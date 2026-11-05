@@ -46,6 +46,8 @@
     unless collection_handle == 'led-lampen'
       assign accessory = 'lichtbronnen'
     endunless
+  elsif kind == 'adapter' or kind == 'eindkap-of-blindplaat' or kind == 'koppelstuk' or kind == 'ophangmateriaal' or kind == 'toebehoren' or kind == 'voeding'
+    assign accessory = kind
   elsif type == 'accessoires' or kind == 'accessoire' or kind == 'accessoires'
     assign accessory = 'overige'
   endif

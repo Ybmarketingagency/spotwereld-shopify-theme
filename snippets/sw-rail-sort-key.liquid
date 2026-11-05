@@ -42,6 +42,16 @@
   if sw_handle contains '1-fase'
     assign sw_phase = 1
   endif
+  assign sw_accessory_kind = ''
+  if sw_group >= 5
+    assign sw_accessory_kind = sw_kind | handleize
+  endif
+  assign sw_colour_rank = 2
+  if sw_colour contains 'wit' or sw_colour contains 'white'
+    assign sw_colour_rank = 0
+  elsif sw_colour contains 'zwart' or sw_colour contains 'black'
+    assign sw_colour_rank = 1
+  endif
   assign sw_length_key = sw_length | prepend: '00000' | slice: -5, 5
 -%}
-{{- sw_group -}}{{- sw_mount -}}{{- sw_length_key -}}{{- sw_phase -}}-{{- sw_handle -}}-{{- sw_colour -}}
+{{- sw_group -}}{{- sw_mount -}}{{- sw_length_key -}}-{{- sw_accessory_kind -}}-{{- sw_phase -}}-{{- sw_handle -}}-{{- sw_colour_rank -}}-{{- sw_colour -}}
