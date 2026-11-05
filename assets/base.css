@@ -4595,3 +4595,4 @@ product-recommendations:has([data-has-recommendations='false']) {
 :root { --sw-sidebar-liquid-version: 20261105.3; }
 
 :root { --sw-kb-paginate-version: 20261105.3; }
+:root { --sw-stock-reveal-version: 20261105; }

@@ -12,12 +12,24 @@ export default class ResultsList extends PaginatedList {
     mediaQueryLarge.addEventListener('change', this.#handleMediaQueryChange);
     this.addEventListener('pagination:render', this.#handlePageRender);
     this.setAttribute('initialized', '');
-    this.#mergeSortedCollectionPages().then(() => this.#updateBackorderCards());
+    this.#sortThenReveal();
   }
 
   updatedCallback() {
     super.updatedCallback();
-    this.#mergeSortedCollectionPages().then(() => this.#updateBackorderCards());
+    this.#sortThenReveal();
+  }
+
+  /**
+   * De tegels staan onzichtbaar tot de nalevering-tegels op hun plek staan (zie de CSS in
+   * main-collection.liquid), zodat de bezoeker ze niet ziet verspringen. Lukt het ophalen
+   * niet, dan worden ze toch getoond; de CSS toont ze sowieso na 1 seconde.
+   */
+  #sortThenReveal() {
+    this.#mergeSortedCollectionPages()
+      .then(() => this.#updateBackorderCards())
+      .catch(() => {})
+      .finally(() => this.setAttribute('data-sw-stock-ready', ''));
   }
 
   disconnectedCallback() {

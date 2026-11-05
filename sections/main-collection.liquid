@@ -1,6 +1,19 @@
 
 
 {% stylesheet %}
+  /* Tegels verborgen tot de voorraadvolgorde klaar is (results-list.js zet data-sw-stock-ready).
+     Valt JavaScript uit of duurt het te lang, dan toont de animatie ze na 1 seconde alsnog. */
+  results-list[data-sw-backorder-sort]:not([data-sw-stock-ready]) [data-testid='product-grid'] {
+    opacity: 0;
+    animation: sw-grid-tonen 0s linear 1s forwards;
+  }
+
+  @keyframes sw-grid-tonen {
+    to {
+      opacity: 1;
+    }
+  }
+
   [data-sw-backorder-label] [data-sw-stock-ids]:not([data-sw-stock-confirmed]) .sw-card-stock {
     visibility: hidden;
   }
