@@ -189,16 +189,20 @@
           assign sw_title = 'Aanbiedingen LED-verlichting | ' | append: sw_brand
         endif
       else
-        # Het patroon zet zelf al 'LED' voor de naam. Begint de collectienaam ook met
-        # LED (LED panelen, LED TL buizen), dan halen we dat eerst weg, anders staat er
-        # 'LED LED panelen' in de tab en bij Google.
-        assign sw_coll_naam = collection.title
-        assign sw_coll_begin = collection.title | slice: 0, 4
-        if sw_coll_begin == 'LED '
-          assign sw_coll_naam = collection.title | remove_first: 'LED '
+        # Het patroon "X kopen - LED X" leest alleen goed bij een naam van een woord
+        # (Inbouwspots, Hanglampen). Bij langere namen gaf het "lampen kopen - LED lampen"
+        # of "1-Fase Rails en onderdelen kopen - LED 1-Fase Rails en onderdelen". Die
+        # krijgen daarom gewoon "Naam kopen | Spotwereld".
+        if collection.title contains ' '
+          if request.locale.iso_code == 'en'
+            assign sw_title = 'Buy ' | append: collection.title | append: ' | ' | append: sw_brand
+          else
+            assign sw_title = collection.title | append: ' kopen | ' | append: sw_brand
+          endif
+        else
+          assign sw_coll_kop = 'sw.collectie.titel_patroon' | t: titel: collection.title
+          assign sw_title = sw_coll_kop | append: ' | ' | append: sw_brand
         endif
-        assign sw_coll_kop = 'sw.collectie.titel_patroon' | t: titel: sw_coll_naam
-        assign sw_title = sw_coll_kop | append: ' | ' | append: sw_brand
     endcase
     if collection.description != blank
       assign sw_desc = collection.description | strip_html | truncate: 155
