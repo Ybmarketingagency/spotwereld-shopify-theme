@@ -65,7 +65,11 @@ const viewTransitionTypes = {
 
         productCards.forEach((card, index) => {
           if (index < cardsToAnimate) {
-            card.style.setProperty('view-transition-name', `product-card-${card.dataset.productId}`);
+            // Op het product-id alleen komt de naam dubbel voor, want van één product staan
+            // meerdere kleurtegels in het raster. De browser breekt de hele overgang dan af
+            // ("duplicate view-transition-name"), waardoor een filterwissel kan blijven hangen.
+            // Het id van de tegel bevat ook de variant en is daarmee wel uniek.
+            card.style.setProperty('view-transition-name', `product-card-${card.id || card.dataset.productId}`);
           } else {
             card.style.setProperty('content-visibility', 'hidden');
           }
