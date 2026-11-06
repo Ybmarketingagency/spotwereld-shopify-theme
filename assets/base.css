@@ -1099,6 +1099,13 @@ ul[product-grid-view='zoom-out'] .product-grid__card > * {
       view-transition-name: footer;
     }
 
+    /* De pagina heeft twee footers: die van het thema en onze eigen. Met dezelfde naam
+       breekt de browser de hele overgang af ("duplicate view-transition-name"), en dan
+       kan een filterwissel blijven hangen. Onze footer krijgt daarom een eigen naam. */
+    footer.sw-footer {
+      view-transition-name: sw-footer;
+    }
+
     .product-grid__item,
     floating-panel-component {
       transition: none;
