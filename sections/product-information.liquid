@@ -982,6 +982,8 @@
       var variant = swHuidigeVariant();
       if (gekozen) naam = gekozen.value || naam;
       if (tekst) tekst.value = 'Voorraadmelding voor ' + naam + (variant ? ' (variant ' + variant + ')' : '') + ' - ' + location.href;
+      var variantVeld = document.querySelector('[data-sw-melding-variant]');
+      if (variantVeld && variant) variantVeld.value = variant;
       blok.hidden = false;
     }
     // Bij een variantwissel tekent het thema het prijsblok opnieuw en verdwijnt de regel die we
@@ -1256,6 +1258,7 @@
       {% if form.errors %}<div class="sw-melding__fout">{{ form.errors | default_errors }}</div>{% endif %}
       <input type="hidden" name="contact[Soort bericht]" value="Voorraadmelding">
       <input type="hidden" name="contact[Product]" value="{{ product.title | escape }}" data-sw-melding-product>
+      <input type="hidden" name="contact[Variant]" value="{{ product.selected_or_first_available_variant.id }}" data-sw-melding-variant>
       <input type="hidden" name="contact[body]" value="Voorraadmelding voor {{ product.title | escape }}" data-sw-melding-body>
       <div class="sw-melding__rij">
         <input class="sw-melding__veld" type="email" name="contact[email]" required autocomplete="email" placeholder="{%- if request.locale.iso_code == 'en' -%}your@email.com{%- else -%}jouw@email.nl{%- endif -%}" aria-label="{%- if request.locale.iso_code == 'en' -%}Your email address{%- else -%}Je e-mailadres{%- endif -%}">
