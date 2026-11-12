@@ -424,7 +424,7 @@
     });
   });
 
-  // ── Adres autocomplete via PDOK (gratis NL overheids-API) ─────────────────
+  // ── Adres autocomplete: PDOK (NL) + Photon/OpenStreetMap (BE) ────────────
   (function(){
     var inp  = document.getElementById('swg-address1');
     var list = document.getElementById('swg-address-suggestions');
@@ -441,9 +441,8 @@
       if (!items.length){ list.style.display='none'; return; }
       items.forEach(function(item, i){
         var li = document.createElement('li');
-        var parts = item.weergavenaam.split(',');
-        li.innerHTML = '<strong>' + escHtml(parts[0]) + '</strong>' +
-          (parts[1] ? '<br><span>' + escHtml(parts.slice(1).join(',').trim()) + '</span>' : '');
+        li.innerHTML = '<strong>' + escHtml(item.address) + '</strong>' +
+          (item.details ? '<br><span>' + escHtml(item.details) + '</span>' : '');
         li.addEventListener('mousedown', function(e){
           e.preventDefault();
           pick(i);
@@ -456,19 +455,9 @@
     function pick(i){
       var item = results[i];
       if (!item) return;
-      // Splits weergavenaam: "Soesterweg 1, 3812 AJ Amersfoort, Nederland"
-      var wn = item.weergavenaam || '';
-      var parts = wn.split(',').map(function(s){ return s.trim(); });
-      // Straat + huisnummer = eerste deel
-      inp.value = parts[0] || '';
-      // Postcode + stad = tweede deel "3812 AJ Amersfoort"
-      if (parts[1]) {
-        var m = parts[1].match(/^(\d{4}\s?[A-Z]{2})\s+(.+)$/i);
-        if (m) {
-          if (zipEl) zipEl.value = m[1].replace(/(\d{4})([A-Z]{2})/i,'$1 $2').toUpperCase();
-          if (cityEl) cityEl.value = m[2];
-        }
-      }
+      inp.value = item.address || '';
+      if (zipEl && item.zip) zipEl.value = item.zip;
+      if (cityEl && item.city) cityEl.value = item.city;
       // Vlag zetten VOOR dispatchEvent zodat de input-listener niet opnieuw de API aanroept
       justPicked = true;
       clearTimeout(timer);
@@ -483,21 +472,50 @@
 
     function escHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
+    function pdokItems(docs){
+      return docs.map(function(item){
+        var parts = (item.weergavenaam || '').split(',').map(function(s){ return s.trim(); });
+        var zip = '', city = '';
+        if (parts[1]) {
+          var m = parts[1].match(/^(\d{4}\s?[A-Z]{2})\s+(.+)$/i);
+          if (m) {
+            zip = m[1].replace(/(\d{4})([A-Z]{2})/i,'$1 $2').toUpperCase();
+            city = m[2];
+          }
+        }
+        return { address: parts[0] || '', details: parts.slice(1).join(', '), zip: zip, city: city };
+      });
+    }
+
+    function photonItems(features){
+      return features.map(function(feature){
+        var p = feature.properties || {};
+        var street = p.street || p.name || '';
+        var address = [street, p.housenumber || ''].join(' ').trim();
+        var city = p.city || p.locality || p.district || '';
+        var details = [p.postcode || '', city, p.country || 'België'].filter(Boolean).join(' ');
+        return { address: address, details: details, zip: p.postcode || '', city: city };
+      }).filter(function(item){ return item.address && item.zip && item.city; });
+    }
+
     inp.addEventListener('input', function(){
       clearTimeout(timer);
       if (justPicked) { justPicked = false; return; }
       var q = inp.value.trim();
-      // PDOK kent alleen Nederlandse adressen
-      if (window.SW_SHIP.country() === 'BE'){ list.style.display='none'; return; }
       if (q.length < 3){ list.style.display='none'; return; }
       timer = setTimeout(function(){
+        if (window.SW_SHIP.country() === 'BE') {
+          // Photon is een gratis, keyless OpenStreetMap-zoekdienst voor België.
+          fetch('https://photon.komoot.io/api/?q=' + encodeURIComponent(q) + '&limit=6&countrycode=BE')
+            .then(function(r){ return r.json(); })
+            .then(function(data){ show(photonItems(data.features || [])); })
+            .catch(function(){ list.style.display='none'; });
+          return;
+        }
         fetch('https://api.pdok.nl/bzk/locatieserver/search/v3_1/suggest?q=' +
           encodeURIComponent(q) + '&fq=type:adres&rows=6')
           .then(function(r){ return r.json(); })
-          .then(function(data){
-            var docs = (data.response && data.response.docs) || [];
-            show(docs);
-          })
+          .then(function(data){ show(pdokItems((data.response && data.response.docs) || [])); })
           .catch(function(){ list.style.display='none'; });
       }, 220);
     });
