@@ -6,7 +6,8 @@
  * or related systems. Please exercise caution as any changes
  * made to this file may be overwritten.
  * ------------------------------------------------------------
- */{
+ */
+{
   "accessibility": {
     "account": "Account",
     "active_filters": "Active filters:",
@@ -375,7 +376,7 @@
       },
       "usp": {
         "verzending": "Delivery",
-        "verzending_sub": "Free from €50, except long rails",
+        "verzending_sub": "Free from €50 in the Netherlands and €75 in Belgium, except long rails",
         "levering": "Fast delivery",
         "levering_sub": "Order today, shipped tomorrow",
         "garantie": "5-year warranty",
@@ -468,7 +469,7 @@
     "balk": {
       "aria": "Announcements",
       "levering": "&#9889;&nbsp;Order today, shipped tomorrow&nbsp;",
-      "verzending": "&nbsp;Free shipping over &euro;50&nbsp; (except long rails)",
+      "verzending": "&nbsp;Free shipping over &euro;50 in the Netherlands and &euro;75 in Belgium&nbsp; (except long rails)",
       "retour": "&nbsp;&#8635;&nbsp;14-day return policy&nbsp;"
     },
     "popup": {
@@ -510,7 +511,7 @@
     },
     "mand": {
       "bekijk": "View cart →",
-      "verzending": "Free shipping from €50 (except long rails)",
+      "verzending": "Free shipping from €50 in the Netherlands and €75 in Belgium (except long rails)",
       "retour": "14-day returns",
       "btw": "Incl. VAT",
       "toevoegen": "Add to cart"
