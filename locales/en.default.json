@@ -686,11 +686,11 @@
       "s4": "Money back",
       "s4_tekst": "After receipt and inspection, money back within 5 working days.",
       "voorwaarden": "Conditions:",
-      "letop_tekst": "Rails over 2 metres: &euro;10 delivery per order, including on orders from &euro;50. If the order also contains standard products and is below &euro;50, total delivery is &euro;17.95. Rails of exactly 2 metres use the standard rate. Delivery takes place on working days.",
+      "letop_tekst": "In the Netherlands: rails over 2 metres &euro;10 delivery per order, including on orders from &euro;50. If the order also contains standard products and is below &euro;50, total delivery is &euro;17.95. In Belgium that is &euro;19.95 per order, and below &euro;75 a total of &euro;29.90. Rails of exactly 2 metres use the standard rate. Delivery takes place on working days.",
       "voorwaarden_tekst": "The product must be unused. Returns are possible up to 14 days after receipt. Damage caused by careless use is not covered."
     },
     "prod": {
-      "verzenden": "&#10003; Free shipping from &euro;50 (except long rails)",
+      "verzenden": "&#10003; Free shipping from &euro;50 in the Netherlands and &euro;75 in Belgium (except long rails)",
       "retour": "&#10003;&#32;14-day right of return",
       "garantie": "&#10003; 5-year warranty",
       "levering": "&#10003; Order today, shipped tomorrow",
