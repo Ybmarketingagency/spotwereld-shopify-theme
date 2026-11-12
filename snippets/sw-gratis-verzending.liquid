@@ -7,6 +7,7 @@
   Gemeten via /cart/shipping_rates.json, niet overgenomen uit een tekst op de site.
   Lange rails vallen vanaf 04-11-2026 in een apart profiel: EUR 10 per bestelling.
   Zie sw-shipping-cost voor de combinatie van gewone producten en lange rails.
+  Belgie: EUR 9,95 onder EUR 75, gratis daarboven, lange rails EUR 19,95.
   Wijzigt het tarief in Shopify, pas het hier en in sections/sw-gegevens.liquid aan.
 
   @param {string} [variant] - 'compact' voor de winkelwagenlade
@@ -82,6 +83,27 @@
       </p>
     {%- endif -%}
     {%- endif -%}
+    {%- comment -%}
+      Belgie heeft een eigen tarief en een eigen drempel. In de winkelwagen weten
+      we het land nog niet, dus staat het hier als losse regel. Houd de bedragen
+      gelijk aan Instellingen > Verzending > zone Belgie en aan
+      window.SW_SHIP.rates in sections/sw-gegevens.liquid.
+    {%- endcomment -%}
+    <p class="sw-vz-sub">
+      {%- if sw_actual_shipping >= 1000 -%}
+        {%- if request.locale.iso_code == 'en' -%}
+          To Belgium: long rails {{ 1995 | money }} per order, standard items {{ 995 | money }} below {{ 7500 | money }}.
+        {%- else -%}
+          Naar Belgi&euml;: lange rails {{ 1995 | money }} per bestelling, gewone producten {{ 995 | money }} onder {{ 7500 | money }}.
+        {%- endif -%}
+      {%- else -%}
+        {%- if request.locale.iso_code == 'en' -%}
+          To Belgium: free from {{ 7500 | money }}, {{ 995 | money }} below that.
+        {%- else -%}
+          Naar Belgi&euml;: gratis vanaf {{ 7500 | money }}, daaronder {{ 995 | money }}.
+        {%- endif -%}
+      {%- endif -%}
+    </p>
   </div>
 {%- endif -%}
 
