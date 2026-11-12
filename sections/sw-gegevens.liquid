@@ -155,6 +155,14 @@
           </div>
         </div>
 
+        <div class="swg-field">
+          <div class="swg-label">{%- if request.locale.iso_code == 'en' -%}Country{%- else -%}Land{%- endif -%}</div>
+          <select id="swg-country" class="swg-select" autocomplete="country">
+            <option value="NL" selected>{%- if request.locale.iso_code == 'en' -%}Netherlands{%- else -%}Nederland{%- endif -%}</option>
+            <option value="BE">{%- if request.locale.iso_code == 'en' -%}Belgium{%- else -%}Belgi&euml;{%- endif -%}</option>
+          </select>
+        </div>
+
         <div class="swg-field-row">
           <div style="grid-column:1 / -1;position:relative;" id="swg-address-wrap">
             <div class="swg-floating">
@@ -182,8 +190,6 @@
         </div>
 
 
-        {%- comment -%} Hidden country field — Shopify checkout vraagt adres zelf {%- endcomment -%}
-        <input type="hidden" id="swg-country" value="NL">
 
         <button type="submit" class="swg-submit" id="swg-submit">
           {{ 'sw.kassa.door' | t }}
@@ -258,6 +264,8 @@
               Nog <strong>{{ swg_rest | money }}</strong> en je bezorging is gratis. <a href="{{ sw_root }}/cart" style="color:#0f6fe3;font-weight:600">Terug naar de winkelmand</a>
             {%- endif -%}
           </p>
+        {%- else -%}
+          <p id="swg-freeship" style="margin:.4rem 0 0;font-size:.78rem;color:#1e3a5f;background:#f4f8ff;border:1px solid #d8e6fb;border-radius:8px;padding:.5rem .65rem;line-height:1.4" hidden></p>
         {%- endif -%}
 
         <div class="swg-discount">
@@ -320,6 +328,70 @@
   var API_VERSION = '2024-10';
   // Google Sheets fallback — alle ingevulde klantdata wordt hier als backup opgeslagen
   var SW_SHEET_URL = 'https://script.google.com/macros/s/AKfycbzNZc9PETXgDlZ5I8gO8o2V5nyt-CDWeyQ8qJsrPu8YeyU1LeVXem89REd9Fn105mMb/exec';
+
+  /* Verzendkosten per land. Houd deze bedragen gelijk aan
+     Instellingen > Verzending > Algemeen profiel (zone Domestic en zone België)
+     en aan het profiel "Lange rails langer dan 2 meter". */
+  window.SW_SHIP = {
+    rates: {
+      NL: { rate: 795, freeFrom: 5000, long: 1000 },
+      BE: { rate: 995, freeFrom: 7500, long: 1995 }
+    },
+    longHandles: ['1-fase-rail-300cm', '3-fase-rail-300cm', '3-fase-rail-400cm'],
+    cart: {
+      total_price: {{ cart.total_price | default: 0 }},
+      items: [{%- for item in cart.items -%}{ handle: {{ item.product.handle | json }}, requires_shipping: {{ item.requires_shipping }} }{%- unless forloop.last -%},{%- endunless -%}{%- endfor -%}]
+    },
+    country: function(){
+      var el = document.getElementById('swg-country');
+      return (el && el.value === 'BE') ? 'BE' : 'NL';
+    },
+    calc: function(cart){
+      var r = this.rates[this.country()];
+      var longHandles = this.longHandles;
+      var hasLong = false, hasStandard = false;
+      (cart.items || []).forEach(function(item){
+        if (item.requires_shipping === false) return;
+        if (longHandles.indexOf(item.handle) !== -1) hasLong = true;
+        else hasStandard = true;
+      });
+      var cost = (hasLong ? r.long : 0) +
+                 ((hasStandard && (cart.total_price || 0) < r.freeFrom) ? r.rate : 0);
+      return { r: r, hasLong: hasLong, hasStandard: hasStandard, cost: cost };
+    },
+    render: function(cart){
+      if (cart) this.cart = cart;
+      var c = this.cart || { items: [], total_price: 0 };
+      var info = this.calc(c);
+      var isEn = document.documentElement.lang && document.documentElement.lang.indexOf('en') === 0;
+      function money(cents){ return '€ ' + (cents / 100).toFixed(2).replace('.', ','); }
+      var ship = document.getElementById('swg-ship');
+      var tot = document.getElementById('swg-total');
+      var nudge = document.getElementById('swg-freeship');
+      if (ship) {
+        ship.textContent = info.cost === 0 ? (isEn ? 'Free' : 'Gratis') : money(info.cost);
+        ship.style.color = info.cost === 0 ? '#16a34a' : '';
+        ship.style.fontWeight = info.cost === 0 ? '700' : '';
+      }
+      if (tot) tot.textContent = money((c.total_price || 0) + info.cost);
+      if (nudge) {
+        if (info.hasLong) {
+          nudge.hidden = false;
+          nudge.textContent = isEn
+            ? 'Long rails over 2 metres: ' + money(info.r.long) + ' delivery, including on orders over ' + money(info.r.freeFrom) + '. Standard items add ' + money(info.r.rate) + ' below ' + money(info.r.freeFrom) + '.'
+            : 'Lange rails boven 2 meter: ' + money(info.r.long) + ' verzending, ook vanaf ' + money(info.r.freeFrom) + '. Voor gewone producten komt onder ' + money(info.r.freeFrom) + ' nog ' + money(info.r.rate) + ' bij.';
+        } else if (info.cost === 0) {
+          nudge.hidden = true;
+        } else {
+          nudge.hidden = false;
+          var rest = money(info.r.freeFrom - (c.total_price || 0));
+          nudge.innerHTML = isEn
+            ? 'Add <strong>' + rest + '</strong> and delivery is free.'
+            : 'Nog <strong>' + rest + '</strong> en je bezorging is gratis.';
+        }
+      }
+    }
+  };
   function swSaveToSheet(data, cart){
     try {
       var items = (cart && cart.items || []).map(function(it){ return it.quantity + 'x ' + it.title; }).join(' | ');
@@ -331,7 +403,7 @@
           email: data.email || '', first_name: data.firstName || '', last_name: data.lastName || '',
           company: data.company || '', type: data.type === 'bedrijf' ? 'Bedrijf' : 'Particulier',
           phone: data.phone || '', address1: data.address1 || '', house_number: '', address2: '',
-          zip: data.zip || '', city: data.city || '', country: 'Netherlands',
+          zip: data.zip || '', city: data.city || '', country: data.country === 'BE' ? 'Belgium' : 'Netherlands',
           line_items: items, total: total, source: 'custom-checkout'
         })
       });
@@ -415,6 +487,8 @@
       clearTimeout(timer);
       if (justPicked) { justPicked = false; return; }
       var q = inp.value.trim();
+      // PDOK kent alleen Nederlandse adressen
+      if (window.SW_SHIP.country() === 'BE'){ list.style.display='none'; return; }
       if (q.length < 3){ list.style.display='none'; return; }
       timer = setTimeout(function(){
         fetch('https://api.pdok.nl/bzk/locatieserver/search/v3_1/suggest?q=' +
@@ -454,12 +528,35 @@
     });
   })();
 
-  // Postcode auto-format: 1234 AB
+  // Postcode: Nederland 1234 AB, België vier cijfers
+  function swZipRule(){
+    return window.SW_SHIP.country() === 'BE'
+      ? { max: 4, re: /^\d{4}$/ }
+      : { max: 7, re: /^\d{4}\s?[A-Za-z]{2}$/ };
+  }
   var zipEl = document.getElementById('swg-zip');
   if (zipEl) {
     zipEl.addEventListener('blur', function(){
+      if (window.SW_SHIP.country() === 'BE') {
+        zipEl.value = zipEl.value.replace(/\D/g,'').slice(0,4);
+        return;
+      }
       var v = zipEl.value.replace(/\s/g,'').toUpperCase();
       if (/^\d{4}[A-Z]{2}$/.test(v)) zipEl.value = v.slice(0,4) + ' ' + v.slice(4);
+    });
+  }
+
+  // Land wisselen: verzendkosten herrekenen en de postcode mee laten lopen
+  var countryEl = document.getElementById('swg-country');
+  if (countryEl) {
+    countryEl.addEventListener('change', function(){
+      var rule = swZipRule();
+      if (zipEl) {
+        zipEl.setAttribute('maxlength', rule.max);
+        if (zipEl.value && !rule.re.test(zipEl.value.trim())) zipEl.value = '';
+        zipEl.dispatchEvent(new Event('input'));
+      }
+      window.SW_SHIP.render();
     });
   }
 
@@ -489,8 +586,9 @@
       zip: val('swg-zip'),
       city: val('swg-city'),
       phone: val('swg-phone'),
-      country: 'NL',
+      country: window.SW_SHIP.country(),
     };
+    var countryName = data.country === 'BE' ? 'Belgium' : 'Netherlands';
 
     // Validatie
     var errors = [];
@@ -499,6 +597,7 @@
     if (!data.lastName) errors.push('Achternaam is verplicht.');
     if (!data.address1) errors.push('Straat en huisnummer zijn verplicht.');
     if (!data.zip) errors.push('Postcode is verplicht.');
+    else if (!swZipRule().re.test(data.zip.trim())) errors.push(data.country === 'BE' ? 'Vul een Belgische postcode van vier cijfers in, bijvoorbeeld 1000.' : 'Vul een Nederlandse postcode in, bijvoorbeeld 1234 AB.');
     if (!data.city) errors.push('Stad is verplicht.');
     if (data.type === 'bedrijf' && !data.company) errors.push('Bedrijfsnaam is verplicht.');
     if (errors.length) { showErrors(errors); return; }
@@ -550,7 +649,7 @@
           buyerIdentity: {
             email: data.email,
             phone: data.phone || null,
-            countryCode: 'NL',
+            countryCode: data.country,
             deliveryAddressPreferences: [{
               deliveryAddress: {
                 firstName: data.firstName,
@@ -559,7 +658,7 @@
                 address1: data.address1,
                 city: data.city,
                 zip: data.zip,
-                country: 'Netherlands',
+                country: countryName,
                 phone: data.phone || null
               }
             }]
@@ -609,6 +708,10 @@
     setIf('swg-zip', saved.zip);
     setIf('swg-city', saved.city);
     setIf('swg-phone', saved.phone);
+    if (saved.country === 'BE') {
+      var cEl = document.getElementById('swg-country');
+      if (cEl) { cEl.value = 'BE'; cEl.dispatchEvent(new Event('change')); }
+    }
   } catch(e){}
 })();
 
@@ -639,41 +742,9 @@
     if (sub) sub.textContent = money(cart.items_subtotal_price);
 
     // Verzending herrekenen: een kortingscode kan de bestelling onder de grens
-    // voor gratis verzending duwen, dan moet het totaal mee omhoog.
-    var freeFrom = ship ? parseInt(ship.getAttribute('data-free-from'), 10) : 5000;
-    var rate = ship ? parseInt(ship.getAttribute('data-rate'), 10) : 795;
-    var isEn = document.documentElement.lang && document.documentElement.lang.indexOf('en') === 0;
-    var longHandles = ['1-fase-rail-300cm', '3-fase-rail-300cm', '3-fase-rail-400cm'];
-    var hasLong = false;
-    var hasStandard = false;
-    (cart.items || []).forEach(function(item){
-      if (item.requires_shipping === false) return;
-      if (longHandles.indexOf(item.handle) !== -1) hasLong = true;
-      else hasStandard = true;
-    });
-    var shipCost = (hasLong ? 1000 : 0) + (hasStandard && cart.total_price < freeFrom ? rate : 0);
-    if (ship) {
-      ship.textContent = shipCost === 0 ? (isEn ? 'Free' : 'Gratis') : money(shipCost);
-      ship.style.color = shipCost === 0 ? '#16a34a' : '';
-      ship.style.fontWeight = shipCost === 0 ? '700' : '';
-    }
-    if (nudge) {
-      if (hasLong) {
-        nudge.hidden = false;
-        nudge.textContent = isEn
-          ? 'Long rails over 2 metres: ' + money(1000) + ' delivery, including on orders over ' + money(freeFrom) + '. Standard items add ' + money(rate) + ' below ' + money(freeFrom) + '.'
-          : 'Lange rails boven 2 meter: ' + money(1000) + ' verzending, ook vanaf ' + money(freeFrom) + '. Voor gewone producten komt onder ' + money(freeFrom) + ' nog ' + money(rate) + ' bij.';
-      } else if (shipCost === 0) {
-        nudge.hidden = true;
-      } else {
-        nudge.hidden = false;
-        var rest = money(freeFrom - cart.total_price);
-        nudge.innerHTML = isEn
-          ? 'Add <strong>' + rest + '</strong> and delivery is free.'
-          : 'Nog <strong>' + rest + '</strong> en je bezorging is gratis.';
-      }
-    }
-    if (tot) tot.textContent = money(cart.total_price + shipCost);
+    // voor gratis verzending duwen, dan moet het totaal mee omhoog. Rekent met
+    // de tarieven van het gekozen land.
+    window.SW_SHIP.render(cart);
     if (!rows) return;
     rows.innerHTML = '';
     (cart.cart_level_discount_applications || []).forEach(function(d){
