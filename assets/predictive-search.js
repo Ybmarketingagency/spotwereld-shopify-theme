@@ -316,6 +316,10 @@ class PredictiveSearchComponent extends Component {
     const url = new URL(Theme.routes.predictive_search_url, location.origin);
     url.searchParams.set('q', searchTerm);
     url.searchParams.set('resources[limit_scope]', 'each');
+    // Shopify sluit uitverkochte producten standaard uit de suggesties. Ze moeten bij
+    // Spotwereld wel vindbaar blijven (alleen na de leverbare resultaten), zodat een
+    // klant een product kan terugvinden en de voorraadmelding kan gebruiken.
+    url.searchParams.set('resources[options][unavailable_products]', 'last');
 
     const { predictiveSearchResults } = this.refs;
 
