@@ -900,7 +900,7 @@
       var sub = blok.querySelector('.sw-voorraad-sub');
       if (!bol || !tekst || !sub) return;
       var na = op && swIsNalevering(id);
-      var kleur = !op ? '#dc2626' : !Number.isSafeInteger(swAantal[id]) ? '#64748b' : na ? '#d97706' : '#16a34a';
+      var kleur = !op || swGeenVoorraad(id) ? '#dc2626' : !Number.isSafeInteger(swAantal[id]) ? '#64748b' : na ? '#d97706' : '#16a34a';
       bol.style.color = kleur;
       tekst.style.color = kleur;
       tekst.textContent = op ? swVoorraadTekst(id) : {{ 'sw.kaart.uitverkocht' | t | json }};
@@ -913,6 +913,9 @@
     var SW_NALEVERING_AAN = true;
     var swAantal = {};
     var swAantalGeladen = false;
+    // swAantalOk = het antwoord bevatte echt aantallen. Zonder die vlag zou een storing
+    // (een leeg antwoord) elke variant als uitverkocht laten lezen; dat mag nooit gebeuren.
+    var swAantalOk = false;
     var swAantalGemeten = 0;
     var swAantalCacheKey = 'sw-voorraad-v2-' + Object.keys(swVoorraad).join(',');
     try {
@@ -921,13 +924,22 @@
         swAantal = swBewaard.varianten;
         swAantalGemeten = swBewaard.gemeten;
         swAantalGeladen = true;
+        swAantalOk = Object.keys(swAantal).length > 0;
       }
     } catch (e) {}
     function swIsNalevering(id) {
       return SW_NALEVERING_AAN && typeof swAantal[id] === 'number' && swAantal[id] <= 0;
     }
+    // De API geeft alleen de varianten terug waarvan hij de voorraad kent. Staat deze variant
+    // er niet in terwijl andere varianten van hetzelfde product er wel in staan, dan heeft hij
+    // geen voorraadbron meer (leverancier losgekoppeld, eigen voorraad op) en is hij dus
+    // uitverkocht. Is het hele antwoord leeg, dan is dat een storing: dan beweren we niets.
+    function swGeenVoorraad(id) {
+      return swAantalOk && !Number.isSafeInteger(swAantal[id]);
+    }
     function swVoorraadTekst(id) {
       if (!swAantalGeladen) return {% if request.locale.iso_code == 'en' %}'Checking stock…'{% else %}'Voorraad controleren…'{% endif %};
+      if (swGeenVoorraad(id)) return {{ 'sw.kaart.uitverkocht' | t | json }};
       var n = swAantal[id];
       if (swIsNalevering(id)) {
         {%- if request.locale.iso_code == 'en' -%}
@@ -958,10 +970,11 @@
           swAantal = j.varianten;
           swAantalGemeten = Date.parse(j.gemeten) || 0;
           swAantalGeladen = true;
+          swAantalOk = Object.keys(swAantal).length > 0;
           try { sessionStorage.setItem(swAantalCacheKey, JSON.stringify({ gemeten: swAantalGemeten, varianten: swAantal })); } catch (e) {}
           swVoorraadRegel();
         })
-        .catch(function () { swAantalGeladen = true; swVoorraadRegel(); });
+        .catch(function () { swAantalGeladen = true; swAantalOk = false; swVoorraadRegel(); });
     }
     swVerversAantallen();
     setInterval(swVerversAantallen, 5 * 60000);
