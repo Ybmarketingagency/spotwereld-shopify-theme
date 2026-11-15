@@ -469,7 +469,7 @@
     "balk": {
       "aria": "Announcements",
       "levering": "&#9889;&nbsp;Order today, shipped tomorrow&nbsp;",
-      "verzending": "&nbsp;Free shipping over &euro;50 in the Netherlands and &euro;75 in Belgium&nbsp; (except long rails)",
+      "verzending": "&nbsp;Free shipping over &euro;50 in the Netherlands and &euro;75 in Belgium",
       "retour": "&nbsp;&#8635;&nbsp;14-day return policy&nbsp;"
     },
     "popup": {
