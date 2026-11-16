@@ -1002,10 +1002,11 @@
     // Bij een variantwissel tekent het thema het prijsblok opnieuw en verdwijnt de regel die we
     // erachter hebben gezet (gemeten 03-11-2026: Wit -> Zwart en de voorraadregel was weg tot
     // een refresh). Daarom zet swPlaatsVoorraadRegel hem terug zodra hij ontbreekt.
-    // Black Friday-regel onder de prijs. Dezelfde data als sw-black-friday-banner.liquid,
-    // zodat alles tegelijk aan en uit gaat; na 30-11 blijft swBfTekst leeg en komt er niets.
-    // De korting is een bestelkorting op de hele bestelling en stapelt niet op de staffel,
-    // dus er staat bewust niet "extra".
+    /* Black Friday-regel onder de prijs. Dezelfde data als sw-black-friday-banner.liquid,
+       zodat alles tegelijk aan en uit gaat; na 30-11 blijft swBfTekst leeg en komt er niets.
+       De korting is een bestelkorting op de hele bestelling en stapelt niet op de staffel,
+       dus er staat bewust niet "extra". Let op: Liquid-tags met {%- -%} slikken het
+       regeleinde op, dus nooit een //-commentaar vlak boven een var zetten. */
     {%- assign sw_bf_start = '2026-11-20' -%}
     {%- assign sw_bf_end = '2026-11-30' -%}
     {%- assign sw_bf_nu = 'now' | date: '%Y-%m-%d' -%}
@@ -1024,7 +1025,7 @@
           {%- assign sw_bf_tekst = '10% korting op je hele bestelling, automatisch in je winkelwagen. Nog t/m 30 november.' -%}
         {%- endif -%}
       {%- endif -%}
-    {%- endif -%}
+    {% endif %}
     var swBfTekst = {{ sw_bf_tekst | json }};
     var swBfHtml = swBfTekst
       ? '<div class="sw-bf-regel" style="display:flex;align-items:center;gap:.55rem;margin:0 0 .85rem;padding:.5rem .7rem;background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;flex-wrap:wrap">' +
