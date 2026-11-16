@@ -4,7 +4,7 @@
 </section>
 
 {% stylesheet %}
-  .sw-selectie { max-width: 1280px; margin-inline: auto; padding: 1.75rem 2rem 2.25rem; }
+  .sw-selectie { max-width: 1280px; margin-inline: auto; padding: 4rem 2rem; }
   .sw-selectie h2 { margin: 0 0 1rem; color: #061f40; font-size: 1.5rem; font-weight: 800; }
   .sw-selectie__grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 1rem; list-style: none; margin: 0; padding: 0; }
   .sw-selectie__card { display: flex; flex-direction: column; gap: .5rem; height: 100%; padding: .875rem; border: 1px solid #e5e7eb; border-radius: .75rem; color: #1e293b; text-decoration: none; }
@@ -14,7 +14,7 @@
   .sw-selectie__price { color: #083d7d; font-weight: 700; margin-top: auto; }
   @media (max-width: 900px) { .sw-selectie__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
   @media (max-width: 600px) {
-    .sw-selectie { padding-inline: 1rem; }
+    .sw-selectie { padding-block: 2.5rem; padding-inline: 1rem; }
     .sw-selectie__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
   }
 {% endstylesheet %}
