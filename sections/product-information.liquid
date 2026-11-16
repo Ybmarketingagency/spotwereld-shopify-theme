@@ -907,6 +907,7 @@
       // Toon directe levering alleen bij een positief aantal.
       sub.style.display = op && swAantal[id] > 0 ? '' : 'none';
       swMeldingBlok(op);
+      swBfRegel();
     }
     // De voorraad-API geeft bevestigde aantallen. Bij nul of negatief is het artikel
     // een nalevering. Bij een ontbrekend aantal verwijst de regel naar een aanvraag.
@@ -1002,36 +1003,49 @@
     // Bij een variantwissel tekent het thema het prijsblok opnieuw en verdwijnt de regel die we
     // erachter hebben gezet (gemeten 03-11-2026: Wit -> Zwart en de voorraadregel was weg tot
     // een refresh). Daarom zet swPlaatsVoorraadRegel hem terug zodra hij ontbreekt.
-    /* Black Friday-regel onder de prijs. Dezelfde data als sw-black-friday-banner.liquid,
-       zodat alles tegelijk aan en uit gaat; na 30-11 blijft swBfTekst leeg en komt er niets.
-       De korting is een bestelkorting op de hele bestelling en stapelt niet op de staffel,
-       dus er staat bewust niet "extra". Let op: een Liquid-tag met streepjes slikt het
-       regeleinde op, dus nooit een //-commentaar vlak boven een var zetten. */
-    {%- assign sw_bf_start = '2026-11-20' -%}
-    {%- assign sw_bf_end = '2026-11-30' -%}
+    /* Aanbiedingsregel onder de prijs, alleen voor de varianten in sw-bf-varianten.
+       Hij hoort NIET op elk product: hij hoort bij een variant die echt is afgeprijsd.
+       Zelfde lijst staat in snippets/sw-variant-card.liquid voor de kleurtegel: pas je er
+       een aan, pas dan ook de andere aan. Verdwijnt vanzelf na de einddatum en zodra de
+       van-prijs weg is. */
+    var swBfVarianten = {};
+    {%- assign sw_bf_ids = '58263816077656' | split: ',' -%}
+    {%- assign sw_bf_eind = '2026-11-30' -%}
     {%- assign sw_bf_nu = 'now' | date: '%Y-%m-%d' -%}
-    {%- assign sw_bf_tekst = '' -%}
-    {%- if sw_bf_nu <= sw_bf_end -%}
-      {%- if sw_bf_nu < sw_bf_start -%}
-        {%- if request.locale.iso_code == 'en' -%}
-          {%- assign sw_bf_tekst = 'From 20 November: 10% off your whole order, applied automatically in your cart.' -%}
-        {%- else -%}
-          {%- assign sw_bf_tekst = 'Vanaf 20 november: 10% korting op je hele bestelling, automatisch in je winkelwagen.' -%}
+    {%- if sw_bf_nu <= sw_bf_eind -%}
+      {%- for sw_v in product.variants -%}
+        {%- assign sw_v_id = sw_v.id | append: '' -%}
+        {%- if sw_bf_ids contains sw_v_id and sw_v.compare_at_price > sw_v.price -%}
+          {%- assign sw_pct = sw_v.compare_at_price | minus: sw_v.price | times: 100 | divided_by: sw_v.compare_at_price -%}
+          {%- capture sw_bf_regel -%}
+            {%- if request.locale.iso_code == 'en' -%}
+              Now {{ sw_v.price | money }} instead of {{ sw_v.compare_at_price | money }}, {{ sw_pct }}% off
+            {%- else -%}
+              Nu {{ sw_v.price | money }} in plaats van {{ sw_v.compare_at_price | money }}, {{ sw_pct }}% korting
+            {%- endif -%}
+          {%- endcapture -%}
+          swBfVarianten[{{ sw_v_id | json }}] = {{ sw_bf_regel | strip | json }};
         {%- endif -%}
-      {%- else -%}
-        {%- if request.locale.iso_code == 'en' -%}
-          {%- assign sw_bf_tekst = '10% off your whole order, applied automatically in your cart. Until 30 November.' -%}
-        {%- else -%}
-          {%- assign sw_bf_tekst = '10% korting op je hele bestelling, automatisch in je winkelwagen. Nog t/m 30 november.' -%}
-        {%- endif -%}
-      {%- endif -%}
+      {%- endfor -%}
     {% endif %}
-    var swBfTekst = {{ sw_bf_tekst | json }};
-    var swBfHtml = swBfTekst
-      ? '<div class="sw-bf-regel" style="display:flex;align-items:center;gap:.55rem;margin:0 0 .85rem;padding:.5rem .7rem;background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;flex-wrap:wrap">' +
+
+    var swBfHtml = Object.keys(swBfVarianten).length
+      ? '<div class="sw-bf-regel" hidden style="align-items:center;gap:.55rem;margin:0 0 .85rem;padding:.5rem .7rem;background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;flex-wrap:wrap">' +
         '<span style="background:#ea580c;color:#fff;font-size:.66rem;font-weight:800;letter-spacing:.06em;padding:.2rem .45rem;border-radius:4px;white-space:nowrap">BLACK FRIDAY</span>' +
         '<span class="sw-bf-regel__tekst" style="color:#9a3412;font-size:.8rem;font-weight:600"></span></div>'
       : '';
+
+    function swBfRegel() {
+      var vak = document.querySelector('.sw-bf-regel');
+      if (!vak) return;
+      var id = swHuidigeVariant();
+      var tekst = id ? swBfVarianten[id] : null;
+      if (!tekst) { vak.hidden = true; return; }
+      var tekstVak = vak.querySelector('.sw-bf-regel__tekst');
+      if (tekstVak) tekstVak.textContent = tekst;
+      vak.hidden = false;
+      vak.style.display = 'flex';
+    }
 
     function swPlaatsVoorraadRegel() {
       if (document.querySelector('.sw-extras')) return false;
@@ -1044,9 +1058,7 @@
         '<span class="sw-voorraad-tekst" style="color:#16a34a;font-size:.82rem;font-weight:600"></span>' +
         '<span class="sw-voorraad-sub" style="color:#94a3b8;font-size:.78rem">&mdash; {{ "sw.spec.leverbaar" | t }}</span></div>' +
         '</div>' + swBfHtml);
-      // De tekst als tekst zetten, niet als HTML, zodat een leesteken nooit opmaak wordt.
-      var swBfVak = document.querySelector('.sw-bf-regel__tekst');
-      if (swBfVak) swBfVak.textContent = swBfTekst;
+      swBfRegel();
       swVoorraadRegel();
       return true;
     }

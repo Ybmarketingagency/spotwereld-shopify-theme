@@ -96,6 +96,19 @@
           </div>
         </div>
       {%- endunless -%}
+      {%- comment -%}
+        Aanbiedingsmerk op de tegel, alleen voor de varianten in deze lijst. Dezelfde lijst
+        staat in sections/product-information.liquid voor de regel onder de prijs: pas je er
+        een aan, pas dan ook de andere aan. Valt vanzelf weg na de einddatum, zodra de
+        van-prijs weg is, of als de variant uitverkocht raakt.
+      {%- endcomment -%}
+      {%- assign sw_bf_ids = '58263816077656' | split: ',' -%}
+      {%- assign sw_bf_eind = '2026-11-30' -%}
+      {%- assign sw_bf_nu = 'now' | date: '%Y-%m-%d' -%}
+      {%- assign sw_bf_vid = variant.id | append: '' -%}
+      {%- if variant.available and sw_bf_nu <= sw_bf_eind and sw_bf_ids contains sw_bf_vid and variant.compare_at_price > variant.price -%}
+        <span class="sw-vcard-bf">BLACK FRIDAY</span>
+      {%- endif -%}
       {%- if foto -%}
         <img
           src="{{ foto | image_url: width: 600 }}"
@@ -141,6 +154,7 @@
   .sw-vcard .sw-vcard-content{display:flex;flex-direction:column;height:100%;gap:.35rem}
   .sw-vcard .sw-vcard-link{position:absolute;inset:0;z-index:1}
   .sw-vcard .sw-vcard-media{position:relative;width:100%;aspect-ratio:1/1;overflow:hidden;border-radius:.5rem;background:#fff}
+  .sw-vcard .sw-vcard-bf{position:absolute;top:.4rem;left:.4rem;z-index:2;background:#ea580c;color:#fff;font-size:.6rem;font-weight:800;letter-spacing:.05em;padding:.2rem .4rem;border-radius:4px;white-space:nowrap}
   .sw-vcard .product-badges{position:absolute;z-index:5;--badge-inset:.5rem}
   .sw-vcard .product-badges--top-right{top:.5rem;right:.5rem}
   .sw-vcard .product-badges--top-left{top:.5rem;left:.5rem}
