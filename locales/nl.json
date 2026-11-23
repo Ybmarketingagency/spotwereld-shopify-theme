@@ -672,7 +672,7 @@
       "t2": "Bestelling &euro;25 tot &euro;50",
       "t3": "Gewone producten vanaf &euro;50",
       "gratis": "GRATIS",
-      "t3_sub": "Lange rails boven 2 meter kosten altijd &euro;10 aan verzending.",
+      "t3_sub": "Rails vanaf 2 meter kosten altijd &euro;26,62 aan verzending.",
       "vandaag": "Vandaag besteld",
       "morgen": "morgen verzonden",
       "werkdagen": "Op werkdagen (ma&ndash;vr). Uitgezonderd feestdagen.",
@@ -686,7 +686,7 @@
       "s4": "Geld terug",
       "s4_tekst": "Na ontvangst en controle, geld terug binnen 5 werkdagen.",
       "voorwaarden": "Voorwaarden:",
-      "letop_tekst": "In Nederland: rails langer dan 2 meter &euro;10 verzending per bestelling, ook vanaf &euro;50. Bestel je daarnaast gewone producten en blijft het bestelbedrag onder &euro;50, dan betaal je samen &euro;17,95. In Belgi&euml; is dat &euro;19,95 per bestelling, en onder &euro;75 samen &euro;29,90. Rails van precies 2 meter vallen onder het gewone tarief. Bezorging vindt plaats op werkdagen.",
+      "letop_tekst": "In Nederland: rails vanaf 2 meter &euro;26,62 verzending per bestelling, ook vanaf &euro;50. Bestel je daarnaast gewone producten en blijft het bestelbedrag onder &euro;50, dan betaal je samen &euro;34,57. In Belgi&euml; is dat &euro;19,95 per bestelling, en onder &euro;75 samen &euro;29,90. Rails tot en met 1,5 meter vallen onder het gewone tarief. Bezorging vindt plaats op werkdagen.",
       "voorwaarden_tekst": "Product mag niet gebruikt zijn. Retourneren kan tot 14 dagen na ontvangst. Bij beschadiging door onzorgvuldig gebruik geldt geen garantie."
     },
     "prod": {
