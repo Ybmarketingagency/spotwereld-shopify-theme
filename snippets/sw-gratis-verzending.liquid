@@ -5,7 +5,8 @@
   Instellingen > Verzending en bezorging > Algemeen profiel > Domestic >
   "Standaard NL". Stand 11-10-2026: EUR 7,95 onder EUR 50, gratis vanaf EUR 50.
   Gemeten via /cart/shipping_rates.json, niet overgenomen uit een tekst op de site.
-  Lange rails vallen vanaf 04-11-2026 in een apart profiel: EUR 10 per bestelling.
+  Lange rails (vanaf 2 meter) vallen in een apart profiel: EUR 26,62 per bestelling.
+  Dat is de toeslag van EUR 22 excl. btw die Profolux per order rekent, gemeten 23-11-2026.
   Zie sw-shipping-cost voor de combinatie van gewone producten en lange rails.
   Belgie: EUR 9,95 onder EUR 75, gratis daarboven, lange rails EUR 19,95.
   Wijzigt het tarief in Shopify, pas het hier en in sections/sw-gegevens.liquid aan.
@@ -27,7 +28,7 @@
 
 {%- if cart.item_count > 0 -%}
   <div class="sw-vz-balk{% if variant == 'compact' %} sw-vz-balk--compact{% endif %}">
-    {%- if sw_actual_shipping >= 1000 -%}
+    {%- if sw_actual_shipping >= 2662 -%}
       <p class="sw-vz-tekst">
         {%- if request.locale.iso_code == 'en' -%}
           Delivery: <strong>{{ sw_actual_shipping | money }}</strong>
@@ -37,11 +38,11 @@
       </p>
       <p class="sw-vz-sub">
         {%- if request.locale.iso_code == 'en' -%}
-          Long rails over 2 metres cost {{ 1000 | money }} to ship, including on orders over {{ sw_free_from | money }}.
-          {%- if sw_actual_shipping > 1000 %} Standard items add {{ sw_ship_rate | money }} below {{ sw_free_from | money }}.{% endif -%}
+          Rails of 2 metres and over cost {{ 2662 | money }} to ship, including on orders over {{ sw_free_from | money }}.
+          {%- if sw_actual_shipping > 2662 %} Standard items add {{ sw_ship_rate | money }} below {{ sw_free_from | money }}.{% endif -%}
         {%- else -%}
-          Lange rails boven 2 meter kosten {{ 1000 | money }} aan verzending, ook vanaf {{ sw_free_from | money }}.
-          {%- if sw_actual_shipping > 1000 %} Voor gewone producten komt onder {{ sw_free_from | money }} nog {{ sw_ship_rate | money }} bij.{% endif -%}
+          Rails vanaf 2 meter kosten {{ 2662 | money }} aan verzending, ook vanaf {{ sw_free_from | money }}.
+          {%- if sw_actual_shipping > 2662 %} Voor gewone producten komt onder {{ sw_free_from | money }} nog {{ sw_ship_rate | money }} bij.{% endif -%}
         {%- endif -%}
       </p>
     {%- else -%}
@@ -90,7 +91,7 @@
       window.SW_SHIP.rates in sections/sw-gegevens.liquid.
     {%- endcomment -%}
     <p class="sw-vz-sub">
-      {%- if sw_actual_shipping >= 1000 -%}
+      {%- if sw_actual_shipping >= 2662 -%}
         {%- if request.locale.iso_code == 'en' -%}
           To Belgium: long rails {{ 1995 | money }} per order, standard items {{ 995 | money }} below {{ 7500 | money }}.
         {%- else -%}
