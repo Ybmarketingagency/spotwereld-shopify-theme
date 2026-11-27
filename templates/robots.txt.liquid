@@ -10,6 +10,18 @@
   naar een sw_-URL. De regels blijven staan voor wat Google in het verleden heeft
   opgepikt: die combinaties leverden nooit andere HTML op dan de kale collectiepagina,
   en het zijn er duizenden.
+
+  2026-11-27 erbij: de drie parameters die Shopify aan links vanuit de interne zoekresultaten
+  plakt (_pos, _sid, _ss) en de .atom-feeds van collecties en blogs. Search Console telde
+  961 URL's in "alternatieve pagina met correcte canonieke tag" plus 34 dubbele, vrijwel
+  allemaal van die drie parameters, en 21 .atom-feeds onder "gecrawld, niet geindexeerd".
+  Google besteedde 93 procent van het crawlen aan herbezoeken en maar 7 procent aan
+  ontdekken, terwijl 80 echte product- en kennisbankpagina's nog nooit opgehaald waren.
+  De canonieke consolidatie is al gebeurd, dus die parameter-URL's hoeven niet opnieuw
+  bekeken te worden.
+
+  Bewust NIET geblokkeerd: de variant-parameter. Die staat in de landingspagina's van de
+  Merchant Center-feed, en blokkeren zou daar afkeuringen geven.
 {%- endcomment -%}
 {% for group in robots.default_groups %}
 {{- group.user_agent }}
@@ -26,6 +38,10 @@
 {{ 'Disallow: /*sw_kantel*' }}
 {{ 'Disallow: /*sw_dim*' }}
 {{ 'Disallow: /pages/gegevens' }}
+{{ 'Disallow: /*_pos=' }}
+{{ 'Disallow: /*_sid=' }}
+{{ 'Disallow: /*_ss=' }}
+{{ 'Disallow: /*.atom$' }}
 {% endif -%}
 
 {%- if group.sitemap != blank -%}
